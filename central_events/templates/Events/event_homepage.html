@@ -274,7 +274,7 @@
                               
                               {% endfor %}
                             </td>
-                            <td>{{ key.event_date }}</td>
+                            <td>{% if key.event_date and key.start_date == None %}{{ key.event_date }}{% else %}{{ key.start_date|date:"M. d, Y"  }}{% endif %}</td>
                         </tr>
                         {% endfor %}
                         
@@ -323,7 +323,7 @@
                   {% csrf_token %}
                 
                 <label for="label">Event Type:</label>
-                <input type="text" id="label" name="event_type">
+                <input type="text" id="label" name="event_type" required>
               </div>
               <div class="modal-footer">
                 <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_event_type" value="Add">

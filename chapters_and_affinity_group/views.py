@@ -95,7 +95,7 @@ def sc_ag_members(request,primary):
         sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
         
         has_access_to_view_member_details=SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary)
-        
+
         if request.method=="POST":
             if request.POST.get('add_sc_ag_member'):
                 position = request.POST['position']
@@ -127,8 +127,7 @@ def sc_ag_members(request,primary):
             'teams':sc_ag_teams,
             'sc_ag_members':sc_ag_members,
             'member_count':len(sc_ag_members),
-            'has_access_to_view_member_details':has_access_to_view_member_details,
-            
+            'has_access_to_view_member_details':has_access_to_view_member_details,            
         }
         return render(request,'Members/sc_ag_members.html',context=context)
     
@@ -149,6 +148,15 @@ def sc_ag_panels(request,primary):
         
         # get panels of SC-AG
         all_panels=SC_AG_Info.get_panels_of_sc_ag(request=request,sc_ag_primary=primary)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
         
         if request.method=="POST":
             if request.POST.get('create_panel'):
@@ -168,13 +176,14 @@ def sc_ag_panels(request,primary):
                                                 sc_ag_primary=primary,tenure_year=tenure_year)
                 ):
                     return redirect('chapters_and_affinity_group:sc_ag_panels',primary)  
-        panel_edit_access=SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+
         context={
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
             'panels':all_panels,
             'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner
         }
         return render(request,'Panels/panel_homepage.html',context=context)
     
@@ -206,6 +215,16 @@ def sc_ag_panel_details(request,primary,panel_pk):
 
         # get sc_ag_executives
         sc_ag_eb_members=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=panel_pk)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
+
         if request.method=="POST":
             # adding member to panel
             if request.POST.get('add_executive_to_sc_ag_panel'):
@@ -389,7 +408,8 @@ def sc_ag_panel_details(request,primary,panel_pk):
             'sc_ag_members':sc_ag_members,
             'sc_ag_eb_members':sc_ag_eb_members,
             'sc_ag_eb_positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner,
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
             'all_positions':PortData.get_all_positions_of_everyone(request=request,sc_ag_primary=primary)
         }
@@ -422,6 +442,15 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
         sc_ag_officer_members_in_panel=SC_AG_Info.get_sc_ag_officers_from_panels(panel_id=panel_pk,request=request)
         # get sc_ag members
         sc_ag_members=SC_AG_Info.get_sc_ag_members(request,primary)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
         
         if(request.method=="POST"):
             # Add Member to officer panel
@@ -450,7 +479,8 @@ def sc_ag_panel_details_officers_tab(request,primary,panel_pk):
             'sc_ag_officer_positions':SC_AG_Info.get_sc_ag_officer_positions(request=request,sc_ag_primary=primary),
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner,
 
         }
         return render(request,'Panels/sc_ag_officer_members_tab.html',context=context)
@@ -486,6 +516,15 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
         # get_sc_ag_officer members from panels
         sc_ag_volunteer_members_in_panel=SC_AG_Info.get_sc_ag_volunteer_from_panels(request=request,panel_id=panel_pk)
         
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
+
         if(request.method=="POST"):
             # Add Member to officer panel
             if(request.POST.get('add_volunteer_to_sc_ag_panel')):
@@ -515,7 +554,8 @@ def sc_ag_panel_details_volunteers_tab(request,primary,panel_pk):
             'sc_ag_teams':SC_AG_Info.get_teams_of_sc_ag(request=request,sc_ag_primary=primary),
             'sc_ag_volunteer_members':sc_ag_volunteer_members_in_panel,
             'member_details_access':SC_Ag_Render_Access.access_for_member_details(request=request,sc_ag_primary=primary),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner
 
         }
         return render(request,'Panels/sc_ag_volunteer_members_tab.html',context=context)
@@ -541,6 +581,15 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
             tenure_time=present_date.date()-panel_info.creation_time.date()
         else:
             tenure_time=panel_info.panel_end_time.date()-panel_info.creation_time.date()
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        panel_edit_access = SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is edit access while update access is restricted from admin then show banner and override the edit access
+        if not has_access_for_sc_ag_updates and panel_edit_access:
+            show_restriction_banner = True
+            panel_edit_access = False
 
         # get all alumni members registered in database of IEEE NSU SB
         alumni_members=Alumni_Members.objects.all().order_by('pk')
@@ -588,7 +637,8 @@ def sc_ag_panel_details_alumni_members_tab(request,primary,panel_pk):
             'positions':SC_AG_Info.get_sc_ag_executive_positions(request=request,sc_ag_primary=primary),
             'alumni_members':alumni_members,
             'alumni_members_in_panel':PanelMembersData.get_alumni_members_from_panel(panel=panel_pk,request=request),
-            'panel_edit_access':SC_Ag_Render_Access.access_for_panel_edit_access(request=request,sc_ag_primary=primary),
+            'panel_edit_access':panel_edit_access,
+            'show_restriction_banner':show_restriction_banner
         }
         return render(request,'Panels/sc_ag_alumni_members_tab.html',context=context)
     except Exception as e:
@@ -1102,8 +1152,8 @@ def event_creation_form_page(request,primary):
                     event_name=request.POST['event_name']
                     event_description=request.POST['event_description']
                     event_type_list = request.POST.getlist('event_type')
-                    event_date=request.POST['event_date']
-                    event_time=request.POST['event_time']
+                    event_start_date=request.POST['start_date_time']
+                    event_end_date=request.POST['end_date_time']
                 
                     #It will return True if register event page 1 is success
                     get_event=Branch.register_event_page1(
@@ -1111,8 +1161,8 @@ def event_creation_form_page(request,primary):
                         event_name=event_name,
                         event_type_list=event_type_list,
                         event_description=event_description,
-                        event_date=event_date,
-                        event_time=event_time,
+                        event_start_date=event_start_date,
+                        event_end_date=event_end_date,
                         event_organiser=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary).primary
                     )
                     
@@ -1284,8 +1334,8 @@ def event_edit_form(request, primary, event_id):
                     event_description=request.POST['event_description']
                     super_event_id=request.POST.get('super_event')
                     event_type_list = request.POST.getlist('event_type')
-                    event_date=request.POST['event_date']
-                    event_time=request.POST['event_time']
+                    event_start_date=request.POST['start_date_time']
+                    event_end_date=request.POST['end_date_time']
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
@@ -1304,7 +1354,7 @@ def event_edit_form(request, primary, event_id):
                         registration_fee_amount = 0
 
                     #Check if the update request is successful
-                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, event_time=event_time, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                 flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event=is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
@@ -1762,7 +1812,7 @@ def event_preview(request, primary, event_id):
 @member_login_permission
 def manage_main_website(request, primary):
 
-    '''This view function loads the portals page for managung main website of socities
+    '''This view function loads the portals page for managing main website of socities
         and affinity group'''
 
     try:
@@ -1770,11 +1820,16 @@ def manage_main_website(request, primary):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-
-    
+  
         has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         if(has_access):
-            
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+
+            show_restriction_banner = False
+            #If access restricted from admin then show banner
+            if not has_access_for_sc_ag_updates:
+                show_restriction_banner = True
+
             if request.method == "POST":
                 #if save button is clicked then saving the details user entered
                 if request.POST.get('save'):
@@ -1801,7 +1856,6 @@ def manage_main_website(request, primary):
                     facebook_link = request.POST.get('facebook_link')
                     mission_vision_color_code_details = request.POST.get('mission_vision_color_code')
 
-                    print(about_image)
                     #checking to see if no picture is uploaded by user, if so then if picture is already present in database
                     #then updating it with saved value to prevent data loss. Otherwise it is None
                     if about_image == None:
@@ -1852,6 +1906,8 @@ def manage_main_website(request, primary):
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
                 'media_url':settings.MEDIA_URL,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates,
+                'show_restriction_banner':show_restriction_banner
             }
 
             return render(request,"Main Web Form/portal_form.html",context)

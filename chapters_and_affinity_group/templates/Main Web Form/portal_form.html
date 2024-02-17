@@ -126,7 +126,24 @@
             }
         }
 
-        
+        /* Banner styles */
+        .banner {
+            background-color: #b4252b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    
+        .banner p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .lock-icon {
+            margin-right: 10px;
+        }
          
     </style>
 </head>
@@ -171,11 +188,21 @@
                 </ol></b>
 
 
+                {% if show_restriction_banner %}
+                <div class="banner">
+                    <p>
+                      <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                      All updates to Society and Affinity groups have been locked by the administrator
+                    </p>
+                </div>
+                {% endif %}
+
                 <br>
                 <div class="btn-container">
                     <button class="btn btn-outline-primary mb-2" data-toggle="modal" data-target="#previewModal">Preview</button>
                 </div>
                 <br>
+
     
                 <!-- Preview Modal -->
                 <div id="previewModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true" style="z-index: 1500;">
@@ -293,9 +320,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal1">Logo</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.logo}}', 'sc_ag_logo')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -315,9 +344,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal2">Group Picture</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.background_image}}', 'background_image')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -358,9 +389,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal3">Mission Image</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.mission_picture}}', 'mission_picture')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -395,9 +428,11 @@
                                     <div class="col-sm-11">
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal4">Vision Image</a>
                                     </div>
+                                    {% if not show_restriction_banner %}
                                     <div class="col-sm-1 d-flex align-items-center justify-content-center">
                                         <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{sc_ag_info.vision_picture}}', 'vision_picture')">✖</button>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </div>
@@ -571,12 +606,14 @@
                             </div>
                             
                             <br>
+                            
+                            {% if has_access_for_sc_ag_updates %}
                             <hr>
                             <br> 
-
                             <div class="form-group text-center">
                                 <input type="submit" name="save" class="btn btn-outline-success p-x-md" value="Save">
                             </div>
+                            {% endif %}
                             <br>
 
                             

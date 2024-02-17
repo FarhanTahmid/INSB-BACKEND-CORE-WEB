@@ -199,6 +199,14 @@
                                         <label for="team_details_page">Team Details Page Access</label><br>
                                     {% endif %}
 
+                                    {% if member.manage_award_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="manage_award_access" name="manage_award_access">
+                                        <label for="manage_award_access">Manage Award Access</label><br>
+                                    {% else %}
+                                        <input type="checkbox" class="checkbox" value="manage_award_access" name="manage_award_access">
+                                        <label for="manage_award_access">Manage Award Access</label><br>
+                                    {% endif %}
+
                                     {% if member.manage_web_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="manage_web_access" name="manage_web_access">
                                         <label for="manage_web_access">Manage Web Access</label><br>

@@ -191,8 +191,8 @@
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel End Date:<span style="color:#00629B;"> {{panel_info.panel_end_time|date:'Y-m-d'}} </span></b></h5>
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
-            <br>
             {% if panel_edit_access %}
+            <br>
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
                     <button type="submit" class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-f" ui-toggle-class="bounce" ui-target="#animate">Delete Panel</button>
@@ -201,6 +201,14 @@
             </div>
             {% endif %}
             <br>
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
             <br>
 
             <!--Tab view for Panels-->

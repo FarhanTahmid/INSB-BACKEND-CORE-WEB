@@ -7,7 +7,6 @@ from port.models import Chapters_Society_and_Affinity_Groups
 from ckeditor.fields import RichTextField
 from django_resized import ResizedImageField
 
-
 # Create your models here.
 
 ###### THESE MODELS ARE SPECIFICALLY USED FOR EVENT HANDLING PURPOSE ####
@@ -58,8 +57,8 @@ class Events(models.Model):
     super_event_id=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=RichTextField(null=True,blank=True)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
-    event_date=models.DateField(null=True,blank=True)
-    event_time=models.CharField(null=True,blank=True,max_length=100)
+    event_date=models.DateField(null=True,blank=True,default = None)
+    event_time=models.CharField(null=True,blank=True,max_length=100,default = None)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
     registration_fee_amount = models.IntegerField(blank=True, null=True,default = 0)
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
@@ -67,7 +66,10 @@ class Events(models.Model):
     more_info_link = models.URLField(null=True,blank=True,max_length=500)
     form_link = models.URLField(null=True,blank=True,max_length=500)
     is_featured = models.BooleanField(null=False,blank=False,default=False,verbose_name="Feature this event")
-    
+    start_date = models.DateTimeField(null=True,blank=True)
+    end_date = models.DateTimeField(null=True,blank=True)
+
+
     class Meta:
         verbose_name="Registered Event"
     
