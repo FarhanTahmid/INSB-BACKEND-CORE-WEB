@@ -2841,8 +2841,8 @@ def event_creation_form_page(request):
                     event_description=request.POST['event_description']
                     super_event_id=request.POST.get('super_event')
                     event_type_list = request.POST.getlist('event_type')
-                    event_date=request.POST['event_date']
-                    event_time=request.POST['event_time']
+                    event_start_date=request.POST['start_date_time']
+                    event_end_date=request.POST['end_date_time']
 
                     #It will return True if register event page 1 is success
                     get_event=Branch.register_event_page1(
@@ -2850,8 +2850,8 @@ def event_creation_form_page(request):
                         event_name=event_name,
                         event_type_list=event_type_list,
                         event_description=event_description,
-                        event_date=event_date,
-                        event_time=event_time
+                        event_start_date=event_start_date,
+                        event_end_date=event_end_date
                     )
                     
                     if(get_event)==False:
@@ -3055,8 +3055,8 @@ def event_edit_form(request, event_id):
                     event_description=request.POST['event_description']
                     super_event_id=request.POST.get('super_event')
                     event_type_list = request.POST.getlist('event_type')
-                    event_date=request.POST['event_date']
-                    event_time=request.POST['event_time']
+                    event_start_date=request.POST['start_date_time']
+                    event_end_date=request.POST['end_date_time']
                     inter_branch_collaboration_list=request.POST.getlist('inter_branch_collaboration')
                     intra_branch_collaboration=request.POST['intra_branch_collaboration']
                     venue_list_for_event=request.POST.getlist('event_venues')
@@ -3074,7 +3074,7 @@ def event_edit_form(request, event_id):
                     else:
                         registration_fee_amount=0
                     #Check if the update request is successful
-                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_date=event_date, event_time=event_time, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                             flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 

@@ -274,7 +274,7 @@
                               
                               {% endfor %}
                             </td>
-                            <td>{{ key.event_date }}</td>
+                            <td>{% if key.event_date and key.start_date == None %}{{ key.event_date }}{% else %}{{ key.start_date|date:"M. d, Y"  }}{% endif %}</td>
                         </tr>
                         {% endfor %}
                         

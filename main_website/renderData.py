@@ -208,7 +208,10 @@ class HomepageItems:
             for event in all_events:
                 try:
                     #if date exists then formatting it
-                    date = event.event_date.strftime("%Y-%m-%d")
+                    if event.event_date != None and event.start_date == None:
+                        date = event.event_date.strftime("%Y-%m-%d")
+                    else:
+                        date = event.start_date.strftime("%Y-%m-%d")
                 except:
                     #otherwise assigning empty value
                     date = ""
@@ -233,14 +236,14 @@ class HomepageItems:
             current_datetime = timezone.now()
             society = SC_AG_Info.get_sc_ag_details(request,primary)
             if primary == 1:
-                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime).order_by('event_date')[:1]
+                upcoming_event = Events.objects.filter(publish_in_main_web = True,start_date__gt=current_datetime).order_by('start_date')[:1]
             else:
                 #getting the latest upcoming event for affinity groups and societies
-                upcoming_event = Events.objects.filter(publish_in_main_web = True,event_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('event_date')#[:1]
+                upcoming_event = Events.objects.filter(publish_in_main_web = True,start_date__gt=current_datetime,event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)).order_by('start_date')#[:1]
                 #getting collaborated upcoming event#if dont want this then remove bottom section and uncomment the list value to one, in the top line --------------------------------------------------------------------------here
                 collaborations = InterBranchCollaborations.objects.filter(collaboration_with = society).values_list('event_id')
                 #joining both the events list of collbarated and their own organised events
-                upcoming_event = upcoming_event .union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,event_date__gt=current_datetime)).order_by('event_date')[:1] 
+                upcoming_event = upcoming_event.union(Events.objects.filter(pk__in=collaborations,publish_in_main_web= True,start_date__gt=current_datetime)).order_by('start_date')[:1] 
                 #########################################################################################################################################################################
             #returning only the first item of the list as filter always returns a list
             return upcoming_event[0]

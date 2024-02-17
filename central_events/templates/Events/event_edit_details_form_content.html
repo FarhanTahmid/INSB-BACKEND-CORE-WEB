@@ -106,30 +106,30 @@
                         {% endfor %}
                     </select>
                 </div>
-                
+                {% if event_details.event_date and event_details.start_date == None %}
                 <br>
                 <div class="form-group">
-                    <label for="exampleInputPassword3">Add a date for the Event</label>
+
+                    <label for="exampleInputPassword3">(Update Starting Date of Event According to this date)</label>
                     <input
                         placeholder="Event Date"
                         name="event_date"
                         type="date"
                         class="form-control"
                         value="{{event_details.event_date|date:"Y-m-d"}}"
+                        disabled
                     />
                 </div>
-                <br>  
+                {% endif %}
+                <br>
                 <div class="form-group">
-                    <label>Event Time: </label> 
-                    <input
-                        placeholder="Event Time"
-                        class="form-control"
-                        type="text"
-                        autocomplete="off"
-                        name="event_time"
-                        value="{{event_details.event_time|default:""}}" 
-                    />
-                        
+                    <label for="exampleInputPassword3">Add a (tentative) start date for the Event: </label>
+                    <input type="datetime-local" id="date_time" name="start_date_time" required value = "{{event_details.start_date|date:"Y-m-d\TH:i" }}">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="exampleInputPassword3">Add a end date for the Event (if any): </label>
+                    <input type="datetime-local" id="date_time" name="end_date_time" value = "{{event_details.end_date|date:"Y-m-d\TH:i" }}">
                 </div>
                 <br>
                 <div class="form-group">

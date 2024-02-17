@@ -293,7 +293,7 @@
                                 <div class="gdlr-blog-info">
                                     <div
                                         class="blog-info blog-date gdlr-skin-info">
-                                        <span class="gdlr-sep">/</span>{{key.event_date}}</div>
+                                        <span class="gdlr-sep">/</span>{% if key.event_date and key.start_date == None %}{{ key.event_date }}{% else %}{{ key.start_date|date:"M. d, Y"  }}{% endif %}</div>
                                     <div
                                         class="blog-info blog-author gdlr-skin-info">
                                         <span class="gdlr-sep">/</span>By {{key.event_organiser.group_name}}</div>

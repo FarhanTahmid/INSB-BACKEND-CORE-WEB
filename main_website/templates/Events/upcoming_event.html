@@ -336,7 +336,7 @@
     const currentYear = new Date().getFullYear();
 
     // Upcoming Event Date
-    const upcomingEventDate = new Date(`{{ upcoming_event.event_date|date:"F j, Y" }} 00:00:00`);
+    const upcomingEventDate = new Date(`{{ upcoming_event.start_date|date:"F j, Y" }} 00:00:00`);
 
     function updateCountdown() {
         const currentTime = new Date();
