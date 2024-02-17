@@ -869,7 +869,15 @@ def event_control_homepage(request,primary):
         user_data=current_user.getUserData() #getting user data as dictionary file
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
         is_branch= False
-        has_access_to_create_event=Branch_View_Access.get_create_event_access(request=request)
+
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        has_access_to_create_event=SC_Ag_Render_Access.access_for_create_event(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is create access while update access is restricted from admin then show banner and override the create access
+        if not has_access_for_sc_ag_updates and has_access_to_create_event:
+            show_restriction_banner = True
+            has_access_to_create_event = False
         
         #loading all events for society affinity groups now
         events= Branch.load_all_inter_branch_collaborations_with_events(primary)
@@ -887,7 +895,6 @@ def event_control_homepage(request,primary):
                 return redirect('chapters_and_affinity_group:event_control_homepage',primary)
 
 
-
         context={
             'user_data':user_data,
             'all_sc_ag':sc_ag,
@@ -896,11 +903,11 @@ def event_control_homepage(request,primary):
             'has_access_to_create_event':has_access_to_create_event,
             'events':events,
             'all_event_years':all_event_years,
-            'has_access_to_create_event':SC_Ag_Render_Access.access_for_create_event(request=request,sc_ag_primary=primary),
             # TODO:
             # if dont have event edit access, make people redirect to event in main web
             'has_access_to_edit_event':SC_Ag_Render_Access.access_for_event_details_edit(request=request,sc_ag_primary=primary),
-            'common_access':SC_Ag_Render_Access.get_sc_ag_common_access(request,primary)
+            'common_access':SC_Ag_Render_Access.get_sc_ag_common_access(request,primary),
+            'show_restriction_banner':show_restriction_banner
             
         }
         return render(request,"Events/event_homepage.html",context)
@@ -921,6 +928,12 @@ def mega_event_creation(request, primary):
 
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        
+        #If there is create access while update access is restricted from admin then override the create access
+        if not has_access_for_sc_ag_updates and has_access:
+            has_access = False
+
         if has_access:
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch= False
@@ -969,7 +982,15 @@ def mega_events(request,primary):
 
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        has_access_to_create_event = SC_Ag_Render_Access.access_for_create_event(request,primary)
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        has_access_to_create_event=SC_Ag_Render_Access.access_for_create_event(request=request,sc_ag_primary=primary)
+        
+        show_restriction_banner = False
+        #If there is create access while update access is restricted from admin then show banner and override the create access
+        if not has_access_for_sc_ag_updates and has_access_to_create_event:
+            show_restriction_banner = True
+            has_access_to_create_event = False
+
         mega_events = SuperEvents.objects.filter(mega_event_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).order_by('-pk')
 
         context = {
@@ -978,7 +999,8 @@ def mega_events(request,primary):
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'sc_ag_info':get_sc_ag_info,
-            'has_access_to_create_event':has_access_to_create_event
+            'has_access_to_create_event':has_access_to_create_event,
+            'show_restriction_banner':show_restriction_banner
         }
 
         return render(request,"Events/Super Event/super_event_table.html",context)
@@ -1119,6 +1141,12 @@ def event_creation_form_page(request,primary):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        
+        #If there is create access while update access is restricted from admin then override the create access
+        if not has_access_for_sc_ag_updates and has_access:
+            has_access = False
+
         if has_access:
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch=False
@@ -1185,7 +1213,7 @@ def event_creation_form_page(request,primary):
 
             return render(request,'Events/event_creation_form.html',context)
         else:
-            return redirect('chapters_and_affinity_group:event_control_homepage', primary)
+            return render(request,'access_denied.html', {'user_data':user_data, 'all_sc_ag':sc_ag})
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -1202,6 +1230,11 @@ def event_creation_form_page2(request,primary,event_id):
         print(request.META.get("HTTP_REFERER"))
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        
+        #If there is create access while update access is restricted from admin then override the create access
+        if not has_access_for_sc_ag_updates and has_access:
+            has_access = False
         # if (request.META.get('HTTP_REFERER') == 
         if has_access:
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
@@ -1249,6 +1282,12 @@ def event_creation_form_page3(request,primary,event_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         sc_ag=PortData.get_all_sc_ag(request=request)
         has_access = SC_Ag_Render_Access.access_for_create_event(request, primary)
+        has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+        
+        #If there is create access while update access is restricted from admin then override the create access
+        if not has_access_for_sc_ag_updates and has_access:
+            has_access = False
+
         if has_access:
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch=False
@@ -1302,6 +1341,11 @@ def event_edit_form(request, primary, event_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if has_access:
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+            show_restriction_banner = False
+            if not has_access_for_sc_ag_updates and has_access:
+                show_restriction_banner = True
+
             sc_ag=PortData.get_all_sc_ag(request=request)
             get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
             is_branch = False
@@ -1415,7 +1459,9 @@ def event_edit_form(request, primary, event_id):
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
-                'is_featured_event':is_featured_event
+                'is_featured_event':is_featured_event,
+                'show_restriction_banner':show_restriction_banner,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates
             }
 
             return render(request, 'Events/event_edit_form.html', context)
@@ -1441,8 +1487,12 @@ def event_edit_media_form_tab(request, primary, event_id):
         #Get event details from databse
         event_details = Events.objects.get(pk=event_id)
         if(has_access):
-            #Getting media links and images from database. If does not exist then they are set to none
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+            show_restriction_banner = False
+            if not has_access_for_sc_ag_updates and has_access:
+                show_restriction_banner = True
 
+            #Getting media links and images from database. If does not exist then they are set to none
             try:
                 media_links = Media_Link.objects.get(event_id = event_details)
             except:
@@ -1490,6 +1540,8 @@ def event_edit_media_form_tab(request, primary, event_id):
                 'allowed_image_upload':6-number_of_uploaded_images,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
+                'show_restriction_banner':show_restriction_banner,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates
             }
             return render(request,"Events/event_edit_media_form_tab.html",context)
         else:
@@ -1518,6 +1570,11 @@ def event_edit_graphics_form_tab(request, primary, event_id):
         event_details = Events.objects.get(pk=event_id)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+            show_restriction_banner = False
+            if not has_access_for_sc_ag_updates and has_access:
+                show_restriction_banner = True
+
             #Getting media links and images from database. If does not exist then they are set to none
             try:
                 graphics_link = Graphics_Link.objects.get(event_id = event_details)
@@ -1566,7 +1623,8 @@ def event_edit_graphics_form_tab(request, primary, event_id):
                 'graphics_banner_image':graphic_banner_image,
                 'media_url':settings.MEDIA_URL,
                 'allowed_image_upload':1-image_number,
-
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates,
+                'show_restriction_banner':show_restriction_banner
             }
             return render(request,"Events/event_edit_graphics_form_tab.html",context)
         else:
@@ -1659,6 +1717,11 @@ def event_edit_content_form_tab(request,primary,event_id):
         # event_details = Events.objects.get(pk=event_id)
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
         if(has_access):
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+            show_restriction_banner = False
+            if not has_access_for_sc_ag_updates and has_access:
+                show_restriction_banner = True
+
             all_notes_content = ContentWritingTeam.load_note_content(event_id)
             form = Content_Form()
             if(request.method == "POST"):               
@@ -1748,7 +1811,8 @@ def event_edit_content_form_tab(request,primary,event_id):
                 'event_details' : event_details,
                 'description_form' : form2,
                 'drive_link_of_documents' : documents_link,
-
+                'show_restriction_banner':show_restriction_banner,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates
             }
             return render(request,"Events/event_edit_content_and_publications_form_tab_sc_ag.html",context)
         else:

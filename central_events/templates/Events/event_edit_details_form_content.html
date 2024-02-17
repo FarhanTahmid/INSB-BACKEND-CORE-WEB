@@ -269,10 +269,13 @@
                 <br>
                 <div style="text-align: center;">
                     
-                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     {% if is_branch %}
+                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        {% endif %}
                     <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% endif %}
                 </div>

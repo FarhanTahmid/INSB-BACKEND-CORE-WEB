@@ -65,6 +65,7 @@
                     />
                 </div>
 
+                {% if has_access_for_sc_ag_updates %}
                 <br>
 
                 <div class="form-group">
@@ -85,6 +86,7 @@
                 <div class="form-group text-center">
                     <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
                 </div>
+                {% endif %}
 
                 <hr>
 
@@ -97,9 +99,11 @@
                         <div class="col-sm-11 text-left">
                             <a href="{{media_url}}{{document.document}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{document.document}}</a>
                         </div>
+                        {% if has_access_for_sc_ag_updates %}
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
                             <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{document.pk}}')">✖</button>
                         </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>

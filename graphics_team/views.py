@@ -243,6 +243,7 @@ def event_form(request,event_id):
                     return redirect("graphics_team:event_form",event_id)
 
             context={
+                'is_branch':True,
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'graphic_links' : graphics_link,
