@@ -67,7 +67,10 @@ class Events(models.Model):
     more_info_link = models.URLField(null=True,blank=True,max_length=500)
     form_link = models.URLField(null=True,blank=True,max_length=500)
     is_featured = models.BooleanField(null=False,blank=False,default=False,verbose_name="Feature this event")
-    
+    start_date = models.DateTimeField(null=True,blank=True)
+    end_date = models.DateTimeField(null=True,blank=True)
+
+
     class Meta:
         verbose_name="Registered Event"
     
