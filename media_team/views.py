@@ -169,7 +169,7 @@ def event_page(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         '''Only events organised by INSB would be shown on the event page of Media Team
         So, only those events are being retrieved from database'''
-        insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+        insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-start_date','-event_date')
         sc_ag=PortData.get_all_sc_ag(request=request)
         print(insb_organised_events)
 
