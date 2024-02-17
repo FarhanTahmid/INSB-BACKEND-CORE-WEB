@@ -1021,6 +1021,11 @@ def mega_event_edit(request,primary,mega_event_id):
 
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
         if has_access:
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+            show_restriction_banner = False
+            if not has_access_for_sc_ag_updates:
+                show_restriction_banner = True
+
             mega_event = Branch.get_mega_event(mega_event_id,primary)
 
             if request.method == 'POST':
@@ -1063,7 +1068,9 @@ def mega_event_edit(request,primary,mega_event_id):
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'sc_ag_info':get_sc_ag_info,
-                'allowed_image_upload':1-image_number
+                'allowed_image_upload':1-image_number,
+                'show_restriction_banner':show_restriction_banner,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates
             }
 
             return render(request,"Events/Super Event/super_event_edit_form.html",context)
@@ -1085,6 +1092,11 @@ def mega_event_add_event(request,primary,mega_event_id):
 
         has_access = SC_Ag_Render_Access.access_for_event_details_edit(request,primary)
         if has_access:
+            has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
+            show_restriction_banner = False
+            if not has_access_for_sc_ag_updates:
+                show_restriction_banner = True
+
             mega_event = Branch.get_mega_event(mega_event_id,primary)
             all_insb_events_with_interbranch_collaborations = Branch.load_all_inter_branch_collaborations_with_events(primary)
             filtered_events_with_collaborations = Branch.events_not_registered_to_mega_events(all_insb_events_with_interbranch_collaborations)
@@ -1121,6 +1133,8 @@ def mega_event_add_event(request,primary,mega_event_id):
                 'mega_event':mega_event,
                 'events':filtered_events_with_collaborations,
                 'events_of_mega_event':events_of_mega_Event,
+                'show_restriction_banner':show_restriction_banner,
+                'has_access_for_sc_ag_updates':has_access_for_sc_ag_updates
             }
 
             return render(request,"Events/Super Event/super_event_add_event_form_tab.html",context)
@@ -1343,7 +1357,7 @@ def event_edit_form(request, primary, event_id):
         if has_access:
             has_access_for_sc_ag_updates = SC_Ag_Render_Access.access_for_sc_ag_updates(request=request)
             show_restriction_banner = False
-            if not has_access_for_sc_ag_updates and has_access:
+            if not has_access_for_sc_ag_updates:
                 show_restriction_banner = True
 
             sc_ag=PortData.get_all_sc_ag(request=request)
