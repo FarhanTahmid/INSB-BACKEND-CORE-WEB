@@ -2492,6 +2492,7 @@ def manage_view_access(request):
                     panel_memeber_add_remove_access=False
                     team_details_page=False
                     manage_web_access=False
+                    manage_award_access=False
 
                     # Getting values from check box
                     
@@ -2507,12 +2508,14 @@ def manage_view_access(request):
                         team_details_page=True
                     if(request.POST.get('manage_web_access')):
                         manage_web_access=True
+                    if(request.POST.get('manage_award_access')):
+                        manage_award_access=True
                     
                     # ****The passed keys must match the field name in the models. otherwise it wont update access
                     if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
                                                             'event_details_page_access':event_details_page_access,
                                                             'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
-                                                            'team_details_page':team_details_page,'manage_web_access':manage_web_access})):
+                                                            'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access})):
                         return redirect('central_branch:manage_access')
                     
                 if(request.POST.get('add_member_to_access')):
@@ -4001,185 +4004,222 @@ def volunteerAwardsPanel(request):
 @login_required
 @member_login_permission    
 def panel_specific_volunteer_awards_page(request,panel_pk):
-    
-    # get all sc ag for sidebar
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    # get user data for side bar
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-    }
-    
-    # get panel info
-    panel_info=Panels.objects.get(pk=panel_pk)
-    context["panel_info"] = panel_info
-    
-    # get all insb members
-    all_insb_members=Members.objects.all().order_by('-position__rank')
-    context["insb_members"]=all_insb_members
-    
-    # load all awards of the panel
-    all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
-    if(all_awards_of_panel.exists() is False):
-        pass
-    else:
-        # get award information of the latest as the tabs will also be sorted like from high rank to low rank
-        award=all_awards_of_panel[0]
-        if(award is None):
-            pass
-        else:
-            context['award']=award
-        context['all_awards']=all_awards_of_panel
-    
-        # get award winners for that specific award
-        award_winners=HandleVolunteerAwards.load_award_winners(request,award.pk)
-        if(award_winners is False):
-            pass
-        else:
-            context['award_winners']=award_winners
-    
-     
-    if request.method=="POST":
-        # create award
-        if(request.POST.get('create_award')):
-            award_name=request.POST['award_name']
-            if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
-
+    try:
+        # get access value
+        has_access=Branch_View_Access.get_manage_award_access(request=request)
         
-        # update award
-        if(request.POST.get('update_award')):
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        if (has_access):
+                       
+            context={
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+            }
             
-            change_award_pk=request.POST.get('select_award')
-            award_name=request.POST['award_name']
+            # get panel info
+            panel_info=Panels.objects.get(pk=panel_pk)
+            context["panel_info"] = panel_info
             
-            if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+            # get all insb members
+            all_insb_members=Members.objects.all().order_by('-position__rank')
+            context["insb_members"]=all_insb_members
+            
+            # load all awards of the panel
+            all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
+            if(all_awards_of_panel.exists() is False):
+                pass
             else:
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                # get award information of the latest as the tabs will also be sorted like from high rank to low rank
+                award=all_awards_of_panel[0]
+                if(award is None):
+                    pass
+                else:
+                    context['award']=award
+                context['all_awards']=all_awards_of_panel
+            
+                # get award winners for that specific award
+                award_winners=HandleVolunteerAwards.load_award_winners(request,award.pk)
+                if(award_winners is False):
+                    pass
+                else:
+                    context['award_winners']=award_winners
+            
+            
+            if request.method=="POST":
+                # create award
+                if(request.POST.get('create_award')):
+                    award_name=request.POST['award_name']
+                    if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
-        # delete award
-        if(request.POST.get('delete_award')):
-            award_to_delete_pk=request.POST.get('select_award')
-            if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
-            else:
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                
+                # update award
+                if(request.POST.get('update_award')):
+                    
+                    change_award_pk=request.POST.get('select_award')
+                    award_name=request.POST['award_name']
+                    
+                    if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                    else:
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
-        # add member to award
-        if(request.POST.get('add_member_to_award')):
-            get_selected_members=request.POST.getlist("member_select")
-            contribution=request.POST['contribution_description']
-            if(HandleVolunteerAwards.add_award_winners(request=request,award_pk=award.pk,selected_members=get_selected_members,contribution=contribution)):
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
-            else:
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                # delete award
+                if(request.POST.get('delete_award')):
+                    award_to_delete_pk=request.POST.get('select_award')
+                    if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                    else:
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
-        # remove member from award
-        if(request.POST.get('remove_member')):
-            remove_member=request.POST['remove_award_member']
-            if(HandleVolunteerAwards.remove_award_winner(request=request,award_pk=award.pk,member_ieee_id=remove_member)):
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
-            else:
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                # add member to award
+                if(request.POST.get('add_member_to_award')):
+                    get_selected_members=request.POST.getlist("member_select")
+                    contribution=request.POST['contribution_description']
+                    try:
+                        if(HandleVolunteerAwards.add_award_winners(request=request,award_pk=award.pk,selected_members=get_selected_members,contribution=contribution)):
+                            return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)
+                    except UnboundLocalError:
+                        messages.warning(request,"Add an award for the Panel first and then add Members!")
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                             
+                    else:
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
+                # remove member from award
+                if(request.POST.get('remove_member')):
+                    remove_member=request.POST['remove_award_member']
+                    if(HandleVolunteerAwards.remove_award_winner(request=request,award_pk=award.pk,member_ieee_id=remove_member)):
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                    else:
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+
+                # save ranking
+                if(request.POST.get('save_ranking')):
+                    return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                
+                
+            return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
         
         
-    return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
-
 @login_required
 @member_login_permission
 def panel_and_award_specific_page(request,panel_pk,award_pk):
-    # get all sc ag for sidebar
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    # get user data for side bar
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
-    
-    context={
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-    }
-    
-    # get panel info
-    panel_info=Panels.objects.get(pk=panel_pk)
-    context["panel_info"] = panel_info
-    
-    # get all insb members
-    all_insb_members=Members.objects.all().order_by('-position__rank')
-    context["insb_members"]=all_insb_members
-    
-    # load all awards of the panel
-    all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
-    if(all_awards_of_panel is False):
-        pass
-    else:
-        context['all_awards']=all_awards_of_panel
-    
-    # get award information
-    award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
-    if(award is False):
-        pass
-    else:
-        context['award']=award
+    try:
+        # get access value
+        has_access=Branch_View_Access.get_manage_award_access(request=request)
         
-    # get award winners for that specific award
-    award_winners=HandleVolunteerAwards.load_award_winners(request,award_pk)
-    if(award_winners is False):
-        pass
-    else:
-        context['award_winners']=award_winners
-          
-    if request.method=="POST":
-        
-        # create award
-        if(request.POST.get('create_award')):
-            award_name=request.POST['award_name']
-            if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
-        
-        # update award
-        if(request.POST.get('update_award')):
+         # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        if(has_access):
+                           
+            context={
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+            }
             
-            change_award_pk=request.POST.get('select_award')
-            award_name=request.POST['award_name']
+            # get panel info
+            panel_info=Panels.objects.get(pk=panel_pk)
+            context["panel_info"] = panel_info
             
-            if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+            # get all insb members
+            all_insb_members=Members.objects.all().order_by('-position__rank')
+            context["insb_members"]=all_insb_members
+            
+            # load all awards of the panel
+            all_awards_of_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=panel_pk)
+            if(all_awards_of_panel is False):
+                pass
             else:
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
-
-        # delete award
-        if(request.POST.get('delete_award')):
-            award_to_delete_pk=request.POST.get('select_award')
-            if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                context['all_awards']=all_awards_of_panel
+            
+            # get award information
+            award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
+            if(award is False):
+                pass
             else:
-                return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
-
-        # add member to award
-        if(request.POST.get('add_member_to_award')):
-            get_selected_members=request.POST.getlist("member_select")
-            contribution=request.POST['contribution_description']
-            if(HandleVolunteerAwards.add_award_winners(request=request,award_pk=award_pk,selected_members=get_selected_members,contribution=contribution)):
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
-            else:
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
-
-        # remove member from award
-        if(request.POST.get('remove_member')):
-            remove_member=request.POST['remove_award_member']
-            if(HandleVolunteerAwards.remove_award_winner(request=request,award_pk=award_pk,member_ieee_id=remove_member)):
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
-            else:
-                return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                context['award']=award
                 
+            # get award winners for that specific award
+            award_winners=HandleVolunteerAwards.load_award_winners(request,award_pk)
+            if(award_winners is False):
+                pass
+            else:
+                context['award_winners']=award_winners
+                
+            if request.method=="POST":
+                
+                # create award
+                if(request.POST.get('create_award')):
+                    award_name=request.POST['award_name']
+                    if(HandleVolunteerAwards.create_new_award(request=request,volunteer_award_name=award_name,panel_pk=panel_pk,sc_ag_primary=1)):
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                
+                # update award
+                if(request.POST.get('update_award')):
+                    
+                    change_award_pk=request.POST.get('select_award')
+                    award_name=request.POST['award_name']
+                    
+                    if(HandleVolunteerAwards.update_awards(request=request,award_pk=change_award_pk,award_name=award_name)):
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                    else:
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
 
-    return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
+                # delete award
+                if(request.POST.get('delete_award')):
+                    award_to_delete_pk=request.POST.get('select_award')
+                    if(HandleVolunteerAwards.delete_award(request=request,award_pk=award_to_delete_pk)):
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
+                    else:
+                        return redirect('central_branch:panel_specific_volunteer_awards_page', panel_pk)                
 
+                # add member to award
+                if(request.POST.get('add_member_to_award')):
+                    get_selected_members=request.POST.getlist("member_select")
+                    contribution=request.POST['contribution_description']
+                    if(HandleVolunteerAwards.add_award_winners(request=request,award_pk=award_pk,selected_members=get_selected_members,contribution=contribution)):
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                    else:
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+
+                # remove member from award
+                if(request.POST.get('remove_member')):
+                    remove_member=request.POST['remove_award_member']
+                    if(HandleVolunteerAwards.remove_award_winner(request=request,award_pk=award_pk,member_ieee_id=remove_member)):
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                    else:
+                        return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+                # save ranking
+                if(request.POST.get('save_ranking')):
+                    return redirect('central_branch:panel_award_specific_volunteer_awards_page', panel_pk,award_pk)
+
+
+            return render(request,"Volunteer_Awards/volunteer_awards_control_base.html",context=context)
+        
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+        
 class UpdateAwardAjax(View):
     def get(self,request, *args, **kwargs):
         award_pk=request.GET.get('award_pk',None)
@@ -4216,12 +4256,11 @@ class AwardRanking(View):
         direction = request.GET.get('direction')
         panel_pk=request.GET.get('panel_pk')
         
-        if(award_id==direction):
+        if(award_id==direction=='0'):
             # fetching awards
             return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
         else:
             
-        
             # get all the awards and the list in sorted order
             all_award_list=[]
             all_awards=HandleVolunteerAwards.load_awards_for_panels(request,panel_pk)
@@ -4229,37 +4268,118 @@ class AwardRanking(View):
             for i in all_awards:
                 all_award_list.append(i)
             
+            # if the direction is up
             if(direction == 'up'):
+                # first get the award to change
                 get_the_award_to_change=VolunteerAwards.objects.get(pk=award_id)
+                
+                # then get a previous award that is ranked the same with the award to change
                 get_the_previous_ranked_award=VolunteerAwards.objects.filter(
-                    rank_of_awards__gt=get_the_award_to_change.rank_of_awards
-                ).last()
-                if(get_the_previous_ranked_award is not None):
-                    
-                    # get the award of the previous ranked award
-                    get_the_previous_of_previous_ranked_award=VolunteerAwards.objects.filter(
-                        rank_of_awards__gt=get_the_previous_ranked_award.rank_of_awards
+                    rank_of_awards=get_the_award_to_change.rank_of_awards
+                ).exclude(pk=get_the_award_to_change.pk).last()
+                
+                if(get_the_previous_ranked_award is None):
+                    # if that kind of event doesnot exist then replace with the last object that has greater rank than the one to edit
+                    get_the_previous_ranked_award=VolunteerAwards.objects.filter(
+                        rank_of_awards__gt=get_the_award_to_change.rank_of_awards
                     ).last()
-                    if(get_the_previous_of_previous_ranked_award is not None):
-                        # this piece of logic is for the awards that has two awards or + higher ranked than it.
+                    
+                if(get_the_previous_ranked_award is not None):
+
+                    # if such award exists then do follow the below conditions
+                    
+                    if(get_the_award_to_change.rank_of_awards==get_the_previous_ranked_award.rank_of_awards==0):
                         
-                        # generate a random number between the range of previous award and the award previous of previous award
-                        random_rank=generate_random_rank_for_awards(get_the_previous_ranked_award.rank_of_awards,get_the_previous_of_previous_ranked_award.rank_of_awards,all_awards)
+                        # if both previous and award to change has 0 values (means that they are newly added)
                         
-                        # assign the random rank to awards now
-                        get_the_award_to_change.rank_of_awards=random_rank
+                        # then change the rank of the award to change to +2. means the new rank will be 0+2=2
+                        get_the_award_to_change.rank_of_awards=(get_the_award_to_change.rank_of_awards+2)
+                        # update award
                         get_the_award_to_change.save()
-                        
                         return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+
+                    elif(get_the_award_to_change.rank_of_awards==get_the_previous_ranked_award.rank_of_awards):
                         
+                        # check if any other object has a rank of the same as (get_the_previous_ranked_award.rank_of_awards+1) value
+                        get_previous_one_award=VolunteerAwards.objects.filter(rank_of_awards=get_the_previous_ranked_award.rank_of_awards+1).last()
+                        if(get_previous_one_award is not None):
+                            # if such an object exists then increase the rank of that object by 1 so that the award to update can be updated by +1.
+                            get_previous_one_award.rank_of_awards=get_previous_one_award.rank_of_awards+1
+                            get_previous_one_award.save()
+                            
+                        # update the award rank by +1 of the previous ranked award
+                        get_the_award_to_change.rank_of_awards=(get_the_previous_ranked_award.rank_of_awards+1)
+                        get_the_award_to_change.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+
                     else:
-                        # implement the logic of having only 1 award higher in rank
+                        # otherwise just swap the previous values of previous award and award to change
                         
-                        pass
+                        temp=get_the_award_to_change.rank_of_awards
+                        get_the_award_to_change.rank_of_awards=get_the_previous_ranked_award.rank_of_awards
+                        get_the_award_to_change.save()
+                        get_the_previous_ranked_award.rank_of_awards=temp
+                        get_the_previous_ranked_award.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
                 else:
-                    pass
+                    # this is the highest ranked award so no need to change
+                    return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
             
-            print(f"Award id is {award_id} and direction is {direction}")
+            elif(direction=="down"):
+                #if the direction is down
+                
+                # first get the award to change
+                get_the_award_to_change=VolunteerAwards.objects.get(pk=award_id)
+
+                # get the award lower to its rank
+                # first check if an award with same rank exists
+                get_the_next_award=VolunteerAwards.objects.filter(
+                    rank_of_awards=get_the_award_to_change.rank_of_awards
+                    ).exclude(pk=get_the_award_to_change.pk).first()
+                if(get_the_next_award is None):
+                    # if same rank does not exist, then get the next award with lower rank
+                    get_the_next_award=VolunteerAwards.objects.filter(
+                        rank_of_awards__lt=get_the_award_to_change.rank_of_awards
+                        ).exclude(pk=get_the_award_to_change.pk).first()
+                
+                if(get_the_next_award is not None):
+                    # if next award exists
+                    if(get_the_award_to_change.rank_of_awards==get_the_next_award.rank_of_awards==0):
+                        
+                        # if both next and award to change has 0 values (means that they are newly added)
+                        
+                        # then change the rank of the award to change to -2. means the new rank will be 0-2=-2
+                        get_the_award_to_change.rank_of_awards=(get_the_award_to_change.rank_of_awards-2)
+                        # update award
+                        get_the_award_to_change.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                    
+                    elif(get_the_award_to_change.rank_of_awards==get_the_next_award.rank_of_awards):
+                        
+                        # check if any other object has a rank of the same as (get_the_next_award.rank_of_awards+1) value
+                        get_next_one_award=VolunteerAwards.objects.filter(rank_of_awards=get_the_next_award.rank_of_awards-1).first()
+                        if(get_next_one_award is not None):
+                            # if such an object exists then decrease the rank of that object by 1 so that the award to update can be updated by +-1.
+                            get_next_one_award.rank_of_awards=get_next_one_award.rank_of_awards-1
+                            get_previous_one_award.save()
+                            
+                        # update the award rank by -1 of the next ranked award
+                        get_the_award_to_change.rank_of_awards=(get_the_next_award.rank_of_awards-1)
+                        get_the_award_to_change.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                    
+                    else:
+                        # otherwise just swap the rank values of next award and award to change
+                        
+                        temp=get_the_award_to_change.rank_of_awards
+                        get_the_award_to_change.rank_of_awards=get_the_next_award.rank_of_awards
+                        get_the_award_to_change.save()
+                        get_the_next_award.rank_of_awards=temp
+                        get_the_next_award.save()
+                        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
+                    
+        #load script    
+        return JsonResponse(data=AwardRanking.get_award_values_json(request,panel_pk),safe=False)
         
     def get_award_values_json(request,panel_pk):
         get_awards=HandleVolunteerAwards.load_awards_for_panels(request,panel_pk)
@@ -4270,11 +4390,3 @@ class AwardRanking(View):
                 "volunteer_award_name": i.volunteer_award_name,
             })
         return data
-def generate_random_rank_for_awards(start,end,award_list):
-    random_rank= random.randint(start,end)
-    for i in award_list:
-        if(i.rank_of_awards==random_rank):
-            generate_random_rank_for_awards(start,end,award_list)
-        else:
-            pass
-    return random_rank

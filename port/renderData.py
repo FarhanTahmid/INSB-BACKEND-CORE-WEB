@@ -15,10 +15,16 @@ class HandleVolunteerAwards:
     def create_new_award(request,**kwargs):
         try:
             # create new award
+            get_the_latest_ranked_award=VolunteerAwards.objects.filter().first()
+            if(get_the_latest_ranked_award is not None):
+                new_rank=get_the_latest_ranked_award.rank_of_awards+5
+            else:
+                new_rank=0
             new_award=VolunteerAwards.objects.create(
                 volunteer_award_name=kwargs['volunteer_award_name'],
                 panel=Panels.objects.get(pk=kwargs['panel_pk']),
-                award_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary'])
+                award_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=kwargs['sc_ag_primary']),
+                rank_of_awards=new_rank
             )
             new_award.save()
             messages.success(request,f"New Award: {kwargs['volunteer_award_name']} was created!")
