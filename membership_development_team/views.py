@@ -1095,7 +1095,7 @@ def site_registration_request_home(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         user = request.user
-        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        has_access=(Access_Render.team_officer_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if has_access:
             # Getting all the requests for portal site
             get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
@@ -1150,7 +1150,7 @@ def site_registration_request_details(request,ieee_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
-        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        has_access=(Access_Render.team_officer_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         
         '''Get the request data'''
         get_request=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)

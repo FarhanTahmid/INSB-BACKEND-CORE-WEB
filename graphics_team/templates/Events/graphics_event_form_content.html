@@ -118,9 +118,17 @@
                     <input type="hidden" name="selected_image" id="graphics-selected-image">
                 </div>
 
+                {% if is_branch %}
                 <div class="form-group text-center">
                     <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
                 </div>
+                {% else %}
+                    {% if has_access_for_sc_ag_updates %}
+                    <div class="form-group text-center">
+                        <button type="submit" name="save" class="btn btn-outline-success p-x-md" value="Add">Save</button>
+                    </div>
+                    {% endif %}
+                {% endif %}
 
                 
                 <hr>
@@ -165,10 +173,19 @@
                     </div>
                     </div>
                 
+                    {% if is_branch %}
                     <!-- Cross button to trigger modal -->
                     <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{graphics_banner_image.selected_image}}')">
-                    &times; <!-- Use the "times" symbol (X) as a close icon -->
-                    </button>
+                        &times; <!-- Use the "times" symbol (X) as a close icon -->
+                        </button>
+                    {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <!-- Cross button to trigger modal -->
+                        <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal" onclick="openModal('{{graphics_banner_image.selected_image}}')">
+                            &times; <!-- Use the "times" symbol (X) as a close icon -->
+                            </button>
+                        {% endif %}
+                    {% endif %}
                 
                     <!-- Confirm Delete Modal -->
                     <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

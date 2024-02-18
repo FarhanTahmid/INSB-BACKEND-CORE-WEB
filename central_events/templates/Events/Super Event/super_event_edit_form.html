@@ -136,6 +136,25 @@
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
         }
+
+        /* Banner styles */
+        .banner {
+            background-color: #b4252b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    
+        .banner p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .lock-icon {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -184,6 +203,15 @@
           </ol></b>
 
           <br>
+
+          {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
         </div>
           
         <!--Back Arrow-->
@@ -201,9 +229,17 @@
             
             <span class="tooltip-text">Go back to Mega Events</span>
         </div>
+        {% if is_branch %}
         <div class="btn-container">
             <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
         </div>
+        {% else %}
+            {% if has_access_for_sc_ag_updates %}
+            <div class="btn-container">
+                <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
+            </div>
+            {% endif %}
+        {% endif %}
 
         <!-- Confirm Delete Modal -->
         <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

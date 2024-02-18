@@ -60,7 +60,7 @@ class Events(models.Model):
     event_date=models.DateField(null=True,blank=True,default = None)
     event_time=models.CharField(null=True,blank=True,max_length=100,default = None)
     registration_fee=models.BooleanField(null=False,blank=False,default=False)
-    registration_fee_amount = models.IntegerField(blank=True, null=True,default = 0)
+    registration_fee_amount = models.TextField(blank=True, null=True,default = "Non-IEEE Member: 0 BDT\n\nIEEE Member: 0 BDT")
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
     publish_in_main_web = models.BooleanField(null=False,blank=False,default=False)
     more_info_link = models.URLField(null=True,blank=True,max_length=500)
