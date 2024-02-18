@@ -21,7 +21,7 @@ from system_administration.render_access import Access_Render
 from django.core.mail import send_mail
 from . import email_sending
 from central_branch.renderData import Branch
-from users.renderData import LoggedinUser,PanelMembersData
+from users.renderData import LoggedinUser,PanelMembersData,member_login_permission
 from port.renderData import PortData
 from . models import Portal_Joining_Requests
 from system_administration.system_error_handling import ErrorHandling
@@ -31,7 +31,10 @@ from central_branch import views as cv
 
 logger=logging.getLogger(__name__)
 
+
 # Create your views here.
+@login_required
+@member_login_permission
 def md_team_homepage(request):
     '''Loads the data for homepage of MDT TEAM'''
 
@@ -61,6 +64,7 @@ def md_team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def insb_members_list(request):
 
     try:
@@ -95,7 +99,8 @@ def insb_members_list(request):
                 'members':members,
                 'totalNumber':totalNumber,
                 'has_view_permission':has_view_permission,
-                'user_data':user_data
+                'user_data':user_data,
+                'is_MDT':True,
             }
             
             return render(request,'INSB Members/members_list.html',context=context)
@@ -108,6 +113,7 @@ def insb_members_list(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def member_details(request,ieee_id):
     '''This function loads an editable member details view for particular IEEE ID'''
 
@@ -276,6 +282,7 @@ def member_details(request,ieee_id):
     
     
 @login_required
+@member_login_permission
 def membership_renewal(request):
     '''This view loads the renewal homepage'''
 
@@ -451,6 +458,7 @@ def membership_renewal_form_success(request,pk):
 
 
 @login_required
+@member_login_permission
 def getRenewalStats(request):
     
     # Returning different context for different seeked data
@@ -500,6 +508,7 @@ def getRenewalStats(request):
             return JsonResponse(context)
 
 @login_required
+@member_login_permission
 def renewal_session_data(request,pk):
     '''This view function loads all data for the renewal session including the members registered'''
 
@@ -587,6 +596,7 @@ def renewal_session_data(request,pk):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
 
     try:
@@ -631,6 +641,7 @@ def sc_ag_renewal_session_data(request,pk,sc_ag_primary):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def renewal_request_details(request,pk,request_id):
     '''This function loads the datas for particular renewal requests'''
 
@@ -805,6 +816,7 @@ def renewal_request_details(request,pk,request_id):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def generateExcelSheet_renewal_requestList(request,session_id):
     
     '''This method generates excel sheets only for renewal recruitment details for particular sessions'''
@@ -872,6 +884,7 @@ def generateExcelSheet_renewal_requestList(request,session_id):
     
     
 @login_required
+@member_login_permission
 def generateExcelSheet_membersList(request):
     '''This method generates the excel files for The Registered INSB members for MDT'''
 
@@ -936,6 +949,7 @@ def generateExcelSheet_membersList(request):
 
 
 @login_required
+@member_login_permission
 def data_access(request):
     '''This function mantains all the data access works'''
 
@@ -1070,6 +1084,7 @@ def data_access(request):
         return cv.custom_500(request)
     
 @login_required
+@member_login_permission
 def site_registration_request_home(request):
     
     '''This loads data for site joining request'''
@@ -1080,7 +1095,7 @@ def site_registration_request_home(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         user = request.user
-        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        has_access=(Access_Render.team_officer_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if has_access:
             # Getting all the requests for portal site
             get_requests=Portal_Joining_Requests.objects.all().order_by('application_status','-pk')
@@ -1105,6 +1120,7 @@ def site_registration_request_home(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def getSiteRegistrationRequestStats(request):
     '''This function returns stats of portal registration application and the stats'''
     if request.method=="GET":
@@ -1124,6 +1140,7 @@ def getSiteRegistrationRequestStats(request):
         
 
 @login_required
+@member_login_permission
 def site_registration_request_details(request,ieee_id):
 
     try:
@@ -1133,7 +1150,7 @@ def site_registration_request_details(request,ieee_id):
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
-        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        has_access=(Access_Render.team_officer_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         
         '''Get the request data'''
         get_request=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
@@ -1290,11 +1307,9 @@ def site_registration_form(request):
                         registration_request.save()
                         mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
                         for official in mdt_officials:
-                            #sending mails to MDT team officials to verify the request, primarily sent to their personal mail
-                            if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_personal)==False):
-                                print("Email couldn't be sent")
-                            else:
-                                print(f"Email sent to {official.email_personal}")                    
+                            #sending mails to MDT team officials to verify the request, primarily sent to their NSU e-mail
+                            if(email_sending.send_emails_to_officials_upon_site_registration_request(request,registration_request.name,registration_request.ieee_id,registration_request.position,registration_request.team,official.name,official.email_nsu)==False):
+                                pass                    
                         return redirect('membership_development_team:confirmation')
                     except:
                         messages.info(request,"Some Error Occured! Please contact the System Administrator")

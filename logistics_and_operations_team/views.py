@@ -8,7 +8,7 @@ from system_administration.models import LAO_Data_Access
 from port.models import Roles_and_Position
 from django.contrib import messages
 from port.renderData import PortData
-from users.renderData import PanelMembersData,LoggedinUser
+from users.renderData import PanelMembersData,LoggedinUser,member_login_permission
 import traceback
 import logging
 from datetime import datetime
@@ -18,6 +18,7 @@ from central_branch import views as cv
 logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
+@member_login_permission
 def team_homepage(request):
     
     try:
@@ -45,6 +46,7 @@ def team_homepage(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def manage_team(request):
     '''This function loads the manage team page for logistics and operations team and is accessable
     by the co-ordinatior only, unless the co-ordinators gives access to others as well'''

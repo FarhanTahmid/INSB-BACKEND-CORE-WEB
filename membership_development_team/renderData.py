@@ -9,8 +9,8 @@ from datetime import datetime,timedelta,time
 from central_branch import renderData
 from django_celery_beat.models import ClockedSchedule,PeriodicTask
 import json
-from zoneinfo import ZoneInfo
-
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 class MDT_DATA:
     
     def get_member_data(ieee_id):
@@ -397,25 +397,18 @@ class MDT_DATA:
     
     def wish_members_birthday(self):
 
-        '''This function will run everday around 11:50pm to check which members
+        '''This function will run everday at 12:00 am to check which members
         have birthday on the following day to greet them'''
-        #gettting tomorrows date
-        tomorrow = datetime.now() + timedelta(days=1)
-        #getting our time zone
-        my_timezone = ZoneInfo("Asia/Dhaka")
-        #scheduling it to be sent at 12:00 AM
-        scheduled_email_date_time = datetime.combine(datetime.today(), time(0,0)).replace(tzinfo=None).astimezone(my_timezone)
+        #gettting todays date
+        today = datetime.now()
         #getting all members
         all_members = Members.objects.all()
         #creating instance of schedule 
-        clocked,created = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)
 
         for members in all_members:  
             if members.date_of_birth:
                 #only getting registered if there are birthdays tomorrow
-                if members.date_of_birth.day == tomorrow.day and members.date_of_birth.month == tomorrow.month:
-                    #assigning unique id
-                    scheduled_email_id = f"{members.nsu_id}_{scheduled_email_date_time}"
+                if members.date_of_birth.day == today.day and members.date_of_birth.month == today.month:
                     #providing email details
                     subject="Birthday Greetings from IEEE NSU Student Branch."
                     mail_body =f"""
@@ -436,23 +429,9 @@ From every individuals of IEEE NSU SB community."""
                     email_list = []
                     email_list.append(members.email_nsu)
                     email_list.append(members.email_personal)
-                    to_email_list = json.dumps(email_list)
-
-                    PeriodicTask.objects.create(
-                        clocked = clocked,
-                        name = scheduled_email_id,
-                        task = "users.tasks.send_birthday_wish_email",
-                        args =json.dumps([to_email_list,subject,mail_body]),
-                        one_off = True,
-                        enabled = True,
-                    )
-
-               
-        
-
-
-
-                
-        
-            
-
+                    email_from = settings.EMAIL_HOST_USER
+                    email = EmailMultiAlternatives(subject,mail_body,
+                                email_from,
+                                email_list,
+                                )
+                    email.send()

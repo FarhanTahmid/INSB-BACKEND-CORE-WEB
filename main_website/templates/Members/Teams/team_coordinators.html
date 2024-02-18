@@ -1,74 +1,230 @@
 {% load static %}
 {% block team_coordinators %}
 <style>
-    .card.shadow.my-3 .image-box-coordinators{
-        width: 100%; 
-        height: 450px; 
+    .coordinator_container {
+        position: relative;
         overflow: hidden;
+        width: 400px;
     }
-    @media screen and (max-width:991px) {
-        .card.shadow.my-3 .image-box-coordinators{
-            height: 200px; 
-        }
+    .slider {
+        display: flex;
+        /* gap: 20px; */
+        width: 100%;
+        /* gap: 50px; */
+        /* margin: 0 46px; */
+        /* overflow: hidden; */
+        transition: transform 0.5s ease-in-out;
     }
-    @media screen and (max-width:767px) {
-        .card.shadow.my-3 .image-box-coordinators{
-            height: 400px; 
-        }
+    .slide {
+        /* width: 419px; */
+        height: auto;
+        margin: 0 50px;
+        /* overflow: hidden; */
+        background: linear-gradient(0deg, rgba(0,40,85,1) 23%, rgba(0,98,155,1) 63%, rgba(0,181,226,1) 100%);
+        border: 1px solid #002855;
+        border-radius: 10px 75px 10px 10px;
+        transition: all 0.4s;
     }
-    @media screen and (max-width:500px) {
-        .card.shadow.my-3 .image-box-coordinators{
-            height: 300px; 
-        }
+    .slide:hover {
+        box-shadow: 1px 1px 10px #000;
     }
-    @media screen and (max-width:370px) {
-        .card.shadow.my-3 .image-box-coordinators{
-            height: 250px; 
-        }
-        .w-75{
-            width: 100%!important;
-        }
+    .slide .img {
+        width: 300px;
+        height: 300px;
+        overflow: hidden;
+        background-color: #fff;
+        border-radius: 10px 89px 50% 70%;
+    }
+    .slide .img img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+    .slide:hover .img img {
+        transform: scale(1.1);
+    }
+    .slide .card_body {
+        padding: 20px;
+        text-align: center;
+    }
+    .slide .card_body .card-title {
+        font-size: 21px;
+        color: #fff;
+        font-weight: 600;
+    }
+    .slide .card_body .card-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: #ffc72c;
+        margin: 2px 0 12px 0;
+    }
+    .slide .card_body .social-links i {
+        font-size: 21px;
+        margin: 0 3px;
+        cursor: pointer;
+        color: #75787b;
+        transition: all 0.4s;
+    }
+    .slide .card_body .social-links i:hover {
+        color: #fff;
+    }
+    .prev, .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        cursor: pointer;
+        color: #fff;
+        background: #002855;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        transition: background 0.3s;
+    }
+    .prev:hover, .next:hover {
+        background: #004080;
+    }
+    .prev {
+        left: 10px;
+    }
+    .next {
+        right: 10px;
+    }
+    .coordinator .text{
+        margin-top: 3rem!important;
+        margin-bottom: 2rem!important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .coordinator .text .title{
+        font-size: 35px;
+        font-weight: 600;
+        text-align: center;
+        color: #000;
+        text-transform: uppercase;
+    }
+    .coordinator .text .bar{
+        height: 5px;
+        width: 200px;
+        background-color: #FFC72C;
+        border-radius: 5px;
     }
 </style>
-<div>
-    <div class="p-2 h5 border fw-bold text-center mb-4 rounded">
-        <span class="">Co-Ordinator</span>
+<div class="coordinator">
+    <div class="text">
+        <h3 class="title">Co-Ordinator</h3>
+        <div class="bar"></div>
     </div>
-    <div id="subebCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner ">
+    <div class="coordinator_container" id="coordinator-container">
+        <button class="prev" onclick="prevSlide()" style="z-index: 100;">❮</button>
+        <div class="slider"  id="slider">
             {% for i in co_ordinators %}
-            <div class="carousel-item active" data-bs-interval="3000">
-                <div class="card shadow my-3">
-                        
-                    <div class="image-box-coordinators">
-                        <img src="/media_files/{{i.member.user_profile_picture}}" style="height: 100%; width: 100%; object-fit: cover;" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title">{{i.member.name}}</h5>
-                        <div class="card-text">{{i.member.position.role}}, {{i.member.team.team_name}}</div>
-                        <div class="my-4">
-                            <a class="h4 me-2" href="{{i.member.linkedin_url}}"><i class="fa-brands fa-linkedin-in"></i></a>
-                            <a class="h4 me-2" href="{{i.member.facebook_url}}"><i class="fa-brands fa-facebook"></i></a>
-                            <a class="h4 me-2" href="mailto:{{i.member.email_ieee}}"><i class="fa-solid fa-envelope"></i></a>
-                        </div>
-                        
+            <div class="slide">
+                <div class="img">
+                    <a href="{% url 'main_website:member_profile' i.member.ieee_id %}"><img src="/media_files/{{i.member.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></a>
+                </div>
+                <div class="card_body">
+                    <h4 class="card-title">{{i.member.name}}</h5>
+                    <div class="card-text">{{i.member.position.role}}, {{i.member.team.team_name}}</div>
+                    <div class="social-links">
+                        {% if i.member.linkedin_url %}
+                        <a href="{{i.member.linkedin_url}}"><i class="fa-brands fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if i.member.facebook_url %}
+                        <a href="{{i.member.facebook_url}}"><i class="fa-brands fa-facebook"></i></a>
+                        {% endif %}
+                        {% if i.member.email_ieee %}
+                        <a href="mailto:{{i.member.email_ieee}}"><i class="fa-solid fa-envelope"></i></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
             {% endfor %}
-            <!-- Rest class="carousel-item" div -->
-
         </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#subebCarousel" data-bs-slide="prev">
-            <span style="border-radius: 50%;" class="carousel-control-prev-icon bg-dark p-3" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#subebCarousel" data-bs-slide="next">
-            <span style="border-radius: 50%;"  class="carousel-control-next-icon bg-dark p-3" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
+        <button class="next" onclick="nextSlide()">❯</button>
     </div>
 </div>
+
+
+<script>
+    let currentSlide = 0;
+    let autoSlideInterval;
+    let startX;
+
+    function showSlide(index) {
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+
+        // Check the number of slides
+        if (slides.length <= 1) {
+            // Hide buttons if there's only one slide
+            document.querySelector('.prev').style.display = 'none';
+            document.querySelector('.next').style.display = 'none';
+            return;
+        } else {
+            // Show buttons if there's more than one slide
+            document.querySelector('.prev').style.display = 'block';
+            document.querySelector('.next').style.display = 'block';
+        }
+
+        if (index >= slides.length) {
+            currentSlide = 0;
+        } else if (index < 0) {
+            currentSlide = slides.length - 1;
+        } else {
+            currentSlide = index;
+        }
+        const translateValue = -currentSlide * 401; // Adjust this value based on the width of your slides
+        slider.style.transform = `translateX(${translateValue}px)`;
+    }
+
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(() => {
+            nextSlide();
+        }, 10000); // Adjust the interval (in milliseconds) as needed
+    }
+
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        startAutoSlide();
+
+        const sliderContainer = document.getElementById('coordinator-container');
+
+        // Touch events for touchscreen devices
+        sliderContainer.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            stopAutoSlide();
+        });
+
+        sliderContainer.addEventListener('touchend', () => {
+            startAutoSlide();
+        });
+
+        sliderContainer.addEventListener('touchmove', (e) => {
+            const deltaX = e.touches[0].clientX - startX;
+            const sensitivity = 0.5; // Adjust the sensitivity as needed
+            const deltaSlide = deltaX * sensitivity;
+            if (Math.abs(deltaSlide) > 50) {
+                showSlide(currentSlide - Math.sign(deltaSlide));
+                startX = e.touches[0].clientX;
+            }
+        });
+
+        // Initially hide buttons if there's only one slide
+        showSlide(currentSlide);
+    });
+</script>
+
 {% endblock team_coordinators %}

@@ -62,13 +62,13 @@
         .gdlr-item,
         .post-2255,
         .gdlr-standard-style {
-            height: 400px;
+            height: 500px;
         }
 
         .article-image {
             width: 100%;
             /* Make the image fill the container */
-            height: 150px;
+            height: 220px;
             /* Fix the image height to 250px */
             object-fit: cover;
             /* Maintain aspect ratio and cover the container */
@@ -387,15 +387,15 @@
                 <!--Mega Events-->
                 <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
                     {% for events in all_mega_events %}
-                    <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega">
+                    <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega mega_event">
                         <article id="post-2255"
                             class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
-                            <div class="gdlr-standard-style" style="height:500px;">
+                            <div class="gdlr-standard-style" style="height: 500px;">
                                 <div class="gdlr-blog-thumbnail">
                                     <a href="{% if events.id %}{% url 'main_website:mega_event_description_page' events.id %}{% endif %}"> <img
                                             class="article-image"
                                             src="{{media_url}}{{events.banner_image}}"
-                                            alt="event_banner" width="100%" /></a>
+                                            alt="{{events.super_event_name}} Banner" width="100%" /></a>
                                 </div>
 
                                 <div class="gdlr-blog-grid-content" style="overflow: hidden;">
@@ -408,7 +408,11 @@
                                             <div class="clear"></div>
                                         </div>
 
-                                        <h3 class="gdlr-blog-title event_name"><a href="{% if  events.id %}{% url 'main_website:mega_event_description_page'  events.id  %}{% endif %}">{{events.super_event_name}}</a></h3>
+                                        <h3 class="gdlr-blog-title event_name" style="display: -webkit-box;
+                                        overflow: hidden;
+                                        -webkit-box-orient: vertical;
+                                        text-overflow: ellipsis;
+                                        -webkit-line-clamp: 2;"><a href="{% if  events.id %}{% url 'main_website:mega_event_description_page'  events.id  %}{% endif %}" id="gdlr-blog-title">{{events.super_event_name}}</a></h3>
                                         <div class="clear"></div>
                                     </header>
                                     <!-- entry-header -->
@@ -451,16 +455,16 @@
                 <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
                     {% for events,banner_image in featured_events.items %}
                     <div style="border-radius: 7px;"
-                        class="col-lg-3 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+                        class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box_mega">
                         <article id="post-2255"
                             class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style"
                             style="border: 1px solid black;">
-                            <div class="gdlr-standard-style">
+                            <div class="gdlr-standard-style" style="height: 500px;">
                                 <div class="gdlr-blog-thumbnail">
                                     <a href="{% url 'main_website:event_details' events.id %}">
                                         <img class="article-image"
                                             src="{{media_url}}{{banner_image}}"
-                                            alt="Event Banner" width="100%" />
+                                            alt="{{events.event_name}} Banner" width="100%" />
                                     </a>
                                 </div>
 
@@ -468,15 +472,19 @@
                                     <header class="post-header">
                                         <div class="gdlr-blog-info">
                                             <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>{{events.event_date|date:"M"}}.{{events.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}, {{events.event_date.year}}
+                                                <span class="gdlr-sep">/</span>{{events.start_date|date:"M"}}.{{events.start_date.day}}{% if event.start_date.day == 1 %}st{% elif event.start_date.day == 2 %}nd {% elif event.start_date.day == 3 %}rd{% else %}th{% endif %}, {{events.start_date.year}}
                                             </div>
                                             <div class="blog-info blog-author gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.short_form}}
+                                                <span class="gdlr-sep">/</span>By {{events.event_organiser.group_name}}
                                             </div>
                                             <div class="clear"></div>
                                         </div>
 
-                                        <h3 class="gdlr-blog-title event_name">
+                                        <h3 class="gdlr-blog-title event_name" style="display: -webkit-box;
+                                        overflow: hidden;
+                                        -webkit-box-orient: vertical;
+                                        text-overflow: ellipsis;
+                                        -webkit-line-clamp: 2;">
                                             <a href="{% url 'main_website:event_details' events.id %}"  id="gdlr-blog-title">{{events.event_name}}</a>
                                         </h3>
                                         <div class="clear"></div>
@@ -578,21 +586,27 @@
                                 <p><b>{{faculty_advisor.member.name}}</b></p>
                                 <p><small>Faculty Advisor, {{society.short_form_2}}</small></p>
                                 <div class="executive-body-profile-icons-container">
+                                    {% if faculty_advisor.member.email_nsu %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{faculty_advisor.member.email_nsu}}" target="_blank">
                                         <i class="fa fa-envelope" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.member.facebook_url %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="{{faculty_advisor.member.facebook_url}}" target="_blank">
                                         <i class="fa fa-facebook" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.member.linkedin_url %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="{{faculty_advisor.member.linkedin_url}}" target="_blank">
                                         <i class="fa fa-linkedin" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -608,21 +622,27 @@
                                 <p><b>{{faculty_advisor.ex_member.name}}</b></p>
                                 <p><small>Faculty Advisor, {{society.short_form_2}}</small></p>
                                 <div class="executive-body-profile-icons-container">
+                                    {% if faculty_advisor.ex_member.email %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{faculty_advisor.ex_member.email}}" target="_blank">
                                         <i class="fa fa-envelope" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.ex_member.facebook_link %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="{{faculty_advisor.ex_member.facebook_link}}" target="_blank">
                                         <i class="fa fa-facebook" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
+                                    {% if faculty_advisor.ex_member.linkedin_link %}
                                     <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
                                         href="{{faculty_advisor.ex_member.linkedin_link}}" target="_blank">
                                         <i class="fa fa-linkedin" aria-hidden="true"
                                             style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                     </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -644,21 +664,27 @@
                                     <p><b>{{members.member.name}}</b></p>
                                     <p><small>{{members.position.role}}, {{society.short_form_2}}</small></p>
                                     <div class="executive-body-profile-icons-container">
+                                        {% if members.member.email_ieee %}
                                         <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
                                             href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{members.member.email_ieee}}" target="_blank">
                                             <i class="fa fa-envelope" aria-hidden="true"
                                                 style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                         </a>
+                                        {% endif %}
+                                        {% if members.member.facebook_url %}
                                         <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
                                             href="{{members.member.facebook_url}}" target="_blank">
                                             <i class="fa fa-facebook" aria-hidden="true"
                                                 style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                         </a>
+                                        {% endif %}
+                                        {% if members.member.linkedin_url %}
                                         <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
                                             href="{{members.member.linkedin_url}}" target="_blank">
                                             <i class="fa fa-linkedin" aria-hidden="true"
                                                 style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                         </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -674,21 +700,27 @@
                                     <p><b>{{members.ex_member.name}}</b></p>
                                     <p><small>{{members.position.role}}, {{society.short_form_2}}</small></p>
                                     <div class="executive-body-profile-icons-container">
+                                        {% if members.ex_member.email %}
                                         <a class="elementor-icon elementor-social-icon elementor-social-icon-envelope elementor-animation-grow elementor-repeater-item-a3eee86"
                                             href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{members.ex_member.email}}" target="_blank">
                                             <i class="fa fa-envelope" aria-hidden="true"
                                                 style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                         </a>
+                                        {% endif %}
+                                        {% if members.ex_member.facebook_link %}
                                         <a class="elementor-icon elementor-social-icon elementor-social-icon-facebook elementor-animation-grow elementor-repeater-item-a3eee86"
                                             href="{{members.ex_member.facebook_link}}" target="_blank">
                                             <i class="fa fa-facebook" aria-hidden="true"
                                                 style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                         </a>
+                                        {% endif %}
+                                        {% if members.ex_member.linkedin_link %}
                                         <a class="elementor-icon elementor-social-icon elementor-social-icon-linkedin elementor-animation-grow elementor-repeater-item-a3eee86"
                                             href="{{members.ex_member.linkedin_link}}" target="_blank">
                                             <i class="fa fa-linkedin" aria-hidden="true"
                                                 style="vertical-align: middle;  font-size: 20px; font-family: 'FontAwesome';"></i>
                                         </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -816,7 +848,7 @@
             // Show/hide cards based on the current page
             function updateCardsVisibility() {
                 const cards = document.querySelectorAll('.mega_event');
-                const cardsPerPage = 4;
+                const cardsPerPage = 6;
     
                 for (let i = 0; i < cards.length; i++) {
                     if (i < currentPage * cardsPerPage) {

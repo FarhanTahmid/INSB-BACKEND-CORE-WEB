@@ -3,7 +3,10 @@
 <!--YOU MUST IMPORT THE event.css IN THE HTML FILE YOU ARE USING THIS BLOCK. JS IS INTEGRATED IN THIS BLOCK -->
 
 {% block event_container %}
-
+<link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp|Material+Icons+Two+Tone"
+      rel="stylesheet"
+    />
 <style>
     .load-more-button {
       background-color: #002855;
@@ -43,6 +46,8 @@
         border-radius: 10px;
         padding: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        display: grid;
+        grid-template-columns: 6fr 1fr;
       }
       @media screen and (max-width: 1200px) {
         .search_event {
@@ -50,6 +55,155 @@
             max-width: 960px;
         }
     }
+    .category{
+      max-width: 300px;
+      z-index: 10;
+      font-size: 15px;
+      margin-top: -10px;
+      margin-left: -1px;
+      padding: 6px;
+      text-transform: capitalize;
+      background: #002855;
+      font-style: italic;
+      color: #ffffff;
+      font-weight: 400;
+      position: absolute;
+      border-radius: 0 0 10px 0;
+      box-shadow: 2px 3px 6px 1px rgb(0 0 0 / 52%);
+    }
+    .dropdown {
+        width: 100%;
+        min-width: 145px;
+        height: fit-content;
+        box-sizing: border-box;
+        position: relative;
+      }
+      .dropdown .input-box {
+        width: 100%;
+        height: 67px;
+        box-sizing: border-box;
+        outline: 0.3mm solid rgba(0, 0, 0, 0.15);
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-family: poppins;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative;
+      }
+      .dropdown .input-box::before {
+        content: "expand_more";
+        font-family: "Material Icons";
+        position: absolute;
+        font-size: 18px;
+        top: 50%;
+        right: 15px;
+        transform: translate(0, -50%);
+        width: fit-content;
+        height: fit-content;
+      }
+      .dropdown .input-box.open::before {
+        content: "expand_less";
+      }
+      .dropdown .input-box:empty::after {
+        content: "Date Latest";
+        color: rgba(0, 0, 0, 0.5);
+      }
+      .dropdown .list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        height: fit-content;
+        background: white;
+        margin-top: 10px;
+        border-radius: 2mm;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        max-height: 0;
+        transition: 0.25s ease-out;
+        z-index: 100;
+      }
+      .dropdown .list input {
+        display: none;
+      }
+      .dropdown .list label {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: flex-start;
+        font-family: poppins;
+        font-size: 14px;
+        padding: 10px 15px;
+        box-sizing: border-box;
+        cursor: pointer;
+        position: relative;
+      }
+      .dropdown .list label .material-icons-outlined,
+      .dropdown .input-box .material-icons-outlined {
+        margin-right: 5px;
+        font-size: 22px;
+      }
+      .dropdown .list label:hover {
+        background: rgba(0, 0, 0, 0.08);
+      }
+      .dropdown input:checked + label {
+        color: #00B5E2;
+        background: rgb(238, 245, 252);
+      }
+      .dropdown input:checked + label::before {
+        content: "done";
+        font-family: "Material Icons";
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translate(0, -50%);
+        font-size: 18px;
+      }
+      .dropdown .open {
+        outline: 0.7mm solid rgb(20, 117, 213);
+      }
+      .dropdown .title {
+        font-family: poppins;
+        font-size: small;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      .dropdown .search-box {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 8px;
+      }
+      .dropdown #search {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px;
+        border-radius: 1mm;
+        border: none;
+        outline: 0.3mm solid rgba(0, 0, 0, 0.15);
+        font-family: poppins;
+      }
+      .dropdown #search:focus {
+        outline: 0.5mm solid rgba(0, 0, 0, 0.35);
+      }
+      /* .category-option {
+          display: none;
+      } */
+      #default1 , #default2 , #default3{
+        display: block;
+      }
+      #back , #back_end{
+        display: none;
+      }
+      #post-2255{
+        max-width: 100%;
+      }
 </style>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -61,27 +215,72 @@
     <input
     type="text"
     id="eventFilter"
-    onkeyup="eventFilterFunction()"
+    onkeyup="eventFilter()"
     placeholder="Search by event name.."
     title="Type in a name"
     />
+  	
+    <div class="dropdown">
+      <div class="input-box"></div>
+      <div class="list main" style="overflow: scroll; overflow-x: hidden;">
+        <input type="radio" name="drop1" id="id11" class="radio" checked/>
+        <label for="id11" id="default1">
+            <span class="name">Date Latest</span>
+        </label>
+
+        <input type="radio" name="drop1" id="id12" class="radio" />
+        <label for="id12" id="default2">
+          <span class="name">Date Oldest</span>
+        </label>
+
+        
+        <input type="radio" name="drop1" id="id13" class="radio" />
+        <label for="id13" id="default3">
+          <span class="name">Category</span>
+        </label>
+
+        <input type="radio" name="drop1" id="id14" class="radio category-option hidden" />
+        <label for="id14" id="back">
+          <span class="name">Back</span>
+        </label>
+
+          <div id="back_end">
+            <!-- backend to display event categories in dropdown -->
+            {% for category in all_categories %}
+            <input type="radio" name="drop1" id="{{category.event_category}}" class="radio category-option hidden" data-category="{{category.event_category}}"/>
+            <label for="{{category.event_category}}">
+              <span class="name">{{category.event_category}}</span>
+            </label>
+            {% endfor %}
+
+          </div>
+      </div>
+  </div>
+    
 </div>
+
 
 <!--EVENT CARD CONTAINER-->
 
 <section class="event">
-    <div class="event-container container" style="padding:0px; "> 
+    <div class="event-container container card_container" style="padding:0px; display: flex ;flex-wrap: wrap;"> 
         <!-- hello  -->
         <!-- <div class="event_search">
             <label>Search: </label>
             <input type="text" onkeyup="searchfunction()" id="search" placeholder="Search with event title">
         </div> -->
-        <div class="row m-0 box-container" style="transition: .3s ease-in-out; ">
+        <div class="row m-0 box-container" style="transition: .3s ease-in-out; width: inherit;">
             {% for key, value in all_events.items %}
-            <div style="border-radius: 7px;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box">
+            <div style="border-radius: 7px; display: flex;" class="col-lg-4 col-md-6 col-sm-12 mt-4 mx-0 gdlr-item gdlr-blog-grid gdlr-skin-box event_box event_card">
                 <article id="post-2255"
                     class="post-2255 post type-post status-publish format-standard has-post-thumbnail hentry category-post-slider tag-blog tag-life-style" style="border: 1px solid black;">
                     <div class="gdlr-standard-style" style="height:500px;">
+                        <div class="category">
+                        {% for category in key.event_type.all %}
+                        {{category.event_category}}{% if not forloop.last%},{% endif %}
+                        {% endfor %}
+
+                    </div>
                         <div class="gdlr-blog-thumbnail">
                             <a href="{% if key.id %}{% url 'main_website:event_details' key.id %}{% endif %}"> <img
                                     class="article-image"
@@ -94,7 +293,7 @@
                                 <div class="gdlr-blog-info">
                                     <div
                                         class="blog-info blog-date gdlr-skin-info">
-                                        <span class="gdlr-sep">/</span>{{key.event_date}}</div>
+                                        <span class="gdlr-sep">/</span>{% if key.event_date and key.start_date == None %}{{ key.event_date }}{% else %}{{ key.start_date|date:"M. d, Y"  }}{% endif %}</div>
                                     <div
                                         class="blog-info blog-author gdlr-skin-info">
                                         <span class="gdlr-sep">/</span>By {{key.event_organiser.group_name}}</div>
@@ -124,9 +323,9 @@
             </div>
             {% endfor %}
         </div>
-    <div class="text-center mt-4 mb-5">
-          <button class="load-more-button load-more">LOAD MORE</button>
-    </div>
+    {% comment %} <div class="text-center mt-4 mb-5" style="margin: auto;">
+          <button class="load-more-button load-more load-event">LOAD MORE</button>
+    </div> {% endcomment %}
         
     </div>
 </section>
@@ -141,7 +340,7 @@
   </script>
 
 <!-- event load more button -->
-<script>
+{% comment %} <script>
     $(document).ready(function () {
         var visibleCount = 3; // Initial number of elements to show
         var totalElements = $(".event_box").length; // Total number of elements
@@ -171,36 +370,201 @@
         });
     });
     
+</script> {% endcomment %}
+
+<script>
+  function eventFilter() {
+  var input, filter, box, eventName, i, txtValue , cards;
+  input = document.getElementById("eventFilter");
+  filter = input.value.toUpperCase();
+  box = document.getElementsByClassName("event_box");
+
+
+  var checkedRadioButton = document.querySelector('input[name="drop1"]:checked');
+
+  // Check if any radio button is checked
+  if (checkedRadioButton) {
+    // Access the ID of the checked radio button
+    var checkedRadioButtonId = checkedRadioButton.id;
+  }
+
+  for (i = 0; i < box.length; i++) {
+      eventName = box[i].getElementsByClassName("event_name")[0];
+      cards = box[i].querySelector(".category").innerHTML.trim();
+
+      if (cards.includes(checkedRadioButtonId)) {
+        console.log(checkedRadioButtonId);
+        console.log(cards);
+          txtValue = eventName.textContent || eventName.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {            
+              box[i].style.display = "block";
+          } else {
+              box[i].style.display = "none";
+          }
+      }
+      else if (checkedRadioButtonId == 'id11' || checkedRadioButtonId == 'id12' || checkedRadioButtonId == 'id13' || checkedRadioButtonId == 'id14') {
+          txtValue = eventName.textContent || eventName.innerText;
+
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+              box[i].style.display = "block";
+          } else {
+              box[i].style.display = "none";
+          }
+      }
+      // if (checkedRadioButtonId == 'id11'){
+      //     console.log('Name: ', txtValue)
+
+      //     if(filter){
+      //       document.querySelector(".load-event").style.display = 'none';
+      //     }
+      //     else {
+      //       document.querySelector(".load-event").style.display = 'inline-block';
+      //     }
+      // }
+  }
+}
 </script>
 
 <script>
-
-    //EVENT SEARCH FUNCTION WITH NAME ONLY
-    function searchfunction() {
-        let input, filter, table, tr, td, j;
-        input = document.getElementById("search");
-        filter = input.value.toUpperCase();
-        table = document.querySelector(".box-container");
-        tr = table.querySelector(".box");
-
-        for (j = 0; j < tr.length; j++) {
-            td = tr[j].getElementsByTagName("div");
-            message = document.getElementById("no_data");
-
-            if (td.length > 0) {
-                if (td[2].innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[j].style.display = "";
-                    message.innerHTML = "";
-                }
-                else {
-                    tr[j].style.display = "none";
-                }
-
-            }
-            if (td.length == 0) {
-                message.innerHTML = "Event not found!";
-            }
-        }
+  document.addEventListener("DOMContentLoaded", function() {
+  var input = document.querySelector(".dropdown .input-box");
+  input.onclick = function () {
+    this.classList.toggle("open");
+    let list = this.nextElementSibling;
+    if (list.style.maxHeight) {
+      list.style.maxHeight = null;
+      list.style.boxShadow = null;
+    } else {
+      list.style.maxHeight = "200px";
+      list.style.boxShadow =
+        "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
     }
+  };
+
+  var rad = document.querySelectorAll(".dropdown .radio");
+  rad.forEach((item) => {
+    item.addEventListener("change", () => {
+      input.innerHTML = item.nextElementSibling.innerHTML;
+      input.click();
+
+      // Perform sorting based on selected option
+      var filter = item.nextElementSibling.innerText.toLowerCase().trim();
+      sortBlogs(filter);
+    });
+  });
+
+  function sortBlogs(filter) {
+      var cardContainer = document.querySelector(".card_container");
+      var cards = Array.from(cardContainer.getElementsByClassName("event_card"));
+      var cardBox = Array.from(cardContainer.getElementsByClassName("event_box"));
+      cards.forEach(function(show){
+        show.style.display = 'block';
+      });
+      console.log(filter);
+      switch (filter.toLowerCase()) {
+        case 'date latest':
+              cards.sort(function(a, b) {
+                  return new Date(b.querySelector(".blog-date").innerText) - new Date(a.querySelector(".blog-date").innerText);
+              });
+              break;
+          case 'date oldest':
+              cards.sort(function(a, b) {
+                  return new Date(a.querySelector(".blog-date").innerText) - new Date(b.querySelector(".blog-date").innerText);
+              });
+              break;
+          default:
+              cards.forEach(function(filtered) {
+                if (filter == 'back' || filter == 'category') {
+                  filtered.style.display = 'block';
+                } else {
+                  var categories = filtered.querySelector(".category").innerText.toLowerCase().split(',').map(function(item) {
+                    return item.trim();
+                  });
+                  if (categories.includes(filter.toLowerCase())) {
+                    filtered.style.display = 'block';
+                  } else {
+                    filtered.style.display = 'none';
+                  }
+                }
+              });
+              break;
+
+      }
+
+      // Reorder cards in the container
+      cardContainer.innerHTML = ""; // Clear the container
+      cards.forEach(function(card) {
+          cardContainer.appendChild(card);
+      });
+  }
+});
+
+</script>
+<script>
+  var input = document.querySelector(".dropdown .input-box");
+  input.onclick = function () {
+    this.classList.toggle("open");
+    let list = this.nextElementSibling;
+    if (list.style.maxHeight) {
+      list.style.maxHeight = null;
+      list.style.boxShadow = null;
+    } else {
+      list.style.maxHeight = list.scrollHeight + "px";
+      list.style.boxShadow =
+        "0 1px 2px 0 rgba(0, 0, 0, 0.15),0 1px 3px 1px rgba(0, 0, 0, 0.1)";
+    }
+  };
+
+  var rad = document.querySelectorAll(".dropdown .radio");
+  rad.forEach((item) => {
+    item.addEventListener("change", () => {
+      input.innerHTML = item.nextElementSibling.innerHTML;
+      input.click();
+    });
+  });
+
+  var label = document.querySelectorAll(".dropdown label");
+  function search(searchin) {
+    let searchVal = searchin.value;
+    searchVal = searchVal.toUpperCase();
+    label.forEach((item) => {
+      let checkVal = item.querySelector(".dropdown .name").innerHTML;
+      checkVal = checkVal.toUpperCase();
+      if (checkVal.indexOf(searchVal) == -1) {
+        item.style.display = "none";
+      } else {
+        item.style.display = "flex";
+      }
+      let list = input.nextElementSibling;
+      list.style.maxHeight = list.scrollHeight + "px";
+    });
+  }
+</script>
+<script>
+  let category = document.getElementById("default3");
+  let dateLatest = document.getElementById("default1");
+  let dateOldest = document.getElementById("default2");
+  let back = document.getElementById("back");
+  let backEnd = document.getElementById("back_end");
+
+  category.onclick = function (){
+    dateLatest.style.display = 'none';
+    dateOldest.style.display = 'none';
+    category.style.display = 'none';
+    back.style.display = 'block';
+    backEnd.style.display = 'contents';
+  }
+
+  back.onclick = function (){
+    back.style.display = 'none';
+    backEnd.style.display = 'none';
+    dateLatest.style.display = 'block';
+    dateOldest.style.display = 'block';
+    category.style.display = 'block';
+  }
+</script>
+<script>
+   
 </script>
 {% endblock event_container %}

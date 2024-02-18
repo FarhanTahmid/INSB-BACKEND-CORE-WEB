@@ -1,7 +1,18 @@
 {% load static %}
 
 {% block team_pic %}
-<div class="col-md-6 my-2">
+<style>
+    .col-md-12.my-2 {
+        margin-top: 8rem!important;
+        width: 98%;
+    }
+    @media screen and (max-width: 800px) {
+        .col-md-12.my-2 {
+            margin-top: 1rem!important;
+        }
+    }
+</style>
+<div class="col-md-12 my-2">
     <div class="border rounded">
         <img class="img-fluid" src="/media_files/{{team.team_picture}}" alt="">
     </div>

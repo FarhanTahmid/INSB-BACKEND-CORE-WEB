@@ -1,0 +1,45 @@
+{% load static %}
+{% block edit_content_form_tab %}
+<style>
+    .tab a.active{
+        color:green;
+        background-color:yellow;
+    }
+    .tabs li:hover{
+        transition: all 0.3s ease-in-out;
+    }
+
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current page's URL
+        const currentPageUrl = window.location.href;
+      
+        // Find the links in the navigation bar
+        const tabs = document.querySelectorAll(".tabs li");
+      
+        // Loop through the tabs and add a "active" class to the matching tab
+        tabs.forEach(function (tab) {
+          const link = tab.querySelector("a");
+          if (link.href === currentPageUrl) {
+            link.classList.add("active");
+          }
+          
+          // Add click event listener to the entire tab
+          tab.addEventListener("click", function() {
+            window.location.href = link.href;
+          });
+        });
+    });
+</script>
+
+<div class="tabs-container">
+    <ul class="tabs" style="display: flex; justify-content: center;">
+        <li class="tab"><a href="{% url 'content_writing_and_publications_team:content_edit' content_id %}">Content</a></li>
+        <li class="tab"><a href="{% url 'content_writing_and_publications_team:edit_content_form_add_notes' content_id %}">Add Captions</a></li>
+    </ul>
+    <br>
+</div>
+
+{% endblock edit_content_form_tab %}

@@ -1,0 +1,234 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Website Homepage | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+    {% block common_css %}
+    {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <style>
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+          }
+            .tooltip-container.right {
+            float: right; /* Float the container to the right */
+            margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- aside -->
+    <div id="aside" class="app-aside modal nav-dropdown">
+
+        {% block sidebar %}
+        {% include 'users/sidebar.html' %}
+        {% endblock %}
+
+    </div>
+    <!-- aside end -->
+
+    <!-- navbar content -->
+    <div id="content" class="app-content box-shadow-z0" role="main">
+        {% block navbar %}
+        {% include 'Manage Website/manage_web_navbar.html' %}
+        {% endblock navbar %}
+
+    </div>
+    <!--navbar content-->
+    <!-- ############ PAGE START-->
+    <div ui-view class="app-body" style="justify-content:center; margin-left:5%; margin-right:5%;" id="view">
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="modal-dialog modal-lg">
+                <div class="tooltip-container">
+                    <a href="{% url 'central_branch:manage_website_home' %}" class="image-button">
+                        <img src="{% static 'back-arrow.png' %}" alt="Go back to Manage Website Homepage">
+                    </a>
+                    <span class="tooltip-text">Manage Website Homepage</span>
+                </div>
+                <h2 style="text-align:center;">Top Banner Picture With Texts & Buttons</h2>
+                <!--Messages-->
+         <div style="justify-content:center; text-align:center;">
+            {% if messages %}
+                {% for message in messages %}
+                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <!--Messages End-->
+                <br>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Top Banner Picture & Texts</h5>
+                    </div>
+
+                    <div class="modal-body text-left p-lg">
+
+                        <p>View the Image given below to understand about the fields and fill the Form according to it.
+                        </p>
+
+                        <!-- Thumbnail image (clickable) -->
+                        <!--If you wish to change photo, make changes in both of the places-->
+                        <div style="text-align:center;">
+                            <img src="{% static 'images/homepage_banner_tutorial.png'%}" alt="Thumbnail" width="250"
+                                height="150"
+                                onclick="openLightbox('{% static 'images/homepage_banner_tutorial.png' %}')">
+                        </div>
+
+                        <!--Form start-->
+
+                        <div class="container">
+                            <div class="padding">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <div class="box">
+                                            <div class="box-header">
+                                                <h1 style="text-align:center;">Provide Details</h1>
+                                            </div>
+
+                                            <form method="POST" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <div class="box-body">
+                                                    <div class="form-group row">
+                                                        <label class="col-sm-10 form-control-label">Banner Picture (1600
+                                                            x 750) <span style="color:red;">*</span></label>
+                                                        <div class="col-sm-11">
+                                                            Currently: <a href="{{media_url}}{{homepage_top_banner.banner_picture}}" target="_blank">{{homepage_top_banner.banner_picture}}</a><br>
+                                                            Change: 
+                                                            <input type="file" id="myFile" name="banner_picture" class="form-control">
+
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>First Layer Text <span
+                                                                        style="color:red">*<span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input placeholder="First Layer Text"
+                                                                        class="form-control" type="text"
+                                                                        autocomplete="off" required
+                                                                        name="first_layer_text" value="{{homepage_top_banner.first_layer_text}}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>First Layer Text (colored) <span
+                                                                        style="color:red">*<span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input placeholder="Colored Text"
+                                                                        class="form-control" type="text"
+                                                                        autocomplete="off" required
+                                                                        name="first_layer_text_colored" value="{{homepage_top_banner.first_layer_text_colored}}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>Third Layer Paragraph <span
+                                                                style="color:red">*<span></label>
+                                                        <div class="col-sm-10">
+                                                            <input placeholder="Third Layer Text" class="form-control"
+                                                                type="text" autocomplete="off" required
+                                                                name="third_layer_text" value="{{homepage_top_banner.third_layer_text}}"/>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Button Text <span
+                                                                        style="color:red">*<span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input placeholder="Place the Button Text"
+                                                                        class="form-control" type="text"
+                                                                        autocomplete="off" required
+                                                                        name="button_text" value="{{homepage_top_banner.button_text}}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Button Link <span
+                                                                        style="color:red">*<span></label>
+                                                                <div class="col-sm-10">
+                                                                    <input
+                                                                        placeholder="Read above Instructions before adding the URL"
+                                                                        class="form-control" type="text"
+                                                                        autocomplete="off" required name="button_url" value="{{homepage_top_banner.button_url}}"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="{% url 'central_branch:manage_website_home' %}" class="btn btn-danger" >Cancel</a>
+                        <input type="submit" name="add_banner" class="btn btn-success p-x-md" value="Update"></input>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div>
+        </form>
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    </div>
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+</body>
+
+</html>

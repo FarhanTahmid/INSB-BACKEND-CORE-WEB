@@ -234,7 +234,9 @@
     <!-- ############ PAGE START-->
     <br>
     <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> IEEE NSU SB Registered Members List </h2>
+    
     <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
+    
     <!--Messages-->
     <div style="justify-content:center; text-align:center;">
       {% if messages %}
@@ -248,15 +250,24 @@
     {% if has_view_permission %}
     <div style="justify-content:center;text-align:center;">  
       <div class="btn-container row">
+        {% if is_MDT %}
         <div style="margin-right:5px;">
           <a href="{% url 'membership_development_team:export_excel' %}" class="btn btn-outline b-success text-success">Generate an Excel Sheet of All Registered INSB Members</a>
         </div>
+        {% endif %}
         <div>
           <form method="POST">
             {% csrf_token %}
             <input type="submit" name="refresh_member_status" class="btn btn-outline b-info text-info" value="Refresh Membership Status of INSB Members">
           </form>          
         </div>
+        {% if is_branch %}
+        <div style="margin-left:5px;">
+          <a href="{% url 'central_branch:user_access' %}" class="btn btn-outline b-primary text-primary">Restrict Users</a>
+        </div>
+        {% endif %}
+
+        
       
       </div>
   </div>
@@ -296,7 +307,9 @@
               <th data-priority="1">Email</th>
               <th data-priority="1">Current Position</th>
               <th data-priority="1">Current Team</th>
+              {% if has_view_permission %}
               <th data-priority="1">Contact No</th>
+              {% endif %}
             </tr>
           </thead>
           <tbody>
@@ -310,7 +323,9 @@
                   <td>{{ member.email_ieee }}</td>
                   <td>{{ member.position.role }}</td>
                   <td>{{ member.team.team_name }}</td>
+                  {% if has_view_permission %}
                   <td>{{ member.contact_no }}</td>
+                  {% endif %}
                                 
               </tr>
       

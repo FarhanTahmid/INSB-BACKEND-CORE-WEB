@@ -19,7 +19,7 @@ import logging
 from django.http import Http404,HttpResponseBadRequest,JsonResponse
 from datetime import datetime
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,member_login_permission
 from system_administration.system_error_handling import ErrorHandling
 from .manage_access import MediaTeam_Render_Access
 from central_branch import views as cv
@@ -27,6 +27,7 @@ from central_branch import views as cv
 logger=logging.getLogger(__name__)
 # Create your views here.
 @login_required
+@member_login_permission
 def team_homepage(request):
 
     try:
@@ -55,6 +56,7 @@ def team_homepage(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def manage_team(request):
 
     try:
@@ -157,6 +159,7 @@ def manage_team(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_page(request):
 
     try:
@@ -166,7 +169,7 @@ def event_page(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         '''Only events organised by INSB would be shown on the event page of Media Team
         So, only those events are being retrieved from database'''
-        insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-event_date')
+        insb_organised_events = Events.objects.filter(event_organiser=5).order_by('-start_date','-event_date')
         sc_ag=PortData.get_all_sc_ag(request=request)
         print(insb_organised_events)
 
@@ -184,6 +187,7 @@ def event_page(request):
         return cv.custom_500(request)
 
 @login_required
+@member_login_permission
 def event_form(request,event_id):
     
     sc_ag=PortData.get_all_sc_ag(request=request)
@@ -232,6 +236,7 @@ def event_form(request,event_id):
                     return redirect("media_team:event_form",event_id)
         
             context={
+                'is_branch':True,
                 'user_data':user_data,
                 'media_links' : media_links,
                 'media_images':media_images,

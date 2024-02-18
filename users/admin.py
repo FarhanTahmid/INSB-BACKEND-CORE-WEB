@@ -4,7 +4,7 @@ from . models import Members,Alumni_Members,ResetPasswordTokenTable,User_IP_Addr
 # Register your models here.
 @admin.register(Members)
 class Members(admin.ModelAdmin):
-    list_display=['ieee_id','name','gender','email_ieee','team','position','facebook_url','email_nsu','is_active_member','user_profile_picture']
+    list_display=['ieee_id','name','gender','email_ieee','team','position','facebook_url','email_nsu','is_active_member','user_profile_picture','is_blocked']
     ordering = ['position__rank']
 @admin.register(Alumni_Members)
 class Alumni_Members(admin.ModelAdmin):
@@ -36,3 +36,10 @@ class User(admin.ModelAdmin):
 @admin.register(UserSignupTokenTable)
 class UserSignupTokens(admin.ModelAdmin):
     list_display=['user','token']
+
+from .models import VolunteerAwardRecievers
+@admin.register(VolunteerAwardRecievers)
+class Award_Recievers(admin.ModelAdmin):
+    list_display=[
+        'award_reciever','award'
+    ]

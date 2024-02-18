@@ -131,6 +131,19 @@
                 flex-direction: column;
             }
         }
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 8px solid #fff;
+            border-top: 8px solid #050D3A; /* Customize animation color */
+            animation: spin 1s linear infinite;
+          }
+          
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
     </style>
 </head>
 
@@ -177,7 +190,7 @@
                         
                         <div class="profile">
                             <div class="profile_content">
-                                <img src="{{ user_data.profile_picture }}" alt="profile_picture">
+                                <img src="{{ user_data.profile_picture }}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                             </div>
                         </div>
                         <label for="image-upload">Update your profile picture</label> 
@@ -234,7 +247,7 @@
                         justify-content: center;
                         ">
                             <button class="btn" type="submit" style="background-color: #050D3A;
-                            color: #fff;">Update</button>
+                            color: #fff;"  id="update-button">Update</button>
                             <a class="btn" href="{% url 'users:profile' %}" style="    background-color: #FFA300;
                             color: #000000;">Cancel</a>
                         </div>
@@ -244,6 +257,9 @@
             </div>
 
         </div>
+        <div id="loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999; text-align: center; vertical-align: middle;">
+            <div class="loading-spinner"></div>
+          </div>
         <!--PAGE END-->
 
         <!--Theme Switcher-->
@@ -259,7 +275,7 @@
           var fileInput = this;
           var errorMessage = document.getElementById('error-message');
     
-          if (fileInput.files.length > 0) {
+          /*if (fileInput.files.length > 0) {
             var fileSize = fileInput.files[0].size; // in bytes
             var maxSize = {{picture_max_size}}; // 4 MB in bytes
     
@@ -269,7 +285,33 @@
             } else {
               errorMessage.textContent = ''; // Clear any previous error message
             }
-          }
+          }*/
+        });
+        const updateButton = document.getElementById('update-button');
+        const loader = document.getElementById('loader');
+
+        updateButton.addEventListener('click', () => {
+        loader.style.display = 'block';
+
+        // Start loading logic and timer for dynamic duration
+        const startTime = Date.now();
+        const loadingPromise = your_loading_function(); // Replace with your actual loading function
+
+        loadingPromise
+            .then(() => {
+            const loadingTime = Date.now() - startTime;
+            // Adjust minimum loading time (e.g., 1000 milliseconds)
+            const displayTime = Math.max(loadingTime, 1000);
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, displayTime);
+            })
+            .catch(() => {
+            // Handle errors gracefully, hide loader after some time
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 3000); // Adjust error timeout as needed
+            });
         });
       </script>
     {% block common_js %}

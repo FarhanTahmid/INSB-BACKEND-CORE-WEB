@@ -1,19 +1,19 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from central_events.models import Events
+from central_events.models import Events,Event_Category
 from central_branch.renderData import Branch
 from chapters_and_affinity_group.models import SC_AG_Members
 from main_website.models import Research_Papers,Blog,Achievements,News
 from membership_development_team.renderData import MDT_DATA
-from port.renderData import PortData
-from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
+from port.renderData import PortData,HandleVolunteerAwards
+from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups,VolunteerAwards
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import Panel_Members, User_IP_Address,Members
 from users.models import User_IP_Address
 import logging
 from datetime import datetime
-from django.http import HttpResponseBadRequest,HttpResponseServerError
+from django.http import JsonResponse
 from system_administration.system_error_handling import ErrorHandling
 import traceback
 from .renderData import HomepageItems
@@ -26,6 +26,9 @@ from django.contrib import messages
 from central_branch.renderData import Branch
 from central_branch import views as cv
 from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
+from django.views import View
+
+
 logger=logging.getLogger(__name__)
 
 # Create your views here.
@@ -46,6 +49,11 @@ def homepage(request):
         # get volunteer of the months
         get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
 
+        # get current panel of Branch
+        current_panel_pk=PortData.get_current_panel()
+        # get awards for the current panel
+        awards_of_current_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=current_panel_pk)
+        
         context={
             'banner_item':bannerItems,
             'banner_pic_with_stat':bannerWithStat,
@@ -59,6 +67,7 @@ def homepage(request):
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'all_thoughts':all_thoughts,
             'all_vom':get_volunteers_of_the_month,
+            'awards':awards_of_current_panel,
         }
         return render(request,"LandingPage/homepage.html",context)
     except Exception as e:
@@ -66,6 +75,80 @@ def homepage(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+class LoadAwards(View):
+    def get(self,request):
+        award_pk = request.GET.get('award_pk')
+        
+        if(award_pk=="0"):
+            # get current panel of branch
+            current_panel_pk=PortData.get_current_panel()
+            # get the highest ranked award
+            highest_ranked_award_in_the_panel=VolunteerAwards.objects.filter(panel=Panels.objects.get(pk=current_panel_pk)).first()
+            if(highest_ranked_award_in_the_panel is None):
+                
+                return JsonResponse(
+                    {
+                    'message':message,
+                    }
+                    ,status=200,safe=False
+                )
+            else:
+                award_winners=HandleVolunteerAwards.load_award_winners(award_pk=highest_ranked_award_in_the_panel.pk,request=request)
+                if(award_winners==False):
+                    message="No Member was found to be a winner in this Award"
+                    return JsonResponse({
+                        'message':message,
+                    },status=200,safe=False)
+                else:
+                    data=[]
+                    for i in award_winners:
+                        data.append({
+                            "picture":str(i.award_reciever.user_profile_picture),
+                            "name":i.award_reciever.name,
+                            "team":str(i.award_reciever.team),
+                            "position":str(i.award_reciever.position),
+                            "contributions":i.contributions
+                        })
+                    json_data={
+                        'award_name':highest_ranked_award_in_the_panel.volunteer_award_name,
+                        'winners':data
+                    }
+                    return JsonResponse(
+                        data=json_data,
+                        status=200,
+                        safe=False
+                    )
+            
+        else:
+            # get award details
+            get_award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
+            # get award winners by award_pk
+            award_winners=HandleVolunteerAwards.load_award_winners(request=request,award_pk=award_pk)
+            if(len(award_winners) == 0):
+                message="No Member was found to be a winner in this Award"
+                return JsonResponse({
+                    'message':message,
+                },status=400,safe=False)
+            else:
+                data=[]
+                for i in award_winners:
+                    data.append({
+                        "picture":str(i.award_reciever.user_profile_picture),
+                        "name":i.award_reciever.name,
+                        "team":str(i.award_reciever.team),
+                        "position":str(i.award_reciever.position),
+                        "contributions":i.contributions
+                    })
+                json_data={
+                    'award_name':get_award.volunteer_award_name,
+                    'winners':data
+                }
+                return JsonResponse(
+                    data=json_data,
+                    status=200,
+                    safe=False
+                )
+            
 
 ##################### EVENT WORKS ####################
 
@@ -80,6 +163,11 @@ def event_homepage(request):
         upcoming_event = HomepageItems.get_upcoming_event(request,1)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
         all_mega_events = HomepageItems.get_all_mega_events(1)
+        all_categories = Event_Category.objects.filter(event_category_for= Chapters_Society_and_Affinity_Groups.objects.get(primary = 1))
+        print(all_categories)
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
         
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,1)
@@ -116,6 +204,8 @@ def event_homepage(request):
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
             'all_mega_events':all_mega_events,
+            'has_mega_events':has_mega_events,
+            'all_categories':all_categories
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -309,6 +399,7 @@ def rasPage(request):
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 3)
         # get mega events
         all_mega_events=HomepageItems.get_all_mega_events(primary=3)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -352,6 +443,7 @@ def rasPage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     except Exception as e:
@@ -366,6 +458,7 @@ def pesPage(request):
         #getting object of PES
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 2)
         all_mega_events=HomepageItems.get_all_mega_events(primary=2)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -405,6 +498,7 @@ def pesPage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
     
@@ -420,6 +514,7 @@ def iasPage(request):
         #getting object of IAS
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 4)
         all_mega_events=HomepageItems.get_all_mega_events(primary=4)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -457,6 +552,7 @@ def iasPage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -472,6 +568,7 @@ def wiePage(request):
         #getting object of WIE
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 5)
         all_mega_events=HomepageItems.get_all_mega_events(primary=5)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         has_mega_events=True
         if(all_mega_events==False):
             has_mega_events=False
@@ -510,6 +607,7 @@ def wiePage(request):
             'page_subtitle':society.secondary_paragraph,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
 
         }
         return render(request,'Society_AG/sc_ag.html',context=context)
@@ -523,12 +621,19 @@ def events_for_sc_ag(request,primary):
     ''' This view function loads the events for the society affinity group event homepage'''
     try:
 
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
         all_events = HomepageItems.load_all_events(request,True,primary)
+        all_mega_events=HomepageItems.get_all_mega_events(primary=primary)
+        organised_events = Events.objects.filter(event_organiser = society,publish_in_main_web = True).order_by('-event_date')
         latest_five_events = HomepageItems.load_all_events(request,False,primary)
         date_and_event = HomepageItems.get_event_for_calender(request,primary)
         upcoming_event = HomepageItems.get_upcoming_event(request,primary)
         upcoming_event_banner_picture = HomepageItems.load_event_banner_image(upcoming_event)
-        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = primary)
+        all_categories = Event_Category.objects.filter(event_category_for= Chapters_Society_and_Affinity_Groups.objects.get(primary = primary))
+
+        has_mega_events=True
+        if(all_mega_events==False):
+            has_mega_events=False
 
         # prepare event stat list for event category with numbers
         get_event_stat=userData.getTypeOfEventStats(request,primary)
@@ -557,6 +662,7 @@ def events_for_sc_ag(request,primary):
             'page_title': 'Events',
             'page_subtitle':society.short_form,
             'all_events':all_events,
+            'all_mega_events':all_mega_events,
             'media_url':settings.MEDIA_URL,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'latest_five_event':latest_five_events,
@@ -566,6 +672,9 @@ def events_for_sc_ag(request,primary):
             'data':event_stat,
             'years':get_years,
             'yearly_event_count':get_yearly_event_count,
+            'has_mega_events':has_mega_events,
+            'organised_events':organised_events,
+            'all_categories':all_categories
         }
 
 
@@ -587,9 +696,11 @@ def blogs(request):
 
     try:
         get_all_blog= Blog.objects.filter(publish_blog=True).order_by('-date')
+        get_all_categories = Blog_Category.objects.all()
         context={
             'page_title':"Blogs",
             'blogs':get_all_blog,
+            'categories':get_all_categories,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,"Publications/Blog/blog.html",context=context)
@@ -985,7 +1096,8 @@ def panel_members_page(request,year):
             'eb':branch_eb,
             'sc_ag_chair':sc_ag_chair,
             'has_current_panel':True,
-            'page_title':f"Executive Panel - {year}"
+            'page_title':f"Executive Panel - {year}",
+            'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         }
         return render(request,'Members/Panel/panel_members.html',context)
     
@@ -1121,7 +1233,7 @@ def exemplary_members(request):
         #loading all the teams of Branch
         branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
         # get all exemplary members
-        all_exemplary_members=ExemplaryMembers.objects.all().order_by('-rank')
+        all_exemplary_members=ExemplaryMembers.objects.all().order_by('rank')
             
         context={
             'page_title':"Exemplary Members",
@@ -1232,7 +1344,8 @@ def member_profile(request, ieee_id):
                 has_current_branch_position = False
 
             context = {
-                'page_title':'Member Details',
+                'page_title':'Member Profile',
+                'page_subtitle': member_data.name,
                 'branch_teams': branch_teams,
                 'member':member_data,
                 'sc_ag_position_data':sc_ag_position_data,
@@ -1481,6 +1594,7 @@ def mega_event_description_page(request,mega_event_id):
                     'media_url':settings.MEDIA_URL,
                     'all_events_of_mega_event':all_events_of_mega_events,
                     'other_mega_event':other_mega_event,
+                    'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
                 }
 
                 return render(request, 'Events/mega_event_description_page.html',context)
@@ -1508,6 +1622,7 @@ def sc_ag_current_panel_members(request,sc_ag_primary):
         'page_title':"Current Executive Committee",
         'page_subtitle':sc_ag.group_name,
         'panels':get_all_panels,
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
         
     }
     if(current_panel is not None):
@@ -1591,7 +1706,7 @@ def sc_ag_panel_members(request,sc_ag_primary,panel_pk,panel_year):
         'has_current_panel':True,
         'sc_ag':sc_ag,
         'panels':get_all_panels,
-
+        'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
     }
     
     if get_panel_members is not None:

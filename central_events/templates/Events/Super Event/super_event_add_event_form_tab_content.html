@@ -72,6 +72,7 @@
             {% csrf_token %}
             <div class="box-body">
                 
+                {% if is_branch %}
                 <div class="form-group row align-items-center">
                     <label for="events" class="col-sm-3 form-control-label">Add Events:</label>
                     <div class="col-sm-7">
@@ -83,16 +84,43 @@
                 </div>
                 
                 <hr>
+                {% else %}
+                    {% if has_access_for_sc_ag_updates %}
+                    <div class="form-group row align-items-center">
+                        <label for="events" class="col-sm-3 form-control-label">Add Events:</label>
+                        <div class="col-sm-7">
+                            <!-- Add input field for events here if needed -->
+                        </div>
+                        <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                            <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddEventModal"></button>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    {% endif %}
+                {% endif %}
                 <div id="events-container" class="mt-3">
                     <label>Events:</label> 
                     {% for event in events_of_mega_event %}
                     <div class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
+                            {% if is_branch %}
                             <a href="{% url 'central_branch:event_edit_form' event.id %}" class="btn btn-link btn-block">{{event.event_name}}</a>
+                            {% else %}
+                            <a href="{% url 'chapters_and_affinity_group:event_edit_form' primary event.id %}" class="btn btn-link btn-block">{{event.event_name}}</a>
+                            {% endif %}
                         </div>
+                        {% if is_branch %}
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
                             <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{event.pk}}')">✖</button>
                         </div>
+                        {% else %}
+                            {% if has_access_for_sc_ag_updates %}
+                            <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{event.pk}}')">✖</button>
+                            </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -177,7 +205,7 @@
                                         </td>
                                         <td>{{ key.event_date }}</td>
                                         <td>
-                                            <input type="checkbox" name="selected_events" {% if key.super_event_id.pk == mega_event.pk%} value="{{ key.pk }}" checked {% else %} value="{{ key.pk }}"{% endif %}>
+                                            <input type="checkbox" name="selected_events" value="{{ key.pk }}" >
                                         </td>
                                     </tr>
                                     {% endfor %}

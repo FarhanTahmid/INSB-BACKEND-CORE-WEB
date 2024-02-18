@@ -1,23 +1,14 @@
-from email.policy import default
-from pyexpat import model
-from tabnanny import verbose
-from tokenize import blank_re
-from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.urls import reverse
-from insb_port import settings
-from port.models import Teams,Roles_and_Position
+from port.models import *
 from recruitment.models import recruitment_session
 from membership_development_team.models import Renewal_Sessions
 from django.contrib.auth.models import User
 from django_resized import ResizedImageField
-import datetime
-from django.contrib.postgres.fields import ArrayField
 from port.models import Panels
-from PIL import Image, ExifTags
-from io import BytesIO
-from django.core.files import File
 import os
+from PIL import Image
+from insb_port import settings
 
 # from membership_development_team.models import Renewal_Sessions
 # Create your models here.
@@ -45,6 +36,60 @@ class Members(models.Model):
     session=models.ForeignKey(recruitment_session,null=True,blank=True,on_delete=models.CASCADE) #recruitment session
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
+    is_blocked = models.BooleanField(null=False,blank=False,default=False)
+
+    def save(self, *args, **kwargs):
+
+        if self.pk:
+            try:
+                # Retrieve the original instance from the database
+                original_instance = Members.objects.get(pk=self.pk)
+                # Check if the profile picture field has changed 
+                if original_instance.user_profile_picture != self.user_profile_picture:
+                    # Remove the existing profile picture from the data base
+                    if original_instance.user_profile_picture and os.path.isfile(original_instance.user_profile_picture.path):
+                        os.remove(original_instance.user_profile_picture.path)
+                    # Resize and compress the new image
+                    _, ext = os.path.splitext(self.user_profile_picture.name)
+                    profile_picture_path = os.path.join('user_profile_pictures', f"{self.pk}_profile_picture{ext}")
+                    compressed_profile_picture_path = os.path.join(settings.MEDIA_ROOT, profile_picture_path)
+                    if self.user_profile_picture:
+                        image = Image.open(self.user_profile_picture)
+                        image.thumbnail((800, 800), Image.ANTIALIAS)  
+
+                        if image.format == 'png':
+                            
+                            with Image.open(self.user_profile_picture) as img:
+                                # Convert the image to RGB mode (if it's in RGBA mode)
+                                if img.mode in ('RGBA', 'LA'):
+                                    img = img.convert('RGB')
+                                
+                                # Save the image with the specified quality
+                                img.save(compressed_profile_picture_path, format='PNG', quality=85, optimize=True)
+                        else:
+                            image.save(compressed_profile_picture_path, quality=85, optimize=True)
+                            self.user_profile_picture = profile_picture_path
+
+                elif not original_instance.user_profile_picture and self.user_profile_picture:
+                    # If there was no profile picture initially, compress the new image
+                    image = Image.open(self.user_profile_picture)
+                    image.thumbnail((800, 800), Image.ANTIALIAS)
+                    if image.format == 'png':
+                        
+                        with Image.open(self.user_profile_picture) as img:
+                            # Convert the image to RGB mode (if it's in RGBA mode)
+                            if img.mode in ('RGBA', 'LA'):
+                                img = img.convert('RGB')
+                            img.save(compressed_profile_picture_path, format='PNG', quality=85, optimize=True)
+                    else:
+                        image.save(compressed_profile_picture_path, quality=85, optimize=True)
+                        self.user_profile_picture = profile_picture_path
+            
+            except Members.DoesNotExist:
+                pass
+                
+        super().save(*args, **kwargs)
+
     class Meta:
         verbose_name='INSB Registered Members'
         ordering = ['position__rank']
@@ -56,6 +101,8 @@ class Members(models.Model):
     
     def get_image_url(self):
         return self.user_profile_picture
+    
+    
 
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
@@ -123,5 +170,16 @@ class User_IP_Address(models.Model):
         verbose_name = "Visitors on Main Website"
     def __str__(self):
         return self.ip_address
+
+class VolunteerAwardRecievers(models.Model):
+    '''Stores the recievers of the particular awards'''
+    award=models.ForeignKey(VolunteerAwards,null=False,blank=False,on_delete=models.CASCADE)
+    award_reciever=models.ForeignKey(Members ,null=False,blank=False,on_delete=models.CASCADE)
+    contributions=models.CharField(null=True,blank=True,max_length=600)
+    
+    class Meta:
+        verbose_name="Award Recievers"
+    def __str__(self) -> str:
+        return str(self.award_reciever)
 
     

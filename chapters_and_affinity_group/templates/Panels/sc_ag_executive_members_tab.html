@@ -195,6 +195,16 @@
             {% endif %}
             <h5 style="justify-content:center;text-align:center;margin-bottom:15px;">Panel Duration:<span style="color:#00629B;"> {{tenure_time}} </span></b></h5>
             <br>
+            
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
+
             {% if panel_edit_access %}
             <div style="justify-content:center;text-align:center;">  
                 <div class="btn-container">
@@ -209,9 +219,9 @@
                     </div>
                 </div>
             </div>
+            <br>
             {% endif %}
             
-            <br>
             <br>
 
             <!--Tab view for Panels-->

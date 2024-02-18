@@ -151,10 +151,16 @@
                       <div class="card-body" style="
                       height: 150px;
                       overflow: hidden;">
-                        {% if event.event_date%}
-                        <h3 class="card-title" style="color:#00B5E2">
-                          {{event.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}
-                          {{event.event_date | date:"b" | capfirst}}
+                        {% if event.event_date and event.start_date == None %}
+                        <h3 class="card-title" style="color:#00629B">
+                          {{event.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}<sup>th</sup>{% endif %}
+                          {{event.event_date | date:"b" | capfirst}}, {{event.event_date.year}}
+                        </h3>
+                        {% endif %}
+                        {% if event.start_date %}
+                        <h3 class="card-title" style="color:#00629B">
+                          {{event.start_date.day}}{% if event.start_date.day == 1 %}st{% elif event.start_date.day == 2 %}nd {% elif event.start_date.day == 3 %}rd{% else %}<sup>th</sup>{% endif %}
+                          {{event.start_date | date:"b" | capfirst}}, {{event.start_date.year}}
                         </h3>
                         {% endif %}
                       <div>
@@ -165,7 +171,7 @@
                         -webkit-box-orient: vertical;
                         text-overflow: ellipsis;
                         -webkit-line-clamp: 1;">{{event.event_description | safe}}</div><br><br>
-                        <div class="card-text"><small class="text-body-secondary" style="color:		#00B5E2">{{event.event_organiser}}</small></div>
+                        <div class="card-text"><small class="text-body-secondary" style="color:		#00629B">{{event.event_organiser}}</small></div>
                       </div>
                     </div>
                   </div>

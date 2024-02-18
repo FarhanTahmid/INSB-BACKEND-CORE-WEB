@@ -17,10 +17,15 @@ class Chapter_Society(admin.ModelAdmin):
                   'vision_description','vision_picture','what_is_this_description','why_join_it',
                   'what_activites_it_has','how_to_join','email','facebook_link']
     
-from .models import Panels  
+from .models import *  
 @admin.register(Panels)
 class Panels(admin.ModelAdmin):
     list_display=[
         'year','creation_time','current','panel_of'
     ]
 
+@admin.register(VolunteerAwards)
+class All_Awards(admin.ModelAdmin):
+    list_display=[
+        'volunteer_award_name','award_of','panel'
+    ]

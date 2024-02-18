@@ -13,7 +13,7 @@
       }
       
       .links a {
-        margin: 5px; /* Add some spacing between the links */
+        margin: 5px!important; /* Add some spacing between the links */
       }
       
       .links a:last-child {
@@ -41,7 +41,7 @@
     });
   </script>
 <div class="link-container" style="text-align:center;">
-    <div class="row">
+    <div class="row" style="justify-content: center;">
         <div class="links">
             <a href="{% url 'main_website:officer_page' %}" class="btn btn-outline-warning text-dark m-1">All Officers</a>
               {% for team in teams %}
