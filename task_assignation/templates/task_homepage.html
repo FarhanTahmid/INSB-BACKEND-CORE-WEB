@@ -1,12 +1,385 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Hello World</h2>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Content | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+    <style>
+        body{
+            background: white;
+        }
+        h4{
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom: 40px;
+        }
+        .form-wrapper{
+            font-family: 'Poppins' , sans-serif;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            max-width: 850px;
+            margin: 40px auto;
+        }
+        .flex-wrapper{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .title-deadline{
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: space-between; 
+            align-items: flex-end;
+        }
+        .deadline-container{
+            display: flex;
+            flex-wrap: wrap; 
+            align-items: center; 
+            gap: 22px; 
+            margin-bottom: 15px;
+        }
+        label{
+            font-size: 16px;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 15px;
+            color: #000000c9;
+        }
+        .title-box{
+            padding: 6px 10px;
+            border-radius: 3px;
+            border: 2px solid #d3d3d3;
+            color: black;
+            transition: .4s;
+            box-shadow: 0 0 5px 0px #80808054;
+            border: 2px solid white;
+        }
+        .title-box:focus{
+            border: 2px solid white;
+            box-shadow: 0 0 5px 0px #808080b1;
+        }
+
+        #task_descriptionCharacterCount{
+            margin-top: 15px;
+        }
+        .radio-btns{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            margin-bottom: 15px;
+
+        }
+        input[type='radio']{
+            /* accent-color: #002855; */
+        }
+        .radio-btns_content{
+            width: 130px;
+        }
+        .radio-btns .radio-btns_content label{
+            margin-left: 5px;
+            margin-bottom: 3px;
+
+        }
+        .box{
+            margin-bottom: 6px;
+            /* border: 2px solid darkgrey; */
+            padding: 2px 25px;
+            box-shadow: 0 0 5px 0px #80808054;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        @media screen and (max-width: 1024px) {
+            .form-wrapper{
+                margin: 10%;
+            }
+            .radio-btns{
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .form-wrapper{
+                margin: 5%;
+            }
+            .grid-wrapper{
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+            label{
+                font-size: medium;
+                margin-bottom: 4px;
+            }
+            h4{
+                font-size: 1.45rem;
+            }
+            .radio-btns_content{
+                width: auto;
+            }
+            .radio-btns_content label{
+                font-size: 14px;
+            }
+            .title-deadline{
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+            .deadline-container{
+                width: 100%;
+                justify-content: center;
+            }
+
+        }
+        @media screen and (max-width:340px) {
+            .radio-btns{
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+  </head>
+  <body>
+
+    <!--LAYOUT START-->
+    <div class="app" id="app">
+
+      <!-- aside -->
+      <div id="aside" class="app-aside modal nav-dropdown">
+        {% block sidebar %} 
+         {% include 'users/sidebar.html' %} 
+        {% endblock %}
+      </div>
+
+
+      <!-- navbar -->
+      <div id="content" class="app-content" role="main">
+        {% block navbar %}
+         {% include 'navbar.html' %} 
+        {% endblock navbar %}
+      </div>
+
+
+      <!--PAGE START-->
+      <div ui-view class="app-body" id="view">
+          
+          <!--contents of page-->
+          <div class="form-wrapper">
+                <h4>Create task</h4>
+
+                <div class="title-deadline">
+                    <label>Title:</label>
+                    <div class="title-box deadline-container">
+                        <label style="margin: 0;text-align: center; font-size: 14px;">Deadline:</label>
+                    <input
+                        id="deadline"
+                        type="datetime-local"
+                        name="deadline"
+                        value="2024-01-01T12:00"
+                        class="title-box"
+                        style="padding: 4px; border-radius: 0;" />
+                    </div>
+                </div>
+                <input class="title-box" type="text" placeholder="eg: Get permission paper for venue">
+                
+
+                <label style="margin-top: 40px;">Description:</label>
+                <div class="ckeditor">
+                    <div style="box-shadow: 0 0 5px 0px #80808054;">
+                        <textarea class="form-control" type="text" name="task_description_details"></textarea>
+                    </div>
+                    <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
+                </div>
+
+
+                <div style="display: flex; gap: 50px;margin-top: 25px;">
+                    <label>Category:</label>
+                    <div class="radio-btns">
+                    <div class="radio-btns_content">
+                        <input type="radio" id='btn01' name="task_category" >
+                        <label for="btn01">Light</label>
+                    </div>
+                    <div class="radio-btns_content">
+                        <input type="radio" id='btn02'name="task_category" >
+                        <label for="btn02">Medium</label>
+                    </div>
+                    <div class="radio-btns_content">
+                        <input type="radio" id='btn03'name="task_category" >
+                        <label for="btn03">High</label>
+                    </div>
+                    <div class="radio-btns_content">
+                        <input type="radio" id='btn04'name="task_category" >
+                        <label for="btn04">Extensive</label>
+                    </div>
+                    </div>
+                </div>
+
+
+                <div style="display: flex; gap: 43px;margin-top: 10px;">
+                    <label>Task Type:</label>
+                    <div class="radio-btns">
+                        <div class="radio-btns_content">
+                            <input type="radio" id='btn05' name="task_type" checked>
+                            <label for="btn05">Team</label>
+                        </div>
+                        <div class="radio-btns_content">
+                            <input type="radio" id='btn06'name="task_type" >
+                            <label for="btn06">Individual</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Search bar-->
+                <div class="tb_search" style="margin:20px 0 15px">
+                    <input
+                    type="text"
+                    id="search_input_all"
+                    onkeyup="FilterkeyWord_all_table()"
+                    placeholder="Search..."
+                    class="form-control title-box"/>
+                </div>
+
+
+                <!--Table start-->
+                <div class="table-responsive" style="border-radius: 4px;">
+                <table class="table box" id="table-id">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>Position</th>
+                        <th>Select</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+        </div>
+    </div>
+    
+    <!--Theme Switcher-->
+    {% block theme_switcher %} 
+    {% include "theme_switcher.html" %} 
+    {% endblock theme_switcher %}
+    <!-- app end-->
+    
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textareas with CKEditor instances
+          CKEDITOR.replace("task_description_details");
+
+          // Attach a function to the change event for each CKEditor instance
+          ["task_description"].forEach(function (editorId) {
+            var editor = CKEDITOR.instances[editorId + "_details"];
+
+            editor.on("change", function () {
+              // Update character count display for each CKEditor instance
+              updateCharacterCount(editorId);
+            });
+
+            // Update character count initially
+            updateCharacterCount(editorId);
+          });
+        });
+
+        function updateCharacterCount(editorId) {
+          var editorContent =
+            CKEDITOR.instances[editorId + "_details"].getData();
+
+          // Handle special space representations
+          var cleanedContent = editorContent
+            .replace(/<[^>]*>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .trim();
+
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+
+          var characterCountElement = document.getElementById(
+            editorId + "CharacterCount"
+          );
+
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: 0";
+          } else {
+            characterCountElement.innerText =
+              "Character Count: " + characterCount;
+          }
+        }
+
+        function FilterkeyWord_all_table() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search_input_all");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows and hide those that don't match the search query
+        for (i = 0; i < tr.length; i++) {
+          // Skip the header row
+          if (i === 0) continue;
+
+          // Loop through all table cells in the current row
+          var rowContainsSearchTerm = false;
+          for (var j = 0; j < tr[i].cells.length; j++) {
+            td = tr[i].cells[j];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                rowContainsSearchTerm = true;
+                break;
+              }
+            }
+          }
+
+          // Toggle the visibility of the row based on whether it contains the search term
+          if (rowContainsSearchTerm) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+      </script>    
+  </body>
 </html>
