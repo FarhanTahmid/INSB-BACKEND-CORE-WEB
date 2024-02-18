@@ -1,5 +1,6 @@
 {% load static %}
 {% block event_details_form %}
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
 <style>
     .publish-switch {
@@ -203,11 +204,9 @@
                         name="registration_fee_amount"
                         id="registrationFeeValue"
                         class="form-control"
-                        placeholder="Non-IEEE Member: 1000 BDT
-
-IEEE Member: 1000 BDT"
+                        value = "{{event_details.registration_fee_amount | safe }}"
                         {% if is_registration_fee_required %} required {% endif %}
-                    >{{event_details.registration_fee_amount}}</textarea>
+                    >{{event_details.registration_fee_amount | safe }}</textarea>
                 </div>
 
                 <div class="form-group">
@@ -314,6 +313,7 @@ IEEE Member: 1000 BDT"
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+          CKEDITOR.replace('registration_fee_amount');
           var form = document.getElementById('myForm');
           var isFormDirty = false;
         
@@ -350,7 +350,7 @@ IEEE Member: 1000 BDT"
             checkbox.change(function () {
                 if (checkbox.is(':checked')) {
                     // Show the textfield with a fixed height
-                    feeInput.css({ opacity: 1, height: '85px', visibility: 'visible' }); // Adjust the height value as needed
+                    feeInput.css({ opacity: 1, height: 'auto', visibility: 'visible' }); // Adjust the height value as needed
                 } else {
                     // Hide the textfield with a fixed height
                     feeInput.css({ opacity: 0, height: 0, visibility: 'hidden' });
