@@ -124,12 +124,11 @@ class LoadAwards(View):
             get_award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
             # get award winners by award_pk
             award_winners=HandleVolunteerAwards.load_award_winners(request=request,award_pk=award_pk)
-            
-            if(award_winners == False):
+            if(len(award_winners) == 0):
                 message="No Member was found to be a winner in this Award"
                 return JsonResponse({
                     'message':message,
-                },status=200,safe=False)
+                },status=400,safe=False)
             else:
                 data=[]
                 for i in award_winners:
@@ -150,8 +149,6 @@ class LoadAwards(View):
                     safe=False
                 )
             
-                 
-
 
 ##################### EVENT WORKS ####################
 

@@ -255,8 +255,6 @@
                 type: "GET",
                 data: {'award_pk': selectedAwardID},
                 success: function (data) {
-                    // Update other form fields based on the received data
-                    // $("#award_name").val(data.volunteer_award_name);
                     const award_name=data.award_name
                     awardNameContainer.innerHTML=award_name;
 
@@ -275,20 +273,20 @@
                             <div class="content">
                                 <div class="con">
                                     <div class="circle">
-                                        <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                        <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
                                     </div>
                                     <div class="details">
                                         <div class="list-with-icon-caption">
                                             <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
-                                            <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
-                                            <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                            <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
+                                            <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
                                         </div>
                                         <div class="list-with-icon-content">
                                             <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
                                                 Contributions
                                             </div>
                                             <div class="list-with-icon-caption">
-                                                <p style="text-align: justify;">{{i.contributions | safe}}</p>
+                                                <p style="text-align: justify;">${contributions}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -349,20 +347,20 @@
                             <div class="content">
                                 <div class="con">
                                     <div class="circle">
-                                        <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                        <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
                                     </div>
                                     <div class="details">
                                         <div class="list-with-icon-caption">
                                             <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
-                                            <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
-                                            <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                            <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
+                                            <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
                                         </div>
                                         <div class="list-with-icon-content">
                                             <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
                                                 Contributions
                                             </div>
                                             <div class="list-with-icon-caption">
-                                                <p style="text-align: justify;">{{i.contributions | safe}}</p>
+                                                <p style="text-align: justify;">${contributions}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -375,11 +373,6 @@
                         awardWinnersContainer.innerHTML = awardWinnerElements.join('');
                         totalSlides = awardWinnerElements.length;
                         showSlide(currentIndex, awardWinnersContainer);
-                        } else {
-                        // If only one object is returned, handle it as such
-                        const awardWinner = data;
-                        console.log("has one")
-                        // ... (extract and update winner details using individual data)
                         }
                 },
                 error: function (error) {
