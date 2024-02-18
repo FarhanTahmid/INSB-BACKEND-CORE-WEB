@@ -169,7 +169,6 @@
         <div class="filter">
             <select id="filter-dropdown" style="width: 200px; height: 40px; border-radius: 5px; padding: 5px;">
                 
-                <option value="0">-------</option>
                 {% for i in awards %}
                     <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
                 {% endfor %}
@@ -181,8 +180,8 @@
         <div class="section2">
             <div class="section3">
                 <div class="section4">
-                    <h1 class="gdlr-heading-shortcode">
-                        Volunteer <br class="break"> of <br class="break">the month</h1>
+                    <h1 class="gdlr-heading-shortcode" id="award_name">
+                        {% comment %} Volunteer <br class="break"> of <br class="break">the month</h1> {% endcomment %}
                     <div class="bar">
                     </div>
                 </div>
@@ -202,6 +201,7 @@
     <script>
         $(document).ready(function () {
             const awardWinnersContainer = document.getElementById('award_winner');
+            const awardNameContainer=document.getElementById('award_name')
 
         // Function to show slide
         function showSlide(index, container) {
@@ -243,75 +243,150 @@
             isDragging = false;
         }
 
-            // AJAX request on dropdown change
-            $("#filter-dropdown").change(function () {
+        function highest_ranked_award_show(){
+            var selectedAwardID = '0';
+            // Display loading indicator while fetching data
+            awardWinnersContainer.innerHTML = '<div class="loading">Loading...</div>';
 
-                var selectedAwardID = $(this).val();
-                // Display loading indicator while fetching data
-                awardWinnersContainer.innerHTML = '<div class="loading">Loading...</div>';
+            // Make an AJAX request to retrieve data for the selected role
+            
+            $.ajax({
+                url: "{% url 'main_website:load_awards' %}",
+                type: "GET",
+                data: {'award_pk': selectedAwardID},
+                success: function (data) {
+                    // Update other form fields based on the received data
+                    // $("#award_name").val(data.volunteer_award_name);
+                    const award_name=data.award_name
+                    awardNameContainer.innerHTML=award_name;
 
-                // Make an AJAX request to retrieve data for the selected role
-                
-                $.ajax({
-                    url: "{% url 'main_website:load_awards' %}",
-                    type: "GET",
-                    data: {'award_pk': selectedAwardID},
-                    success: function (data) {
-                        // Update other form fields based on the received data
-                        // $("#award_name").val(data.volunteer_award_name);
-                        if (Array.isArray(data.winners)) {
-                            // Dynamically create individual award winner elements
-                            const awardWinnerElements = data.winners.map(awardWinner => {
-                                
-                                const award_name=awardWinner.award_name;
-                                const imgSrc=awardWinner.picture;
-                                const name=awardWinner.name;
-                                const team=awardWinner.team;
-                                const position = awardWinner.position;
-                                const contributions = awardWinner.contributions;
+                    if (Array.isArray(data.winners)) {
+                        // Dynamically create individual award winner elements
+                        const awardWinnerElements = data.winners.map(awardWinner => {
+                            
+                            const award_name=awardWinner.award_name;
+                            const imgSrc=awardWinner.picture;
+                            const name=awardWinner.name;
+                            const team=awardWinner.team;
+                            const position = awardWinner.position;
+                            const contributions = awardWinner.contributions;
 
-                                return `
-                                <div class="content">
-                                    <div class="con">
-                                        <div class="circle">
-                                            <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                            return `
+                            <div class="content">
+                                <div class="con">
+                                    <div class="circle">
+                                        <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                    </div>
+                                    <div class="details">
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                            <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
+                                            <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
                                         </div>
-                                        <div class="details">
-                                            <div class="list-with-icon-caption">
-                                                <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
-                                                <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
-                                                <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                        <div class="list-with-icon-content">
+                                            <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                Contributions
                                             </div>
-                                            <div class="list-with-icon-content">
-                                                <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
-                                                    Contributions
-                                                </div>
-                                                <div class="list-with-icon-caption">
-                                                    <p style="text-align: justify;">{{i.contributions | safe}}</p>
-                                                </div>
+                                            <div class="list-with-icon-caption">
+                                                <p style="text-align: justify;">{{i.contributions | safe}}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                `;
-                            });
-                            
-                            // Update the award winner container content
-                            awardWinnersContainer.innerHTML = awardWinnerElements.join('');
-                            totalSlides = awardWinnerElements.length;
-                            showSlide(currentIndex, awardWinnersContainer);
-                          } else {
-                            // If only one object is returned, handle it as such
-                            const awardWinner = data;
-                            console.log("has one")
-                            // ... (extract and update winner details using individual data)
-                          }
-                    },
-                    error: function (error) {
-                        console.log("Error:", error);
-                    }
-                });
+                            </div>
+                            `;
+                        });
+                        
+                        // Update the award winner container content
+                        awardWinnersContainer.innerHTML = awardWinnerElements.join('');
+                        totalSlides = awardWinnerElements.length;
+                        showSlide(currentIndex, awardWinnersContainer);
+                        } else {
+                        // If only one object is returned, handle it as such
+                        const awardWinner = data;
+                        console.log("has one")
+                        // ... (extract and update winner details using individual data)
+                        }
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
             });
+        }
+        highest_ranked_award_show();
+
+        // AJAX request on dropdown change
+        $("#filter-dropdown").change(function () {
+
+            var selectedAwardID = $(this).val();
+            // Display loading indicator while fetching data
+            awardWinnersContainer.innerHTML = '<div class="loading">Loading...</div>';
+
+            // Make an AJAX request to retrieve data for the selected role
+            
+            $.ajax({
+                url: "{% url 'main_website:load_awards' %}",
+                type: "GET",
+                data: {'award_pk': selectedAwardID},
+                success: function (data) {
+                    // Update other form fields based on the received data
+                    // $("#award_name").val(data.volunteer_award_name);
+                    const award_name=data.award_name
+                    awardNameContainer.innerHTML=award_name;
+
+                    if (Array.isArray(data.winners)) {
+                        // Dynamically create individual award winner elements
+                        const awardWinnerElements = data.winners.map(awardWinner => {
+                            
+                            const award_name=awardWinner.award_name;
+                            const imgSrc=awardWinner.picture;
+                            const name=awardWinner.name;
+                            const team=awardWinner.team;
+                            const position = awardWinner.position;
+                            const contributions = awardWinner.contributions;
+
+                            return `
+                            <div class="content">
+                                <div class="con">
+                                    <div class="circle">
+                                        <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                    </div>
+                                    <div class="details">
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                            <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
+                                            <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
+                                        </div>
+                                        <div class="list-with-icon-content">
+                                            <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                Contributions
+                                            </div>
+                                            <div class="list-with-icon-caption">
+                                                <p style="text-align: justify;">{{i.contributions | safe}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
+                        });
+                        
+                        // Update the award winner container content
+                        awardWinnersContainer.innerHTML = awardWinnerElements.join('');
+                        totalSlides = awardWinnerElements.length;
+                        showSlide(currentIndex, awardWinnersContainer);
+                        } else {
+                        // If only one object is returned, handle it as such
+                        const awardWinner = data;
+                        console.log("has one")
+                        // ... (extract and update winner details using individual data)
+                        }
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
+        });
 
             // Function to show previous slide
         function prevSlide() {

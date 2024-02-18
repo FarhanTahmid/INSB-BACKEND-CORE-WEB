@@ -80,14 +80,46 @@ class LoadAwards(View):
         award_pk = request.GET.get('award_pk')
         
         if(award_pk=="0"):
-            
-            message="Show all award"
-            return JsonResponse({
-                'message':message,
-            },status=404,safe=False)
+            # get current panel of branch
+            current_panel_pk=PortData.get_current_panel()
+            # get the highest ranked award
+            highest_ranked_award_in_the_panel=VolunteerAwards.objects.filter(panel=Panels.objects.get(pk=current_panel_pk)).first()
+            if(highest_ranked_award_in_the_panel is None):
+                
+                return JsonResponse(
+                    {
+                    'message':message,
+                    }
+                    ,status=200,safe=False
+                )
+            else:
+                award_winners=HandleVolunteerAwards.load_award_winners(award_pk=highest_ranked_award_in_the_panel.pk,request=request)
+                if(award_winners==False):
+                    message="No Member was found to be a winner in this Award"
+                    return JsonResponse({
+                        'message':message,
+                    },status=200,safe=False)
+                else:
+                    data=[]
+                    for i in award_winners:
+                        data.append({
+                            "picture":str(i.award_reciever.user_profile_picture),
+                            "name":i.award_reciever.name,
+                            "team":str(i.award_reciever.team),
+                            "position":str(i.award_reciever.position),
+                            "contributions":i.contributions
+                        })
+                    json_data={
+                        'award_name':highest_ranked_award_in_the_panel.volunteer_award_name,
+                        'winners':data
+                    }
+                    return JsonResponse(
+                        data=json_data,
+                        status=200,
+                        safe=False
+                    )
             
         else:
-        
             # get award details
             get_award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
             # get award winners by award_pk
@@ -97,7 +129,7 @@ class LoadAwards(View):
                 message="No Member was found to be a winner in this Award"
                 return JsonResponse({
                     'message':message,
-                },status=404,safe=False)
+                },status=200,safe=False)
             else:
                 data=[]
                 for i in award_winners:
@@ -112,7 +144,6 @@ class LoadAwards(View):
                     'award_name':get_award.volunteer_award_name,
                     'winners':data
                 }
-                print(json_data)
                 return JsonResponse(
                     data=json_data,
                     status=200,
