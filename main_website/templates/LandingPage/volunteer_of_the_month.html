@@ -32,7 +32,7 @@
     #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode .break{
         display: none;
     }
-    #content-section-2 .section1 .section2 .section3 .section4 .bar{
+    #content-section-2 .section1 .section2 .section3 .bar{
         background-color: #002855; width: 200px; height: 5px; text-align: center; border-radius: 5px;
     }
     #content-section-2 .section1 .section2 .section3 .carousal{
@@ -145,6 +145,9 @@
             justify-content: center;
             margin-right: 0;
         }
+        #content-section-2 .section1 .section2 .section3{
+            margin-top: 20px;
+        }
     }
     @media screen and (max-width: 575px) {
         #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode .break{
@@ -168,7 +171,7 @@
     <div class="section1 dropdown">
         <div class="filter">
             <select id="filter-dropdown" style="width: 200px; height: 40px; border-radius: 5px; padding: 5px;">
-                
+                <option value="" selected disabled>Select Award</option>
                 {% for i in awards %}
                     <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
                 {% endfor %}
@@ -182,9 +185,9 @@
                 <div class="section4">
                     <h1 class="gdlr-heading-shortcode" id="award_name">
                         {% comment %} Volunteer <br class="break"> of <br class="break">the month</h1> {% endcomment %}
-                    <div class="bar">
-                    </div>
                 </div>
+                <div class="bar">
+                    </div>
                 <div class="carousal">
                     <div class="container" id="award_winner">
                         
