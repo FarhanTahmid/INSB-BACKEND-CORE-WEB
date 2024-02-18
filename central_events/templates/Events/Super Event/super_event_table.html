@@ -79,6 +79,25 @@
                   margin-right: 5%;
               }
           }
+
+          /* Banner styles */
+          .banner {
+              background-color: #b4252b;
+              color: white;
+              padding: 10px;
+              text-align: center;
+          }
+      
+          .banner p {
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+          }
+      
+          .lock-icon {
+              margin-right: 10px;
+          }
         
     </style>
 </head>
@@ -141,6 +160,15 @@
               <br>
             </div>
             <!--for error messages end-->
+
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
 
             {% if has_access_to_create_event %}
               <div class="container" style="justify-content:center;text-align:center;"> 
