@@ -50,7 +50,7 @@
             flex-wrap: wrap; 
             align-items: center; 
             gap: 22px; 
-            margin-bottom: 15px;
+            margin-bottom: 40px;
         }
         label{
             font-size: 16px;
@@ -101,6 +101,53 @@
             border-radius: 6px;
             margin-bottom: 16px;
         }
+        .task-btn{
+            display: flex;
+            justify-content: center;
+        }
+        .create-task-btn , .start-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #75D481;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #75D481;
+            transition: all ease-in-out .3s;
+        }
+        .create-task-btn:hover , .start-task-btn:hover{
+            color: #75D481;
+            background: white;
+            border-color: #75D481;
+        }
+        .view-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #10609D;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #10609D;
+            transition: all ease-in-out .3s;
+        }
+        .view-task-btn:hover{
+            background: white;
+            border-color: #10609D;
+            color: #10609D;
+        }
+        .add-members-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #72C2D6;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #72C2D6;
+            transition: all ease-in-out .3s;
+        }
+        .add-members-task-btn:hover{
+            color: #72C2D6;
+            background: white;
+            border-color: #72C2D6;
+        }
+        
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -173,6 +220,13 @@
           
           <!--contents of page-->
           <div class="form-wrapper">
+                <div class="task-btn">
+                    <a href="#" class="view-task-btn">View Task</a>
+                    <a href="#" class="add-members-task-btn">Add members and task</a>
+                    <a href="#" class="start-task-btn">Start Task</a>
+                </div>
+
+
                 <h4>Create task</h4>
 
                 <div class="title-deadline">
@@ -191,7 +245,7 @@
                 <input class="title-box" type="text" placeholder="eg: Get permission paper for venue">
                 
 
-                <label style="margin-top: 40px;">Description:</label>
+                <label style="margin-top: 40px;">Task description:</label>
                 <div class="ckeditor">
                     <div style="box-shadow: 0 0 5px 0px #80808054;">
                         <textarea class="form-control" type="text" name="task_description_details"></textarea>
@@ -249,7 +303,7 @@
                 </div>
 
 
-                <!--Table start-->
+                <!--Table for individuals-->
                 <div class="table-responsive" style="border-radius: 4px;">
                 <table class="table box" id="table-id">
                     <thead>
@@ -287,6 +341,45 @@
                 </table>
                 </div>
 
+
+                <!--Table for teams-->
+                <div class="table-responsive" style="border-radius: 4px;">
+                <table class="table box" id="table-id">
+                    <thead>
+                    <tr>
+                        <th>SL no.</th>
+                        <th>Team</th>
+                        <th>Select</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>1.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>2.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>3.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+
+                <div class="task-btn">
+                    <a href="#" class="create-task-btn">Create Task</a>
+                </div>
         </div>
     </div>
     
