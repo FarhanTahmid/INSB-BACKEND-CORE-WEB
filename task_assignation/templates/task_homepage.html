@@ -50,7 +50,7 @@
             flex-wrap: wrap; 
             align-items: center; 
             gap: 22px; 
-            margin-bottom: 40px;
+            margin-bottom: 10px;
         }
         label{
             font-size: 16px;
@@ -81,9 +81,6 @@
             grid-template-columns: 1fr 1fr 1fr 1fr;
             margin-bottom: 15px;
 
-        }
-        input[type='radio']{
-            /* accent-color: #002855; */
         }
         .radio-btns_content{
             width: 130px;
@@ -147,11 +144,16 @@
             background: white;
             border-color: #72C2D6;
         }
-        
+        .hide_table{
+            display: none;
+        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
             }
+
+        }
+        @media screen and (max-width: 750px){
             .radio-btns{
                 grid-template-columns: 1fr 1fr;
             }
@@ -254,7 +256,7 @@
                 </div>
 
 
-                <div style="display: flex; gap: 50px;margin-top: 25px;">
+                <div style="display: flex; gap: 50px;margin-top: 25px;" >
                     <label>Category:</label>
                     <div class="radio-btns">
                     <div class="radio-btns_content">
@@ -293,19 +295,19 @@
 
 
                 <!--Search bar-->
-                <div class="tb_search" style="margin:20px 0 15px">
+                <div class="tb_search search_input_individuals hide_table" style="margin:20px 0 15px">
                     <input
                     type="text"
-                    id="search_input_all"
-                    onkeyup="FilterkeyWord_all_table()"
+                    id="search_input_individuals"
+                    onkeyup="filter_individual_table()"
                     placeholder="Search..."
                     class="form-control title-box"/>
                 </div>
 
 
                 <!--Table for individuals-->
-                <div class="table-responsive" style="border-radius: 4px;">
-                <table class="table box" id="table-id">
+                <div class="table-responsive individuals-table hide_table" style="border-radius: 4px;">
+                <table class="table box" id="individuals-table">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -341,10 +343,19 @@
                 </table>
                 </div>
 
+                <!--Search bar-->
+                <div class="tb_search  search_input_team" style="margin:20px 0 15px">
+                    <input
+                    type="text"
+                    id="search_input_team"
+                    onkeyup="filter_team_table()"
+                    placeholder="Search..."
+                    class="form-control title-box"/>
+                </div>
 
                 <!--Table for teams-->
-                <div class="table-responsive" style="border-radius: 4px;">
-                <table class="table box" id="table-id">
+                <div class="table-responsive  team-table" style="border-radius: 4px;">
+                <table class="table box" id="team-table">
                     <thead>
                     <tr>
                         <th>SL no.</th>
@@ -439,12 +450,12 @@
           }
         }
 
-        function FilterkeyWord_all_table() {
+        function filter_individual_table() {
         // Declare variables
         var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("search_input_all");
+        input = document.getElementById("search_input_individuals");
         filter = input.value.toUpperCase();
-        table = document.getElementById("table-id");
+        table = document.getElementById("individuals-table");
         tr = table.getElementsByTagName("tr");
 
         // Loop through all table rows and hide those that don't match the search query
@@ -473,6 +484,69 @@
           }
         }
       }
-      </script>    
+
+      function filter_team_table() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search_input_team");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("team-table");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows and hide those that don't match the search query
+        for (i = 0; i < tr.length; i++) {
+          // Skip the header row
+          if (i === 0) continue;
+
+          // Loop through all table cells in the current row
+          var rowContainsSearchTerm = false;
+          for (var j = 0; j < tr[i].cells.length; j++) {
+            td = tr[i].cells[j];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                rowContainsSearchTerm = true;
+                break;
+              }
+            }
+          }
+
+          // Toggle the visibility of the row based on whether it contains the search term
+          if (rowContainsSearchTerm) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+      </script>   
+    <script>
+        let radioButtons = document.querySelectorAll(".radio-btns_content");
+        let searchIndividuals = document.querySelector('.search_input_individuals');
+        let searchTeam = document.querySelector('.search_input_team');
+        let individualsTable = document.querySelector('.individuals-table');
+        let teamTable = document.querySelector('.team-table');
+
+
+        radioButtons.forEach((button) => {
+        button.addEventListener("change", () => {
+            let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
+
+            if(checkedRadioButton.id == 'btn05'){
+                searchIndividuals.classList.add('hide_table');
+                individualsTable.classList.add('hide_table');
+                searchTeam.classList.remove('hide_table');
+                teamTable.classList.remove('hide_table');
+            }
+            else if(checkedRadioButton.id == 'btn06'){
+                searchIndividuals.classList.remove('hide_table');
+                individualsTable.classList.remove('hide_table');
+                searchTeam.classList.add('hide_table');
+                teamTable.classList.add('hide_table');
+            }
+        });
+        });
+
+      </script> 
   </body>
 </html>
