@@ -44,6 +44,7 @@
             flex-wrap: wrap; 
             justify-content: space-between; 
             align-items: center;
+            margin-bottom: 15px;
         }
         .deadline-container{
             display: flex;
@@ -139,6 +140,25 @@
             justify-content: center;
             text-align: center;
         }
+        .create-task-btn:visited , .start-task-btn:visited , .view-task-btn:visited , .add-members-task-btn:visited , .delete_task_btn{
+            color: white;
+        }
+        .delete_task_btn{
+            padding: 2px 26px;
+            color: #d33838;
+            background: white;
+            margin: 16px 0px 16px;
+            border-radius: 4px;
+            border: 2px solid #d33838;
+            transition: all ease-in-out .3s;
+            position: relative;
+            bottom: 21px;
+        }
+        .delete_task_btn:hover{
+            color: white;
+            background: #d33838;
+            border-color: #d33838;
+        }
         .create-task-btn , .start-task-btn{
             padding: 5px 15px;
             color: white;
@@ -207,6 +227,74 @@
         }
         .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover {
             background-color: rgb(169, 170, 170);
+        }
+        .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 17px;
+        }
+
+        .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+        }
+
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 13px;
+        width: 13px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        input:checked + .slider {
+        background-color: #75D481;
+        }
+
+        input:focus + .slider {
+        box-shadow: 0 0 1px #75D481;
+        }
+
+        input:checked + .slider:before {
+        -webkit-transform: translateX(13px);
+        -ms-transform: translateX(13px);
+        transform: translateX(13px);
+        }
+
+        .slider.round {
+        border-radius: 34px;
+        }
+
+        .slider.round:before {
+        border-radius: 50%;
+        }
+        .delete_complete_toggle{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 18px;
+        }
+        .complete_text{
+            margin-right: 8px;
+            font-weight: 600;
+            color: #000000a2;
         }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
@@ -312,14 +400,28 @@
               <!--create task heading-->
               <h4>Create task</h4>
               
-              <form method="post">
               
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
                   <a href="#" class="add-members-task-btn">Add members and task</a>
                   <a href="#" class="start-task-btn">Start Task</a>
-              </div>
+                </div>
+
+                
+            <form method="post">
+                <!--delete and complete toggle btn-->
+                <div class="delete_complete_toggle">
+                    <button type="submit" class="delete_task_btn">Delete</button>
+                    <div style="display: flex;">
+                        <p class="complete_text">Mark as complete?</p>
+                        <label class="switch">
+                            <input type="checkbox" name="toggle_switch" >
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
@@ -511,7 +613,7 @@
 
 
                 <!--create task btn-->
-                <div class="task-btn">
+                <div style="text-align: center;">
                     <button type="submit" class="create-task-btn">Create Task</button>
                 </div>
             </form>
@@ -681,5 +783,24 @@
         });
 
     </script> 
+    <script>
+        //change text if the toggle is active
+
+        let completeText = document.querySelector('.complete_text');
+        let toggle = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]');
+
+        toggle.onclick = function(){
+            let active = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]:checked');
+    
+            if(active){
+                completeText.innerHTML = 'Task complete!';
+                completeText.style.color = '#75D481';
+            }
+            else{
+                completeText.innerHTML = 'Mark as complete?';
+                completeText.style.color = '#000000a2';
+            }
+        };
+    </script>
   </body>
 </html>
