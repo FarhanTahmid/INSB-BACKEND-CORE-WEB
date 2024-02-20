@@ -70,11 +70,10 @@ INSTALLED_APPS = [
     'media_team',
     'graphics_team',
     'finance_and_corporate_team',
-    # 'ieee_nsu_sb_pes_sbc',
-    # 'ieee_nsu_sb_ras_sbc',
     'ckeditor',
     'chapters_and_affinity_group',
     'central_events',
+    'task_assignation',
     'django_celery_beat',
     'django_celery_results',
 ]
