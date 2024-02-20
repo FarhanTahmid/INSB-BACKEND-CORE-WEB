@@ -1,11 +1,13 @@
 from django.urls import path
+from .views import LoadAwards
 from . import views
 
 app_name = "main_website"
 
 urlpatterns = [
     path('',views.homepage,name="homepage"),
-    
+    # get award winners
+    path('award_winners/',LoadAwards.as_view(),name="load_awards"),
     #ACTIVITY URLS
     # Event
     path('events/',views.event_homepage,name="event_homepage"),
