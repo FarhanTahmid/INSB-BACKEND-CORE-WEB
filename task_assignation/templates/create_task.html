@@ -404,8 +404,8 @@
                         {% for member in all_members %}
                         <tr>
                             <td>{{member.name}}</td>
-                            <td>Public Relation and Promotions Team</td>
-                            <td>Co-ordinator</td>
+                            <td>{{member.team.team_name}}</td>
+                            <td>{{member.position.role}}</td>
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
                         </tr>
                         {% endfor %}
