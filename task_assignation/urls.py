@@ -7,4 +7,5 @@ urlpatterns = [
         #task assignation
         path('',views.create_task, name='create_task'),
         path('',views.task_home, name='task_home'),
+        path('',views.upload_task, name='upload_task'),
 ]
