@@ -17,10 +17,23 @@
       }
       
       .links a:last-child {
-        margin-right: 0; /* Remove the margin from the last link */
+        min-width: max-content;
       }
       .links a.active {
             color: #FFA300;
+      }
+      @media screen and (max-width: 768px){
+        .links{
+          flex-wrap: nowrap;
+          overflow-x: scroll;
+          justify-content: flex-start;
+        }
+        .links2{
+          width: 100%;
+        }
+        ::-webkit-scrollbar {
+          height: 0px;
+        }
       }
 </style>
 <!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
@@ -41,14 +54,16 @@
     });
   </script>
 <div class="link-container" style="text-align:center;">
-    <div class="row" style="justify-content: center;">
         <div class="links">
+          <div class="links2">
             <a href="{% url 'main_website:officer_page' %}" class="btn btn-outline-warning text-dark m-1">All Officers</a>
+          </div>
               {% for team in teams %}
-                  <a href="{% url 'main_website:team_officer' team.primary %}" class="btn btn-outline-warning text-dark m-1">{{team.team_name}}</a>
+              <div class="links2">
+                <a href="{% url 'main_website:team_officer' team.primary %}" class="btn btn-outline-warning text-dark m-1">{{team.team_name}}</a>
+              </div>
               {% endfor %}
           </div>
-    </div>
 
       
 </div>
