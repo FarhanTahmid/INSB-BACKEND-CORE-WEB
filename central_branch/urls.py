@@ -3,7 +3,7 @@ from django.urls import path,include
 from . import views
 from .views import UpdatePositionAjax,UpdateAwardAjax
 from .views import UpdatePositionAjax,UpdateRestrictionAjax,AwardRanking
-from task_assignation.views import task_homepage
+from task_assignation.views import create_task
 from task_assignation.views import task_home
 app_name='central_branch'
 
@@ -127,7 +127,7 @@ urlpatterns = [
     path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year"),
     path('members/user_access/',views.user_access,name="user_access"),
     path('update_restricted_members/',UpdateRestrictionAjax.as_view(),name="update_restricted_members"),
-    path('task_assignation/',task_homepage,name="task_homepage"),
+    path('create_task/',create_task,name="create_task"),
     path('task_home/',task_home,name="task_home"),
 
 ]

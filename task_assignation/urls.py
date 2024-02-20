@@ -5,6 +5,6 @@ app_name = 'task_assignation'
 
 urlpatterns = [
         #task assignation
-        path('',views.task_homepage, name='task_homepage'),
+        path('',views.create_task, name='create_task'),
         path('',views.task_home, name='task_home'),
 ]

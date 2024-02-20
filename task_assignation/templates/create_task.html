@@ -121,6 +121,7 @@
         }
         .individuals-table, .team-table{
             border-radius: 4px;
+            max-height: 186px;
         }
         .box{
             padding: 2px 25px 0px 9px;
@@ -195,12 +196,24 @@
         .table-responsive{
             overflow-x: hidden;
         }
+        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb {
+            background-color: #e7eeef;
+            transition: all .4s ease-in-out;
+            border-radius: 4px;
+        }
+        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(169, 170, 170);
+        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
             }
             .title-deadline{
-                flex-direction: column-reverse;
+                flex-direction: column;
                 align-items: flex-start;
             }
             .deadline-container{
@@ -258,6 +271,9 @@
             .table-responsive{
                 overflow-x: auto;
             }    
+            .individuals-table, .team-table{
+                max-height: 259px;
+            }
         }
         @media screen and (max-width:340px) {
             .radio-btns{
@@ -327,7 +343,7 @@
                     <label class="category_label">Task category:</label>
                     <div class="radio-btns">
                     <div class="radio-btns_content box">
-                        <input type="radio" id='btn01' name="task_category" >
+                        <input type="radio" id='btn01' name="task_category" required>
                         <label for="btn01">Light</label>
                     </div>
                     <div class="radio-btns_content box">
@@ -357,7 +373,7 @@
                     <label class="task_type_label">Select task type and individuals:</label>
                     <div class="radio-btns">
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn05' name="task_type" checked>
+                            <input type="radio" id='btn05' name="task_type" checked required>
                             <label for="btn05">Team</label>
                         </div>
                         <div class="radio-btns_content box">
@@ -390,6 +406,22 @@
                         <th>Select</th>
                     </tr>
                     </thead>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
                     <tbody>
                         <tr>
                         <td>Md Shakib Shahriar Junayed</td>
@@ -449,6 +481,20 @@
                     <tbody>
                         <tr>
                         <td>2.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>3.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>3.</td>
                         <td>Public Relation and Promotions Team</td>
                         <td><input type="checkbox"></td>
                         </tr>
