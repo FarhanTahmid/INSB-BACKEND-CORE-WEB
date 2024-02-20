@@ -84,9 +84,11 @@
         }
         .category{
             margin-top: 0px;
+            margin-bottom: 25px;
         }
         .category_label{
             margin-bottom: 8px;
+            margin-right: 25px;
         }
         .category .radio-btns{
             display: flex;
@@ -441,9 +443,9 @@
                 
 
                 <!--task category-->
-                <div class=" category">
+                <div class="category">
                     <label class="category_label">Task category:</label>
-                    <div class="radio-btns">
+                    <!-- <div class="radio-btns">
                     <div class="radio-btns_content box">
                         <input type="radio" id='btn01' name="task_category" required>
                         <label for="btn01">Light</label>
@@ -456,7 +458,12 @@
                         <input type="radio" id='btn03'name="task_category" >
                         <label for="btn03">High</label>
                     </div>
-                    </div>
+                    </div> -->
+                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                        <option value="Light" >Light</option>
+                        <option value="Medium" >Medium</option>
+                        <option value="High" >High</option>
+                    </select>
                 </div>
 
 
@@ -464,7 +471,7 @@
                 <label class="description_label">Describe your task:</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea class="form-control" type="text" name="task_description_details"></textarea>
+                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details"></textarea>
                     </div>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
