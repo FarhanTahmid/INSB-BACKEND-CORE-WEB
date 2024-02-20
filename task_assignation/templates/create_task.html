@@ -313,7 +313,7 @@
               <h4>Create task</h4>
               
               <form method="post">
-              
+              {% csrf_token %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
@@ -323,7 +323,7 @@
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" required>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title" required>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
                     <input
@@ -342,18 +342,12 @@
                 <div class=" category">
                     <label class="category_label">Task category:</label>
                     <div class="radio-btns">
+                    {% for task_category in task_categories %}
                     <div class="radio-btns_content box">
-                        <input type="radio" id='btn01' name="task_category" required>
-                        <label for="btn01">Light</label>
+                        <input type="radio" id="btn-{{task_category.pk}}" name="task_category" value="{{task_category.name}}" required>
+                        <label for="btn-{{task_category.pk}}">{{task_category.name}}</label>
                     </div>
-                    <div class="radio-btns_content box">
-                        <input type="radio" id='btn02'name="task_category" >
-                        <label for="btn02">Medium</label>
-                    </div>
-                    <div class="radio-btns_content box">
-                        <input type="radio" id='btn03'name="task_category" >
-                        <label for="btn03">High</label>
-                    </div>
+                    {% endfor %}
                     </div>
                 </div>
 
@@ -373,11 +367,11 @@
                     <label class="task_type_label">Select task type and individuals:</label>
                     <div class="radio-btns">
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn05' name="task_type" checked required>
+                            <input type="radio" id='btn05' name="task_type" value="Team" checked required>
                             <label for="btn05">Team</label>
                         </div>
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn06'name="task_type" >
+                            <input type="radio" id='btn06'name="task_type" value="Individuals">
                             <label for="btn06">Individuals</label>
                         </div>
                     </div>
@@ -407,44 +401,14 @@
                     </tr>
                     </thead>
                     <tbody>
+                        {% for member in all_members %}
                         <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
+                            <td>{{member.name}}</td>
+                            <td>Public Relation and Promotions Team</td>
+                            <td>Co-ordinator</td>
+                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
                         </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 </div>
@@ -472,39 +436,13 @@
                     </tr>
                     </thead>
                     <tbody>
+                        {% for team in teams %}
                         <tr>
-                        <td>1.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
+                            <td>{{forloop.counter}}.</td>
+                            <td>{{team.team_name}}</td>
+                            <td><input type="checkbox" name="team_select" value="{{team.primary}}"></td>
                         </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>2.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>3.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>3.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>3.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 </div>

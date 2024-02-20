@@ -16,6 +16,7 @@ from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from system_administration.system_error_handling import ErrorHandling
+from task_assignation.models import Task, Task_Category
 from users import renderData
 from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
@@ -4390,3 +4391,67 @@ class AwardRanking(View):
                 "volunteer_award_name": i.volunteer_award_name,
             })
         return data
+    
+def create_task(request):
+
+    task_categories = Task_Category.objects.all()
+    teams = Branch.load_teams()
+    all_members = Members.objects.all()
+
+    if request.method == 'POST':
+        title = request.POST.get('task_title')
+        description = request.POST.get('task_description_details')
+        task_category = request.POST.get('task_category')
+        deadline = request.POST.get('deadline')
+        task_type = request.POST.get('task_type')
+
+        team_select = None
+        member_select = None
+        if task_type == "Team":
+            team_select = request.POST.getlist('team_select')
+        elif task_type == "Individuals":
+            member_select = request.POST.getlist('member_select')
+
+        new_task = Task(title=title,
+                        description=description,
+                        task_category=Task_Category.objects.get(name=task_category),
+                        task_type=task_type,
+                        sc_ag_id=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
+                        deadline=deadline
+                        )
+        
+        new_task.save()
+
+        if team_select:
+            team_primaries = []
+            for team_primary in team_select:
+                team_primaries.append(Teams.objects.get(primary=team_primary))
+            new_task.team.add(*team_primaries)
+            new_task.save()
+
+        if member_select:
+            new_task.members.add(*member_select)
+            new_task.save()
+
+        return redirect('central_branch:task_home')
+
+
+    context = {
+        'task_categories':task_categories,
+        'teams':teams,
+        'all_members':all_members,
+    }
+
+    return render(request,"create_task.html",context)
+
+def task_home(request):
+        all_tasks = Task.objects.all()
+
+        context = {
+            'all_tasks':all_tasks,
+        }
+
+        return render(request,"task_home.html",context)
+
+def upload_task(request):
+        return render(request,"task_page.html")
