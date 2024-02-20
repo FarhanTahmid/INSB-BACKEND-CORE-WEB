@@ -48,7 +48,22 @@
       word-wrap: break-word; /* Break long words if necessary */
       font-size: 16px; /* Adjust the font size as needed */
     }
-    
+    .btn_flex {
+      display:flex;
+      justify-content: space-around;
+    }
+    .button {
+      background-color: #75D481; /* Green */
+      border: none;
+      color: white;
+      padding: 6px 13px;
+      border-radius: 4px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      text-align: center;
+    }
     /* Media query for smaller screens (adjust the breakpoint as needed) */
     @media (max-width: 768px) {
       .btn {
@@ -233,9 +248,9 @@
 
     <!-- ############ PAGE START-->
     <br>
-    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> IEEE NSU SB Registered Members List </h2>
+    <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> Tasks </h2>
     
-    <h4 style="justify-content:center;text-align:center;margin-bottom:30px;"> Total Registered Member in System: <span style="color:#00629B;"><b>{{totalNumber}}</b></span> </h4>
+    <div class="btn_flex"> <button class="button">Assign Task </button> </div>
     
     <!--Messages-->
     <div style="justify-content:center; text-align:center;">
@@ -301,12 +316,11 @@
       
           <thead>
             <tr>
-              <th data-priority="1">IEEE ID</th>
-              <th data-priority="1">NSU ID</th>
+              
               <th data-priority="1">Name</th>
-              <th data-priority="1">Email</th>
-              <th data-priority="1">Current Position</th>
-              <th data-priority="1">Current Team</th>
+              <th data-priority="1">Deadline</th>
+              <th data-priority="1">Status</th>
+              
               {% if has_view_permission %}
               <th data-priority="1">Contact No</th>
               {% endif %}
@@ -318,14 +332,15 @@
               <tr>
               
                   <td style="color:#00629B"><a href="{% if is_branch %}{% url 'central_branch:member_details' member.ieee_id %}{% else %}{% url 'membership_development_team:member_details' member.ieee_id %}{% endif %}">{{ member.ieee_id  }}</a></td>
-                  <td>{{ member.nsu_id }}</td>
-                  <td>{{ member.name  }}</td>
-                  <td>{{ member.email_ieee }}</td>
-                  <td>{{ member.position.role }}</td>
-                  <td>{{ member.team.team_name }}</td>
-                  {% if has_view_permission %}
+                  <td><a href="#">complete website</a></td>
+                  <td>30/02/2024</td>
+                  
+                  
+                  <td>completed</td>
+                  {% comment %} <td>{{ member.status}}</td> {% endcomment %}
+                  {% comment %} {% if has_view_permission %}
                   <td>{{ member.contact_no }}</td>
-                  {% endif %}
+                  {% endif %} {% endcomment %}
                                 
               </tr>
       
