@@ -6,6 +6,7 @@ from .views import UpdatePositionAjax,UpdateRestrictionAjax,AwardRanking
 from task_assignation.views import create_task
 from task_assignation.views import task_home
 from task_assignation.views import upload_task
+from task_assignation.views import add_task
 app_name='central_branch'
 
 ##defining the urls to work with
@@ -131,5 +132,6 @@ urlpatterns = [
     path('create_task/',create_task,name="create_task"),
     path('task_home/',task_home,name="task_home"),
     path('upload_task/',upload_task,name="upload_task"),
+    path('add_task/',add_task,name="add_task"),
 
 ]
