@@ -479,7 +479,7 @@
                   <a href="{% url 'central_branch:upload_task' %}" class="start-task-btn">Start Task</a>
                 </div>
 
-                
+
              <form method="post">  
                 <!-- The Modal -->
                 <div id="myModal" class="delete_modal">
@@ -549,7 +549,8 @@
                         <label for="btn03">High</label>
                     </div>
                     </div> -->
-                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                    <select name="task_category" id="btn01" class="title-box" style="width: 180px;" required>
+                        <option selected value="null">Choose a category</option>
                         <option value="Light" >Light</option>
                         <option value="Medium" >Medium</option>
                         <option value="High" >High</option>
