@@ -24,7 +24,7 @@ from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from users.models import Members,Panel_Members
 from django.conf import settings
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,member_login_permission
 import os
 import xlwt
 from users import renderData as port_render
@@ -4391,11 +4391,13 @@ class AwardRanking(View):
                 "volunteer_award_name": i.volunteer_award_name,
             })
         return data
-    
+
+@login_required
+@member_login_permission
 def create_task(request):
 
     task_categories = Task_Category.objects.all()
-    teams = Branch.load_teams()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
     all_members = Members.objects.all()
 
     if request.method == 'POST':
@@ -4445,14 +4447,16 @@ def create_task(request):
 
     return render(request,"create_task.html",context)
 
+@login_required
+@member_login_permission
 def task_home(request):
-        all_tasks = Task.objects.all()
+    all_tasks = Task.objects.all()
 
-        context = {
-            'all_tasks':all_tasks,
-        }
+    context = {
+        'all_tasks':all_tasks,
+    }
 
-        return render(request,"task_home.html",context)
+    return render(request,"task_home.html",context)
 
 def upload_task(request):
         return render(request,"task_page.html")
