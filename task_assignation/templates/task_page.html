@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Content | IEEE NSU Student Branch</title>
+    <title>Task Page</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -44,7 +44,6 @@
             flex-wrap: wrap; 
             justify-content: space-between; 
             align-items: center;
-            margin-bottom: 15px;
         }
         .deadline-container{
             display: flex;
@@ -84,11 +83,9 @@
         }
         .category{
             margin-top: 0px;
-            margin-bottom: 25px;
         }
         .category_label{
             margin-bottom: 8px;
-            margin-right: 25px;
         }
         .category .radio-btns{
             display: flex;
@@ -124,7 +121,6 @@
         }
         .individuals-table, .team-table{
             border-radius: 4px;
-            max-height: 186px;
         }
         .box{
             padding: 2px 25px 0px 9px;
@@ -142,26 +138,7 @@
             justify-content: center;
             text-align: center;
         }
-        .create-task-btn:visited , .start-task-btn:visited , .view-task-btn:visited , .add-members-task-btn:visited , .delete_task_btn{
-            color: white;
-        }
-        .delete_task_btn{
-            padding: 2px 26px;
-            color: #d33838;
-            background: white;
-            margin: 16px 0px 16px;
-            border-radius: 160px;
-            border: 2px solid #d33838;
-            transition: all ease-in-out .3s;
-            position: relative;
-            bottom: 21px;
-        }
-        .delete_task_btn:hover{
-            color: white;
-            background: #d33838;
-            border-color: #d33838;
-        }
-        .create-task-btn , .start-task-btn{
+        .finish-task-btn , .start-task-btn{
             padding: 5px 15px;
             color: white;
             background: #75D481;
@@ -170,10 +147,24 @@
             border: 2px solid #75D481;
             transition: all ease-in-out .3s;
         }
-        .create-task-btn:hover , .start-task-btn:hover{
+        .finish-task-btn:hover , .start-task-btn:hover{
             color: #75D481;
             background: white;
             border-color: #75D481;
+        }
+        .cancel-task-btn , .start-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #d33838;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #d33838;
+            transition: all ease-in-out .3s;
+        }
+        .cancel-task-btn:hover , .start-task-btn:hover{
+            color: #d33838;
+            background: white;
+            border-color: #d33838;
         }
         .view-task-btn{
             padding: 5px 15px;
@@ -218,92 +209,12 @@
         .table-responsive{
             overflow-x: hidden;
         }
-        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar{
-            width: 6px;
-            height: 6px;
-        }
-        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb {
-            background-color: #e7eeef;
-            transition: all .4s ease-in-out;
-            border-radius: 4px;
-        }
-        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover {
-            background-color: rgb(169, 170, 170);
-        }
-        .switch {
-        position: relative;
-        display: inline-block;
-        width: 30px;
-        height: 17px;
-        }
-
-        .switch input { 
-        opacity: 0;
-        width: 0;
-        height: 0;
-        }
-
-        .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-        }
-
-        .slider:before {
-        position: absolute;
-        content: "";
-        height: 13px;
-        width: 13px;
-        left: 2px;
-        bottom: 2px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-        }
-
-        input:checked + .slider {
-        background-color: #75D481;
-        }
-
-        input:focus + .slider {
-        box-shadow: 0 0 1px #75D481;
-        }
-
-        input:checked + .slider:before {
-        -webkit-transform: translateX(13px);
-        -ms-transform: translateX(13px);
-        transform: translateX(13px);
-        }
-
-        .slider.round {
-        border-radius: 34px;
-        }
-
-        .slider.round:before {
-        border-radius: 50%;
-        }
-        .delete_complete_toggle{
-            display: flex;
-            justify-content: space-between;
-            margin-top: 18px;
-        }
-        .complete_text{
-            margin-right: 8px;
-            font-weight: 600;
-            color: #000000a2;
-        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
             }
             .title-deadline{
-                flex-direction: column;
+                flex-direction: column-reverse;
                 align-items: flex-start;
             }
             .deadline-container{
@@ -361,15 +272,82 @@
             .table-responsive{
                 overflow-x: auto;
             }    
-            .individuals-table, .team-table{
-                max-height: 259px;
-            }
         }
         @media screen and (max-width:340px) {
             .radio-btns{
                 grid-template-columns: 1fr;
             }
         }
+        /* Checkbox */
+                   
+            .check {
+            cursor: pointer;
+            position: relative;
+            margin: auto;
+            width: 18px;
+            height: 18px;
+            -webkit-tap-highlight-color: transparent;
+            transform: translate3d(0, 0, 0);
+            top: 4px;
+            }
+
+            .check:before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(238, 5, 5, 0.03);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            }
+
+            .check svg {
+            position: relative;
+            z-index: 1;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke: #dd2222;
+            stroke-width: 1.5;
+            transform: translate3d(0, 0, 0);
+            transition: all 0.2s ease;
+            }
+
+            .check svg path {
+            stroke-dasharray: 60;
+            stroke-dashoffset: 0;
+            }
+
+            .check svg polyline {
+            stroke-dasharray: 22;
+            stroke-dashoffset: 66;
+            }
+
+            .check:hover:before {
+            opacity: 1;
+            }
+
+            .check:hover svg {
+            stroke: var(--accent-color, #e72424);
+            }
+
+            #cbx2:checked + .check svg {
+            stroke: var(--accent-color, #65e724);
+            }
+
+            #cbx2:checked + .check svg path {
+            stroke-dashoffset: 60;
+            transition: all 0.3s linear;
+            }
+
+            #cbx2:checked + .check svg polyline {
+            stroke-dashoffset: 42;
+            transition: all 0.2s linear;
+            transition-delay: 0.15s;
+            }
     </style>
   </head>
   <body>
@@ -398,170 +376,110 @@
           
           <!--contents of page-->
           <div class="form-wrapper">
-              
-              <!--create task heading-->
-              <h4>Create task</h4>
-              
-              
-              {% if not is_new_task %}
-              <!--buttons showed when viewing task-->
-              <div class="task-btn">
-                <a href="#" class="view-task-btn">View Task</a>
-                <a href="#" class="add-members-task-btn">Add members and task</a>
-                <a href="#" class="start-task-btn">Start Task</a>
-              </div>
-              {% endif %}
+            
+           <!-- task page heading-->
+           <h4>Finish Task</h4>
+           <br><br>
 
+            <!-- Paper permission -->
+            <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
+            <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+            
+                <input type="checkbox" id="cbx2" style="display: none;" >
+                <label for="cbx2" class="check">
+                    <svg width="18px" height="18px" viewBox="0 0 18 18" style="padding-top: 1px;">
+                        <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
+                        <polyline points="1 9 7 14 15 4"></polyline>
+                    </svg>
+                </label>
+            
+            </div>
+
+            <br>
+
+             <!--file upload -->
+             <div class="form-group"  style="background-color: #F8F8F8; padding: 5px;">
+                <label for="documents">File Upload</label>
+                <input type="file" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
                 
-            <form method="post">
-                {% csrf_token %}
-
-                <!--delete and complete toggle btn-->
-                <div class="delete_complete_toggle">
-                    {% if not is_new_task %}
-                    <button type="submit" class="delete_task_btn">Delete</button>
-                    <div style="display: flex;">
-                        <p class="complete_text">Mark as complete?</p>
-                        <label class="switch">
-                            <input type="checkbox" name="toggle_switch" >
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                    {% endif %}
-                </div>
+                <br>
+                <div id="content-selected-docs-container"></div>
+                <input type="hidden" name="selected_documents" id="content-selected-documents">
+            </div>
+            <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+            
+            <br>
+              
 
 
-                <!--title and deadline of task-->
-                <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title" required>
-                    <div class="title-box deadline-container" style="padding: 1px 16px;">
-                        <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
-                    <input
-                        id="deadline"
-                        type="datetime-local"
-                        name="deadline"
-                        class="title-box"
-                        style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
-                        required />
-                    </div>
-                </div>
-                <!-- <input class="title-box" type="text" placeholder="Title (eg: Get permission paper for venue)"> -->
-                
-
-                <!--task category-->
-                <div class="category">
-                    <label class="category_label">Task category:</label>                    
-
-                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
-                        {% for task_category in task_categories %}
-                        <option value="{{task_category.name}}" >{{task_category.name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-
-                <!--task description-->
-                <label class="description_label">Describe your task:</label>
+                <!--content-->
+                <label class="description_label">Content</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details"></textarea>
+                        <textarea class="form-control" type="text" name="content_details"></textarea>
                     </div>
-                    <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
+                    <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
                 </div>
+                
+                <br>
+                
 
-
-                <!--task type-->
-                <div class="task_type ">
-                    <label class="task_type_label">Select task type and individuals:</label>
-                    <div class="radio-btns">
-                        <div class="radio-btns_content box">
-                            <input type="radio" id='btn05' name="task_type" value="Team" checked required>
-                            <label for="btn05">Team</label>
-                        </div>
-                        <div class="radio-btns_content box">
-                            <input type="radio" id='btn06'name="task_type" value="Individuals">
-                            <label for="btn06">Individuals</label>
-                        </div>
+                
+                <div id="media-selected-images-container"></div>
+                <input type="hidden" name="selected_images" id="media-selected-images">
+           
+            
+            <br>
+            
+            <!-- Drive link -->
+            <div class="form-group">
+                <label>Folder Drive Link</label>
+                <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
+                value="{{media_links.logo_link}}" name="logo_drive_link_of_event" />
+            </div>
+            
+            
+            <br>
+            
+            
+            <!-- Media -->
+            <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">
+                <div style="display: flex; align-items: center;">
+                    <label for="images" style="margin-right: 10px;">Media Upload</label>
+                    <div class="custom-file">
+                        <input type="file" id="media-image-input" name="image" accept="image/*" multiple style="margin-bottom: 0;">
+                        
                     </div>
                 </div>
+            </div>
+            <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+            
+            
+            
+                <br>
 
 
-                <!--Search bar for individuals-->
-                <div class="tb_search search_input_individuals hide_table">
-                    <input
-                    type="text"
-                    id="search_input_individuals"
-                    onkeyup="filter_individual_table()"
-                    placeholder="Search..."
-                    class="form-control title-box"/>
+                <!--other content-->
+                <label class="description_label">Other Contents</label>
+                <div class="ckeditor">
+                    <div>
+                        <textarea class="form-control" type="text" name="other_content_details"></textarea>
+                    </div>
+                   
                 </div>
+                
+                <br>
 
+               
+            </div> 
 
-                <!--Table for individuals-->
-                <div class="table-responsive individuals-table hide_table">
-                <table class="table box" id="individuals-table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Team</th>
-                        <th>Position</th>
-                        <th>Select</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for member in all_members %}
-                        <tr>
-                            <td>{{member.name}}</td>
-                            <td>{{member.team.team_name}}</td>
-                            <td>{{member.position.role}}</td>
-                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <!--Submit btn-->
+                <div class="task-btn">
+                    <a href="#" class="cancel-task-btn">Cancel</a>
+                    <a href="#" class="finish-task-btn">Finish</a>
                 </div>
-
-
-                <!--Search bar for teams-->
-                <div class="tb_search  search_input_team" >
-                    <input
-                    type="text"
-                    id="search_input_team"
-                    onkeyup="filter_team_table()"
-                    placeholder="Search..."
-                    class="form-control title-box"/>
-                </div>
-
-
-                <!--Table for teams-->
-                <div class="table-responsive team-table">
-                <table class="table box" id="team-table">
-                    <thead>
-                    <tr>
-                        <th>SL no.</th>
-                        <th>Team</th>
-                        <th>Select</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for team in teams %}
-                        <tr>
-                            <td>{{forloop.counter}}.</td>
-                            <td>{{team.team_name}}</td>
-                            <td><input type="checkbox" name="team_select" value="{{team.primary}}"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                </div>
-
-
-                <!--create task btn-->
-                <div style="text-align: center;">
-                    <button type="submit" class="create-task-btn">Create Task</button>
-                </div>
-            </form>
         </div>
+        
     </div>
     
     <!--Theme Switcher-->
@@ -578,10 +496,57 @@
         // character count function
         document.addEventListener("DOMContentLoaded", function () {
           // Replace the textareas with CKEditor instances
-          CKEDITOR.replace("task_description_details");
+          CKEDITOR.replace("content_details");
 
           // Attach a function to the change event for each CKEditor instance
-          ["task_description"].forEach(function (editorId) {
+          ["content"].forEach(function (editorId) {
+            var editor = CKEDITOR.instances[editorId + "_details"];
+
+            editor.on("change", function () {
+              // Update character count display for each CKEditor instance
+              updateCharacterCount(editorId);
+            });
+
+            // Update character count initially
+            updateCharacterCount(editorId);
+          });
+        });
+
+        function updateCharacterCount(editorId) {
+          var editorContent =
+            CKEDITOR.instances[editorId + "_details"].getData();
+
+          // Handle special space representations
+          var cleanedContent = editorContent
+            .replace(/<[^>]*>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .trim();
+
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+
+          var characterCountElement = document.getElementById(
+            editorId + "CharacterCount"
+          );
+
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: 0";
+          } else {
+            characterCountElement.innerText =
+              "Character Count: " + characterCount;
+          }
+        }
+    </script>
+    <script>
+        // character count function
+        document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textareas with CKEditor instances
+          CKEDITOR.replace("other_content_details");
+
+          // Attach a function to the change event for each CKEditor instance
+          ["other_content"].forEach(function (editorId) {
             var editor = CKEDITOR.instances[editorId + "_details"];
 
             editor.on("change", function () {
@@ -727,24 +692,6 @@
         });
 
     </script> 
-    <script>
-        //change text if the toggle is active
-
-        let completeText = document.querySelector('.complete_text');
-        let toggle = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]');
-
-        toggle.onclick = function(){
-            let active = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]:checked');
-    
-            if(active){
-                completeText.innerHTML = 'Task complete!';
-                completeText.style.color = '#75D481';
-            }
-            else{
-                completeText.innerHTML = 'Mark as complete?';
-                completeText.style.color = '#000000a2';
-            }
-        };
-    </script>
   </body>
 </html>
+

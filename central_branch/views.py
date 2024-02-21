@@ -4437,6 +4437,7 @@ def create_task(request):
 
 
     context = {
+        'is_new_task':True, #Task is being created. Use it to disable some ui in the template
         'task_categories':task_categories,
         'teams':teams,
         'all_members':all_members,
@@ -4455,3 +4456,6 @@ def task_home(request):
 
 def upload_task(request):
         return render(request,"task_page.html")
+
+def add_task(request):
+        return render(request,"team_task_forword_to_members.html")
