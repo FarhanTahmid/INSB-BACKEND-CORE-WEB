@@ -145,6 +145,27 @@
         .create-task-btn:visited , .start-task-btn:visited , .view-task-btn:visited , .add-members-task-btn:visited , .delete_task_btn{
             color: white;
         }
+        .confirm_delete_task_btn{
+            padding: 2px 26px;
+            color: #d33838;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #d33838;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_delete_task_btn{
+            padding: 2px 26px;
+            color: #0000008f;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #0000004f;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_delete_task_btn:hover{
+            color: white;
+            background: #0000004f;
+            border-color: transparent;
+        }
         .delete_task_btn{
             padding: 2px 26px;
             color: #d33838;
@@ -156,7 +177,7 @@
             position: relative;
             bottom: 21px;
         }
-        .delete_task_btn:hover{
+        .delete_task_btn:hover , .confirm_delete_task_btn:hover{
             color: white;
             background: #d33838;
             border-color: #d33838;
@@ -298,6 +319,47 @@
             font-weight: 600;
             color: #000000a2;
         }
+        .delete_modal {
+         /* Hidden by default */
+        opacity: 0;
+        position: fixed; /* Stay in place */
+        z-index: -1;
+        padding-top: 50px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 150%;
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        transition: all .3s ease-in-out;
+        transform: translateY(-50px);
+        overflow: auto;
+        }
+
+        /* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto 35%;
+        padding: 20px;
+        border: 1px solid rgb(136, 136, 136);
+        width: 40%;
+        }
+
+        /* The Close Button */
+        .close {
+        color: #000;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -314,6 +376,10 @@
                 width: 100%;
                 margin-bottom: 15px;
             }
+            .modal-content{
+                width: 50%;
+                margin: auto;
+            }
 
         }
         @media screen and (max-width: 750px){
@@ -328,6 +394,9 @@
             }
             .task_type{
                 margin-bottom: -20px;
+            }
+            .modal-content{
+                width: 90%;
             }
         }
         @media screen and (max-width: 500px) {
@@ -407,14 +476,33 @@
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
                   <a href="#" class="add-members-task-btn">Add members and task</a>
-                  <a href="#" class="start-task-btn">Start Task</a>
+                  <a href="{% url 'central_branch:upload_task' %}" class="start-task-btn">Start Task</a>
                 </div>
 
                 
+                <!-- The Modal -->
+                <div id="myModal" class="delete_modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                            <h5>Confirm Delete</h5>
+                            <span class="close">&times;</span>
+                        </div>
+                        <h6>Do you want to delete this task?</h6>
+                        <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
+                            <a href="#" class="cancel_delete_task_btn">Cancel</a>
+                            <button type="submit" class="confirm_delete_task_btn">Confirm</button>
+                    </div>
+                    </div>
+                
+                </div>
+
+
             <form method="post">
                 <!--delete and complete toggle btn-->
                 <div class="delete_complete_toggle">
-                    <button type="submit" class="delete_task_btn">Delete</button>
+                    <a href="#" class="delete_task_btn">Delete</a>
                     <div style="display: flex;">
                         <p class="complete_text">Mark as complete?</p>
                         <label class="switch">
@@ -808,6 +896,51 @@
                 completeText.style.color = '#000000a2';
             }
         };
+    </script>
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    
+    // Get the button that opens the modal
+    var btn = document.querySelector(".delete_task_btn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    var cancel = document.getElementsByClassName('cancel_delete_task_btn')[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+    //   modal.style.display = "block";
+    modal.style.transform = 'translateY(0px)';
+    modal.style.zIndex = '103100';
+    modal.style.opacity = '1';
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    //   modal.style.display = "none";
+    modal.style.transform = 'translateY(-50px)';
+    modal.style.zIndex = '-100';
+    modal.style.opacity = '0';
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    cancel.onclick = function() {
+    //   modal.style.display = "none";
+    modal.style.transform = 'translateY(-50px)';
+    modal.style.zIndex = '-100';
+    modal.style.opacity = '0';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.transform = 'translateY(-50px)';
+        modal.style.zIndex = '-100';
+        modal.style.opacity = '0';
+      }
+    }
     </script>
   </body>
 </html>
