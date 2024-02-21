@@ -67,12 +67,12 @@
             border: 2px solid #d3d3d3;
             color: black;
             transition: .4s;
-            box-shadow: 0 0 5px 0px #80808054;
+            box-shadow: 2px 2px 5px 0px #80808054;
             border: 2px solid white;
         }
         .title-box:focus{
             border: 2px solid white;
-            box-shadow: 0 0 5px 0px #808080b1;
+            box-shadow: 2px 2px 5px 0px #808080b1;
         }
 
         #task_descriptionCharacterCount{
@@ -128,14 +128,14 @@
         }
         .box{
             padding: 2px 25px 0px 9px;
-            box-shadow: 0 0 5px 0px #80808054;
+            box-shadow: 2px 2px 5px 0px #80808054;
             border-radius: 3px;
             margin-bottom: 19px;
             margin-right: 8px;
             text-align: center;
         }
         .ckeditor{
-            box-shadow: 0 0 5px 0px #80808054;
+            box-shadow: 2px 2px 5px 0px #80808054;
         }
         .task-btn{
             display: flex;
@@ -472,12 +472,14 @@
               <h4>Create task</h4>
               
               
+              {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
                   <a href="#" class="add-members-task-btn">Add members and task</a>
                   <a href="{% url 'central_branch:upload_task' %}" class="start-task-btn">Start Task</a>
                 </div>
+                {% endif %}
 
 
              <form method="post">  
@@ -500,24 +502,28 @@
                 </div>
             </form> 
 
+            <!--delete and complete toggle btn-->
+            <div class="delete_complete_toggle">
+                {% if not is_new_task %}
+                <button type="button" class="delete_task_btn">Delete</button>
+                <div style="display: flex;">
+                    <p class="complete_text">Mark as complete?</p>
+                    <label class="switch">
+                        <input type="checkbox" name="toggle_switch" >
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                {% endif %}
+            </div>
 
             <form method="post">
-                <!--delete and complete toggle btn-->
-                <div class="delete_complete_toggle">
-                    <a href="#" class="delete_task_btn">Delete</a>
-                    <div style="display: flex;">
-                        <p class="complete_text">Mark as complete?</p>
-                        <label class="switch">
-                            <input type="checkbox" name="toggle_switch" >
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-                </div>
+                {% csrf_token %}
+
 
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" required>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title" required>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
                     <input
@@ -534,26 +540,12 @@
 
                 <!--task category-->
                 <div class="category">
-                    <label class="category_label">Task category:</label>
-                    <!-- <div class="radio-btns">
-                    <div class="radio-btns_content box">
-                        <input type="radio" id='btn01' name="task_category" required>
-                        <label for="btn01">Light</label>
-                    </div>
-                    <div class="radio-btns_content box">
-                        <input type="radio" id='btn02'name="task_category" >
-                        <label for="btn02">Medium</label>
-                    </div>
-                    <div class="radio-btns_content box">
-                        <input type="radio" id='btn03'name="task_category" >
-                        <label for="btn03">High</label>
-                    </div>
-                    </div> -->
-                    <select name="task_category" id="btn01" class="title-box" style="width: 180px;" required>
-                        <option selected value="null">Choose a category</option>
-                        <option value="Light" >Light</option>
-                        <option value="Medium" >Medium</option>
-                        <option value="High" >High</option>
+                    <label class="category_label">Task category:</label>                    
+
+                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                        {% for task_category in task_categories %}
+                        <option value="{{task_category.name}}" >{{task_category.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
@@ -573,11 +565,11 @@
                     <label class="task_type_label">Select task type and individuals:</label>
                     <div class="radio-btns">
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn05' name="task_type" checked required>
+                            <input type="radio" id='btn05' name="task_type" value="Team" checked required>
                             <label for="btn05">Team</label>
                         </div>
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn06'name="task_type" >
+                            <input type="radio" id='btn06'name="task_type" value="Individuals">
                             <label for="btn06">Individuals</label>
                         </div>
                     </div>
@@ -607,44 +599,14 @@
                     </tr>
                     </thead>
                     <tbody>
+                        {% for member in all_members %}
                         <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
+                            <td>{{member.name}}</td>
+                            <td>{{member.team.team_name}}</td>
+                            <td>{{member.position.role}}</td>
+                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
                         </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>Md Shakib Shahriar Junayed</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td>Co-ordinator</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 </div>
@@ -672,39 +634,13 @@
                     </tr>
                     </thead>
                     <tbody>
+                        {% for team in teams %}
                         <tr>
-                        <td>1.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
+                            <td>{{forloop.counter}}.</td>
+                            <td>{{team.team_name}}</td>
+                            <td><input type="checkbox" name="team_select" value="{{team.primary}}"></td>
                         </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>2.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>3.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>3.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                        <td>3.</td>
-                        <td>Public Relation and Promotions Team</td>
-                        <td><input type="checkbox"></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 </div>

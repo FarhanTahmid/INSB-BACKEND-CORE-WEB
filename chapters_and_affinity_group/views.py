@@ -1407,9 +1407,9 @@ def event_edit_form(request, primary, event_id):
 
                     #if there is registration fee then taking the amount from field
                     if registration_fee:
-                        registration_fee_amount = int(request.POST.get('registration_fee_amount'))
+                        registration_fee_amount = request.POST.get('registration_fee_amount')
                     else:
-                        registration_fee_amount = 0
+                        registration_fee_amount = event_details.registration_fee_amount
 
                     #Check if the update request is successful
                     if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,

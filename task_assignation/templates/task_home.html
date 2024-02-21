@@ -196,29 +196,22 @@
               
               <th data-priority="1">Name</th>
               <th data-priority="1">Deadline</th>
-              <th data-priority="1">Status</th>
-              
-              {% if has_view_permission %}
-              <th data-priority="1">Contact No</th>
-              {% endif %}
+              <th data-priority="1">Current Status</th>
+              <th data-priority="1">Completed?</th>
             </tr>
           </thead>
           <tbody>
-            {% for member in members %}
+            {% for task in all_tasks %}
                               
-              <tr>
-              
-                  <td style="color:#00629B"><a href="{% if is_branch %}{% url 'central_branch:member_details' member.ieee_id %}{% else %}{% url 'membership_development_team:member_details' member.ieee_id %}{% endif %}">{{ member.ieee_id  }}</a></td>
-                  <td><a href="#">complete website</a></td>
-                  <td>30/02/2024</td>
-                  
-                  
-                  <td>completed</td>
-                  {% comment %} <td>{{ member.status}}</td> {% endcomment %}
-                  {% comment %} {% if has_view_permission %}
-                  <td>{{ member.contact_no }}</td>
-                  {% endif %} {% endcomment %}
-                                
+              <tr>             
+                  <td style="color:#00629B"><a href="#">{{task.title}}</a></td>
+                  <td>{{task.deadline}}</td>
+                  <td>Not Implemented</td>               
+                  {% if task.idk %}
+                    <td><img src="/static/admin/img/icon-yes.svg" alt="True"></td>
+                  {% else %}
+                    <td><img src="/static/admin/img/icon-no.svg" alt="False"></td>
+                  {% endif %}                                
               </tr>
       
             {% endfor %}
