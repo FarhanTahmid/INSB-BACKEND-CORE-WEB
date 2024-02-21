@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Content | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+    <style>
+        body{
+            background: white;
+        }
+        h4{
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        .form-wrapper{
+            font-family: 'Poppins' , sans-serif;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            max-width: 850px;
+            margin: 40px auto;
+        }
+        .flex-wrapper{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .title-deadline{
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .deadline-container{
+            display: flex;
+            flex-wrap: wrap; 
+            align-items: center; 
+            gap: 22px; 
+            width: 40%;
+            justify-content: space-between;
+        }
+        label{
+            font-size: 15px;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 15px;
+            color: #000000c9;
+        }
+        .title-box{
+            padding: 6px 10px;
+            border-radius: 3px;
+            border: 2px solid #d3d3d3;
+            color: black;
+            transition: .4s;
+            box-shadow: 0 0 5px 0px #80808054;
+            border: 2px solid white;
+        }
+        .title-box:focus{
+            border: 2px solid white;
+            box-shadow: 0 0 5px 0px #808080b1;
+        }
+
+        #task_descriptionCharacterCount{
+            margin-top: 15px;
+        }
+        .radio-btns{
+            display: flex;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .category{
+            margin-top: 0px;
+            margin-bottom: 25px;
+        }
+        .category_label{
+            margin-bottom: 8px;
+            margin-right: 25px;
+        }
+        .category .radio-btns{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .description_label{
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+        .task_type{
+            gap: 43px;
+            margin-top: 15px;
+            margin-bottom: -67px;
+        }
+        .task_type_label{
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+        .radio-btns_content{
+            width: 162px;
+        }
+        .radio-btns .radio-btns_content label{
+            margin-left: 5px;
+            margin-bottom: 3px;
+
+        }
+        .search_input_individuals, .search_input_team{
+            margin:20px 0 15px;
+        }
+        #search_input_individuals, #search_input_team{
+            padding: 3px 10px;
+        }
+        .individuals-table, .team-table{
+            border-radius: 4px;
+            max-height: 186px;
+        }
+        .box{
+            padding: 2px 25px 0px 9px;
+            box-shadow: 0 0 5px 0px #80808054;
+            border-radius: 3px;
+            margin-bottom: 19px;
+            margin-right: 8px;
+            text-align: center;
+        }
+        .ckeditor{
+            box-shadow: 0 0 5px 0px #80808054;
+        }
+        .task-btn{
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+        .create-task-btn:visited , .start-task-btn:visited , .view-task-btn:visited , .add-members-task-btn:visited , .delete_task_btn{
+            color: white;
+        }
+        .delete_task_btn{
+            padding: 2px 26px;
+            color: #d33838;
+            background: white;
+            margin: 16px 0px 16px;
+            border-radius: 160px;
+            border: 2px solid #d33838;
+            transition: all ease-in-out .3s;
+            position: relative;
+            bottom: 21px;
+        }
+        .delete_task_btn:hover{
+            color: white;
+            background: #d33838;
+            border-color: #d33838;
+        }
+        .create-task-btn , .start-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #75D481;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #75D481;
+            transition: all ease-in-out .3s;
+        }
+        .create-task-btn:hover , .start-task-btn:hover{
+            color: #75D481;
+            background: white;
+            border-color: #75D481;
+        }
+        .view-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #10609D;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #10609D;
+            transition: all ease-in-out .3s;
+        }
+        .view-task-btn:hover{
+            background: white;
+            border-color: #10609D;
+            color: #10609D;
+        }
+        .add-members-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #72C2D6;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #72C2D6;
+            transition: all ease-in-out .3s;
+        }
+        .add-members-task-btn:hover{
+            color: #72C2D6;
+            background: white;
+            border-color: #72C2D6;
+        }
+        .hide_table{
+            display: none;
+        }
+        .title{
+            width: 59%;
+        }  
+        .tb_search {
+            width: 39%;
+            float: left;
+            position: relative;
+            left: 61%;
+        }
+        .table-responsive{
+            overflow-x: hidden;
+        }
+        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb {
+            background-color: #e7eeef;
+            transition: all .4s ease-in-out;
+            border-radius: 4px;
+        }
+        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover {
+            background-color: rgb(169, 170, 170);
+        }
+        .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 17px;
+        }
+
+        .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+        }
+
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 13px;
+        width: 13px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        input:checked + .slider {
+        background-color: #75D481;
+        }
+
+        input:focus + .slider {
+        box-shadow: 0 0 1px #75D481;
+        }
+
+        input:checked + .slider:before {
+        -webkit-transform: translateX(13px);
+        -ms-transform: translateX(13px);
+        transform: translateX(13px);
+        }
+
+        .slider.round {
+        border-radius: 34px;
+        }
+
+        .slider.round:before {
+        border-radius: 50%;
+        }
+        .delete_complete_toggle{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 18px;
+        }
+        .complete_text{
+            margin-right: 8px;
+            font-weight: 600;
+            color: #000000a2;
+        }
+        @media screen and (max-width: 1024px) {
+            .form-wrapper{
+                margin: 10%;
+            }
+            .title-deadline{
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .deadline-container{
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            .title{
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+        }
+        @media screen and (max-width: 750px){
+            .radio-btns{
+                grid-template-columns: 1fr 1fr;
+            }
+            .tb_search{
+                left: 0%;
+            }
+            .search_input_individuals, .search_input_team{
+                width: 100%;
+            }
+            .task_type{
+                margin-bottom: -20px;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .form-wrapper{
+                margin: 5%;
+            }
+            .grid-wrapper{
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+            label{
+                font-size: medium;
+                margin-bottom: 4px;
+            }
+            h4{
+                font-size: 1.45rem;
+            }
+            .radio-btns_content{
+                width: auto;
+            }
+            .radio-btns_content label{
+                font-size: 14px;
+            }
+            .deadline-container{
+                width: 100%;
+                justify-content: center;
+            }
+            .title{
+                width: 100%;
+            }
+            .table-responsive{
+                overflow-x: auto;
+            }    
+            .individuals-table, .team-table{
+                max-height: 259px;
+            }
+        }
+        @media screen and (max-width:340px) {
+            .radio-btns{
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+  </head>
+  <body>
+
+    <!--LAYOUT START-->
+    <div class="app" id="app">
+
+      <!-- aside -->
+      <div id="aside" class="app-aside modal nav-dropdown">
+        {% block sidebar %} 
+         {% include 'users/sidebar.html' %} 
+        {% endblock %}
+      </div>
+
+
+      <!-- navbar -->
+      <div id="content" class="app-content" role="main">
+        {% block navbar %}
+         {% include 'navbar.html' %} 
+        {% endblock navbar %}
+      </div>
+
+
+      <!--PAGE START-->
+      <div ui-view class="app-body" id="view">
+          
+          <!--contents of page-->
+          <div class="form-wrapper">
+              
+              <!--create task heading-->
+              <h4>Create task</h4>
+              
+              
+              <!--buttons showed when viewing task-->
+              <div class="task-btn">
+                  <a href="#" class="view-task-btn">View Task</a>
+                  <a href="#" class="add-members-task-btn">Add members and task</a>
+                  <a href="#" class="start-task-btn">Start Task</a>
+                </div>
+
+                
+            <form method="post">
+                <!--delete and complete toggle btn-->
+                <div class="delete_complete_toggle">
+                    <button type="submit" class="delete_task_btn">Delete</button>
+                    <div style="display: flex;">
+                        <p class="complete_text">Mark as complete?</p>
+                        <label class="switch">
+                            <input type="checkbox" name="toggle_switch" >
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <!--title and deadline of task-->
+                <div class="title-deadline">
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" required>
+                    <div class="title-box deadline-container" style="padding: 1px 16px;">
+                        <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
+                    <input
+                        id="deadline"
+                        type="datetime-local"
+                        name="deadline"
+                        class="title-box"
+                        style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
+                        required />
+                    </div>
+                </div>
+                <!-- <input class="title-box" type="text" placeholder="Title (eg: Get permission paper for venue)"> -->
+                
+
+                <!--task category-->
+                <div class="category">
+                    <label class="category_label">Task category:</label>
+                    <!-- <div class="radio-btns">
+                    <div class="radio-btns_content box">
+                        <input type="radio" id='btn01' name="task_category" required>
+                        <label for="btn01">Light</label>
+                    </div>
+                    <div class="radio-btns_content box">
+                        <input type="radio" id='btn02'name="task_category" >
+                        <label for="btn02">Medium</label>
+                    </div>
+                    <div class="radio-btns_content box">
+                        <input type="radio" id='btn03'name="task_category" >
+                        <label for="btn03">High</label>
+                    </div>
+                    </div> -->
+                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                        <option value="Light" >Light</option>
+                        <option value="Medium" >Medium</option>
+                        <option value="High" >High</option>
+                    </select>
+                </div>
+
+
+                <!--task description-->
+                <label class="description_label">Describe your task:</label>
+                <div class="ckeditor">
+                    <div>
+                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details"></textarea>
+                    </div>
+                    <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
+                </div>
+
+
+                <!--task type-->
+                <div class="task_type ">
+                    <label class="task_type_label">Select task type and individuals:</label>
+                    <div class="radio-btns">
+                        <div class="radio-btns_content box">
+                            <input type="radio" id='btn05' name="task_type" checked required>
+                            <label for="btn05">Team</label>
+                        </div>
+                        <div class="radio-btns_content box">
+                            <input type="radio" id='btn06'name="task_type" >
+                            <label for="btn06">Individuals</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--Search bar for individuals-->
+                <div class="tb_search search_input_individuals hide_table">
+                    <input
+                    type="text"
+                    id="search_input_individuals"
+                    onkeyup="filter_individual_table()"
+                    placeholder="Search..."
+                    class="form-control title-box"/>
+                </div>
+
+
+                <!--Table for individuals-->
+                <div class="table-responsive individuals-table hide_table">
+                <table class="table box" id="individuals-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Team</th>
+                        <th>Position</th>
+                        <th>Select</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>Md Shakib Shahriar Junayed</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td>Co-ordinator</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+
+                <!--Search bar for teams-->
+                <div class="tb_search  search_input_team" >
+                    <input
+                    type="text"
+                    id="search_input_team"
+                    onkeyup="filter_team_table()"
+                    placeholder="Search..."
+                    class="form-control title-box"/>
+                </div>
+
+
+                <!--Table for teams-->
+                <div class="table-responsive team-table">
+                <table class="table box" id="team-table">
+                    <thead>
+                    <tr>
+                        <th>SL no.</th>
+                        <th>Team</th>
+                        <th>Select</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        <td>1.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>2.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>3.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>3.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr>
+                        <td>3.</td>
+                        <td>Public Relation and Promotions Team</td>
+                        <td><input type="checkbox"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+
+                <!--create task btn-->
+                <div style="text-align: center;">
+                    <button type="submit" class="create-task-btn">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!--Theme Switcher-->
+    {% block theme_switcher %} 
+    {% include "theme_switcher.html" %} 
+    {% endblock theme_switcher %}
+    <!-- app end-->
+    
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+    
+    <script>
+        // character count function
+        document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textareas with CKEditor instances
+          CKEDITOR.replace("task_description_details");
+
+          // Attach a function to the change event for each CKEditor instance
+          ["task_description"].forEach(function (editorId) {
+            var editor = CKEDITOR.instances[editorId + "_details"];
+
+            editor.on("change", function () {
+              // Update character count display for each CKEditor instance
+              updateCharacterCount(editorId);
+            });
+
+            // Update character count initially
+            updateCharacterCount(editorId);
+          });
+        });
+
+        function updateCharacterCount(editorId) {
+          var editorContent =
+            CKEDITOR.instances[editorId + "_details"].getData();
+
+          // Handle special space representations
+          var cleanedContent = editorContent
+            .replace(/<[^>]*>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .trim();
+
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+
+          var characterCountElement = document.getElementById(
+            editorId + "CharacterCount"
+          );
+
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: 0";
+          } else {
+            characterCountElement.innerText =
+              "Character Count: " + characterCount;
+          }
+        }
+    </script>
+    <script>
+            
+            //filtering for individual table
+        function filter_individual_table() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search_input_individuals");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("individuals-table");
+            tr = table.getElementsByTagName("tr");
+            
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                // Skip the header row
+                if (i === 0) continue;
+                
+                // Loop through all table cells in the current row
+                var rowContainsSearchTerm = false;
+                for (var j = 0; j < tr[i].cells.length; j++) {
+                    td = tr[i].cells[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rowContainsSearchTerm = true;
+                        break;
+                    }
+                    }
+                }
+                
+                // Toggle the visibility of the row based on whether it contains the search term
+                if (rowContainsSearchTerm) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+                }
+        }
+
+    
+        //filtering for team table
+        function filter_team_table() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search_input_team");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("team-table");
+            tr = table.getElementsByTagName("tr");
+            
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                // Skip the header row
+                if (i === 0) continue;
+                
+                // Loop through all table cells in the current row
+                var rowContainsSearchTerm = false;
+                for (var j = 0; j < tr[i].cells.length; j++) {
+                    td = tr[i].cells[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowContainsSearchTerm = true;
+                            break;
+                        }
+                    }
+                }
+            
+                // Toggle the visibility of the row based on whether it contains the search term
+                if (rowContainsSearchTerm) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>   
+    <script>
+        //determining which table to show depending on the selected radio button
+        let radioButtons = document.querySelectorAll(".radio-btns_content");
+        let searchIndividuals = document.querySelector('.search_input_individuals');
+        let searchTeam = document.querySelector('.search_input_team');
+        let individualsTable = document.querySelector('.individuals-table');
+        let teamTable = document.querySelector('.team-table');
+
+
+        radioButtons.forEach((button) => {
+        button.addEventListener("change", () => {
+            let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
+
+            if(checkedRadioButton.id == 'btn05'){
+                searchIndividuals.classList.add('hide_table');
+                individualsTable.classList.add('hide_table');
+                searchTeam.classList.remove('hide_table');
+                teamTable.classList.remove('hide_table');
+            }
+            else if(checkedRadioButton.id == 'btn06'){
+                searchIndividuals.classList.remove('hide_table');
+                individualsTable.classList.remove('hide_table');
+                searchIndividuals.classList.remove('hide_table');
+                individualsTable.classList.remove('hide_table');
+                searchTeam.classList.add('hide_table');
+                teamTable.classList.add('hide_table');
+            }
+        });
+        });
+
+    </script> 
+    <script>
+        //change text if the toggle is active
+
+        let completeText = document.querySelector('.complete_text');
+        let toggle = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]');
+
+        toggle.onclick = function(){
+            let active = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]:checked');
+    
+            if(active){
+                completeText.innerHTML = 'Task complete!';
+                completeText.style.color = '#75D481';
+            }
+            else{
+                completeText.innerHTML = 'Mark as complete?';
+                completeText.style.color = '#000000a2';
+            }
+        };
+    </script>
+  </body>
+</html>
