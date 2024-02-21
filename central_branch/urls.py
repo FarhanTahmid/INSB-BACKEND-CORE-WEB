@@ -3,9 +3,7 @@ from django.urls import path,include
 from . import views
 from .views import UpdatePositionAjax,UpdateAwardAjax
 from .views import UpdatePositionAjax,UpdateRestrictionAjax,AwardRanking
-from task_assignation.views import create_task
-from task_assignation.views import task_home
-from task_assignation.views import upload_task
+
 app_name='central_branch'
 
 ##defining the urls to work with
