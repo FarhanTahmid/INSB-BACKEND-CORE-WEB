@@ -10,23 +10,16 @@
 
     <!-- style -->
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
-    <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
-    <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
-    <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
-    <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
-    
-
-    <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
-    <!-- build:css ../assets/styles/app.min.css -->
-    <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
-    <!-- endbuild -->
-    <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
     <style>
       body, html {
-        
         margin: 0;
-        
         align-items: center;
         justify-content: center;
         background: white;
@@ -90,7 +83,7 @@
       }
 
       .image-button img {
-        width: 50px; /* Adjust as needed */
+        width: 32px; /* Adjust as needed */
         height: auto; /* Maintain aspect ratio */
         border-radius: 50%; /* Add rounded corners if desired */
         box-shadow: 2px 2px 5px 0px #80808054;
@@ -159,7 +152,7 @@
         margin-bottom: var(--ck-spacing-large);
         height: 10rem;
       }
-      .create-task-btn {
+      .forward-task-btn {
         padding: 5px 15px;
         color: white;
         background: #75D481;
@@ -167,10 +160,9 @@
         border-radius: 4px;
         border: 2px solid #75D481;
         transition: all ease-in-out .3s;
-        box-shadow: 2px 2px 5px 1px #80808054;
       }
       
-      .create-task-btn:hover {
+      .forward-task-btn:hover {
         color: #75D481;
         background: white;
         border-color: #75D481;
@@ -180,22 +172,34 @@
         box-shadow: 2px 2px 5px 0px #80808054;
         border: 0px;
       }
+      .table-responsive::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .table-responsive::-webkit-scrollbar-thumb{
+          background-color: #e7eeef;
+          transition: all .4s ease-in-out;
+          border-radius: 4px;
+      }
+      .table-responsive::-webkit-scrollbar-thumb:hover{
+          background-color: rgb(169, 170, 170);
+      }
+      .table-responsive{
+        max-height: 270px;
+      }
     </style>
   </head>
     <body>
       <div class="app" id="app">
 
-        <!-- ############ LAYOUT START-->
 
         <!-- aside -->
         <div id="aside" class="app-aside modal nav-dropdown">
-          
           {% block sidebar %}
             {% include 'users/sidebar.html' %}
           {% endblock %}
-
         </div>
-        <!-- / -->
+
 
         <!-- navbar -->
         <div id="content" class="app-content" role="main">
@@ -204,16 +208,15 @@
           {% endblock navbar %}
         </div>
       
-        <!-- content -->
-        <div id="content" class="app-content box-shadow-z0" role="main">
+
+        <div id="content" class="app-content" role="main">
             
           <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%; padding-top: 3.5rem;" id="view">
 
             <!-- ############ PAGE START-->
-            <br>
-            <h2 style="justify-content:center;text-align:center;margin-bottom:15px;">FORWARD TASK
-            </h2>
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;margin-top:30px;">Add members and task type</h4>
             
+
             <!--Messages-->
             <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
               <div id="messageBox" class="alert alert-success" role="alert">
@@ -223,6 +226,7 @@
                   </button>
               </div>
             </div>
+
 
             <!--Messages-->
             <div class="tooltip-container">
@@ -235,38 +239,38 @@
       
             <form method="post">
               {% csrf_token %}
-              <div style="justify-content:center;text-align:center; margin-top:30px;">  
-                <div class="container" style="justify-content:center;">
+              <div style="justify-content:center;text-align:center; margin-top:15px;">  
+                <div style="justify-content:center;">
                   <div class="header_wrap">
                     <!-- <div class="num_rows">
-                
                       <div class="form-group">
-      
                         <select class="form-control" name="state" id="maxRows">
-                
                           <option value="10">10</option>
                           <option value="15">15</option>
                           <option value="20">20</option>
                           <option value="50">50</option>
                           <option value="5000">Show ALL Rows</option>
                         </select>
-                
                       </div>
                     </div> -->
+
+
+                    <!--search bar-->
                     <div class="tb_search" style="margin-bottom: 1rem;">
-                      <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+                      <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search..." class="form-control">
                     </div>
                   </div>
+
+                  <!--table-->
                   <div class="table-responsive">
-                    <table class="table table-striped table-class" id="table-id">
-                  
+                    <table class="table table-class" id="table-id">
                       <thead>
                         <tr>
                           <th data-priority="1">IEEE ID</th>
                           <th data-priority="1">Name</th>
                           <th data-priority="1">Position</th>
                           <th data-priority="1">Contact</th>
-                          <th data-priority= "1">Select Members</th>
+                          <th data-priority= "1">Select</th>
                         </tr>
                       </thead>
                       <tbody>                                    
@@ -293,8 +297,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135453</td>
-                          <td>Kuddus Molla</td>
+                          <td>99135451</td>
+                          <td>Washio Ferdous</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -304,8 +308,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135454</td>
-                          <td>Kashem Ali</td>
+                          <td>99135452</td>
+                          <td>Akkas Uddin</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -315,8 +319,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135455</td>
-                          <td>Siddik Khan</td>
+                          <td>99135451</td>
+                          <td>Washio Ferdous</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -326,19 +330,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135456</td>
-                          <td>Sokhina Kumari</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody>                                    
-                        <tr>
-                          <td>99135457</td>
-                          <td>Bilkis Begom</td>
+                          <td>99135452</td>
+                          <td>Akkas Uddin</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -348,24 +341,29 @@
                       </tbody>
                     </table>
                   </div>  
-                        
                 </div>
               </div>
       
+
+              <!--task submission type-->
               <div class="task-selections">
-                <h5 class="submission-label">Submission Type:</h5>
+                <h6 class="submission-label">Task submission type:</h6>
                 <ul class="submission-list">
                   <li class="submission-item">
-                    <input type="checkbox" id="file-upload" class="submission-checkbox" name="submission-type" value="file-upload">
-                    <label for="file-upload" class="option-label">File Upload</label>
+                    <input type="checkbox" id="permission-paper" class="submission-checkbox" name="submission-type" value="permission-paper">
+                    <label for="permission-paper" class="option-label">Permission paper</label>
                   </li>
                   <li class="submission-item">
                     <input type="checkbox" id="content" class="submission-checkbox" name="submission-type" value="content">
                     <label for="content" class="option-label">Content</label>
                   </li>
                   <li class="submission-item">
-                    <input type="checkbox" id="picture" class="submission-checkbox" name="submission-type" value="picture">
-                    <label for="picture" class="option-label">Picture</label>
+                    <input type="checkbox" id="file-upload" class="submission-checkbox" name="submission-type" value="file-upload">
+                    <label for="file-upload" class="option-label">File Upload</label>
+                  </li>
+                  <li class="submission-item">
+                    <input type="checkbox" id="media" class="submission-checkbox" name="submission-type" value="media">
+                    <label for="media" class="option-label">Media</label>
                   </li>
                   <li class="submission-item">
                     <input type="checkbox" id="drive-link" class="submission-checkbox" name="submission-type" value="drive-link">
@@ -386,69 +384,18 @@
                 </ul>
               </div>
               
-              <!--create task btn-->
+              <!--forward task btn-->
               <div style="text-align: center;">
-                <button type="submit" class="create-task-btn">Forward Task</button>
+                <button type="submit" class="forward-task-btn">Forward Task</button>
               </div>
-
             </form>
       
           </div>
-
-          <!-- ############ PAGE END-->
-
         </div>
       </div>
-      <!-- / -->
-      
-      <!--Theme Switcher-->
-      {% block theme_switcher %} 
-      {% include "theme_switcher.html" %} 
-      {% endblock theme_switcher %}
-      
-      <!-- app end-->
-      <!-- / -->
-
-      <!-- ############ LAYOUT END-->
-
-      <!-- build:js scripts/app.html.js -->
-      <!-- jQuery -->
-      <script src="{% static 'script/jquery.js'%}"></script>
-      <!-- Bootstrap -->
-      <script src="{% static 'script/tether.min.js'%}"></script>
-      <script src="{% static 'script/bootstrap.js'%}"></script>
-      <!-- core -->
-      <script src="{% static 'script/underscore-min.js'%}"></script>
-      <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
-      <script src="{% static 'script/pace.min.js'%}"></script>
-
-      {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
-
-      <script src="{% static 'script/palette.js'%}"></script>
-      <script src="{% static 'script/ui-load.js'%}"></script>
-      <script src="{% static 'script/ui-jp.js' %}"></script>
-      <script src="{% static 'script/ui-include.js'%}"></script>
-      <script src="{% static 'script/ui-device.js'%}"></script>
-      <script src="{% static 'script/ui-form.js'%}"></script>
-      <script src="{% static 'script/ui-nav.js'%}"></script>
-      <script src="{% static 'script/ui-screenfull.js'%}"></script>
-      <script src="{% static 'script/ui-scroll-to.js'%}"></script>
-      <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-      {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
-      <script src="{% static 'script/app.js'%}"></script>
-      <!-- apexcharts -->
-      <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-      <!-- Chart JS -->
-      <script src="{% static 'scripts/chartjs.js' %}"></script>
-      <!-- ajax -->
-      {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
-      <script src="{% static 'script/ajax.js'%}"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
-
 
       {% block common_js %}
-      {% include "common_js.html" %}
+       {% include "common_js.html" %}
       {% endblock common_js %}
 
       <script>
@@ -548,51 +495,51 @@
         }
 
         // All Table search script
-        function FilterkeyWord_all_table() {
-          
-        // Count td if you want to search on all table instead of specific column
+    function FilterkeyWord_all_table() {
+      // Count td if you want to search on all table instead of specific column
 
-        var count = $('.table').children('tbody').children('tr:first-child').children('td').length; 
+      var count = $(".table")
+        .children("tbody")
+        .children("tr:first-child")
+        .children("td").length;
 
-              // Declare variables
-        var input, filter, table, tr, td, i;
-        input = document.getElementById("search_input_all");
-        var input_value =     document.getElementById("search_input_all").value;
-            filter = input.value.toLowerCase();
-        if(input_value !=''){
-              table = document.getElementById("table-id");
-              tr = table.getElementsByTagName("tr");
+      // Declare variables
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("search_input_all");
+      var input_value = document.getElementById("search_input_all").value;
+      filter = input.value.toLowerCase();
+      if (input_value != "") {
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
 
-              // Loop through all table rows, and hide those who don't match the search query
-              for (i = 1; i < tr.length; i++) {
-                
-                var flag = 0;
-                
-                for(j = 0; j < count; j++){
-                  td = tr[i].getElementsByTagName("td")[j];
-                  if (td) {
-                  
-                      var td_text = td.innerHTML;  
-                      if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
-                      //var td_text = td.innerHTML;  
-                      //td.innerHTML = 'shaban';
-                        flag = 1;
-                      } else {
-                        //DO NOTHING
-                      }
-                    }
-                  }
-                if(flag==1){
-                          tr[i].style.display = "";
-                }else {
-                  tr[i].style.display = "none";
-                }
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 1; i < tr.length; i++) {
+          var flag = 0;
+
+          for (j = 0; j < count; j++) {
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+              var td_text = td.innerHTML;
+              if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                //var td_text = td.innerHTML;
+                //td.innerHTML = 'shaban';
+                flag = 1;
+              } else {
+                //DO NOTHING
               }
-          }else {
-            //RESET TABLE
-            $('#maxRows').trigger('change');
+            }
           }
-        } 
+          if (flag == 1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      } else {
+        //RESET TABLE
+        $("#maxRows").trigger("change");
+      }
+    } 
       </script>
       <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -725,7 +672,7 @@
       </script>
       <script>
 
-        var forwardBtn = document.querySelectorAll('.create-task-btn');
+        var forwardBtn = document.querySelectorAll('.forward-task-btn');
         // forwardBtn.forEach(input => {
         //   input.addEventListener('change', function() {
         //     checkSelections();
