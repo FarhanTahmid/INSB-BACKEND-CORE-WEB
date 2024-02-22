@@ -4414,11 +4414,18 @@ def create_task(request):
         elif task_type == "Individuals":
             member_select = request.POST.getlist('member_select')
 
+        if task_type == "Team" and not team_select:
+            messages.warning(request,"Please select Team(s)")
+            return redirect('central_branch:create_task')
+        elif task_type == "Individuals" and not member_select:
+            messages.warning(request,"Please select Individual(s)")
+            return redirect('central_branch:create_task')
+
         new_task = Task(title=title,
                         description=description,
                         task_category=Task_Category.objects.get(name=task_category),
                         task_type=task_type,
-                        sc_ag_id=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
+                        task_of=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
                         deadline=deadline
                         )
         
@@ -4429,13 +4436,29 @@ def create_task(request):
             for team_primary in team_select:
                 team_primaries.append(Teams.objects.get(primary=team_primary))
             new_task.team.add(*team_primaries)
+            new_task.save()                     
+
+            coordinators = []
+            get_current_panel=Branch.load_current_panel()
+            has_current_panel=True
+            get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+
+            for member in get_current_panel_members:
+                if str(member.team.primary) in team_select:
+                    if member.position.is_co_ordinator:
+                        coordinators.append(member.member)
+                        ##
+                        ## Send email/notification here
+                        ##
+            
+            new_task.team_coordinators.add(*coordinators)
             new_task.save()
 
-        if member_select:
+        elif member_select:
             new_task.members.add(*member_select)
             new_task.save()
 
-        return redirect('central_branch:task_home')
+        return redirect('central_branch:create_task')
 
 
     context = {
@@ -4462,4 +4485,4 @@ def upload_task(request):
         return render(request,"task_page.html")
 
 def add_task(request):
-        return render(request,"team_task_forword_to_members.html")
+        return render(request,"task_forward_to_members.html")
