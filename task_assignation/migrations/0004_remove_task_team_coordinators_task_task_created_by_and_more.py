@@ -18,7 +18,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='task',
             name='task_created_by',
-            field=models.CharField(max_length=15),
+            field=models.CharField(default=123, max_length=15),
+            preserve_default=False,
         ),
         migrations.AlterField(
             model_name='task',
