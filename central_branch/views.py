@@ -4473,19 +4473,60 @@ def upload_task(request, task_id):
 def add_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
+    team_members = Branch.load_team_members(team_primary=1)
 
     context = {
         'task':task,
+        'team_members':team_members,
     }
 
     return render(request,"task_forward_to_members.html",context)
 
 def task_edit(request, task_id):
-
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     task = Task.objects.get(id=task_id)
+    task_categories = Task_Category.objects.all()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+    all_members = Members.objects.all()
+
+    if request.method == 'POST':
+        if 'update_task' in request.POST:
+            title = request.POST.get('task_title')
+            description = request.POST.get('task_description_details')
+            task_category = request.POST.get('task_category')
+            deadline = request.POST.get('deadline')
+            task_type = request.POST.get('task_type')
+
+            team_select = None
+            member_select = None
+            if task_type == "Team":
+                team_select = request.POST.getlist('team_select')
+            elif task_type == "Individuals":
+                member_select = request.POST.getlist('member_select')
+
+            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select)):
+                messages.success(request,"Task Updated successfully!")
+            else:
+                messages.warning(request,"Something went wrong while updating the task!")
+
+            return redirect('central_branch:task_edit',task_id)
+        elif 'delete_task' in request.POST:
+            if(Task_Assignation.delete_task(task_id=task_id)):
+                messages.success(request,"Task deleted successfully!")
+            else:
+                messages.warning(request,"Something went wrong while deleting the task!")
+            
+            return redirect('central_branch:task_home')
 
     context = {
         'task':task,
+        'task_categories':task_categories,
+        'teams':teams,
+        'all_members':all_members,
     }
 
     return render(request,"create_task.html",context)

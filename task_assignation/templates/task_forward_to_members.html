@@ -273,72 +273,19 @@
                           <th data-priority= "1">Select</th>
                         </tr>
                       </thead>
+                      {% for member in team_members %}
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
+                          <td>{{member.ieee_id}}</td>
+                          <td>{{member.name}}</td>
+                          <td>{{member.position.role}}</td>
+                          <td>{{member.contact_no}}</td>
                           <td>
                             <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
                           </td>
                         </tr>
                       </tbody>
-                      <tbody>                                    
-                        <tr>
-                          <td>99135452</td>
-                          <td>Akkas Uddin</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody>                                    
-                        <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody>                                    
-                        <tr>
-                          <td>99135452</td>
-                          <td>Akkas Uddin</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody>                                    
-                        <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody>                                    
-                        <tr>
-                          <td>99135452</td>
-                          <td>Akkas Uddin</td>
-                          <td>Team Volunteer</td>
-                          <td>01912653657</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
-                          </td>
-                        </tr>
-                      </tbody>
+                      {% endfor %}
                     </table>
                   </div>  
                 </div>

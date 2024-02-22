@@ -20,7 +20,7 @@ class Task_Assignation:
             messages.warning(request,"Please select Individual(s)")
         
         try:
-            task_created_by=Members.objects.get(ieee_id=current_user.user.username).ieee_id
+            task_created_by=str(Members.objects.get(ieee_id=current_user.user.username).ieee_id)
         except:
             task_created_by=adminUsers.objects.get(username=current_user.user.username).username
 
@@ -44,7 +44,7 @@ class Task_Assignation:
 
             coordinators = []
             get_current_panel_members = None
-            if task_of == 5:
+            if task_of == 1:
                 get_current_panel=Branch.load_current_panel()
                 get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
             else:
@@ -68,4 +68,59 @@ class Task_Assignation:
             new_task.save()
             return True
         
+    def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select):
+        
+        if task_type == "Team" and not team_select:
+            messages.warning(request,"Please select Team(s)")
+        elif task_type == "Individuals" and not member_select:
+            messages.warning(request,"Please select Individual(s)")
+
+        task = Task.objects.get(id=task_id)
+        task.title = title
+        task.description = description
+        task.task_category = Task_Category.objects.get(name=task_category)
+        task.deadline = deadline
+        if task.task_type == "Team":
+            task.team.clear()
+        elif task.task_type == "Individuals":
+            task.members.clear()
+        task.task_type = task_type
+
+        if task_type == "Team":
+            team_primaries = []
+            for team_primary in team_select:
+                team_primaries.append(Teams.objects.get(primary=team_primary))
+            task.team.add(*team_primaries)
+        elif task_type == "Individuals":
+            task.members.add(*member_select)
+        
+        #task.is_task_completed = is_task_completed
+        coordinators = []
+        get_current_panel_members = None
+        if task.task_of.primary == 1:
+            get_current_panel=Branch.load_current_panel()
+            get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+        else:
+            get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task.task_of.primary).first()
+            get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
+
+        if task_type == "Team":
+            for member in get_current_panel_members:
+                if str(member.team.primary) in team_select:
+                    if member.position.is_co_ordinator:
+                        coordinators.append(member.member)
+                        ##
+                        ## Send email/notification here
+                        ##
+            print(coordinators)
+
+        task.save()
+        return True
+
+    def delete_task(task_id):
+        Task.objects.get(id=task_id).delete()
+        return True
+
+
+
         

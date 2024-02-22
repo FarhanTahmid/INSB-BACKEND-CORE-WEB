@@ -144,7 +144,7 @@
       <div style="justify-content: center; text-align: center">
         {% if messages %} 
         {% for message in messages %}
-        <h4>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
+        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
         {% endfor %}
         <br />
         {% endif %}
