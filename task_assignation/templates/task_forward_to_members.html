@@ -40,6 +40,10 @@
       .btn-container {
         text-align: center;
       }
+      .tb_search {
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
       
       .btn {
         max-width: 100%;
@@ -50,13 +54,13 @@
         font-size: 16px; /* Adjust the font size as needed */
       }
       .update_button{
-          display : flex;
-          justify-content: space-around;
+        display : flex;
+        justify-content: space-around;
 
       }
       .tooltip-container {
-          position: relative;
-          display: inline-block;
+        position: relative;
+        display: inline-block;
       }
 
       .tooltip-container.right {
@@ -86,10 +90,10 @@
       }
 
       .image-button img {
-        height: 50px;
         width: 50px; /* Adjust as needed */
         height: auto; /* Maintain aspect ratio */
-        border-radius: 5px; /* Add rounded corners if desired */
+        border-radius: 50%; /* Add rounded corners if desired */
+        box-shadow: 2px 2px 5px 0px #80808054;
       }
       .submission-list {
         list-style: none;
@@ -104,6 +108,9 @@
       .table-class tbody tr:nth-child(odd){
         background-color: white; /* White color for odd rows */
       }
+      .table-class tbody tr:nth-child(odd){
+        background-color: white; /* White color for odd rows */
+      }
       .table-class tbody tr:hover {
         background-color: #e0e0e0; /* Lighter gray color for hover effect */
       }
@@ -111,10 +118,11 @@
         max-height: 250px; /* Set maximum height for the table */
         overflow-y: auto; /* Enable vertical scrollbar when content overflows */
         border-radius: 4px;
+        box-shadow: 2px 2px 5px 0px #80808054;
       }
       .table-responsive thead th {
         position: sticky;
-        top: 0;
+        top: -2px;
       }
       /* Styling for the checkbox */
       .submission-checkbox {
@@ -137,12 +145,15 @@
         .btn {
           width: 100%; /* Make the button full width on smaller screens */
         }
+        .tb_search{
+          width: 100%;
+        }
       }
       .nav a.active {
         color: #FFA300;
       }
-      .ckeditor textarea {
-        height: 200px;
+      .ckeditor {
+        box-shadow: 2px 2px 5px 0px #80808054;
       }
       .ck.ck-editor__editable_inline>:last-child {
         margin-bottom: var(--ck-spacing-large);
@@ -156,11 +167,18 @@
         border-radius: 4px;
         border: 2px solid #75D481;
         transition: all ease-in-out .3s;
+        box-shadow: 2px 2px 5px 1px #80808054;
       }
+      
       .create-task-btn:hover {
         color: #75D481;
         background: white;
         border-color: #75D481;
+      }
+      .form-control{
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 0px;
       }
     </style>
   </head>
@@ -264,8 +282,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
+                          <td>99135452</td>
+                          <td>Akkas Uddin</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -275,8 +293,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
+                          <td>99135453</td>
+                          <td>Kuddus Molla</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -286,8 +304,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
+                          <td>99135454</td>
+                          <td>Kashem Ali</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -297,8 +315,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
+                          <td>99135455</td>
+                          <td>Siddik Khan</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -308,8 +326,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
+                          <td>99135456</td>
+                          <td>Sokhina Kumari</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -319,8 +337,8 @@
                       </tbody>
                       <tbody>                                    
                         <tr>
-                          <td>99135451</td>
-                          <td>Washio Ferdous</td>
+                          <td>99135457</td>
+                          <td>Bilkis Begom</td>
                           <td>Team Volunteer</td>
                           <td>01912653657</td>
                           <td>
@@ -703,6 +721,47 @@
           }
         }
 
+
+      </script>
+      <script>
+
+        var forwardBtn = document.querySelectorAll('.create-task-btn');
+        // forwardBtn.forEach(input => {
+        //   input.addEventListener('change', function() {
+        //     checkSelections();
+        //   });
+        // });
+
+        forwardBtn.onclick = function () {
+          // Check if a radio button is selected
+          var radioButtons = document.querySelectorAll('.table-checkbox');
+          var radioSelected = false;
+
+          radioButtons.forEach(function(radioButton) {
+            if (radioButton.checked) {
+              radioSelected = true;
+            }
+          });
+
+          // Check if at least one checkbox is selected from the table
+          var checkboxes = document.querySelectorAll('.submission-checkbox');
+          var checkboxSelected = false;
+
+          checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+              checkboxSelected = true;
+            }
+          });
+
+          // Display alert messages based on selections
+          if (!radioSelected) {
+            alert('Please select a member to forward task');
+          } else if (!checkboxSelected) {
+            alert('Please select a task submission type');
+          } else {
+            alert('I don\'t know where to go next');
+          }
+        }
 
       </script>
     <!-- endbuild -->
