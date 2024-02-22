@@ -490,8 +490,8 @@
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
-                  <a href="#" class="add-members-task-btn">Add members and task</a>
-                  <a href="{% url 'central_branch:upload_task' %}" class="start-task-btn">Start Task</a>
+                  <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">Start Task</a>
                 </div>
                 {% endif %}
 
