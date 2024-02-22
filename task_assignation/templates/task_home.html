@@ -185,7 +185,7 @@
                 {% for task in all_tasks %}
                 <tr>
                   <td style="color: #00629b">
-                    <a href="#">{{task.title}}</a>
+                    <a href="{% url 'central_branch:task_edit' task.pk %}">{{task.title}}</a>
                   </td>
                   <td>{{task.deadline}}</td>
                   <td>Not Implemented</td>

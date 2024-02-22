@@ -4445,16 +4445,47 @@ def create_task(request):
 @login_required
 @member_login_permission
 def task_home(request):
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     all_tasks = Task.objects.all()
 
     context = {
         'all_tasks':all_tasks,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"task_home.html",context)
 
-def upload_task(request):
-        return render(request,"task_page.html")
+def upload_task(request, task_id):
 
-def add_task(request):
-        return render(request,"task_forward_to_members.html")
+    task = Task.objects.get(id=task_id)
+
+    context = {
+        'task':task,
+    }
+
+    return render(request,"task_page.html",context)
+
+def add_task(request, task_id):
+
+    task = Task.objects.get(id=task_id)
+
+    context = {
+        'task':task,
+    }
+
+    return render(request,"task_forward_to_members.html",context)
+
+def task_edit(request, task_id):
+
+    task = Task.objects.get(id=task_id)
+
+    context = {
+        'task':task,
+    }
+
+    return render(request,"create_task.html",context)
