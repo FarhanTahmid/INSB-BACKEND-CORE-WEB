@@ -348,6 +348,27 @@
             transition: all 0.2s linear;
             transition-delay: 0.15s;
             }
+
+            /* file input */
+            .file-input {
+                width: 100%;
+            }
+
+            .file-input-bordered {
+                border: 2px solid #F8F8F8; /* Adjust color as needed */
+                border-radius: 0.375rem; /* Adjust border radius as needed */
+                padding: 0.5px;
+            }
+
+            .file-input-info {
+                color: black; /* Adjust color as needed */
+                background-color: #F8F8F8; /* Adjust background color as needed */
+            }
+
+            .max-w-xs {
+                max-width: 20rem; /* Adjust max-width as needed */
+            }
+
     </style>
   </head>
   <body>
@@ -355,129 +376,132 @@
     <!--LAYOUT START-->
     <div class="app" id="app">
 
-      <!-- aside -->
-      <div id="aside" class="app-aside modal nav-dropdown">
-        {% block sidebar %} 
-         {% include 'users/sidebar.html' %} 
-        {% endblock %}
-      </div>
-
-
-      <!-- navbar -->
-      <div id="content" class="app-content" role="main">
-        {% block navbar %}
-         {% include 'navbar.html' %} 
-        {% endblock navbar %}
-      </div>
-
-
-      <!--PAGE START-->
-      <div ui-view class="app-body" id="view">
-          
-          <!--contents of page-->
-          <div class="form-wrapper">
-            
-           <!-- task page heading-->
-           <h4>Finish Task</h4>
-           <br><br>
-
-            <!-- Paper permission -->
-            <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
-            <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
-            
-                <input type="checkbox" id="cbx2" style="display: none;" >
-                <label for="cbx2" class="check">
-                    <svg width="18px" height="18px" viewBox="0 0 18 18" style="padding-top: 1px;">
-                        <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
-                        <polyline points="1 9 7 14 15 4"></polyline>
-                    </svg>
-                </label>
-            
+            <!-- aside -->
+            <div id="aside" class="app-aside modal nav-dropdown">
+                {% block sidebar %} 
+                {% include 'users/sidebar.html' %} 
+                {% endblock %}
             </div>
 
-            <br>
 
-             <!--file upload -->
-             <div class="form-group"  style="background-color: #F8F8F8; padding: 5px;">
-                <label for="documents">File Upload</label>
-                <input type="file" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
-                
-                <br>
-                <div id="content-selected-docs-container"></div>
-                <input type="hidden" name="selected_documents" id="content-selected-documents">
+            <!-- navbar -->
+            <div id="content" class="app-content" role="main">
+                {% block navbar %}
+                {% include 'navbar.html' %} 
+                {% endblock navbar %}
             </div>
-            <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
-            
-            <br>
-              
 
 
-                <!--content-->
-                <label class="description_label">Content</label>
-                <div class="ckeditor">
-                    <div>
-                        <textarea class="form-control" type="text" name="content_details"></textarea>
-                    </div>
-                    <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
-                </div>
+        <!--PAGE START-->
+        <div ui-view class="app-body" id="view">
                 
-                <br>
-                
+            <!--contents of page-->
+            <div class="form-wrapper">
+                    
+                <!-- task page heading-->
+                <h4>Finish Task</h4>
+                <br><br>
 
-                
-                <div id="media-selected-images-container"></div>
-                <input type="hidden" name="selected_images" id="media-selected-images">
-           
-            
-            <br>
-            
-            <!-- Drive link -->
-            <div class="form-group">
-                <label>Folder Drive Link</label>
-                <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
-                value="{{media_links.logo_link}}" name="logo_drive_link_of_event" />
-            </div>
-            
-            
-            <br>
-            
-            
-            <!-- Media -->
-            <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">
-                <div style="display: flex; align-items: center;">
-                    <label for="images" style="margin-right: 10px;">Media Upload</label>
-                    <div class="custom-file">
-                        <input type="file" id="media-image-input" name="image" accept="image/*" multiple style="margin-bottom: 0;">
+                    <!-- Paper permission -->
+                    <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                    <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                         
+                            <select id="paper_permission_dropdown" class="form-control">
+                                <option value="yes">Completed</option>
+                                <option value="no">Not Completed</option>
+                                <option value="not_needed">Not Needed</option>
+                            </select>
+                        
+                        
+                    
                     </div>
-                </div>
-            </div>
-            <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
-            
-            
-            
-                <br>
 
+                    <br>
 
-                <!--other content-->
-                <label class="description_label">Other Contents</label>
-                <div class="ckeditor">
-                    <div>
-                        <textarea class="form-control" type="text" name="other_content_details"></textarea>
+                    
+                    
+                    
+                    <!--content-->
+                    <label class="description_label">Content</label>
+                    <div class="ckeditor">
+                        <div>
+                            <textarea class="form-control" type="text" name="content_details"></textarea>
+                            </div>
+                            <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
+                        </div>
+                        
+
+                        <br>
+                        
+                        
+                        
+                        <div id="media-selected-images-container"></div>
+                        <input type="hidden" name="selected_images" id="media-selected-images">
+                        
+                        
+                        <br>
+                        
+
+                        <!--file upload -->
+                        <label for="documents">File Upload</label>
+                        <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
+                            <input type="file" class="file-input file-input-bordered file-input-info" style="flex-grow: 1;">
+
+                        
+                        <br>
+                        <div id="content-selected-docs-container"></div>
+                        <input type="hidden" name="selected_documents" id="content-selected-documents">
                     </div>
-                   
-                </div>
-                
-                <br>
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    
+                    <br>
 
-               
+                    
+                    
+                    <!-- Media -->
+                    <label for="images" >Media Upload</label>
+                    <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
+                        <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple>
+                    </div>
+                    
+                    
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    
+                    
+                    
+                        <br>
+
+
+                        <!-- Drive link -->
+                        <div class="form-group">
+                            <label>Folder Drive Link</label>
+                            <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
+                            value="{{media_links.logo_link}}" name="content_drive" />
+                        </div>
+                        
+                        
+                        <br>
+
+
+                        <!--other content-->
+                        <label class="description_label">Other Contents</label>
+                        <div class="ckeditor">
+                            <div>
+                                <textarea class="form-control" type="text" name="other_content_details"></textarea>
+                            </div>
+                        
+                        </div>
+                        
+                        
+
+                    
             </div> 
 
-                <!--Submit btn-->
-                <div class="task-btn">
-                    <a href="#" class="cancel-task-btn">Cancel</a>
-                    <a href="#" class="finish-task-btn">Finish</a>
-                </div>
+                    <!--Submit btn-->
+                    <div class="task-btn">
+                        <a href="#" class="cancel-task-btn">Cancel</a>
+                        <a href="#" class="finish-task-btn">Finish</a>
+                    </div>
         </div>
         
     </div>
