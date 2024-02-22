@@ -4414,11 +4414,18 @@ def create_task(request):
         elif task_type == "Individuals":
             member_select = request.POST.getlist('member_select')
 
+        if task_type == "Team" and not team_select:
+            messages.warning(request,"Please select Team(s)")
+            return redirect('central_branch:create_task')
+        elif task_type == "Individuals" and not member_select:
+            messages.warning(request,"Please select Individual(s)")
+            return redirect('central_branch:create_task')
+
         new_task = Task(title=title,
                         description=description,
                         task_category=Task_Category.objects.get(name=task_category),
                         task_type=task_type,
-                        sc_ag_id=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
+                        task_of=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
                         deadline=deadline
                         )
         
@@ -4430,8 +4437,7 @@ def create_task(request):
                 team_primaries.append(Teams.objects.get(primary=team_primary))
             new_task.team.add(*team_primaries)
             new_task.save()
-
-        if member_select:
+        elif member_select:
             new_task.members.add(*member_select)
             new_task.save()
 

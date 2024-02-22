@@ -471,6 +471,15 @@
               <!--create task heading-->
               <h4>Create task</h4>
               
+              <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                <br>
+                {% endif %}
+            </div>
               
               {% if not is_new_task %}
               <!--buttons showed when viewing task-->

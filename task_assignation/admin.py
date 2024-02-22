@@ -8,4 +8,4 @@ class Task_Category(admin.ModelAdmin):
 
 @admin.register(Task)
 class Task(admin.ModelAdmin):
-    list_display = ['id','title','task_category','task_type','sc_ag_id','deadline','has_file_upload','has_content','has_picture_upload','has_permission_paper']
+    list_display = ['id','title','task_category','task_type','task_of','deadline','has_file_upload','has_content','has_picture_upload','has_permission_paper']
