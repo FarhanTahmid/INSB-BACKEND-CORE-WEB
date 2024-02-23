@@ -4404,10 +4404,6 @@ def create_task(request):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
 
-    task_categories = Task_Category.objects.all()
-    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Members.objects.all()
-
     if request.method == 'POST':
         title = request.POST.get('task_title')
         description = request.POST.get('task_description_details')
@@ -4430,7 +4426,10 @@ def create_task(request):
             messages.warning(request,"Something went wrong while creating the task!")
 
         return redirect('central_branch:task_home')
-
+    
+    task_categories = Task_Category.objects.all()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+    all_members = Members.objects.all()
 
     context = {
         'is_new_task':True, #Task is being created. Use it to disable some ui in the template
@@ -4451,7 +4450,7 @@ def task_home(request):
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    all_tasks = Task.objects.all()
+    all_tasks = Task.objects.all().order_by('-pk')
 
     context = {
         'all_tasks':all_tasks,
@@ -4474,7 +4473,52 @@ def upload_task(request, task_id):
 def add_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
-    team_members = Branch.load_team_members(team_primary=1)
+
+    if request.method == 'POST':
+        has_permission_paper = False
+        if request.POST.get('permission_paper'):
+            has_permission_paper = True
+        
+        has_content = False
+        if request.POST.get('content'):
+            has_content = True
+        
+        has_file_upload = False
+        if request.POST.get('file_upload'):
+            has_file_upload = True
+        
+        has_media = False
+        if request.POST.get('media'):
+            has_media = True
+
+        has_drive_link = False
+        if request.POST.get('drive_link'):
+            has_drive_link = True
+
+        has_others = False
+        others_description = None
+        if request.POST.get('others'):
+            has_others = True
+            others_description = request.POST.get('task_description_details')
+
+        member_select = []
+        if 'member_select' in request.POST:
+            member_select = request.POST.getlist('member_select')
+
+        if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
+            if(task.task_type == "Team" and not member_select):
+                messages.info(request,'Saved changes. Please select a member to forward tasks!')
+            else:
+                messages.success(request,"Task params updated successfully!")
+        else:
+            messages.warning(request,"We're a failure")
+
+        return redirect('central_branch:add_task',task_id)
+    
+    team_members = []
+    for team in task.team.all():
+        members = Branch.load_team_members(team_primary=team.primary)
+        team_members.extend(members)
 
     context = {
         'task':task,
@@ -4489,10 +4533,6 @@ def task_edit(request, task_id):
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    task = Task.objects.get(id=task_id)
-    task_categories = Task_Category.objects.all()
-    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Members.objects.all()
 
     if request.method == 'POST':
         if 'update_task' in request.POST:
@@ -4501,6 +4541,7 @@ def task_edit(request, task_id):
             task_category = request.POST.get('task_category')
             deadline = request.POST.get('deadline')
             task_type = request.POST.get('task_type')
+            is_task_completed = request.POST.get('task_completed_toggle_switch')
 
             team_select = None
             member_select = None
@@ -4510,7 +4551,7 @@ def task_edit(request, task_id):
             elif task_type == "Individuals":
                 member_select = request.POST.getlist('member_select')
 
-            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select)):
+            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed)):
                 messages.success(request,"Task Updated successfully!")
             else:
                 messages.warning(request,"Something went wrong while updating the task!")
@@ -4523,6 +4564,11 @@ def task_edit(request, task_id):
                 messages.warning(request,"Something went wrong while deleting the task!")
             
             return redirect('central_branch:task_home')
+    
+    task = Task.objects.get(id=task_id)
+    task_categories = Task_Category.objects.all()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+    all_members = Members.objects.all()
 
     context = {
         'task':task,

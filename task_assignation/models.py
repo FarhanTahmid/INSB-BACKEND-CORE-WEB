@@ -26,11 +26,13 @@ class Task(models.Model):
     start_date = models.DateTimeField(null=True,blank=True)
     deadline = models.DateTimeField(null=True,blank=True)
     drive_link = models.TextField(null=True,blank=True)
+    others_description = models.TextField(null=True,blank=True)
     has_drive_link = models.BooleanField(null=False,blank=False,default=False)
     has_file_upload = models.BooleanField(null=False,blank=False,default=False)
     has_content = models.BooleanField(null=False,blank=False,default=False)
     has_picture_upload = models.BooleanField(null=False,blank=False,default=False)
     has_permission_paper = models.BooleanField(null=False,blank=False,default=False)
+    has_others = models.BooleanField(null=False,blank=False,default=False)
     is_task_completed = models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:

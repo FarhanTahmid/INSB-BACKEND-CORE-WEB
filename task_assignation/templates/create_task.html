@@ -521,6 +521,7 @@
                 </div>
             </form> 
 
+            <form method="post">
             <!--delete and complete toggle btn-->
             <div class="delete_complete_toggle">
                 {% if not is_new_task %}
@@ -528,14 +529,13 @@
                 <div style="display: flex;">
                     <p class="complete_text">Mark as complete?</p>
                     <label class="switch">
-                        <input type="checkbox" name="toggle_switch" >
+                        <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
                         <span class="slider round"></span>
                     </label>
                 </div>
                 {% endif %}
             </div>
 
-            <form method="post">
                 {% csrf_token %}
 
 
@@ -858,10 +858,10 @@
         //change text if the toggle is active
 
         let completeText = document.querySelector('.complete_text');
-        let toggle = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]');
+        let toggle = document.querySelector('.delete_complete_toggle input[name="task_completed_toggle_switch"]');
 
         toggle.onclick = function(){
-            let active = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]:checked');
+            let active = document.querySelector('.delete_complete_toggle input[name="task_completed_toggle_switch"]:checked');
     
             if(active){
                 completeText.innerHTML = 'Task complete!';

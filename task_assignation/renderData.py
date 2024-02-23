@@ -90,8 +90,18 @@ class Task_Assignation:
             new_task.save()
             return True
         
-    def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select):
+    def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed):
         ''' This function is used to update task for both Branch and SC_AG '''
+
+        #Get the task using the task_id
+        task = Task.objects.get(id=task_id)
+
+        if is_task_completed:
+            task.is_task_completed = True
+            task.save()
+            return True
+        else:
+            task.is_task_completed = False
 
         #Checking to see if the list is empty depending on which task_type is selected
         #If empty then stop the creation
@@ -100,8 +110,6 @@ class Task_Assignation:
         elif task_type == "Individuals" and not member_select:
             messages.warning(request,"Please select Individual(s)")
 
-        #Get the task using the task_id
-        task = Task.objects.get(id=task_id)
 
         #Set the new parameters to the task
         task.title = title
@@ -171,6 +179,25 @@ class Task_Assignation:
         Task.objects.get(id=task_id).delete()
         return True
 
+    def add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description):
+        ''' This function is used to add members and/or task params '''
+        
+        task = Task.objects.get(id=task_id)
 
+        if member_select:
+            task.members.clear()
+            task.members.add(*member_select)
+        else:
+            task.members.clear()
 
+        task.has_permission_paper = has_permission_paper
+        task.has_content = has_content
+        task.has_file_upload = has_file_upload
+        task.has_picture_upload = has_media
+        task.has_drive_link = has_drive_link
+        task.has_others = has_others
+        task.others_description = others_description
+        task.save()
+        
+        return True
         
