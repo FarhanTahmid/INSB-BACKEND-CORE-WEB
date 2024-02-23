@@ -4417,12 +4417,13 @@ def create_task(request):
 
         team_select = None
         member_select = None
+        #Checking task types and get list accordingly
         if task_type == "Team":
             team_select = request.POST.getlist('team_select')
         elif task_type == "Individuals":
             member_select = request.POST.getlist('member_select')
 
-        task_of = 1
+        task_of = 1 #Setting task_of as 1 for Branch primary
         if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select)):
             messages.success(request,"Task Created successfully!")
         else:
@@ -4503,6 +4504,7 @@ def task_edit(request, task_id):
 
             team_select = None
             member_select = None
+            #Checking task types and get list accordingly
             if task_type == "Team":
                 team_select = request.POST.getlist('team_select')
             elif task_type == "Individuals":
