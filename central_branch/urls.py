@@ -127,8 +127,9 @@ urlpatterns = [
     path('members/user_access/',views.user_access,name="user_access"),
     path('update_restricted_members/',UpdateRestrictionAjax.as_view(),name="update_restricted_members"),
 
+    #task assignation urls
     path('create_task/',views.create_task,name="create_task"),
     path('task_home/',views.task_home,name="task_home"),
     path('upload_task/',views.upload_task,name="upload_task"),
-
+    path('add_task/',views.add_task,name="add_task"),
 ]

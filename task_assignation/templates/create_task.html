@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Content | IEEE NSU Student Branch</title>
+    <title>Create Task | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -44,6 +44,7 @@
             flex-wrap: wrap; 
             justify-content: space-between; 
             align-items: center;
+            margin-bottom: 15px;
         }
         .deadline-container{
             display: flex;
@@ -66,12 +67,12 @@
             border: 2px solid #d3d3d3;
             color: black;
             transition: .4s;
-            box-shadow: 0 0 5px 0px #80808054;
+            box-shadow: 2px 2px 5px 0px #80808054;
             border: 2px solid white;
         }
         .title-box:focus{
             border: 2px solid white;
-            box-shadow: 0 0 5px 0px #808080b1;
+            box-shadow: 2px 2px 5px 0px #808080b1;
         }
 
         #task_descriptionCharacterCount{
@@ -83,9 +84,11 @@
         }
         .category{
             margin-top: 0px;
+            margin-bottom: 25px;
         }
         .category_label{
             margin-bottom: 8px;
+            margin-right: 25px;
         }
         .category .radio-btns{
             display: flex;
@@ -125,19 +128,59 @@
         }
         .box{
             padding: 2px 25px 0px 9px;
-            box-shadow: 0 0 5px 0px #80808054;
+            box-shadow: 2px 2px 5px 0px #80808054;
             border-radius: 3px;
             margin-bottom: 19px;
             margin-right: 8px;
             text-align: center;
         }
         .ckeditor{
-            box-shadow: 0 0 5px 0px #80808054;
+            box-shadow: 2px 2px 5px 0px #80808054;
         }
         .task-btn{
             display: flex;
             justify-content: center;
             text-align: center;
+        }
+        .create-task-btn:visited , .start-task-btn:visited , .view-task-btn:visited , .add-members-task-btn:visited , .delete_task_btn{
+            color: white;
+        }
+        .confirm_delete_task_btn{
+            padding: 2px 26px;
+            color: #d33838;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #d33838;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_delete_task_btn{
+            padding: 2px 26px;
+            color: #0000008f;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #0000004f;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_delete_task_btn:hover{
+            color: white;
+            background: #0000004f;
+            border-color: transparent;
+        }
+        .delete_task_btn{
+            padding: 2px 26px;
+            color: #d33838;
+            background: white;
+            margin: 16px 0px 16px;
+            border-radius: 160px;
+            border: 2px solid #d33838;
+            transition: all ease-in-out .3s;
+            position: relative;
+            bottom: 21px;
+        }
+        .delete_task_btn:hover , .confirm_delete_task_btn:hover{
+            color: white;
+            background: #d33838;
+            border-color: #d33838;
         }
         .create-task-btn , .start-task-btn{
             padding: 5px 15px;
@@ -208,6 +251,115 @@
         .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover {
             background-color: rgb(169, 170, 170);
         }
+        .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 17px;
+        }
+
+        .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+        }
+
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 13px;
+        width: 13px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        }
+
+        input:checked + .slider {
+        background-color: #75D481;
+        }
+
+        input:focus + .slider {
+        box-shadow: 0 0 1px #75D481;
+        }
+
+        input:checked + .slider:before {
+        -webkit-transform: translateX(13px);
+        -ms-transform: translateX(13px);
+        transform: translateX(13px);
+        }
+
+        .slider.round {
+        border-radius: 34px;
+        }
+
+        .slider.round:before {
+        border-radius: 50%;
+        }
+        .delete_complete_toggle{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 18px;
+        }
+        .complete_text{
+            margin-right: 8px;
+            font-weight: 600;
+            color: #000000a2;
+        }
+        .delete_modal {
+         /* Hidden by default */
+        opacity: 0;
+        position: fixed; /* Stay in place */
+        z-index: -1;
+        padding-top: 50px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 150%;
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        transition: all .3s ease-in-out;
+        transform: translateY(-50px);
+        overflow: auto;
+        }
+
+        /* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto 35%;
+        padding: 20px;
+        border: 1px solid rgb(136, 136, 136);
+        width: 40%;
+        }
+
+        /* The Close Button */
+        .close {
+        color: #000;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -224,6 +376,10 @@
                 width: 100%;
                 margin-bottom: 15px;
             }
+            .modal-content{
+                width: 50%;
+                margin: auto;
+            }
 
         }
         @media screen and (max-width: 750px){
@@ -238,6 +394,9 @@
             }
             .task_type{
                 margin-bottom: -20px;
+            }
+            .modal-content{
+                width: 90%;
             }
         }
         @media screen and (max-width: 500px) {
@@ -312,14 +471,64 @@
               <!--create task heading-->
               <h4>Create task</h4>
               
-              <form method="post">
-              {% csrf_token %}
+              <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                    {% endfor %}
+                <br>
+                {% endif %}
+            </div>
+              
+              {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
                   <a href="#" class="add-members-task-btn">Add members and task</a>
-                  <a href="#" class="start-task-btn">Start Task</a>
-              </div>
+                  <a href="{% url 'central_branch:upload_task' %}" class="start-task-btn">Start Task</a>
+                </div>
+                {% endif %}
+
+
+             <form method="post">  
+                <!-- The Modal -->
+                <div id="myModal" class="delete_modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                            <h5>Confirm Delete</h5>
+                            <span class="close">&times;</span>
+                        </div>
+                        <h6>Do you want to delete this task?</h6>
+                        <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
+                            <a href="#" class="cancel_delete_task_btn">Cancel</a>
+                            <button type="submit" class="confirm_delete_task_btn">Confirm</button>
+                    </div>
+                    </div>
+                
+                </div>
+            </form> 
+
+            <!--delete and complete toggle btn-->
+            <div class="delete_complete_toggle">
+                {% if not is_new_task %}
+                <button type="button" class="delete_task_btn">Delete</button>
+                <div style="display: flex;">
+                    <p class="complete_text">Mark as complete?</p>
+                    <label class="switch">
+                        <input type="checkbox" name="toggle_switch" >
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                {% endif %}
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
@@ -339,16 +548,14 @@
                 
 
                 <!--task category-->
-                <div class=" category">
-                    <label class="category_label">Task category:</label>
-                    <div class="radio-btns">
-                    {% for task_category in task_categories %}
-                    <div class="radio-btns_content box">
-                        <input type="radio" id="btn-{{task_category.pk}}" name="task_category" value="{{task_category.name}}" required>
-                        <label for="btn-{{task_category.pk}}">{{task_category.name}}</label>
-                    </div>
-                    {% endfor %}
-                    </div>
+                <div class="category">
+                    <label class="category_label">Task category:</label>                    
+
+                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                        {% for task_category in task_categories %}
+                        <option value="{{task_category.name}}" >{{task_category.name}}</option>
+                        {% endfor %}
+                    </select>
                 </div>
 
 
@@ -356,7 +563,7 @@
                 <label class="description_label">Describe your task:</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea class="form-control" type="text" name="task_description_details"></textarea>
+                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details"></textarea>
                     </div>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
@@ -449,7 +656,7 @@
 
 
                 <!--create task btn-->
-                <div class="task-btn">
+                <div style="text-align: center;">
                     <button type="submit" class="create-task-btn">Create Task</button>
                 </div>
             </form>
@@ -619,5 +826,69 @@
         });
 
     </script> 
+    <script>
+        //change text if the toggle is active
+
+        let completeText = document.querySelector('.complete_text');
+        let toggle = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]');
+
+        toggle.onclick = function(){
+            let active = document.querySelector('.delete_complete_toggle input[name="toggle_switch"]:checked');
+    
+            if(active){
+                completeText.innerHTML = 'Task complete!';
+                completeText.style.color = '#75D481';
+            }
+            else{
+                completeText.innerHTML = 'Mark as complete?';
+                completeText.style.color = '#000000a2';
+            }
+        };
+    </script>
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    
+    // Get the button that opens the modal
+    var btn = document.querySelector(".delete_task_btn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    var cancel = document.getElementsByClassName('cancel_delete_task_btn')[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+    //   modal.style.display = "block";
+    modal.style.transform = 'translateY(0px)';
+    modal.style.zIndex = '103100';
+    modal.style.opacity = '1';
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    //   modal.style.display = "none";
+    modal.style.transform = 'translateY(-50px)';
+    modal.style.zIndex = '-100';
+    modal.style.opacity = '0';
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    cancel.onclick = function() {
+    //   modal.style.display = "none";
+    modal.style.transform = 'translateY(-50px)';
+    modal.style.zIndex = '-100';
+    modal.style.opacity = '0';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.transform = 'translateY(-50px)';
+        modal.style.zIndex = '-100';
+        modal.style.opacity = '0';
+      }
+    }
+    </script>
   </body>
 </html>

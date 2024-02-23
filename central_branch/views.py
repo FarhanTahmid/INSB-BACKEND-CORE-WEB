@@ -24,7 +24,7 @@ from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
 from users.models import Members,Panel_Members
 from django.conf import settings
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,member_login_permission
 import os
 import xlwt
 from users import renderData as port_render
@@ -4391,11 +4391,13 @@ class AwardRanking(View):
                 "volunteer_award_name": i.volunteer_award_name,
             })
         return data
-    
+
+@login_required
+@member_login_permission
 def create_task(request):
 
     task_categories = Task_Category.objects.all()
-    teams = Branch.load_teams()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
     all_members = Members.objects.all()
 
     if request.method == 'POST':
@@ -4412,11 +4414,18 @@ def create_task(request):
         elif task_type == "Individuals":
             member_select = request.POST.getlist('member_select')
 
+        if task_type == "Team" and not team_select:
+            messages.warning(request,"Please select Team(s)")
+            return redirect('central_branch:create_task')
+        elif task_type == "Individuals" and not member_select:
+            messages.warning(request,"Please select Individual(s)")
+            return redirect('central_branch:create_task')
+
         new_task = Task(title=title,
                         description=description,
                         task_category=Task_Category.objects.get(name=task_category),
                         task_type=task_type,
-                        sc_ag_id=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
+                        task_of=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
                         deadline=deadline
                         )
         
@@ -4427,16 +4436,33 @@ def create_task(request):
             for team_primary in team_select:
                 team_primaries.append(Teams.objects.get(primary=team_primary))
             new_task.team.add(*team_primaries)
+            new_task.save()                     
+
+            coordinators = []
+            get_current_panel=Branch.load_current_panel()
+            has_current_panel=True
+            get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+
+            for member in get_current_panel_members:
+                if str(member.team.primary) in team_select:
+                    if member.position.is_co_ordinator:
+                        coordinators.append(member.member)
+                        ##
+                        ## Send email/notification here
+                        ##
+            
+            new_task.team_coordinators.add(*coordinators)
             new_task.save()
 
-        if member_select:
+        elif member_select:
             new_task.members.add(*member_select)
             new_task.save()
 
-        return redirect('central_branch:task_home')
+        return redirect('central_branch:create_task')
 
 
     context = {
+        'is_new_task':True, #Task is being created. Use it to disable some ui in the template
         'task_categories':task_categories,
         'teams':teams,
         'all_members':all_members,
@@ -4444,14 +4470,19 @@ def create_task(request):
 
     return render(request,"create_task.html",context)
 
+@login_required
+@member_login_permission
 def task_home(request):
-        all_tasks = Task.objects.all()
+    all_tasks = Task.objects.all()
 
-        context = {
-            'all_tasks':all_tasks,
-        }
+    context = {
+        'all_tasks':all_tasks,
+    }
 
-        return render(request,"task_home.html",context)
+    return render(request,"task_home.html",context)
 
 def upload_task(request):
         return render(request,"task_page.html")
+
+def add_task(request):
+        return render(request,"task_forward_to_members.html")
