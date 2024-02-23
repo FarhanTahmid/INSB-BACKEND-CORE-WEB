@@ -15,8 +15,10 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from system_administration.models import adminUsers
 from system_administration.system_error_handling import ErrorHandling
 from task_assignation.models import Task, Task_Category
+from task_assignation.renderData import Task_Assignation
 from users import renderData
 from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
@@ -4121,7 +4123,7 @@ def panel_and_award_specific_page(request,panel_pk,award_pk):
         # get access value
         has_access=Branch_View_Access.get_manage_award_access(request=request)
         
-         # get all sc ag for sidebar
+        # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -4396,6 +4398,12 @@ class AwardRanking(View):
 @member_login_permission
 def create_task(request):
 
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
     all_members = Members.objects.all()
@@ -4414,51 +4422,13 @@ def create_task(request):
         elif task_type == "Individuals":
             member_select = request.POST.getlist('member_select')
 
-        if task_type == "Team" and not team_select:
-            messages.warning(request,"Please select Team(s)")
-            return redirect('central_branch:create_task')
-        elif task_type == "Individuals" and not member_select:
-            messages.warning(request,"Please select Individual(s)")
-            return redirect('central_branch:create_task')
+        task_of = 1
+        if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select)):
+            messages.success(request,"Task Created successfully!")
+        else:
+            messages.warning(request,"Something went wrong while creating the task!")
 
-        new_task = Task(title=title,
-                        description=description,
-                        task_category=Task_Category.objects.get(name=task_category),
-                        task_type=task_type,
-                        task_of=Chapters_Society_and_Affinity_Groups.objects.get(id=5),
-                        deadline=deadline
-                        )
-        
-        new_task.save()
-
-        if team_select:
-            team_primaries = []
-            for team_primary in team_select:
-                team_primaries.append(Teams.objects.get(primary=team_primary))
-            new_task.team.add(*team_primaries)
-            new_task.save()                     
-
-            coordinators = []
-            get_current_panel=Branch.load_current_panel()
-            has_current_panel=True
-            get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
-
-            for member in get_current_panel_members:
-                if str(member.team.primary) in team_select:
-                    if member.position.is_co_ordinator:
-                        coordinators.append(member.member)
-                        ##
-                        ## Send email/notification here
-                        ##
-            
-            new_task.team_coordinators.add(*coordinators)
-            new_task.save()
-
-        elif member_select:
-            new_task.members.add(*member_select)
-            new_task.save()
-
-        return redirect('central_branch:create_task')
+        return redirect('central_branch:task_home')
 
 
     context = {
@@ -4466,6 +4436,8 @@ def create_task(request):
         'task_categories':task_categories,
         'teams':teams,
         'all_members':all_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"create_task.html",context)
@@ -4473,16 +4445,88 @@ def create_task(request):
 @login_required
 @member_login_permission
 def task_home(request):
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     all_tasks = Task.objects.all()
 
     context = {
         'all_tasks':all_tasks,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"task_home.html",context)
 
-def upload_task(request):
-        return render(request,"task_page.html")
+def upload_task(request, task_id):
 
-def add_task(request):
-        return render(request,"task_forward_to_members.html")
+    task = Task.objects.get(id=task_id)
+
+    context = {
+        'task':task,
+    }
+
+    return render(request,"task_page.html",context)
+
+def add_task(request, task_id):
+
+    task = Task.objects.get(id=task_id)
+    team_members = Branch.load_team_members(team_primary=1)
+
+    context = {
+        'task':task,
+        'team_members':team_members,
+    }
+
+    return render(request,"task_forward_to_members.html",context)
+
+def task_edit(request, task_id):
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    task = Task.objects.get(id=task_id)
+    task_categories = Task_Category.objects.all()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+    all_members = Members.objects.all()
+
+    if request.method == 'POST':
+        if 'update_task' in request.POST:
+            title = request.POST.get('task_title')
+            description = request.POST.get('task_description_details')
+            task_category = request.POST.get('task_category')
+            deadline = request.POST.get('deadline')
+            task_type = request.POST.get('task_type')
+
+            team_select = None
+            member_select = None
+            if task_type == "Team":
+                team_select = request.POST.getlist('team_select')
+            elif task_type == "Individuals":
+                member_select = request.POST.getlist('member_select')
+
+            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select)):
+                messages.success(request,"Task Updated successfully!")
+            else:
+                messages.warning(request,"Something went wrong while updating the task!")
+
+            return redirect('central_branch:task_edit',task_id)
+        elif 'delete_task' in request.POST:
+            if(Task_Assignation.delete_task(task_id=task_id)):
+                messages.success(request,"Task deleted successfully!")
+            else:
+                messages.warning(request,"Something went wrong while deleting the task!")
+            
+            return redirect('central_branch:task_home')
+
+    context = {
+        'task':task,
+        'task_categories':task_categories,
+        'teams':teams,
+        'all_members':all_members,
+    }
+
+    return render(request,"create_task.html",context)

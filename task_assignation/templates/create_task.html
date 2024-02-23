@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Create Task | IEEE NSU Student Branch</title>
+    <title>{% if is_new_task %}Create{% else %}Update{% endif %} Task | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -360,6 +360,11 @@
         text-decoration: none;
         cursor: pointer;
         }
+
+        .table-responsive thead th {
+        position: sticky;
+        top: -2px;
+        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -468,8 +473,12 @@
           <!--contents of page-->
           <div class="form-wrapper">
               
+              {% if is_new_task %}
               <!--create task heading-->
               <h4>Create task</h4>
+              {% else %}
+              <h4>Task: {{task.title}}</h4>
+              {% endif %}
               
               <!--Messages-->
             <div style="justify-content:center; text-align:center;">
@@ -485,13 +494,14 @@
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   <a href="#" class="view-task-btn">View Task</a>
-                  <a href="#" class="add-members-task-btn">Add members and task</a>
-                  <a href="{% url 'central_branch:upload_task' %}" class="start-task-btn">Start Task</a>
+                  <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">Start Task</a>
                 </div>
                 {% endif %}
 
 
-             <form method="post">  
+             <form method="post">
+                {% csrf_token %} 
                 <!-- The Modal -->
                 <div id="myModal" class="delete_modal">
 
@@ -504,7 +514,7 @@
                         <h6>Do you want to delete this task?</h6>
                         <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
                             <a href="#" class="cancel_delete_task_btn">Cancel</a>
-                            <button type="submit" class="confirm_delete_task_btn">Confirm</button>
+                            <button type="submit" class="confirm_delete_task_btn" name="delete_task">Confirm</button>
                     </div>
                     </div>
                 
@@ -532,7 +542,7 @@
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title" required>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
                     <input
@@ -541,6 +551,7 @@
                         name="deadline"
                         class="title-box"
                         style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
+                        value="{{task.deadline|date:'Y-m-d H:i'}}"
                         required />
                     </div>
                 </div>
@@ -553,7 +564,7 @@
 
                     <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
                         {% for task_category in task_categories %}
-                        <option value="{{task_category.name}}" >{{task_category.name}}</option>
+                        <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -563,7 +574,7 @@
                 <label class="description_label">Describe your task:</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details"></textarea>
+                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details">{{task.description}}</textarea>
                     </div>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
@@ -574,11 +585,16 @@
                     <label class="task_type_label">Select task type and individuals:</label>
                     <div class="radio-btns">
                         <div class="radio-btns_content box">
+                            {% if is_new_task %}
                             <input type="radio" id='btn05' name="task_type" value="Team" checked required>
+                            {% else %}
+                            <input type="radio" id='btn05' name="task_type" value="Team" {% if task.task_type == "Team" %}checked{% endif %} required>
+
+                            {% endif %}
                             <label for="btn05">Team</label>
                         </div>
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn06'name="task_type" value="Individuals">
+                            <input type="radio" id='btn06'name="task_type" value="Individuals" {% if task.task_type == "Individuals" %}checked{% endif %}>
                             <label for="btn06">Individuals</label>
                         </div>
                     </div>
@@ -586,7 +602,11 @@
 
 
                 <!--Search bar for individuals-->
+                {% if is_new_task %}
                 <div class="tb_search search_input_individuals hide_table">
+                {% else %}
+                <div class="tb_search search_input_individuals {% if task.task_type == "Team" %}hide_table{% endif %}">
+                {% endif %}
                     <input
                     type="text"
                     id="search_input_individuals"
@@ -597,7 +617,11 @@
 
 
                 <!--Table for individuals-->
+                {% if is_new_task %}
                 <div class="table-responsive individuals-table hide_table">
+                {% else %}
+                <div class="table-responsive individuals-table {% if task.task_type == "Team" %}hide_table{% endif %}">
+                {% endif %}
                 <table class="table box" id="individuals-table">
                     <thead>
                     <tr>
@@ -613,7 +637,7 @@
                             <td>{{member.name}}</td>
                             <td>{{member.team.team_name}}</td>
                             <td>{{member.position.role}}</td>
-                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
+                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -622,7 +646,7 @@
 
 
                 <!--Search bar for teams-->
-                <div class="tb_search  search_input_team" >
+                <div class="tb_search  search_input_team {% if task.task_type == "Individuals" %}hide_table{% endif %}" >
                     <input
                     type="text"
                     id="search_input_team"
@@ -633,7 +657,7 @@
 
 
                 <!--Table for teams-->
-                <div class="table-responsive team-table">
+                <div class="table-responsive team-table {% if task.task_type == "Individuals" %}hide_table{% endif %}">
                 <table class="table box" id="team-table">
                     <thead>
                     <tr>
@@ -647,7 +671,7 @@
                         <tr>
                             <td>{{forloop.counter}}.</td>
                             <td>{{team.team_name}}</td>
-                            <td><input type="checkbox" name="team_select" value="{{team.primary}}"></td>
+                            <td><input type="checkbox" name="team_select" value="{{team.primary}}" {% if task.task_type == "Team" and team in task.team.all %}checked{% endif %}></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -657,7 +681,11 @@
 
                 <!--create task btn-->
                 <div style="text-align: center;">
-                    <button type="submit" class="create-task-btn">Create Task</button>
+                    {% if is_new_task %}
+                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
+                    {% else %}
+                    <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
+                    {% endif %}
                 </div>
             </form>
         </div>
