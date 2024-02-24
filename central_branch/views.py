@@ -4475,6 +4475,9 @@ def add_task(request, task_id):
     task = Task.objects.get(id=task_id)
 
     if request.method == 'POST':
+        ##########################################
+        ## Checking submission types from input ##
+        ##########################################
         has_permission_paper = False
         if request.POST.get('permission_paper'):
             has_permission_paper = True
@@ -4506,9 +4509,11 @@ def add_task(request, task_id):
             member_select = request.POST.getlist('member_select')
 
         if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
+            #If it is a team task and no members were selected then show message but save other params
             if(task.task_type == "Team" and not member_select):
                 messages.info(request,'Saved changes. Please select a member to forward tasks!')
             else:
+                #Else members were selected
                 messages.success(request,"Task params updated successfully!")
         else:
             messages.warning(request,"We're a failure")
@@ -4516,6 +4521,7 @@ def add_task(request, task_id):
         return redirect('central_branch:add_task',task_id)
     
     team_members = []
+    #Get all team members from the selected teams
     for team in task.team.all():
         members = Branch.load_team_members(team_primary=team.primary)
         team_members.extend(members)

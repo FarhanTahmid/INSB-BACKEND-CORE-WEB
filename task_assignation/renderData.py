@@ -85,8 +85,19 @@ class Task_Assignation:
         
         #Else if task_type is Individuals
         elif task_type == "Individuals":
-            #Add the members from the member_select array to the task and save it
-            new_task.members.add(*member_select)
+            members = []
+            #For each member in member_select array
+            for member in member_select:
+                #Get member reference and store it in volunteer
+                volunteer = Members.objects.get(ieee_id=member)
+                #Add the volunteer to the array and send confirmation
+                members.append(volunteer)
+                ##
+                ## Send email/notification here
+                ##
+
+            #Add those members to task
+            new_task.members.add(*members)
             new_task.save()
             return True
         
@@ -135,8 +146,19 @@ class Task_Assignation:
             task.team.add(*teams)
         #Else if task_type is Individuals
         elif task_type == "Individuals":
-            #Add the members from the member_select array to the task
-            task.members.add(*member_select)
+            members = []
+            #For each member in member_select array
+            for member in member_select:
+                #Get member reference and store it in volunteer
+                volunteer = Members.objects.get(ieee_id=member)
+                #Add the volunteer to the array and send confirmation
+                members.append(volunteer)
+                ##
+                ## Send email/notification here
+                ##
+
+            #Add those members to task
+            task.members.add(*members)
         
         #Save the task with the new changes
         task.save()
@@ -182,14 +204,18 @@ class Task_Assignation:
     def add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description):
         ''' This function is used to add members and/or task params '''
         
+        #Get the task using the task_id
         task = Task.objects.get(id=task_id)
 
+        #If any members are selected then clear it and add new members if there are any
         if member_select:
             task.members.clear()
             task.members.add(*member_select)
         else:
+            #Otherwise just clear it
             task.members.clear()
 
+        #Update task submission types
         task.has_permission_paper = has_permission_paper
         task.has_content = has_content
         task.has_file_upload = has_file_upload
@@ -197,6 +223,7 @@ class Task_Assignation:
         task.has_drive_link = has_drive_link
         task.has_others = has_others
         task.others_description = others_description
+        #Save the changes
         task.save()
         
         return True
