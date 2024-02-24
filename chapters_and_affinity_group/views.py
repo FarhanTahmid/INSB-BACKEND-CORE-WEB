@@ -2046,7 +2046,7 @@ def feedbacks(request,primary):
         #rendering all the data to be loaded on the page
         sc_ag=PortData.get_all_sc_ag(request=request)
         get_sc_ag_info=SC_AG_Info.get_sc_ag_details(request,primary)
-        has_access = SC_Ag_Render_Access.access_for_event_details_edit(request, primary)
+        has_access = SC_Ag_Render_Access.access_for_manage_web(request, primary)
         #getting all the feedbacks for the particular societies and affinity groups
         all_feedbacks = Sc_Ag.get_all_feedbacks(request,primary)
         if(has_access):
