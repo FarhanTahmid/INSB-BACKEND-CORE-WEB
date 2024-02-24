@@ -214,7 +214,7 @@
           <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%; padding-top: 3.5rem;" id="view">
 
             <!-- ############ PAGE START-->
-            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;margin-top:30px;">Add members and task type</h4>
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;margin-top:30px;">Add members and task submission type</h4>
             
 
             <!--Messages-->
@@ -234,6 +234,16 @@
                 <img src="/static/back-arrow.png" alt="Go back to session">
               </a>
               <span class="tooltip-text">Go back</span>
+            </div>
+
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+              {% if messages %}
+                  {% for message in messages %}
+                      <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                  {% endfor %}
+              <br>
+              {% endif %}
             </div>
       
       
@@ -255,12 +265,15 @@
                     </div> -->
 
 
+                    {% if task.task_type == "Team" %}
                     <!--search bar-->
                     <div class="tb_search" style="margin-bottom: 1rem;">
                       <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search..." class="form-control">
                     </div>
+                    {% endif %}
                   </div>
 
+                  {% if task.task_type == "Team" %}
                   <!--table-->
                   <div class="table-responsive">
                     <table class="table table-class" id="table-id">
@@ -268,6 +281,7 @@
                         <tr>
                           <th data-priority="1">IEEE ID</th>
                           <th data-priority="1">Name</th>
+                          <th data-priority="1">Team</th>
                           <th data-priority="1">Position</th>
                           <th data-priority="1">Contact</th>
                           <th data-priority= "1">Select</th>
@@ -276,18 +290,20 @@
                       {% for member in team_members %}
                       <tbody>                                    
                         <tr>
-                          <td>{{member.ieee_id}}</td>
+                          <td style="color: #00629b"><a href="{% url 'main_website:member_profile' member.ieee_id %}" target="_blank">{{member.ieee_id}}</a></td>
                           <td>{{member.name}}</td>
+                          <td>{{member.team.team_name}}</td>
                           <td>{{member.position.role}}</td>
                           <td>{{member.contact_no}}</td>
                           <td>
-                            <input class="table-checkbox" id="update_member" name="update_member" type="checkbox">
+                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}" {% if member in task.members.all %}checked{% endif %}>
                           </td>
                         </tr>
                       </tbody>
                       {% endfor %}
                     </table>
-                  </div>  
+                  </div> 
+                  {% endif %} 
                 </div>
               </div>
       
@@ -297,34 +313,34 @@
                 <h6 class="submission-label">Task submission type:</h6>
                 <ul class="submission-list">
                   <li class="submission-item">
-                    <input type="checkbox" id="permission-paper" class="submission-checkbox" name="submission-type" value="permission-paper">
+                    <input type="checkbox" id="permission-paper" class="submission-checkbox" name="permission_paper" value="permission-paper" {% if task.has_permission_paper %}checked{% endif %}>
                     <label for="permission-paper" class="option-label">Permission paper</label>
                   </li>
                   <li class="submission-item">
-                    <input type="checkbox" id="content_" class="submission-checkbox" name="submission-type" value="content_">
+                    <input type="checkbox" id="content_" class="submission-checkbox" name="content" value="content_" {% if task.has_content %}checked{% endif %}>
                     <label for="content_" class="option-label">Content</label>
                   </li>
                   <li class="submission-item">
-                    <input type="checkbox" id="file-upload" class="submission-checkbox" name="submission-type" value="file-upload">
+                    <input type="checkbox" id="file-upload" class="submission-checkbox" name="file_upload" value="file-upload" {% if task.has_file_upload %}checked{% endif %}>
                     <label for="file-upload" class="option-label">File Upload</label>
                   </li>
                   <li class="submission-item">
-                    <input type="checkbox" id="media" class="submission-checkbox" name="submission-type" value="media">
+                    <input type="checkbox" id="media" class="submission-checkbox" name="media" value="media" {% if task.has_media %}checked{% endif %}>
                     <label for="media" class="option-label">Media</label>
                   </li>
                   <li class="submission-item">
-                    <input type="checkbox" id="drive-link" class="submission-checkbox" name="submission-type" value="drive-link">
+                    <input type="checkbox" id="drive-link" class="submission-checkbox" name="drive_link" value="drive-link" {% if task.has_drive_link %}checked{% endif %}>
                     <label for="drive-link" class="option-label">Drive Links</label>
                   </li>
                   <li class="submission-item">
-                    <input type="checkbox" id="others" class="submission-checkbox submission-checkbox-others" name="submission-type" value="others">
+                    <input type="checkbox" id="others" class="submission-checkbox submission-checkbox-others" name="others" value="others" {% if task.has_others %}checked{% endif %}>
                     <label for="others" class="option-label" id="other-description-label">Others</label>
                   </li>
-                  <div id="other_description" class="discription">
+                  <div id="other_description" class="discription"  {% if task.has_others %}style="display:block;"{% endif %}>
                     <label class="description_label" style="padding: 1rem 0rem 0.5rem 0rem ; font-size: 17px;">Describe your task:</label>
                     <div class="ckeditor" id="other-description">
                       <div>
-                        <textarea id="task_description_details" name="task_description_details" ></textarea>
+                        <textarea id="task_description_details" name="task_description_details" >{{task.others_description|default:""}}</textarea>
                       </div>
                     </div>
                   </div>
@@ -504,51 +520,7 @@
           });
         });
       </script>
-      <script>
-
-        $(document).on('change', 'input[name="update_member"]', function() {
-          // Extract member ID from the corresponding row
-          var memberId = $(this).siblings('input[name="memeber_id"]').val();
-          // Determine whether the checkbox is checked or unchecked
-          var isChecked = $(this).is(':checked');
-          console.log(memberId);
-          console.log(isChecked);
-          // Send AJAX request to the backend
-          $.ajax({
-            url: "{% url 'central_branch:update_restricted_members' %}",
-            type: 'GET',
-            data: {
-                'member_id': memberId,
-                'is_checked': isChecked
-            },
-            success: function(response) {
-                // Handle success response from the backend
-                console.log('AJAX request successful');
-                $('#total_number').text(response.restricted_number);
-                showMessage(response.message);
-            },
-            error: function(xhr, status, error) {
-                // Handle error response from the backend
-                console.error('AJAX request error:', error);
-            }
-        });
-        });
-
-        function showMessage(message) {
-          $('#messageText').text(message);
-          $('#messageContainer').show();
-        }
       
-        // Function to hide the message box
-        function hideMessage() {
-            $('#messageContainer').hide();
-        }
-        // Add event listener to close button
-        $('#messageBox .close').click(function() {
-          // Hide the message box when the close button is clicked
-          hideMessage();
-        });
-      </script>
       <script>
 
           // Get the input elements
