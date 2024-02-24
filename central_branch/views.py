@@ -4507,6 +4507,11 @@ def add_task(request, task_id):
         member_select = []
         if 'member_select' in request.POST:
             member_select = request.POST.getlist('member_select')
+        
+        #If task is completed then do not update task params
+        if(task.is_task_completed):
+            messages.info(request,'Task is completed already!')
+            return redirect('central_branch:add_task',task_id)
 
         if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
             #If it is a team task and no members were selected then show message but save other params
