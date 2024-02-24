@@ -8,7 +8,7 @@ class Task_Category(admin.ModelAdmin):
 
 @admin.register(Task)
 class Task(admin.ModelAdmin):
-    list_display = ['id','title','task_category','task_type','task_of','deadline','has_drive_link','has_file_upload','has_content','has_picture_upload','has_permission_paper']
+    list_display = ['id','title','task_category','task_type','task_of','task_created_by','deadline','is_task_completed','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper','has_others']
 
 @admin.register(Task_Drive_Link)
 class Task_Drive_Link(admin.ModelAdmin):

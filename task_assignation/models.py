@@ -29,7 +29,7 @@ class Task(models.Model):
     has_drive_link = models.BooleanField(null=False,blank=False,default=False)
     has_file_upload = models.BooleanField(null=False,blank=False,default=False)
     has_content = models.BooleanField(null=False,blank=False,default=False)
-    has_picture_upload = models.BooleanField(null=False,blank=False,default=False)
+    has_media = models.BooleanField(null=False,blank=False,default=False)
     has_permission_paper = models.BooleanField(null=False,blank=False,default=False)
     has_others = models.BooleanField(null=False,blank=False,default=False)
     is_task_completed = models.BooleanField(null=False,blank=False,default=False)
