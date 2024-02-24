@@ -4470,6 +4470,8 @@ def upload_task(request, task_id):
 
     return render(request,"task_page.html",context)
 
+@login_required
+@member_login_permission
 def add_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
@@ -4538,6 +4540,8 @@ def add_task(request, task_id):
 
     return render(request,"task_forward_to_members.html",context)
 
+@login_required
+@member_login_permission
 def task_edit(request, task_id):
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
