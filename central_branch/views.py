@@ -3634,6 +3634,10 @@ def insb_members_list(request):
         if request.method=="POST":
             if request.POST.get("site_register"):
                 return redirect('membership_development_team:site_registration')
+            if(request.POST.get('add_new_skill')):
+                skill_name=request.POST['skillset']
+                if(renderData.add_new_skill_type(request,skill_name)):
+                    return redirect('central_branch:members_list')
             
         members=Members.objects.all()
         totalNumber=Members.objects.all().count()
@@ -3642,6 +3646,9 @@ def insb_members_list(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
+        # load all skill types
+        get_all_skills=renderData.load_all_skill_types(request)
+                
         context={
             'is_branch':True,
             'user_data':user_data,
@@ -3650,7 +3657,8 @@ def insb_members_list(request):
             'totalNumber':totalNumber,
             'has_view_permission':has_view_permission,
             'user_data':user_data,
-            'is_MDT':False
+            'is_MDT':False,
+            'all_skills':get_all_skills,
         }
         
         return render(request,'INSB Members/members_list.html',context=context)

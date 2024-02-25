@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Members,Alumni_Members,ResetPasswordTokenTable,User_IP_Address,UserSignupTokenTable
+from . models import Members,Alumni_Members,ResetPasswordTokenTable,User_IP_Address,UserSignupTokenTable,MemberSkillSets,SkillSetTypes
 
 # Register your models here.
 @admin.register(Members)
@@ -42,4 +42,15 @@ from .models import VolunteerAwardRecievers
 class Award_Recievers(admin.ModelAdmin):
     list_display=[
         'award_reciever','award'
+    ]
+
+@admin.register(SkillSetTypes)
+class SkillSetTypes(admin.ModelAdmin):
+    list_display=[
+        'pk','skill_type'
+    ]
+@admin.register(MemberSkillSets)
+class MemberSkillSets(admin.ModelAdmin):
+    list_display=[
+        'pk','member','skill'
     ]
