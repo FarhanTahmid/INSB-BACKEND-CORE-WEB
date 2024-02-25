@@ -79,3 +79,14 @@ class Task_Media(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+class Task_History(models.Model):
+
+    task_number = models.ForeignKey(Task,on_delete=models.CASCADE)
+    task_history = models.TextField(null=True,blank=True,default=None)
+
+    class Meta:
+        verbose_name = "Task History"
+
+    def __str__(self) ->str:
+        return self.task_number.title
