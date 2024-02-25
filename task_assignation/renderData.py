@@ -6,9 +6,9 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Task, Task_Category,Task_History
+from task_assignation.models import Task, Task_Category
 from users.models import Members, Panel_Members
-from datetime import datetime
+
 
 class Task_Assignation:
     
@@ -43,13 +43,6 @@ class Task_Assignation:
                         )
         
         new_task.save()
-
-        #formatting start date
-        formatted_start_date = new_task.start_date.date().strftime("%Y-%m-%d, %A")
-
-        #creating task history instance to save details
-        task_history = Task_History.objects.create(task_number = new_task)
-        task_history.save()
 
         #If task_type is Team
         if task_type == "Team":
@@ -87,13 +80,7 @@ class Task_Assignation:
                         ## Send email/notification here
                         ##
             print(coordinators)
-
-            #formatting team_names
-            team_names = [team['team_name'] for team in new_task.team.all().values()]
-            team_names_str = ', '.join(team_names)
-
-            task_history.task_history_details = f"{formatted_start_date}: Task Assigned to Teams -> \n{team_names_str} by ,{task_created_by}.\n\n"
-            task_history.save()
+            
             return True
         
         #Else if task_type is Individuals
@@ -112,15 +99,6 @@ class Task_Assignation:
             #Add those members to task
             new_task.members.add(*members)
             new_task.save()
-
-            # Extract member names
-            member_names = [member.name for member in members]
-
-            # Create a string containing member names
-            members_str = ", ".join(member_names)
-
-            task_history.task_history_details = f"{formatted_start_date}: Task Assigned to Members ->\n{members_str} by ,{task_created_by}.\n\n"
-            task_history.save()
             return True
         
     def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed):
@@ -128,7 +106,6 @@ class Task_Assignation:
 
         #Get the task using the task_id
         task = Task.objects.get(id=task_id)
-        task_history = Task_History.objects.get(id = task_id)
 
         if is_task_completed:
             task.is_task_completed = True
@@ -143,6 +120,7 @@ class Task_Assignation:
             messages.warning(request,"Please select Team(s)")
         elif task_type == "Individuals" and not member_select:
             messages.warning(request,"Please select Individual(s)")
+
 
         #Set the new parameters to the task
         task.title = title
@@ -166,12 +144,6 @@ class Task_Assignation:
                 teams.append(Teams.objects.get(primary=team_primary))
             #Set the array of teams as list for team inside the task and save the task with newly added teams
             task.team.add(*teams)
-
-            #formatting team_names
-            team_names = [team['team_name'] for team in task.team.all().values()]
-            team_names_str = ', '.join(team_names)
-            task_history.task_history_details += f"{datetime.now().strftime('%Y-%m-%d, %A')} Task Assigned to Teams, Updated -> \n{team_names_str} by ,{request.user.username}.\n\n"
-        
         #Else if task_type is Individuals
         elif task_type == "Individuals":
             members = []
@@ -187,19 +159,10 @@ class Task_Assignation:
 
             #Add those members to task
             task.members.add(*members)
-            # Extract member names
-            member_names = [member.name for member in members]
-
-            # Create a string containing member names
-            members_str = ", ".join(member_names)
-
-            task_history.task_history_details += f"{datetime.now().strftime('%Y-%m-%d, %A')}: Task Assigned to Members, Updated ->\n{members_str} by ,{request.user.username}.\n\n"
-
+        
         #Save the task with the new changes
         task.save()
-        #saving task_history
-        task_history.save()
-
+        
         ##task.is_task_completed = is_task_completed
 
         get_current_panel_members = None
