@@ -227,4 +227,41 @@ class Task_Assignation:
         task.save()
         
         return True
+    
+    def load_team_members_for_task_assignation(request, team_primary):
+        '''This function loads all the team members whose positions are below the position of the requesting user, and also checks if the member is included in the current panel. Works for both admin and regular user'''
+        
+        team=Teams.objects.get(primary=team_primary)
+        team_id=team.id
+        get_users=Members.objects.order_by('-position').filter(team=team_id)
+        get_current_panel=Branch.load_current_panel()
+        team_members=[]
+        #Check if the current panel exists
+        if(get_current_panel is not None):
+            #Check the type of requesting user
+            try:
+                #If the requesting user is a member
+                requesting_member = Members.objects.get(ieee_id=request.user.username)
+            except:
+                #If the requesting user is an admin
+                requesting_member = adminUsers.objects.get(username=request.user.username)
+            
+            #If member
+            if type(requesting_member) is Members:
+                for i in get_users:
+                    #If there are panels members for that panel
+                    if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                        #If the position is below the position of the requesting user then add it to the list
+                        #Here rank is used to determine the position. Higher the rank, less the position
+                        if i.position.rank > requesting_member.position.rank:
+                            team_members.append(i)
+            else:
+                #If admin user
+                for i in get_users:
+                    #If there are panels members for that panel
+                    if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                        #Add all members to the list
+                        team_members.append(i)
+
+        return team_members
         

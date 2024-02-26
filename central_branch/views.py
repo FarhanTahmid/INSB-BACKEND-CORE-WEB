@@ -4464,6 +4464,9 @@ def upload_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
 
+    if request.method == 'POST':
+        pass
+
     context = {
         'task':task,
     }
@@ -4474,6 +4477,11 @@ def upload_task(request, task_id):
 @member_login_permission
 def add_task(request, task_id):
 
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     task = Task.objects.get(id=task_id)
 
     if request.method == 'POST':
@@ -4530,12 +4538,15 @@ def add_task(request, task_id):
     team_members = []
     #Get all team members from the selected teams
     for team in task.team.all():
-        members = Branch.load_team_members(team_primary=team.primary)
+        members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+                
         team_members.extend(members)
 
     context = {
         'task':task,
         'team_members':team_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"task_forward_to_members.html",context)
@@ -4590,6 +4601,8 @@ def task_edit(request, task_id):
         'task_categories':task_categories,
         'teams':teams,
         'all_members':all_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"create_task.html",context)
