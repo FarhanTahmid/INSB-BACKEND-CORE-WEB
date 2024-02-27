@@ -23,7 +23,7 @@ class Task(models.Model):
     task_created_by = models.CharField(null=False,blank=False,max_length=15)
     team = models.ManyToManyField(Teams,blank=True)
     members = models.ManyToManyField(Members,blank=True,related_name="members")
-    start_date = models.DateTimeField(null=True,blank=True,auto_now_add = True)
+    start_date = models.DateTimeField(null=True,blank=True)
     deadline = models.DateTimeField(null=True,blank=True)
     others_description = models.TextField(null=True,blank=True)
     has_drive_link = models.BooleanField(null=False,blank=False,default=False)
@@ -80,13 +80,13 @@ class Task_Media(models.Model):
     def __str__(self) -> str:
         return str(self.pk)
     
-class Task_History(models.Model):
+class Task_Log(models.Model):
 
     task_number = models.ForeignKey(Task,on_delete=models.CASCADE)
-    task_history_details = models.TextField(null=True,blank=True,default=None)
+    task_log_details = models.JSONField()
 
     class Meta:
-        verbose_name = "Task History"
+        verbose_name = "Task Log"
 
     def __str__(self) ->str:
         return self.task_number.title

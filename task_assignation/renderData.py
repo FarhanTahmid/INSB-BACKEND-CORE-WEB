@@ -6,8 +6,9 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Task, Task_Category
+from task_assignation.models import Task, Task_Category,Task_Log
 from users.models import Members, Panel_Members
+from datetime import datetime
 
 
 class Task_Assignation:
@@ -43,6 +44,9 @@ class Task_Assignation:
                         )
         
         new_task.save()
+        #creating task log
+        task_log = Task_Log.objects.create(task_number = new_task,task_log_details = {str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, created by {task_created_by}'})
+        task_log.save()
 
         #If task_type is Team
         if task_type == "Team":
@@ -53,6 +57,15 @@ class Task_Assignation:
             #Set the array of teams as list for team inside the task and save the task with newly added teams
             new_task.team.add(*teams)
             new_task.save()                     
+
+            #getting team names as list
+            team_names = []
+            for name in teams:
+                team_names.append(name.team_name)
+            team_names = ", ".join(team_names)
+            #updating task_log details
+            task_log.task_log_details.update({str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, assigned to Teams: {team_names}'})
+            task_log.save()
 
             get_current_panel_members = None
             #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
@@ -96,9 +109,20 @@ class Task_Assignation:
                 ## Send email/notification here
                 ##
 
+            #getting members IEEE_ID
+            members_ieee_id = []
+            for member in members:
+                members_ieee_id.append(member.ieee_id)
+            
+            members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
+
             #Add those members to task
             new_task.members.add(*members)
             new_task.save()
+            #updating task log details
+            task_log.task_log_details.update({str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'})
+            task_log.save()
+
             return True
         
     def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed):
