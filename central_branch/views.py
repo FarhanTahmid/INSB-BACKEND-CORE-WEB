@@ -4429,7 +4429,7 @@ def create_task(request):
     
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Members.objects.all()
+    all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
     context = {
         'is_new_task':True, #Task is being created. Use it to disable some ui in the template
@@ -4594,7 +4594,7 @@ def task_edit(request, task_id):
     task = Task.objects.get(id=task_id)
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Members.objects.all()
+    all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
     context = {
         'task':task,

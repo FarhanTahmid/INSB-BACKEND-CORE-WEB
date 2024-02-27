@@ -264,4 +264,25 @@ class Task_Assignation:
                         team_members.append(i)
 
         return team_members
+    
+    def load_insb_members_for_task_assignation(request):
+        ''' This function load all insb members whose positions are below the position of the requesting user. Works for both admin and regular user '''
+        #Check the type of requesting user
+        try:
+            #If the requesting user is a member
+            requesting_member = Members.objects.get(ieee_id=request.user.username)
+        except:
+            #If the requesting user is an admin
+            requesting_member = adminUsers.objects.get(username=request.user.username)
+
+        #If member
+        if type(requesting_member) is Members:
+            #If the position is below the position of the requesting user then add it to the list
+            #Here rank is used to determine the position. Higher the rank, less the position
+            #Here __gt is "Greater Than"
+            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
+        else:
+            #Admin user so load all members
+            members = Members.objects.all()
+        return members
         
