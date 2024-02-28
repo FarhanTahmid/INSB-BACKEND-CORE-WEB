@@ -120,6 +120,15 @@ class VolunteerAwards(models.Model):
         
     def __str__(self):
         return self.volunteer_award_name
+    
+class SkillSetTypes(models.Model):
+    '''Stores skillset types'''
+    skill_type=models.CharField(null=False,blank=False,max_length=200)
+
+    class Meta:
+        verbose_name="Skill set Types"
+    def __str__(self) -> str:
+        return str(self.pk)
 
     
     

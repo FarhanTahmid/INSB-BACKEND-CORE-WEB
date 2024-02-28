@@ -67,6 +67,9 @@ class Recruitment:
             if member.ieee_payment_status and member.ieee_id == "":
                 return "no_ieee_id" #This is implied to enforce entering of ieee id upon completion of payment
             else:
+                member.skills.clear()
+                if values['skill_set_list'][0] != 'null':
+                    member.skills.add(*values['skill_set_list'])
                 member.save() #Updating member data
                 return True
         except IntegrityError:

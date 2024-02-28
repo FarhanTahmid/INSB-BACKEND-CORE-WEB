@@ -103,21 +103,11 @@ class Members(models.Model):
         return self.user_profile_picture
 
 
-class SkillSetTypes(models.Model):
-    '''Stores skillset types'''
-    skill_type=models.CharField(null=False,blank=False,max_length=200)
-    
-    class Meta:
-        verbose_name="Skill set Types"
-    def __str__(self) -> str:
-        return str(self.pk)
-
-
 class MemberSkillSets(models.Model):
     
     '''This stores all the skill sets for Members'''
     member=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
-    skill=models.ForeignKey(SkillSetTypes,null=True,blank=True,on_delete=models.CASCADE)
+    skill=models.ManyToManyField(SkillSetTypes,blank=True)
     
     class Meta:
         verbose_name="Member Skill Sets"

@@ -385,6 +385,18 @@
                                 </div>
                             </div>
                             <br>
+
+                            <div class="form-group">
+                              <label>Select Skillsets:</label>
+                              <select multiple class="form-control" name="skill_sets">
+                                  <option value="null" selected>--------------------</option>
+                                  {% for skill in all_skills %}
+                                      <option value="{{ skill.id }}"> 
+                                          {{ skill.skill_type }}
+                                      </option>
+                                  {% endfor %}
+                              </select>
+                          </div>
                             
                             <div class="box-header" style="text-align:center;">
                             <h1>For Official Use</h1>
