@@ -299,11 +299,13 @@ def recruitee_details(request,session_id,nsu_id):
                         #print(type(getMember[0]['recruitment_time']))
                         # Registering member to the main database
                         try:
+                            name = getMember[0].first_name + " "
+                            if getMember[0].middle_name:
+                                name += getMember[0].middle_name + " "
+                            name += getMember[0].last_name
                             newMember = Members(
                                 ieee_id=getMember[0].ieee_id,
-                                name=getMember[0].first_name + " " +
-                                getMember[0].middle_name+" " +
-                                getMember[0].last_name,
+                                name=name,
                                 nsu_id=getMember[0].nsu_id,
                                 email_personal=getMember[0].email_personal,
                                 email_nsu=getMember[0].email_nsu,
@@ -317,8 +319,8 @@ def recruitee_details(request,session_id,nsu_id):
                             )
                             newMember.save()
 
+                            #After registering the member, register the member's skills
                             member_skill_sets = MemberSkillSets.objects.create(member=newMember)
-                            member_skill_sets.save()
                             member_skill_sets.skills.add(*getMember[0].skills.all())
                             member_skill_sets.save()
 
@@ -416,7 +418,9 @@ def recruit_member(request, session_id):
                             recruited_member.unique_code=unique_code
                             recruited_member.save()  # Saving the member to the database
 
+                            #Check if any skills were selected
                             if skill_set_list[0] != 'null':
+                                #If yes then add them
                                 recruited_member.skills.add(*skill_set_list)
                                 recruited_member.save()  # Saving the member to the database
                             
@@ -436,9 +440,9 @@ def recruit_member(request, session_id):
                                 request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
                             return render(request, "recruitment_form.html", context=context)
 
-                        except Exception as e:  # Handling all errors
-                            messages.warning(request, "Something went Wrong! Please try again")
-                            return render(request, "recruitment_form.html", context=context)
+                        # except Exception as e:  # Handling all errors
+                        #     messages.warning(request, "Something went Wrong! Please try again")
+                        #     return render(request, "recruitment_form.html", context=context)
                         
                         
 
