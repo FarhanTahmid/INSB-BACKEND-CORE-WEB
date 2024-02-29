@@ -9,7 +9,9 @@ from system_administration.models import adminUsers
 from task_assignation.models import Task, Task_Category,Task_Log
 from users.models import Members, Panel_Members
 from datetime import datetime
-
+from django.utils import timezone
+from central_branch.renderData import Branch
+from pytz import timezone as tz
 
 class Task_Assignation:
     
@@ -46,6 +48,7 @@ class Task_Assignation:
         new_task.save()
         #creating task log
         task_log = Task_Log.objects.create(task_number = new_task,task_log_details = {str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, created by {task_created_by}'})
+        task_log.update_task_number+=1
         task_log.save()
 
         #If task_type is Team
@@ -64,7 +67,8 @@ class Task_Assignation:
                 team_names.append(name.team_name)
             team_names = ", ".join(team_names)
             #updating task_log details
-            task_log.task_log_details.update({str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, assigned to Teams: {team_names}'})
+            task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]= f'Task Name: {title}, assigned to Teams: {team_names}'
+            task_log.update_task_number+=1
             task_log.save()
 
             get_current_panel_members = None
@@ -120,7 +124,8 @@ class Task_Assignation:
             new_task.members.add(*members)
             new_task.save()
             #updating task log details
-            task_log.task_log_details.update({str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'})
+            task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]=f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
+            task_log.update_task_number += 1
             task_log.save()
 
             return True
@@ -130,12 +135,35 @@ class Task_Assignation:
 
         #Get the task using the task_id
         task = Task.objects.get(id=task_id)
+        #getting the task log
+        task_log_details = Task_Log.objects.get(task_number = task)
+        #formatting deadline
+        deadline = datetime.strptime(deadline, '%Y-%m-%dT%H:%M')
+        #formatting current time
+        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
 
         if is_task_completed:
-            task.is_task_completed = True
-            task.save()
-            return True
+            task_flag = task.is_task_completed
+            if task_flag == False:
+                task.is_task_completed = True
+                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"]=f"Task marked completed by {request.user.username}"
+                task_log_details.update_task_number+=1
+                task_log_details.save()
+                task.save()
+                # return True
+            else:
+                task.is_task_completed = True
+                task.save()
+                # return True
         else:
+            task_flag = task.is_task_completed
+            if task_flag == False:
+                pass
+            else:
+                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"]=f"Task marked undone by {request.user.username}"
+                task_log_details.update_task_number+=1
+                task_log_details.save()
+                task.save()
             task.is_task_completed = False
 
         #Checking to see if the list is empty depending on which task_type is selected
@@ -145,12 +173,49 @@ class Task_Assignation:
         elif task_type == "Individuals" and not member_select:
             messages.warning(request,"Please select Individual(s)")
 
+        #setting previous values
+        prev_title = str(task.title)
+
+        #removing html tags
+        prev_description = str(task.description)
+        prev_description = Branch.process_ckeditor_content(prev_description)
+        #getting previous categories
+        prev_task_category = task.task_category
+        prev_deadline = task.deadline
+        #getting html cleared descriptions
+        description_without_tags = Branch.process_ckeditor_content(description)
+
+        prev_deadline = str(task.deadline.astimezone(deadline.tzinfo))
+        prev_deadline = prev_deadline[:-6]
 
         #Set the new parameters to the task
         task.title = title
         task.description = description
         task.task_category = Task_Category.objects.get(name=task_category)
         task.deadline = deadline
+
+        new_task_category = Task_Category.objects.get(name = task_category)
+
+        #making necessary updates in task log history
+        if prev_title != title:
+            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"]=f"Task Title changed from {prev_title} to {title} by {request.user.username}"
+            task_log_details.update_task_number+=1
+            task_log_details.save()
+        if description_without_tags != prev_description:
+            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f"Task Description changed from {prev_description} to {description_without_tags} by {request.user.username}"
+            task_log_details.update_task_number+=1
+            task_log_details.save()
+        if new_task_category != prev_task_category:
+            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f"Task Category changed from {prev_task_category.name} to {task_category} by {request.user.username}"
+            task_log_details.update_task_number+=1
+            task_log_details.save()
+        #deadline saving not correct
+        if prev_deadline != str(deadline):
+            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
+            task_log_details.update_task_number+=1
+            task_log_details.save()
+
+        prev_task_type = task.task_type
 
         #Check the task's task_type and clear their respective fields
         if task.task_type == "Team":
@@ -160,6 +225,10 @@ class Task_Assignation:
         #Set the new task_type
         task.task_type = task_type
 
+        changed = False
+        if prev_task_type != task_type:
+            changed = True
+
         #If new task_type is Team
         if task_type == "Team":
             teams = []
@@ -168,6 +237,18 @@ class Task_Assignation:
                 teams.append(Teams.objects.get(primary=team_primary))
             #Set the array of teams as list for team inside the task and save the task with newly added teams
             task.team.add(*teams)
+
+            #getting team names as list
+            team_names = []
+            for name in teams:
+                team_names.append(name.team_name)
+            team_names = ", ".join(team_names)
+            if changed:
+                #updating task_log details only if changed
+                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {team_names}'
+                task_log_details.update_task_number+=1
+                task_log_details.save()
+
         #Else if task_type is Individuals
         elif task_type == "Individuals":
             members = []
@@ -183,6 +264,18 @@ class Task_Assignation:
 
             #Add those members to task
             task.members.add(*members)
+
+            #getting members IEEE_ID
+            members_ieee_id = []
+            for member in members:
+                members_ieee_id.append(member.ieee_id)
+            
+            members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
+            if changed:
+                #updating task_log details on if changed
+                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {members_ieee_id}'
+                task_log_details.update_task_number+=1
+                task_log_details.save()
         
         #Save the task with the new changes
         task.save()

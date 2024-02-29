@@ -29,5 +29,5 @@ class Task_Media(admin.ModelAdmin):
 @admin.register(Task_Log)
 class Task_Log(admin.ModelAdmin):
     list_display=[
-        'task_number','task_log_details'
+        'task_number','task_log_details','update_task_number'
     ]
