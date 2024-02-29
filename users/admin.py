@@ -47,8 +47,8 @@ class Award_Recievers(admin.ModelAdmin):
 @admin.register(MemberSkillSets)
 class MemberSkillSets(admin.ModelAdmin):
     list_display=[
-        'pk','member','skills'
+        'pk','member','skill_sets'
     ]
 
-    def skills(self, obj):
-        return ", ".join([p.skill_type for p in obj.skill.all()])
+    def skill_sets(self, obj):
+        return ", ".join([p.skill_type for p in obj.skills.all()])

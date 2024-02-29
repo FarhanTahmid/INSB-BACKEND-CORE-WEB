@@ -107,7 +107,7 @@ class MemberSkillSets(models.Model):
     
     '''This stores all the skill sets for Members'''
     member=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
-    skill=models.ManyToManyField(SkillSetTypes,blank=True)
+    skills=models.ManyToManyField(SkillSetTypes,blank=True)
     
     class Meta:
         verbose_name="Member Skill Sets"

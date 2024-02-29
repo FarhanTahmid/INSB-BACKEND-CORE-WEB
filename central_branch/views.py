@@ -21,7 +21,8 @@ from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Grou
 from django.db import DatabaseError
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
-from users.models import Members,Panel_Members
+import users
+from users.models import MemberSkillSets, Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
@@ -3681,6 +3682,7 @@ def member_details(request,ieee_id):
         has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
         
         member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
+        member_skills=MemberSkillSets.objects.get(member=member_data)
         try:
             dob = datetime.strptime(str(
                 member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
@@ -3693,17 +3695,21 @@ def member_details(request,ieee_id):
         renewal_session=Renewal_Sessions.objects.all().order_by('-id')
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
+        # load all skill types
+        all_skills=users.renderData.load_all_skill_types(request)
         
         context={
             'is_branch':True,
             'all_sc_ag':sc_ag,
             'member_data':member_data,
+            'member_skills':member_skills,
             'dob':dob,
             'sessions':sessions,
             'renewal_session':renewal_session,
             'media_url':settings.MEDIA_URL,
             'active_status':active_status,
             'user_data':user_data,
+            'all_skills':all_skills
         }
         if request.method=="POST":
             if request.POST.get('save_edit'):
