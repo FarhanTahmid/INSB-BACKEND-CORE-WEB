@@ -440,9 +440,9 @@ def recruit_member(request, session_id):
                                 request, f"Member with NSU ID: {request.POST['nsu_id']} is already registered in the database! It is prohibited to recruit another member with same NSU ID under one recruitment session.")
                             return render(request, "recruitment_form.html", context=context)
 
-                        # except Exception as e:  # Handling all errors
-                        #     messages.warning(request, "Something went Wrong! Please try again")
-                        #     return render(request, "recruitment_form.html", context=context)
+                        except Exception as e:  # Handling all errors
+                            messages.warning(request, "Something went Wrong! Please try again")
+                            return render(request, "recruitment_form.html", context=context)
                         
                         
 
