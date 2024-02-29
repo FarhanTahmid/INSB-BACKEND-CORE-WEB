@@ -420,10 +420,10 @@ def recruit_member(request, session_id):
                                 recruited_member.skills.add(*skill_set_list)
                                 recruited_member.save()  # Saving the member to the database
                             
-                            # #send an email now to the recruited member
-                            # email_status=email_sending.send_email_to_recruitees_upon_recruitment(
-                            #     recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,Session.session,unique_code)
-                            email_status=False
+                            #send an email now to the recruited member
+                            email_status=email_sending.send_email_to_recruitees_upon_recruitment(
+                                recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,Session.session,unique_code)
+
                             if(email_status)==False:
                                 messages.warning(request,"The system could not send email to the recruited member due to some errors! Please contact the system administrator")
                             elif(email_status):
