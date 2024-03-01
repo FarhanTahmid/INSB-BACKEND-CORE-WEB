@@ -287,7 +287,7 @@
                         <div style="display: flex;">
                             <div class="upcoming_event_event_date">
                                 <div class="upcoming_event_block">
-                                    <div class="upcoming_event_date">{{upcoming_event.start_date.day}}</div>
+                                    <div class="upcoming_event_date">{{upcoming_event.start_date|date:"d"}}</div>
                                     <div class="upcoming_event_month_year">
                                         <div class="month">{{upcoming_event.start_date | date:"F"}}</div>
                                         <div class="year">{{upcoming_event.start_date.year}}</div>
@@ -336,10 +336,11 @@
     const currentYear = new Date().getFullYear();
 
     // Upcoming Event Date
-    const upcomingEventDate = new Date(`{{ upcoming_event.start_date|date:"F j, Y" }} 00:00:00`);
+    const upcomingEventDate = new Date('{{ modified_start_time.isoformat }}');
 
     function updateCountdown() {
         const currentTime = new Date();
+        console.log(currentTime)
         const diff = upcomingEventDate - currentTime;
 
         if (diff > 0) {
