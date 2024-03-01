@@ -287,10 +287,10 @@
                         <div style="display: flex;">
                             <div class="upcoming_event_event_date">
                                 <div class="upcoming_event_block">
-                                    <div class="upcoming_event_date">{{upcoming_event.event_date.day}}</div>
+                                    <div class="upcoming_event_date">{{upcoming_event.start_date.day}}</div>
                                     <div class="upcoming_event_month_year">
-                                        <div class="month">{{upcoming_event.event_date | date:"F"}}</div>
-                                        <div class="year">{{upcoming_event.event_date.year}}</div>
+                                        <div class="month">{{upcoming_event.start_date | date:"F"}}</div>
+                                        <div class="year">{{upcoming_event.start_date.year}}</div>
                                     </div>
                                 </div>
                                 <div class="extra_block"></div>
