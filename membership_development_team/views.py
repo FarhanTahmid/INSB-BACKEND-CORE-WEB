@@ -1013,7 +1013,8 @@ def data_access(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         #Only sub eb of that team can access the page
         user=request.user
-        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        has_eb_admin_access = Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
+        has_access=(Access_Render.team_co_ordinator_access(team_id=renderData.MDT_DATA.get_team_id(),username=user.username) or has_eb_admin_access)
         
         data_access=renderData.MDT_DATA.load_mdt_data_access()
         team_members=renderData.MDT_DATA.load_team_members()
@@ -1122,6 +1123,7 @@ def data_access(request):
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'data_access':data_access,
+            'has_eb_admin_access':has_eb_admin_access,
             'members':team_members,
             'insb_members':all_insb_members,
             'positions':position,      
