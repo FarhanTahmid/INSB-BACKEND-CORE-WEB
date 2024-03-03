@@ -3682,7 +3682,11 @@ def member_details(request,ieee_id):
         has_access=(renderData.MDT_DATA.insb_member_details_view_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username))
         
         member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
-        member_skills=MemberSkillSets.objects.get(member=member_data)
+        try:
+            member_skills=MemberSkillSets.objects.get(member=member_data)
+        except:
+            member_skills=None
+
         try:
             dob = datetime.strptime(str(
                 member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
