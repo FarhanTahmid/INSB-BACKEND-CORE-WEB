@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task Page</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+    <style>
+        body{
+            background: white;
+        }
+        h4{
+            text-align: center;
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        .form-wrapper{
+            font-family: 'Poppins' , sans-serif;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            max-width: 850px;
+            margin: 40px auto;
+        }
+        .flex-wrapper{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .title-deadline{
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        .deadline-container{
+            display: flex;
+            flex-wrap: wrap; 
+            align-items: center; 
+            gap: 22px; 
+            width: 40%;
+            justify-content: space-between;
+        }
+        label{
+            font-size: 15px;
+            margin: 0;
+            margin-top: 2px;
+            margin-bottom: 15px;
+            color: #000000c9;
+        }
+        .title-box{
+            padding: 6px 10px;
+            border-radius: 3px;
+            border: 2px solid #d3d3d3;
+            color: black;
+            transition: .4s;
+            box-shadow: 0 0 5px 0px #80808054;
+            border: 2px solid white;
+        }
+        .title-box:focus{
+            border: 2px solid white;
+            box-shadow: 0 0 5px 0px #808080b1;
+        }
+
+        #task_descriptionCharacterCount{
+            margin-top: 15px;
+        }
+        .radio-btns{
+            display: flex;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .category{
+            margin-top: 0px;
+        }
+        .category_label{
+            margin-bottom: 8px;
+        }
+        .category .radio-btns{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .description_label{
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+        .task_type{
+            gap: 43px;
+            margin-top: 15px;
+            margin-bottom: -67px;
+        }
+        .task_type_label{
+            margin-top: 6px;
+            margin-bottom: 8px;
+        }
+        .radio-btns_content{
+            width: 162px;
+        }
+        .radio-btns .radio-btns_content label{
+            margin-left: 5px;
+            margin-bottom: 3px;
+
+        }
+        .search_input_individuals, .search_input_team{
+            margin:20px 0 15px;
+        }
+        #search_input_individuals, #search_input_team{
+            padding: 3px 10px;
+        }
+        .individuals-table, .team-table{
+            border-radius: 4px;
+        }
+        .box{
+            padding: 2px 25px 0px 9px;
+            box-shadow: 0 0 5px 0px #80808054;
+            border-radius: 3px;
+            margin-bottom: 19px;
+            margin-right: 8px;
+            text-align: center;
+        }
+        .ckeditor{
+            box-shadow: 0 0 5px 0px #80808054;
+        }
+        .task-btn{
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+        .finish-task-btn , .start-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #75D481;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #75D481;
+            transition: all ease-in-out .3s;
+        }
+        .finish-task-btn:hover , .start-task-btn:hover{
+            color: #75D481;
+            background: white;
+            border-color: #75D481;
+        }
+        .cancel-task-btn , .start-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #d33838;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #d33838;
+            transition: all ease-in-out .3s;
+        }
+        .cancel-task-btn:hover , .start-task-btn:hover{
+            color: #d33838;
+            background: white;
+            border-color: #d33838;
+        }
+        .view-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #10609D;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #10609D;
+            transition: all ease-in-out .3s;
+        }
+        .view-task-btn:hover{
+            background: white;
+            border-color: #10609D;
+            color: #10609D;
+        }
+        .add-members-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #72C2D6;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #72C2D6;
+            transition: all ease-in-out .3s;
+        }
+        .add-members-task-btn:hover{
+            color: #72C2D6;
+            background: white;
+            border-color: #72C2D6;
+        }
+        .hide_table{
+            display: none;
+        }
+        .title{
+            width: 59%;
+        }  
+        .tb_search {
+            width: 39%;
+            float: left;
+            position: relative;
+            left: 61%;
+        }
+        .table-responsive{
+            overflow-x: hidden;
+        }
+        @media screen and (max-width: 1024px) {
+            .form-wrapper{
+                margin: 10%;
+            }
+            .title-deadline{
+                flex-direction: column-reverse;
+                align-items: flex-start;
+            }
+            .deadline-container{
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            .title{
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+        }
+        @media screen and (max-width: 750px){
+            .radio-btns{
+                grid-template-columns: 1fr 1fr;
+            }
+            .tb_search{
+                left: 0%;
+            }
+            .search_input_individuals, .search_input_team{
+                width: 100%;
+            }
+            .task_type{
+                margin-bottom: -20px;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .form-wrapper{
+                margin: 5%;
+            }
+            .grid-wrapper{
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+            label{
+                font-size: medium;
+                margin-bottom: 4px;
+            }
+            h4{
+                font-size: 1.45rem;
+            }
+            .radio-btns_content{
+                width: auto;
+            }
+            .radio-btns_content label{
+                font-size: 14px;
+            }
+            .deadline-container{
+                width: 100%;
+                justify-content: center;
+            }
+            .title{
+                width: 100%;
+            }
+            .table-responsive{
+                overflow-x: auto;
+            }    
+        }
+        @media screen and (max-width:340px) {
+            .radio-btns{
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Checkbox */
+                   
+            .check {
+            cursor: pointer;
+            position: relative;
+            margin: auto;
+            width: 18px;
+            height: 18px;
+            -webkit-tap-highlight-color: transparent;
+            transform: translate3d(0, 0, 0);
+            top: 4px;
+            }
+
+            .check:before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(238, 5, 5, 0.03);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            }
+
+            .check svg {
+            position: relative;
+            z-index: 1;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke: #dd2222;
+            stroke-width: 1.5;
+            transform: translate3d(0, 0, 0);
+            transition: all 0.2s ease;
+            }
+
+            .check svg path {
+            stroke-dasharray: 60;
+            stroke-dashoffset: 0;
+            }
+
+            .check svg polyline {
+            stroke-dasharray: 22;
+            stroke-dashoffset: 66;
+            }
+
+            .check:hover:before {
+            opacity: 1;
+            }
+
+            .check:hover svg {
+            stroke: var(--accent-color, #e72424);
+            }
+
+            #cbx2:checked + .check svg {
+            stroke: var(--accent-color, #65e724);
+            }
+
+            #cbx2:checked + .check svg path {
+            stroke-dashoffset: 60;
+            transition: all 0.3s linear;
+            }
+
+            #cbx2:checked + .check svg polyline {
+            stroke-dashoffset: 42;
+            transition: all 0.2s linear;
+            transition-delay: 0.15s;
+            }
+
+            /* file input */
+            .file-input {
+                width: 100%;
+            }
+
+            .file-input-bordered {
+                border: 2px solid #F8F8F8; /* Adjust color as needed */
+                border-radius: 0.375rem; /* Adjust border radius as needed */
+                padding: 0.5px;
+            }
+
+            .file-input-info {
+                color: black; /* Adjust color as needed */
+                background-color: #F8F8F8; /* Adjust background color as needed */
+            }
+
+            .max-w-xs {
+                max-width: 20rem; /* Adjust max-width as needed */
+            }
+
+    </style>
+  </head>
+  <body>
+
+    <!--LAYOUT START-->
+    <div class="app" id="app">
+
+            <!-- aside -->
+            <div id="aside" class="app-aside modal nav-dropdown">
+                {% block sidebar %} 
+                {% include 'users/sidebar.html' %} 
+                {% endblock %}
+            </div>
+
+
+            <!-- navbar -->
+            <div id="content" class="app-content" role="main">
+                {% block navbar %}
+                {% include 'navbar.html' %} 
+                {% endblock navbar %}
+            </div>
+
+
+        <!--PAGE START-->
+        <div ui-view class="app-body" id="view">
+                
+            <!--contents of page-->
+            <div class="form-wrapper">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- task page heading-->
+                    <h4>Finish Task</h4>
+                    <br><br>
+                    
+                    {% if task.has_permission_paper %}
+                    <!-- Paper permission -->
+                    <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                    <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
+                        
+                            <select id="paper_permission_dropdown" class="form-control">
+                                <option value="yes">Completed</option>
+                                <option value="no">Not Completed</option>
+                                <option value="not_needed">Not Needed</option>
+                            </select>                                  
+                        </div>
+                        <br>
+                    {% endif %}
+
+
+                    
+                    
+                    
+                    {% if task.has_content %}
+                    <!--content-->
+                    <label class="description_label">Content</label>
+                    <div class="ckeditor">
+                        <div>
+                            <textarea class="form-control" type="text" name="content_details"></textarea>
+                        </div>
+                            <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
+                        </div>
+                        <br>
+                        {% endif %}
+                        
+
+                        
+                        
+                        
+                        <div id="media-selected-images-container"></div>
+                        <input type="hidden" name="selected_images" id="media-selected-images">
+                        
+                        
+                        <br>
+                        
+                        
+                        {% if task.has_file_upload %}
+                        <!--file upload -->
+                        <label for="documents">File Upload</label>
+                        <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
+                            <input type="file" class="file-input file-input-bordered file-input-info" style="flex-grow: 1;">
+
+                            
+                            <br>
+                            <div id="content-selected-docs-container"></div>
+                            <input type="hidden" name="selected_documents" id="content-selected-documents">
+                        </div>
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    <br>
+                        {% endif %}
+                    
+
+                        
+                        
+                        {% if task.has_media %}
+                        <!-- Media -->
+                    <label for="images" >Media Upload</label>
+                    <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
+                        <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple>
+                    </div>
+                    
+                    
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    <br>
+                    {% endif %}
+                    
+                    
+                    
+
+
+                        {% if task.has_drive_link %}
+                        <!-- Drive link -->
+                        <div class="form-group">
+                            <label>Folder Drive Link</label>
+                            <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
+                            value="{{media_links.logo_link}}" name="content_drive" />
+                        </div>
+                        <br>
+                        {% endif %}
+                        
+                        
+
+                        
+                        <!--other content-->
+                        <label class="description_label">Other Contents</label>
+                        <div class="ckeditor">
+                            <div>
+                                <textarea class="form-control" type="text" name="other_content_details"></textarea>
+                            </div>
+                        
+                        </div>
+                        
+                        
+
+                    
+            </div> 
+
+                    <!--Submit btn-->
+                    <div class="task-btn">
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a>
+                        <button type="submit" class="finish-task-btn" name="finish_task">Finish</button>
+                    </div>
+                </form> 
+        </div>
+        
+    </div>
+    
+    <!--Theme Switcher-->
+    {% block theme_switcher %} 
+    {% include "theme_switcher.html" %} 
+    {% endblock theme_switcher %}
+    <!-- app end-->
+    
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+    
+    <script>
+        // character count function
+        document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textareas with CKEditor instances
+          CKEDITOR.replace("content_details");
+
+          // Attach a function to the change event for each CKEditor instance
+          ["content"].forEach(function (editorId) {
+            var editor = CKEDITOR.instances[editorId + "_details"];
+
+            editor.on("change", function () {
+              // Update character count display for each CKEditor instance
+              updateCharacterCount(editorId);
+            });
+
+            // Update character count initially
+            updateCharacterCount(editorId);
+          });
+        });
+
+        function updateCharacterCount(editorId) {
+          var editorContent =
+            CKEDITOR.instances[editorId + "_details"].getData();
+
+          // Handle special space representations
+          var cleanedContent = editorContent
+            .replace(/<[^>]*>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .trim();
+
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+
+          var characterCountElement = document.getElementById(
+            editorId + "CharacterCount"
+          );
+
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: 0";
+          } else {
+            characterCountElement.innerText =
+              "Character Count: " + characterCount;
+          }
+        }
+    </script>
+    <script>
+        // character count function
+        document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textareas with CKEditor instances
+          CKEDITOR.replace("other_content_details");
+
+          // Attach a function to the change event for each CKEditor instance
+          ["other_content"].forEach(function (editorId) {
+            var editor = CKEDITOR.instances[editorId + "_details"];
+
+            editor.on("change", function () {
+              // Update character count display for each CKEditor instance
+              updateCharacterCount(editorId);
+            });
+
+            // Update character count initially
+            updateCharacterCount(editorId);
+          });
+        });
+
+        function updateCharacterCount(editorId) {
+          var editorContent =
+            CKEDITOR.instances[editorId + "_details"].getData();
+
+          // Handle special space representations
+          var cleanedContent = editorContent
+            .replace(/<[^>]*>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .trim();
+
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+
+          var characterCountElement = document.getElementById(
+            editorId + "CharacterCount"
+          );
+
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: 0";
+          } else {
+            characterCountElement.innerText =
+              "Character Count: " + characterCount;
+          }
+        }
+    </script>
+    <script>
+            
+            //filtering for individual table
+        function filter_individual_table() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search_input_individuals");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("individuals-table");
+            tr = table.getElementsByTagName("tr");
+            
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                // Skip the header row
+                if (i === 0) continue;
+                
+                // Loop through all table cells in the current row
+                var rowContainsSearchTerm = false;
+                for (var j = 0; j < tr[i].cells.length; j++) {
+                    td = tr[i].cells[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rowContainsSearchTerm = true;
+                        break;
+                    }
+                    }
+                }
+                
+                // Toggle the visibility of the row based on whether it contains the search term
+                if (rowContainsSearchTerm) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+                }
+        }
+
+    
+        //filtering for team table
+        function filter_team_table() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search_input_team");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("team-table");
+            tr = table.getElementsByTagName("tr");
+            
+            // Loop through all table rows and hide those that don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                // Skip the header row
+                if (i === 0) continue;
+                
+                // Loop through all table cells in the current row
+                var rowContainsSearchTerm = false;
+                for (var j = 0; j < tr[i].cells.length; j++) {
+                    td = tr[i].cells[j];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowContainsSearchTerm = true;
+                            break;
+                        }
+                    }
+                }
+            
+                // Toggle the visibility of the row based on whether it contains the search term
+                if (rowContainsSearchTerm) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>   
+    <script>
+        //determining which table to show depending on the selected radio button
+        let radioButtons = document.querySelectorAll(".radio-btns_content");
+        let searchIndividuals = document.querySelector('.search_input_individuals');
+        let searchTeam = document.querySelector('.search_input_team');
+        let individualsTable = document.querySelector('.individuals-table');
+        let teamTable = document.querySelector('.team-table');
+
+
+        radioButtons.forEach((button) => {
+        button.addEventListener("change", () => {
+            let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
+
+            if(checkedRadioButton.id == 'btn05'){
+                searchIndividuals.classList.add('hide_table');
+                individualsTable.classList.add('hide_table');
+                searchTeam.classList.remove('hide_table');
+                teamTable.classList.remove('hide_table');
+            }
+            else if(checkedRadioButton.id == 'btn06'){
+                searchIndividuals.classList.remove('hide_table');
+                individualsTable.classList.remove('hide_table');
+                searchIndividuals.classList.remove('hide_table');
+                individualsTable.classList.remove('hide_table');
+                searchTeam.classList.add('hide_table');
+                teamTable.classList.add('hide_table');
+            }
+        });
+        });
+
+    </script> 
+  </body>
+</html>
+

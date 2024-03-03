@@ -145,6 +145,25 @@
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
         }
+
+        /* Banner styles */
+        .banner {
+            background-color: #b4252b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    
+        .banner p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .lock-icon {
+            margin-right: 10px;
+        }
         
     </style>
 </head>
@@ -183,7 +202,7 @@
                 <br>
                 <br>
                 <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
-                    style="color:#00629B;">{{event_name}}</b></span></h2><br>
+                    style="color:#00629B;">{{event_details.event_name}}</b></span></h2>
                 
             
                 <h6>Note:</h6>
@@ -208,7 +227,7 @@
                 <br>
             </div>
             <!--Back Arrow-->
-            <br>
+
             <div class="tooltip-container">
                 {% if is_branch %}
                 <a href="{% url 'central_branch:event_control' %}" class="image-button">
@@ -221,8 +240,23 @@
                 {% endif %}
                 <span class="tooltip-text">Go back to Events</span>
             </div>
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
+            <br>
             <div class="btn-container">
+                {% if is_branch %}
                 <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
+                {% else %}
+                    {% if has_access_for_sc_ag_updates %}
+                    <button class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal" style="margin-bottom:15px">Delete Event</button>
+                    {% endif %}
+                {% endif %}
                 <button class="btn btn-outline-primary" data-toggle="modal" data-target="#previewModal" style="margin-bottom:15px">Preview Event</button>
             </div>
 

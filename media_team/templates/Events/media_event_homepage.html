@@ -246,7 +246,7 @@
                 <a class="event_name_column_content" href="{% url 'media_team:event_form' event.id %}"> {{event.event_name}}</a><br>
               </td>
               <td>{{ event.event_organiser.group_name }}</td>
-              <td>{{ event.event_date }}</td>
+              <td>{{ event.start_date | date:"M. d, Y" }}</td>
               
           </tr>
           {% endfor %}

@@ -472,7 +472,7 @@
                                     <header class="post-header">
                                         <div class="gdlr-blog-info">
                                             <div class="blog-info blog-date gdlr-skin-info">
-                                                <span class="gdlr-sep">/</span>{{events.event_date|date:"M"}}.{{events.event_date.day}}{% if event.event_date.day == 1 %}st{% elif event.event_date.day == 2 %}nd {% elif event.event_date.day == 3 %}rd{% else %}th{% endif %}, {{events.event_date.year}}
+                                                <span class="gdlr-sep">/</span>{{events.start_date|date:"M"}}.{{events.start_date.day}}{% if event.start_date.day == 1 %}st{% elif event.start_date.day == 2 %}nd {% elif event.start_date.day == 3 %}rd{% else %}th{% endif %}, {{events.start_date.year}}
                                             </div>
                                             <div class="blog-info blog-author gdlr-skin-info">
                                                 <span class="gdlr-sep">/</span>By {{events.event_organiser.group_name}}

@@ -5,15 +5,15 @@ from central_branch.renderData import Branch
 from chapters_and_affinity_group.models import SC_AG_Members
 from main_website.models import Research_Papers,Blog,Achievements,News
 from membership_development_team.renderData import MDT_DATA
-from port.renderData import PortData
-from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups
+from port.renderData import PortData,HandleVolunteerAwards
+from port.models import Teams,Panels,Chapters_Society_and_Affinity_Groups,VolunteerAwards
 from .renderData import HomepageItems
 from django.conf import settings
 from users.models import Panel_Members, User_IP_Address,Members
 from users.models import User_IP_Address
 import logging
 from datetime import datetime
-from django.http import HttpResponseBadRequest,HttpResponseServerError
+from django.http import JsonResponse
 from system_administration.system_error_handling import ErrorHandling
 import traceback
 from .renderData import HomepageItems
@@ -26,6 +26,9 @@ from django.contrib import messages
 from central_branch.renderData import Branch
 from central_branch import views as cv
 from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
+from django.views import View
+
+
 logger=logging.getLogger(__name__)
 
 # Create your views here.
@@ -46,6 +49,11 @@ def homepage(request):
         # get volunteer of the months
         get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
 
+        # get current panel of Branch
+        current_panel_pk=PortData.get_current_panel()
+        # get awards for the current panel
+        awards_of_current_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=current_panel_pk)
+        
         context={
             'banner_item':bannerItems,
             'banner_pic_with_stat':bannerWithStat,
@@ -59,6 +67,7 @@ def homepage(request):
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'all_thoughts':all_thoughts,
             'all_vom':get_volunteers_of_the_month,
+            'awards':awards_of_current_panel,
         }
         return render(request,"LandingPage/homepage.html",context)
     except Exception as e:
@@ -66,6 +75,80 @@ def homepage(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+class LoadAwards(View):
+    def get(self,request):
+        award_pk = request.GET.get('award_pk')
+        
+        if(award_pk=="0"):
+            # get current panel of branch
+            current_panel_pk=PortData.get_current_panel()
+            # get the highest ranked award
+            highest_ranked_award_in_the_panel=VolunteerAwards.objects.filter(panel=Panels.objects.get(pk=current_panel_pk)).first()
+            if(highest_ranked_award_in_the_panel is None):
+                
+                return JsonResponse(
+                    {
+                    'message':message,
+                    }
+                    ,status=200,safe=False
+                )
+            else:
+                award_winners=HandleVolunteerAwards.load_award_winners(award_pk=highest_ranked_award_in_the_panel.pk,request=request)
+                if(award_winners==False):
+                    message="No Member was found to be a winner in this Award"
+                    return JsonResponse({
+                        'message':message,
+                    },status=200,safe=False)
+                else:
+                    data=[]
+                    for i in award_winners:
+                        data.append({
+                            "picture":str(i.award_reciever.user_profile_picture),
+                            "name":i.award_reciever.name,
+                            "team":str(i.award_reciever.team),
+                            "position":str(i.award_reciever.position),
+                            "contributions":i.contributions
+                        })
+                    json_data={
+                        'award_name':highest_ranked_award_in_the_panel.volunteer_award_name,
+                        'winners':data
+                    }
+                    return JsonResponse(
+                        data=json_data,
+                        status=200,
+                        safe=False
+                    )
+            
+        else:
+            # get award details
+            get_award=HandleVolunteerAwards.load_award_details(request=request,award_pk=award_pk)
+            # get award winners by award_pk
+            award_winners=HandleVolunteerAwards.load_award_winners(request=request,award_pk=award_pk)
+            if(len(award_winners) == 0):
+                message="No Member was found to be a winner in this Award"
+                return JsonResponse({
+                    'message':message,
+                },status=400,safe=False)
+            else:
+                data=[]
+                for i in award_winners:
+                    data.append({
+                        "picture":str(i.award_reciever.user_profile_picture),
+                        "name":i.award_reciever.name,
+                        "team":str(i.award_reciever.team),
+                        "position":str(i.award_reciever.position),
+                        "contributions":i.contributions
+                    })
+                json_data={
+                    'award_name':get_award.volunteer_award_name,
+                    'winners':data
+                }
+                return JsonResponse(
+                    data=json_data,
+                    status=200,
+                    safe=False
+                )
+            
 
 ##################### EVENT WORKS ####################
 

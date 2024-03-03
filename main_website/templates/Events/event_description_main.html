@@ -556,7 +556,7 @@
                                         <h6><i class="fa-solid fa-wallet" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">COST</span></h6>
                                         {% if event.registration_fee %}
-                                        <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
+                                        <h6 class="adjust_placement">{{event.registration_fee_amount|safe}}</h6>
                                         {% else %}
                                         <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                         {% endif %}
@@ -643,7 +643,7 @@
                                     <h6><i class="fa-solid fa-wallet" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">COST</span></h6>
                                     {% if event.registration_fee %}
-                                    <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
+                                    <h6 class="adjust_placement">{{event.registration_fee_amount|safe}}</h6>
                                     {% else %}
                                     <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                     {% endif %}
