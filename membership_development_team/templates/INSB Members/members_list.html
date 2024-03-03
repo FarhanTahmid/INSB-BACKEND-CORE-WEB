@@ -265,11 +265,10 @@
         <div style="margin-left:5px;">
           <a href="{% url 'central_branch:user_access' %}" class="btn btn-outline b-danger text-danger">Restrict Users</a>
         </div>
+        {% endif %}        
         <div style="margin-left:5px;">
           <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-s" ui-toggle-class="bounce" ui-target="#animate">Add a new type of Skillset</button>
         </div>
-        {% endif %}        
-      
       </div>
     </div>
     {% endif %}
