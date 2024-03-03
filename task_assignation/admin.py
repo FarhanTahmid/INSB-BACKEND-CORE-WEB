@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media
+from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media,Task_Log
 
 # Register your models here.
 @admin.register(Task_Category)
@@ -25,3 +25,9 @@ class Task_Document(admin.ModelAdmin):
 @admin.register(Task_Media)
 class Task_Media(admin.ModelAdmin):
     list_display = ['id','task','media']
+
+@admin.register(Task_Log)
+class Task_Log(admin.ModelAdmin):
+    list_display=[
+        'task_number','task_log_details','update_task_number'
+    ]

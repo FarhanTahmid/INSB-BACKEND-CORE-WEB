@@ -79,3 +79,15 @@ class Task_Media(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+class Task_Log(models.Model):
+
+    task_number = models.ForeignKey(Task,on_delete=models.CASCADE)
+    task_log_details = models.JSONField()
+    update_task_number = models.IntegerField(null=True,blank=True,default = 0)
+    
+    class Meta:
+        verbose_name = "Task Log"
+
+    def __str__(self) ->str:
+        return self.task_number.title
