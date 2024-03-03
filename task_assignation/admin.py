@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media,Task_Log
+from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media,Task_Log,Member_Task_Point
 
 # Register your models here.
 @admin.register(Task_Category)
@@ -31,3 +31,7 @@ class Task_Log(admin.ModelAdmin):
     list_display=[
         'task_number','task_log_details','update_task_number'
     ]
+
+@admin.register(Member_Task_Point)
+class Member_Task_Point(admin.ModelAdmin):
+    list_display = ['member','task','points']

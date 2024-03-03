@@ -91,3 +91,14 @@ class Task_Log(models.Model):
 
     def __str__(self) ->str:
         return self.task_number.title
+
+class Member_Task_Point(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    member = models.CharField(null=False,blank=False,max_length=15)
+    points = models.IntegerField(null=False,blank=False,default=0)
+
+    class Meta:
+        verbose_name="Member Task Point"
+
+    def __str__(self) -> str:
+        return str(self.pk)
