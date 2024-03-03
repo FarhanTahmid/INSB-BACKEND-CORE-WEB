@@ -146,8 +146,11 @@ def member_details(request,ieee_id):
         # load all skill types
         all_skills=users.renderData.load_all_skill_types(request)
         # get member skills
-        skill_of_member=member_skills.skills.all()
-        
+        try:
+            skill_of_member=member_skills.skills.all()
+        except AttributeError:
+            skill_of_member=None
+            
         context={
             'is_branch':False,
             'all_sc_ag':sc_ag,
