@@ -145,6 +145,8 @@ def member_details(request,ieee_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         # load all skill types
         all_skills=users.renderData.load_all_skill_types(request)
+        # get member skills
+        skill_of_member=member_skills.skills.all()
         
         context={
             'is_branch':False,
@@ -157,8 +159,10 @@ def member_details(request,ieee_id):
             'media_url':settings.MEDIA_URL,
             'active_status':active_status,
             'user_data':user_data,
-            'all_skills':all_skills
+            'all_skills':all_skills,
+            'skill_of_member':skill_of_member,
         }
+        
         if request.method=="POST":
             if request.POST.get('save_edit'):
                 nsu_id=request.POST['nsu_id']
