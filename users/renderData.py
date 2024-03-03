@@ -1,6 +1,6 @@
-from users.models import Members,SkillSetTypes,MemberSkillSets
+from users.models import Members,MemberSkillSets
 from system_administration.models import adminUsers
-from port.models import Roles_and_Position,Teams
+from port.models import Roles_and_Position, SkillSetTypes,Teams
 import os
 from django.conf import settings
 from django.db import DatabaseError
