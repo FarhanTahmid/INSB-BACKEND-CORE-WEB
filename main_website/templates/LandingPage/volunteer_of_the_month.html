@@ -3,7 +3,6 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
     #content-section-2{
-        max-height: 900px;
         background-image: url('{% static 'upload/service-bg.jpg' %}');
         padding-top: 20px;
         padding-bottom: 20px;
@@ -87,7 +86,7 @@
         /* top: 50%; */
         border: none;
         color: 	#6d6d6d;
-        margin-top: 465px;
+        margin-top: 470px;
         outline: none;
         transition: all 0.3s;
         
@@ -156,7 +155,7 @@
     }
     @media screen and (max-width: 420px) {
         #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .details {
-            width: 50%;
+            width: 60%;
         }
     }
     #content-section-2 .section1 .prev {
@@ -408,7 +407,7 @@
         // Function to restart auto-swipe interval
         function restartAutoSwipe() {
             clearInterval(autoSwipeInterval);
-            autoSwipeInterval = setInterval(nextSlide, 3000);
+            autoSwipeInterval = setInterval(nextSlide, 7000);
         }
 
         // Attach touch event listeners to container element
@@ -419,7 +418,7 @@
         }
 
         // Start auto-swipe on page load
-        autoSwipeInterval = setInterval(nextSlide, 3000);
+        autoSwipeInterval = setInterval(nextSlide, 7000);
     });
     </script>
 
