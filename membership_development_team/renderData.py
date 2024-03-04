@@ -1,4 +1,4 @@
-from . models import Renewal_Form_Info,Renewal_Sessions
+from . models import Renewal_Form_Info,Renewal_Sessions,Birthday_Email_Records
 from membership_development_team.models import Renewal_requests
 from users.models import Members
 from port.models import Teams,Roles_and_Position
@@ -435,3 +435,8 @@ From every individuals of IEEE NSU SB community."""
                                 email_list,
                                 )
                     email.send()
+
+                    #saving email records
+                    message = f"Birthday Email sent to {members.ieee_id}-{members.name}, Date: {str(today)}"
+                    log = Birthday_Email_Records.objects.create(confirm_message = message)
+                    log.save()
