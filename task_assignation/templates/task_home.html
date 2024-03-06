@@ -177,7 +177,6 @@
                 <tr>
                   <th data-priority="1">Name</th>
                   <th data-priority="1">Deadline</th>
-                  <th data-priority="1">Current Status</th>
                   <th data-priority="1">Completed?</th>
                 </tr>
               </thead>
@@ -188,7 +187,6 @@
                     <a href="{% url 'central_branch:task_edit' task.pk %}">{{task.title}}</a>
                   </td>
                   <td>{{task.deadline}}</td>
-                  <td>Not Implemented</td>
                   {% if task.is_task_completed %}
                   <td>
                     <img src="/static/admin/img/icon-yes.svg" alt="True" />

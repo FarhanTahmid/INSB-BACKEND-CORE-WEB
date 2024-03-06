@@ -24,7 +24,8 @@ from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Grou
 from django.db import DatabaseError
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
-from users.models import Members,Panel_Members
+import users
+from users.models import MemberSkillSets, Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser,member_login_permission
 import os
@@ -3637,6 +3638,10 @@ def insb_members_list(request):
         if request.method=="POST":
             if request.POST.get("site_register"):
                 return redirect('membership_development_team:site_registration')
+            if(request.POST.get('add_new_skill')):
+                skill_name=request.POST['skillset']
+                if(renderData.add_new_skill_type(request,skill_name)):
+                    return redirect('central_branch:members_list')
             
         members=Members.objects.all()
         totalNumber=Members.objects.all().count()
@@ -3645,6 +3650,9 @@ def insb_members_list(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
+        # load all skill types
+        get_all_skills=renderData.load_all_skill_types(request)
+                
         context={
             'is_branch':True,
             'user_data':user_data,
@@ -3653,7 +3661,8 @@ def insb_members_list(request):
             'totalNumber':totalNumber,
             'has_view_permission':has_view_permission,
             'user_data':user_data,
-            'is_MDT':False
+            'is_MDT':False,
+            'all_skills':get_all_skills,
         }
         
         return render(request,'INSB Members/members_list.html',context=context)
@@ -3677,6 +3686,11 @@ def member_details(request,ieee_id):
         
         member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
         try:
+            member_skills=MemberSkillSets.objects.get(member=member_data)
+        except:
+            member_skills=None
+
+        try:
             dob = datetime.strptime(str(
                 member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
         except:
@@ -3688,17 +3702,21 @@ def member_details(request,ieee_id):
         renewal_session=Renewal_Sessions.objects.all().order_by('-id')
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
+        # load all skill types
+        all_skills=users.renderData.load_all_skill_types(request)
         
         context={
             'is_branch':True,
             'all_sc_ag':sc_ag,
             'member_data':member_data,
+            'member_skills':member_skills,
             'dob':dob,
             'sessions':sessions,
             'renewal_session':renewal_session,
             'media_url':settings.MEDIA_URL,
             'active_status':active_status,
             'user_data':user_data,
+            'all_skills':all_skills
         }
         if request.method=="POST":
             if request.POST.get('save_edit'):
@@ -4429,7 +4447,7 @@ def create_task(request):
     
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Members.objects.all()
+    all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
     context = {
         'is_new_task':True, #Task is being created. Use it to disable some ui in the template
@@ -4464,6 +4482,9 @@ def upload_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
 
+    if request.method == 'POST':
+        pass
+
     context = {
         'task':task,
     }
@@ -4474,6 +4495,11 @@ def upload_task(request, task_id):
 @member_login_permission
 def add_task(request, task_id):
 
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
     task = Task.objects.get(id=task_id)
 
     if request.method == 'POST':
@@ -4530,12 +4556,15 @@ def add_task(request, task_id):
     team_members = []
     #Get all team members from the selected teams
     for team in task.team.all():
-        members = Branch.load_team_members(team_primary=team.primary)
+        members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+                
         team_members.extend(members)
 
     context = {
         'task':task,
         'team_members':team_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"task_forward_to_members.html",context)
@@ -4583,13 +4612,15 @@ def task_edit(request, task_id):
     task = Task.objects.get(id=task_id)
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Members.objects.all()
+    all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
     context = {
         'task':task,
         'task_categories':task_categories,
         'teams':teams,
         'all_members':all_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
     }
 
     return render(request,"create_task.html",context)

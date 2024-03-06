@@ -27,6 +27,7 @@ from central_branch.renderData import Branch
 from central_branch import views as cv
 from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
 from django.views import View
+from pytz import timezone as tz
 
 
 logger=logging.getLogger(__name__)
@@ -53,7 +54,7 @@ def homepage(request):
         current_panel_pk=PortData.get_current_panel()
         # get awards for the current panel
         awards_of_current_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=current_panel_pk)
-        
+
         context={
             'banner_item':bannerItems,
             'banner_pic_with_stat':bannerWithStat,
@@ -189,7 +190,14 @@ def event_homepage(request):
         get_years=get_yearly_events[0]
         # prepare event counts according to years
         get_yearly_event_count=get_yearly_events[1]
-        
+
+        if upcoming_event:
+            local_timezone = tz('Asia/Dhaka')
+            modified_start_time = upcoming_event.start_date.astimezone(local_timezone)
+            modified_start_time = modified_start_time.replace(tzinfo=None)
+        else:
+            modified_start_time = None
+
         context = {
             'page_title':"Events",
             'page_subtitle':"IEEE NSU Student Branch",
@@ -205,7 +213,8 @@ def event_homepage(request):
             'yearly_event_count':get_yearly_event_count,
             'all_mega_events':all_mega_events,
             'has_mega_events':has_mega_events,
-            'all_categories':all_categories
+            'all_categories':all_categories,
+            'modified_start_time':modified_start_time,
         }
 
         return render(request,'Events/events_homepage.html',context)
@@ -656,6 +665,13 @@ def events_for_sc_ag(request,primary):
         # prepare event counts according to years
         get_yearly_event_count=get_yearly_events[1]
 
+        if upcoming_event:
+            local_timezone = tz('Asia/Dhaka')
+            modified_start_time = upcoming_event.start_date.astimezone(local_timezone)
+            modified_start_time = modified_start_time.replace(tzinfo=None)
+        else:
+            modified_start_time = None
+
         context = {
             'is_sc_ag':True,
             'society':society,
@@ -674,7 +690,8 @@ def events_for_sc_ag(request,primary):
             'yearly_event_count':get_yearly_event_count,
             'has_mega_events':has_mega_events,
             'organised_events':organised_events,
-            'all_categories':all_categories
+            'all_categories':all_categories,
+            'modified_start_time':modified_start_time,
         }
 
 

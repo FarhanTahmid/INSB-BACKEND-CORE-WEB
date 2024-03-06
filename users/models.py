@@ -37,6 +37,7 @@ class Members(models.Model):
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     is_blocked = models.BooleanField(null=False,blank=False,default=False)
+    completed_task_points = models.FloatField(null=False,blank=False,default=0)
 
     def save(self, *args, **kwargs):
 
@@ -101,9 +102,18 @@ class Members(models.Model):
     
     def get_image_url(self):
         return self.user_profile_picture
-    
-    
 
+
+class MemberSkillSets(models.Model):
+    
+    '''This stores all the skill sets for Members'''
+    member=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    skills=models.ManyToManyField(SkillSetTypes,blank=True)
+    
+    class Meta:
+        verbose_name="Member Skill Sets"
+    def __str__(self) -> str:
+        return str(self.pk)
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
 

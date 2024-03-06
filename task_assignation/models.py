@@ -6,7 +6,7 @@ from users.models import Members
 # Create your models here.
 class Task_Category(models.Model):
     name = models.TextField(null=False,blank=False)
-    points = models.IntegerField(null=False,blank=False)
+    points = models.FloatField(null=False,blank=False)
 
     class Meta:
         verbose_name="Task Category"
@@ -91,3 +91,27 @@ class Task_Log(models.Model):
 
     def __str__(self) ->str:
         return self.task_number.title
+
+class Member_Task_Point(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    member = models.CharField(null=False,blank=False,max_length=15)
+    completion_points = models.FloatField(null=False,blank=False,default=0)
+    is_task_completed = models.BooleanField(null=False,blank=False,default=False)
+
+    class Meta:
+        verbose_name="Member Task Point"
+
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class Team_Task_Point(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    team = models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE)
+    completion_points = models.FloatField(null=False,blank=False,default=0)
+    is_task_completed = models.BooleanField(null=False,blank=False,default=False)
+
+    class Meta:
+        verbose_name="Team Task Point"
+
+    def __str__(self) -> str:
+        return str(self.pk)

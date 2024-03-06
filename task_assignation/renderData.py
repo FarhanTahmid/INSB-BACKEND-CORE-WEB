@@ -6,7 +6,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Task, Task_Category,Task_Log
+from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log
 from users.models import Members, Panel_Members
 from datetime import datetime
 from django.utils import timezone
@@ -123,6 +123,13 @@ class Task_Assignation:
             #Add those members to task
             new_task.members.add(*members)
             new_task.save()
+
+            #Divide the category points into equal points for each member
+            points_for_members = new_task.task_category.points / len(members)
+            #For each member, add them to the task points table
+            for member in members:
+                Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=points_for_members)
+
             #updating task log details
             task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]=f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
             task_log.update_task_number += 1
@@ -150,11 +157,25 @@ class Task_Assignation:
                 task_log_details.update_task_number+=1
                 task_log_details.save()
                 task.save()
-                # return True
+                #For each member in the selected members for the task
+                for member in task.members.all():
+                    #Get their respective task points and add it to their user id as the task is set to completed
+                    member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
+                    member_points.is_task_completed = True
+                    member_points.save()
+                    member.completed_task_points += member_points.completion_points
+                    member.save()
+                return True
             else:
+                #Not sure what this else is for
                 task.is_task_completed = True
                 task.save()
-                # return True
+                #For each member in the selected members for the task
+                for member in task.members.all():
+                    member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
+                    member_points.is_task_completed = True
+                    member_points.save()
+                return True
         else:
             task_flag = task.is_task_completed
             if task_flag == False:
@@ -164,6 +185,14 @@ class Task_Assignation:
                 task_log_details.update_task_number+=1
                 task_log_details.save()
                 task.save()
+                #For each member in the selected members for the task
+                for member in task.members.all():
+                    #Get their respective task points and subtract it to their user id as the task is set back to undone
+                    member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
+                    member_points.is_task_completed = False
+                    member_points.save()
+                    member.completed_task_points -= member_points.completion_points
+                    member.save()
             task.is_task_completed = False
 
         #Checking to see if the list is empty depending on which task_type is selected
@@ -344,4 +373,62 @@ class Task_Assignation:
         task.save()
         
         return True
+    
+    def load_team_members_for_task_assignation(request, team_primary):
+        '''This function loads all the team members whose positions are below the position of the requesting user, and also checks if the member is included in the current panel. Works for both admin and regular user'''
+        
+        team=Teams.objects.get(primary=team_primary)
+        team_id=team.id
+        get_users=Members.objects.order_by('-position').filter(team=team_id)
+        get_current_panel=Branch.load_current_panel()
+        team_members=[]
+        #Check if the current panel exists
+        if(get_current_panel is not None):
+            #Check the type of requesting user
+            try:
+                #If the requesting user is a member
+                requesting_member = Members.objects.get(ieee_id=request.user.username)
+            except:
+                #If the requesting user is an admin
+                requesting_member = adminUsers.objects.get(username=request.user.username)
+            
+            #If member
+            if type(requesting_member) is Members:
+                for i in get_users:
+                    #If there are panels members for that panel
+                    if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                        #If the position is below the position of the requesting user then add it to the list
+                        #Here rank is used to determine the position. Higher the rank, less the position
+                        if i.position.rank > requesting_member.position.rank:
+                            team_members.append(i)
+            else:
+                #If admin user
+                for i in get_users:
+                    #If there are panels members for that panel
+                    if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
+                        #Add all members to the list
+                        team_members.append(i)
+
+        return team_members
+    
+    def load_insb_members_for_task_assignation(request):
+        ''' This function load all insb members whose positions are below the position of the requesting user. Works for both admin and regular user '''
+        #Check the type of requesting user
+        try:
+            #If the requesting user is a member
+            requesting_member = Members.objects.get(ieee_id=request.user.username)
+        except:
+            #If the requesting user is an admin
+            requesting_member = adminUsers.objects.get(username=request.user.username)
+
+        #If member
+        if type(requesting_member) is Members:
+            #If the position is below the position of the requesting user then add it to the list
+            #Here rank is used to determine the position. Higher the rank, less the position
+            #Here __gt is "Greater Than"
+            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
+        else:
+            #Admin user so load all members
+            members = Members.objects.all()
+        return members
         
