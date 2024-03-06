@@ -132,5 +132,8 @@ urlpatterns = [
     path('task_home/',views.task_home,name="task_home"),
     path('task/<int:task_id>/upload_task/',views.upload_task,name="upload_task"),
     path('task/<int:task_id>/add_task/',views.add_task,name="add_task"),
-    path('task/<int:task_id>',views.task_edit,name="task_edit")
+    path('task/<int:task_id>',views.task_edit,name="task_edit"),
+
+    #my task url
+    path('my_tasks/',views.my_tasks,name="my_tasks")
 ]

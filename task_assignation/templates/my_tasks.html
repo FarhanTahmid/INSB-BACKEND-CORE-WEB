@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tasks | IEEE NSU Student Branch</title>
+
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+</head>
+<body>
+    <!--LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+          {% block sidebar %} 
+           {% include 'users/sidebar.html' %} 
+          {% endblock %}
+        </div>
+
+        <!--PAGE START-->
+        <div ui-view class="app-body" id="view">
+            
+        </div>
+      
+      <!--Theme Switcher-->
+      {% block theme_switcher %} 
+      {% include "theme_switcher.html" %} 
+      {% endblock theme_switcher %}
+      <!-- app end-->
+      
+      {% block common_js %}
+      {% include "common_js.html" %}
+      {% endblock common_js %}
+    </div>
+</body>
+</html>
