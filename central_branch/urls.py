@@ -130,6 +130,7 @@ urlpatterns = [
     #task assignation urls
     path('create_task/',views.create_task,name="create_task"),
     path('task_home/',views.task_home,name="task_home"),
-    path('upload_task/',views.upload_task,name="upload_task"),
-    path('add_task/',views.add_task,name="add_task"),
+    path('task/<int:task_id>/upload_task/',views.upload_task,name="upload_task"),
+    path('task/<int:task_id>/add_task/',views.add_task,name="add_task"),
+    path('task/<int:task_id>',views.task_edit,name="task_edit")
 ]

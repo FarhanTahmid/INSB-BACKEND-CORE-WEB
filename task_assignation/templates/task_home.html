@@ -144,7 +144,7 @@
       <div style="justify-content: center; text-align: center">
         {% if messages %} 
         {% for message in messages %}
-        <h4>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
+        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
         {% endfor %}
         <br />
         {% endif %}
@@ -185,11 +185,11 @@
                 {% for task in all_tasks %}
                 <tr>
                   <td style="color: #00629b">
-                    <a href="#">{{task.title}}</a>
+                    <a href="{% url 'central_branch:task_edit' task.pk %}">{{task.title}}</a>
                   </td>
                   <td>{{task.deadline}}</td>
                   <td>Not Implemented</td>
-                  {% if task.idk %}
+                  {% if task.is_task_completed %}
                   <td>
                     <img src="/static/admin/img/icon-yes.svg" alt="True" />
                   </td>
