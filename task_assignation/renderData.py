@@ -6,7 +6,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Task, Task_Category,Task_Log
+from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log
 from users.models import Members, Panel_Members
 from datetime import datetime
 from django.utils import timezone
@@ -123,6 +123,13 @@ class Task_Assignation:
             #Add those members to task
             new_task.members.add(*members)
             new_task.save()
+
+            #Divide the category points into equal points for each member
+            points_for_members = new_task.task_category.points / len(members)
+            #For each member, add them to the task points table
+            for member in members:
+                Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=points_for_members)
+
             #updating task log details
             task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]=f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
             task_log.update_task_number += 1
@@ -150,11 +157,25 @@ class Task_Assignation:
                 task_log_details.update_task_number+=1
                 task_log_details.save()
                 task.save()
-                # return True
+                #For each member in the selected members for the task
+                for member in task.members.all():
+                    #Get their respective task points and add it to their user id as the task is set to completed
+                    member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
+                    member_points.is_task_completed = True
+                    member_points.save()
+                    member.completed_task_points += member_points.completion_points
+                    member.save()
+                return True
             else:
+                #Not sure what this else is for
                 task.is_task_completed = True
                 task.save()
-                # return True
+                #For each member in the selected members for the task
+                for member in task.members.all():
+                    member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
+                    member_points.is_task_completed = True
+                    member_points.save()
+                return True
         else:
             task_flag = task.is_task_completed
             if task_flag == False:
@@ -164,6 +185,14 @@ class Task_Assignation:
                 task_log_details.update_task_number+=1
                 task_log_details.save()
                 task.save()
+                #For each member in the selected members for the task
+                for member in task.members.all():
+                    #Get their respective task points and subtract it to their user id as the task is set back to undone
+                    member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
+                    member_points.is_task_completed = False
+                    member_points.save()
+                    member.completed_task_points -= member_points.completion_points
+                    member.save()
             task.is_task_completed = False
 
         #Checking to see if the list is empty depending on which task_type is selected
