@@ -199,30 +199,30 @@
         .view-task-btn{
             padding: 5px 15px;
             color: white;
-            background: #10609D;
+            background: #75D481;
             margin: 16px 4px 16px; 
             border-radius: 4px;
-            border: 2px solid #10609D;
+            border: 2px solid #75D481;
             transition: all ease-in-out .3s;
         }
         .view-task-btn:hover{
             background: white;
-            border-color: #10609D;
-            color: #10609D;
+            border-color: #75D481;
+            color: #75D481;
         }
         .add-members-task-btn{
             padding: 5px 15px;
             color: white;
-            background: #72C2D6;
+            background: #75D481;
             margin: 16px 4px 16px; 
             border-radius: 4px;
-            border: 2px solid #72C2D6;
+            border: 2px solid #75D481;
             transition: all ease-in-out .3s;
         }
         .add-members-task-btn:hover{
-            color: #72C2D6;
+            color: #75D481;
             background: white;
-            border-color: #72C2D6;
+            border-color: #75D481;
         }
         .hide_table{
             display: none;
@@ -444,6 +444,49 @@
                 grid-template-columns: 1fr;
             }
         }
+        .tooltip-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+      }
+
+      .image-button:hover + .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(10px); /* Adjust the distance from the link */
+      }
+
+      .tooltip-text {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        background-color: #333;
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      }
+
+      .image-button img {
+        width: 32px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 50%; /* Add rounded corners if desired */
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
+      .task_point{
+        color: #75D481;
+        font-size: 20px;
+        font-style: italic;
+        font-weight: 900;
+      }
     </style>
   </head>
   <body>
@@ -489,13 +532,21 @@
                 <br>
                 {% endif %}
             </div>
-              
+              <!--Messages-->
+            <div class="tooltip-container">
+                <a href="{% url 'central_branch:task_home' %}" class="image-button">
+                  <img src="/static/back-arrow.png" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back</span>
+              </div>
+  
+              <!--Messages-->
               {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
-                  <a href="#" class="view-task-btn">View Task</a>
+                  {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">Start Task</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">Check or Start Task</a>
                 </div>
                 {% endif %}
 
@@ -567,6 +618,9 @@
                         <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
                         {% endfor %}
                     </select>
+                </div>
+                <div class="category">
+                    <div>Task point: <span class="task_point">50</span></div>
                 </div>
 
 
