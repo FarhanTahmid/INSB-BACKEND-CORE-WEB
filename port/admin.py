@@ -29,3 +29,9 @@ class All_Awards(admin.ModelAdmin):
     list_display=[
         'volunteer_award_name','award_of','panel'
     ]
+
+@admin.register(SkillSetTypes)
+class SkillSetTypes(admin.ModelAdmin):
+    list_display=[
+        'pk','skill_type'
+    ]

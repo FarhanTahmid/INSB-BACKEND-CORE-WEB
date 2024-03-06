@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from insb_port import settings
 import datetime
+from port.models import SkillSetTypes
 
 # Create your models here.
 class recruitment_session(models.Model):
@@ -33,6 +34,7 @@ class recruited_members(models.Model):
     major=models.CharField(null=True,blank=True,max_length=30)
     graduating_year=models.IntegerField(null=True,blank=True)
     recruitment_time=models.DateTimeField(auto_now_add=True,null=True,blank=True)
+    skills=models.ManyToManyField(SkillSetTypes,blank=True)
     ieee_id=models.CharField(null=True,blank=True,max_length=30)
     session_id=models.IntegerField(null=False,blank=True)
     recruited_by=models.CharField(null=True,blank=True,max_length=30)
