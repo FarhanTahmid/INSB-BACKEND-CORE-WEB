@@ -13,6 +13,7 @@ from system_administration.system_error_handling import ErrorHandling
 from django.contrib import messages
 from chapters_and_affinity_group.renderData import SC_AG_Info
 from port.renderData import PortData
+from django.contrib import messages
 class PRT_Email_System:
 
     logger=logging.getLogger(__name__)
@@ -217,7 +218,7 @@ class PRT_Email_System:
         
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
-    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
+    def send_email(request,to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
         # print(len(to_email_list))
         # print(len(bcc_email_list))
         # print(len(cc_email_list))
@@ -235,7 +236,7 @@ class PRT_Email_System:
                 # print(f"to_email_list >= {len(to_email_list)}  and bcc_email_list>={len(bcc_email_list)}")
                 # print(len(to_email_list))
                 # print(len(bcc_email_list))
-                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list[0:41],subject,mail_body,is_scheduled,attachment):
+                if PRT_Email_System.send_email_confirmation(to_email_list[:40],cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
                     to_email_list = to_email_list[40:]
                     bcc_email_list = bcc_email_list[40:]
                     # print(len(to_email_list))
@@ -247,7 +248,7 @@ class PRT_Email_System:
             while len(to_email_list)!=0:
                 # print(f"to_email_list only more than {len(to_email_list)}")
                 # print(len(to_email_list))
-                if PRT_Email_System.send_email_confirmation(to_email_list[0:41],cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
+                if PRT_Email_System.send_email_confirmation(to_email_list[:40],cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                     to_email_list = to_email_list[40:]
                     # print(len(to_email_list))
                 else:
@@ -257,7 +258,7 @@ class PRT_Email_System:
             while len(bcc_email_list)!=0:
                 # print(f"bcc_email_list only more than {len(bcc_email_list)}")
                 # print(len(bcc_email_list))
-                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[0:41],subject,mail_body,is_scheduled,attachment):
+                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
                     bcc_email_list = bcc_email_list[40:]
                     # print(len(bcc_email_list))
                 else:
@@ -277,6 +278,7 @@ class PRT_Email_System:
                     return False
             else:
                 # print("mail not sent")
+                messages.error(request,"Add atleast one email in TO or BCC field")
                 return False
 
 
