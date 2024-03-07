@@ -218,7 +218,7 @@ class PRT_Email_System:
         
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
-    def send_email(request,to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
+    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
         # print(len(to_email_list))
         # print(len(bcc_email_list))
         # print(len(cc_email_list))
@@ -274,11 +274,7 @@ class PRT_Email_System:
             if len(to_email_list)!=0 or len(bcc_email_list)!=0:
                 if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                     return True
-                else:
-                    return False
             else:
-                # print("mail not sent")
-                messages.error(request,"Add atleast one email in TO or BCC field")
                 return False
 
 
