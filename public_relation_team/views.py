@@ -525,7 +525,7 @@ def send_email(request):
                                 if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
                                     messages.success(request,"Email sent successfully!")
                                 else:
-                                    messages.error(request,"Email sending failed! Try again Later or Add atleast one email in TO list")
+                                    messages.error(request,"Email sending failed! Try again Later")
                                 
                             # IF there is no files
                             except MultiValueDictKeyError:
@@ -535,7 +535,7 @@ def send_email(request):
                                 if PRT_Email_System.send_email(to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
                                     messages.success(request,"Email sent successfully!")
                                 else:
-                                    messages.error(request,"Email sending failed! Try again Later or Add atleast one email in TO list")
+                                    messages.error(request,"Email sending failed! Try again Later")
 
                             
                 

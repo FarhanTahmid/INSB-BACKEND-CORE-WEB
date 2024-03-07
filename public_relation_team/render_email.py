@@ -267,15 +267,17 @@ class PRT_Email_System:
         
         #If both list does not have more than 40 than normal just sending the emails without any
         #changes in the lists'''
-        if len(to_email_list)<40 or len(bcc_email_list)<40:
+        if (len(to_email_list)>0 and len(to_email_list)<40) or (len(bcc_email_list)>0 and len(bcc_email_list)<40):
             # print(f"Outside, less than 40")
             # print(len(to_email_list))
             # print(len(bcc_email_list))
-            if len(to_email_list)!=0 or len(bcc_email_list)!=0:
-                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
-                    return True
+            if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
+                return True
             else:
                 return False
+            
+        if len(to_email_list)==0 and len(bcc_email_list)==0 and len(cc_email_list)>0:
+            return True
 
 
     def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,is_scheduled,attachment):
