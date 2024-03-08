@@ -709,7 +709,7 @@
                             <td>{{member.position.role}}</td>
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
                             <td>
-                                <select name="{{member.name}}_task_type[]" multiple multiselect-search="true" multiselect-select-all="true"> 
+                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true" multiselect-select-all="true"> 
                                     <option value="permission_paper">Permission paper</option>
                                     <option value="content">Content</option>
                                     <option value="file_upload">File Upload</option>

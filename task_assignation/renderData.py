@@ -6,7 +6,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log
+from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types
 from users.models import Members, Panel_Members
 from datetime import datetime
 from django.utils import timezone
@@ -15,7 +15,7 @@ from pytz import timezone as tz
 
 class Task_Assignation:
     
-    def create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select):
+    def create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
 
         #Checking to see if the list is empty depending on which task_type is selected
@@ -113,6 +113,39 @@ class Task_Assignation:
                 ## Send email/notification here
                 ##
 
+            #saving members task type as per needed
+            for ieee_id,task_type in task_types_per_member.items():
+                memb = Members.objects.get(ieee_id = ieee_id)
+                member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = new_task)
+                member_task_type.save()
+                message = ""
+                for i in task_type:
+                    if i=="permission_paper":
+                        member_task_type.has_permission_paper = True
+                        member_task_type.save()
+                        message += "Permission Paper,"
+                    if i=="content":
+                        member_task_type.has_content = True
+                        member_task_type.save()
+                        message += "Content,"
+                    if i=="file_upload":
+                        member_task_type.has_file_upload = True
+                        member_task_type.save()
+                        message += "File Upload,"
+                    if i=="media":
+                        member_task_type.has_media = True
+                        member_task_type.save()
+                        message += "Media,"
+                    if i=="drive_link":
+                        member_task_type.has_drive_link = True
+                        member_task_type.save()
+                        message += "drive link"
+                if message!="":
+                    message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
+                    task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]= f'Task Name: {title}, {message}'
+                    task_log.update_task_number+=1
+                    task_log.save()
+            
             #getting members IEEE_ID
             members_ieee_id = []
             for member in members:

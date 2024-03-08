@@ -43,5 +43,5 @@ class Team_Task_Point(admin.ModelAdmin):
 @admin.register(Member_Task_Upload_Types)
 class Member_Task_Upload_Types(admin.ModelAdmin):
     list_display = [
-        'task_member','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper'
+        'task_member','task','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper'
     ]

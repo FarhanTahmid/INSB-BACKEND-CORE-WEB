@@ -42,6 +42,7 @@ class Task(models.Model):
     
 class Member_Task_Upload_Types(models.Model):
     task_member = models.ForeignKey(Members, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     has_drive_link = models.BooleanField(null=False,blank=False,default=False)
     has_file_upload = models.BooleanField(null=False,blank=False,default=False)
     has_content = models.BooleanField(null=False,blank=False,default=False)

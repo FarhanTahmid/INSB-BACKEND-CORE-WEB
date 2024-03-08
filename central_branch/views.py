@@ -4436,9 +4436,13 @@ def create_task(request):
             team_select = request.POST.getlist('team_select')
         elif task_type == "Individuals":
             member_select = request.POST.getlist('member_select')
-
+            task_types_per_member = {}
+            for member_id in member_select:
+                member_name = request.POST.getlist(member_id + '_task_type[]')
+                task_types_per_member[member_id] = member_name
+    
         task_of = 1 #Setting task_of as 1 for Branch primary
-        if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select)):
+        if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
             messages.success(request,"Task Created successfully!")
         else:
             messages.warning(request,"Something went wrong while creating the task!")
