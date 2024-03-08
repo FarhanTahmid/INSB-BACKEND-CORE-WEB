@@ -502,6 +502,9 @@
       .multiselect-dropdown{
         width: 150px!important;
       }
+      .multiselect-dropdown{
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -707,15 +710,18 @@
                             <td>{{member.name}}</td>
                             <td>{{member.team.team_name}}</td>
                             <td>{{member.position.role}}</td>
-                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
                             <td>
-                                <select name="{{member.name}}_task_type[]" multiple multiselect-search="true" multiselect-select-all="true"> 
+                                <input type="checkbox" class="member_checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}>
+                            </td>
+                            <td>
+                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true" class="task_select">
                                     <option value="permission_paper">Permission paper</option>
                                     <option value="content">Content</option>
                                     <option value="file_upload">File Upload</option>
                                     <option value="media">Media</option>
                                     <option value="drive_link">Drive Link</option>
                                 </select>
+                                <span class="select_instruction">Please select the left checkbox</span>
                             </td>
                         </tr>
                         {% endfor %}
@@ -780,6 +786,27 @@
     {% include "common_js.html" %}
     {% endblock common_js %}
     
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var checkboxes = document.querySelectorAll('.member_checkbox');
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                var select = this.parentElement.nextElementSibling.querySelector('.multiselect-dropdown');
+                var span = this.parentElement.nextElementSibling.querySelector('.select_instruction');
+                if (this.checked) {
+                    select.style.display = 'inline-block';
+                    span.style.display = 'none';
+                } else {
+                    select.style.display = 'none';
+                    span.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
+
     <script>
         // character count function
         document.addEventListener("DOMContentLoaded", function () {
@@ -1002,7 +1029,7 @@
 style.setAttribute("id","multiselect_dropdown_styles");
 style.innerHTML = `
 .multiselect-dropdown{
-  display: inline-block;
+  display: none;
   padding: 2px 5px 0px 5px;
   border-radius: 4px;
   border: solid 1px #ced4da;
