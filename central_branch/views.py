@@ -4624,3 +4624,6 @@ def task_edit(request, task_id):
     }
 
     return render(request,"create_task.html",context)
+
+def my_tasks(request):
+    return render(request,"my_tasks.html")

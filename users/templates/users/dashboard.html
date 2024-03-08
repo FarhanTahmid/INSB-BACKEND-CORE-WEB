@@ -69,7 +69,12 @@
 			height: 40px;
 		}
 	}
-
+	.my_task{
+		font-weight: bold;
+	}
+	.my_task:hover{
+		color: #FFD100;
+	}
   </style>
 </head>
 <body>
@@ -88,14 +93,13 @@
   <!-- NAVIGATION BAR START -->
   <div id="content" class="app-content box-shadow-z0" role="main">
     <div class="app-header white box-shadow">
-        <div class="navbar navbar-toggleable-sm flex-row align-items-center">
+        <div class="navbar  flex-row align-items-center">
             <!-- Open side - Naviation on mobile -->
             <a data-toggle="modal" data-target="#aside" class="hidden-lg-up mr-3">
               <i class="material-icons">&#xe5d2;</i>
             </a>
             <!-- / -->
-        
-            <!-- Page title - Bind to $state's title -->
+			<!-- Page title - Bind to $state's title -->
             <div class="mb-0 h5 no-wrap" ng-bind="$state.current.data.title" id="pageTitle"></div>
         
             <!-- navbar collapse -->
