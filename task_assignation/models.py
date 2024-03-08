@@ -40,6 +40,19 @@ class Task(models.Model):
     def __str__(self) -> str:
         return str(self.pk)
     
+class Member_Task_Upload_Types(models.Model):
+    task_member = models.ForeignKey(Members, on_delete=models.CASCADE)
+    has_drive_link = models.BooleanField(null=False,blank=False,default=False)
+    has_file_upload = models.BooleanField(null=False,blank=False,default=False)
+    has_content = models.BooleanField(null=False,blank=False,default=False)
+    has_media = models.BooleanField(null=False,blank=False,default=False)
+    has_permission_paper = models.BooleanField(null=False,blank=False,default=False)
+
+    class Meta:
+        verbose_name="Member Task Upload Types"
+    def __str__(self) -> str:
+        return str(self.pk)
+
 class Task_Drive_Link(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     drive_link = models.URLField(null=True,blank=True)
