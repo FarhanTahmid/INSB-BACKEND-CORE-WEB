@@ -58,6 +58,7 @@ class Member_Task_Upload_Types(models.Model):
 class Task_Drive_Link(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     drive_link = models.URLField(null=True,blank=True)
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Drive Link"
@@ -68,16 +69,22 @@ class Task_Drive_Link(models.Model):
 class Task_Content(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     content = models.TextField(null=True,blank=True)
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Content"
 
     def __str__(self) -> str:
         return str(self.pk)
-
+class Permission_Paper(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    permission_paper = models.CharField(max_length=50,default = "")
+    uploaded_by = models.CharField(max_length = 50,default = "")
+    
 class Task_Document(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     document = models.FileField(null=True,blank=True,upload_to="Task_Assignation/Task_Documents/")
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Document"
@@ -88,6 +95,7 @@ class Task_Document(models.Model):
 class Task_Media(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     media = models.ImageField(upload_to='Task_Assignation/Task_Media_Images/',null=True,blank=True)
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Media"

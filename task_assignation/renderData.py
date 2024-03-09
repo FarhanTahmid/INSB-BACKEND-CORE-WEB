@@ -6,12 +6,14 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types
+from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types,Task_Drive_Link,Task_Content,Permission_Paper,Task_Document,Task_Media
 from users.models import Members, Panel_Members
 from datetime import datetime
 from django.utils import timezone
 from central_branch.renderData import Branch
 from pytz import timezone as tz
+from insb_port import settings
+import os
 
 class Task_Assignation:
     
@@ -532,4 +534,57 @@ class Task_Assignation:
         #TODO:set to all instead of individuals
         user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
         return user_tasks
+    
+    def save_task_uploads(task,member,permission_paper,media,content,file_upload,drive_link):
+
+        #This function saves the documents uploaded by the user
+
+        if permission_paper!=None:
+            try:
+                permission_paper_save = Permission_Paper.objects.get(task=task,uploaded_by = member.ieee_id)
+                permission_paper_save.permission_paper = permission_paper
+                permission_paper_save.save()
+            except:
+                permission_paper_save = Permission_Paper.objects.create(task=task,permission_paper = permission_paper,uploaded_by = member.ieee_id)
+                permission_paper_save.save()
+        if len(media)!=0:
+            medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
+            for m in medias:
+                path = settings.MEDIA_ROOT+str(m.media)
+                if os.path.isfile(path):
+                    os.remove(path)
+                    m.delete()
+            for m in media:
+                media_save = Task_Media.objects.create(task=task,media = m,uploaded_by = member.ieee_id)
+                media_save.save()
+        if content!=None:
+            try:
+                content_save = Task_Content.objects.get(task=task,uploaded_by = member.ieee_id)
+                content_save.content = content
+                content_save.save()
+            except:
+                content_save = Task_Content.objects.create(task=task, content = content,uploaded_by = member.ieee_id)
+                content_save.save()
+        if len(file_upload)!=0:
+            file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
+            for file in file_upload_save:
+                path = settings.MEDIA_ROOT+str(file.document)
+                if os.path.isfile(path):
+                    os.remove(path)
+                    file.delete()
+            for file in file_upload:
+                file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
+                file_upload_save.save()
+        if drive_link!=None:
+            try:
+                drive_link_save = Task_Drive_Link.objects.get(tas=task,uploaded_by = member.ieee_id)
+                drive_link_save.drive_link = drive_link
+                drive_link_save.save()
+            except:
+                drive_link_save = Task_Drive_Link.objects.create(task=task,drive_link = drive_link,uploaded_by = member.ieee_id)
+                drive_link_save.save()
+
+        return True
+
+
         

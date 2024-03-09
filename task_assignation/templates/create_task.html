@@ -720,7 +720,7 @@
                             <td>{{member.position.role}}</td>
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
                             <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true" multiselect-select-all="true"> 
+                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
                                     <option value="permission_paper" {% if 'permission_paper_'|add:member.ieee_id in members_task_type|default_if_none:"" %}selected{% endif %}>Permission Paper</option>
                                     <option value="content" {% if member.ieee_id == members_task_type.task_member.ieee_id  %}selected{% endif %}>Content </option>
                                     <option value="file_upload" {% if member in members_task_type and members_task_type.has_file_upload %}selected{% endif %}>File Upload </option>

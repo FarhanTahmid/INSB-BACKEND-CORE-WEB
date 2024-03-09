@@ -51,7 +51,7 @@ from membership_development_team.models import Renewal_Sessions
 from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
-from task_assignation.models import Member_Task_Upload_Types
+from task_assignation.models import *
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -4513,13 +4513,57 @@ def upload_task(request, task_id):
         except:
             #else admin who can see all
             member_task_type = None
+        try:
+            permission_paper_loaded = Permission_Paper.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
+        except:
+            permission_paper_loaded = None
+        try:
+            content_loaded = Task_Content.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
+        except:
+            content_loaded = None
+        try:
+            drive_link_loaded = Task_Drive_Link.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
+        except:
+            drive_link_loaded = None
+       
         if request.method == 'POST':
             
-            pass
+            if request.POST.get('save_task'):
+
+                file_upload = None
+                media = None
+                drive_link = None
+                if member_task_type.has_permission_paper:
+                    permission_paper = request.POST.get('permission_paper')
+                    if permission_paper == None:
+                        permission_paper = permission_paper_loaded
+                if member_task_type.has_content:
+                    content = request.POST.get('content_details')
+                    if content == None:
+                        content = content_loaded
+                if member_task_type.has_drive_link:
+                    drive_link = request.POST.get('content_drive')
+                    if drive_link == None:
+                        drive_link = drive_link_loaded
+                if member_task_type.has_file_upload:
+                    file_upload = request.FILES.getlist('document')
+                    print(file_upload)
+                if member_task_type.has_media:
+                    media = request.FILES.getlist('images')
+              
+
+                if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper,media,content,file_upload,drive_link):
+                    messages.success(request,"Task Saved! Please finish it as soon as you can")
+                else:
+                    messages.warning(request,"Something went wrong while saving the task!")
+                return redirect('central_branch:upload_task',task_id)
 
         context = {
             'task':task,
             'members_task_type':member_task_type,
+            'permission_paper_loaded':permission_paper_loaded,
+            'content_loaded':content_loaded,
+            'drive_link_loaded':drive_link_loaded
 
         }
 

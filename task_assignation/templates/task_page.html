@@ -448,15 +448,18 @@
               </div>
   
               <!--Messages-->
+                    <div class="center">
+                        {{members_task_type.task_member.name}}
+                        {{members_task_type.task_member.ieee_id}}
+                    </div>
                     {% if members_task_type.has_permission_paper or members_task_type == None %}
                     <!-- Paper permission -->
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                         
-                            <select id="paper_permission_dropdown" class="form-control">
-                                <option value="yes">Completed</option>
-                                <option value="no">Not Completed</option>
-                                <option value="not_needed">Not Needed</option>
+                            <select id="paper_permission_dropdown" name = "permission_paper" class="form-control">
+                                <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Completed </option>
+                                <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
                             </select>                                  
                         </div>
                         <br>
@@ -493,7 +496,7 @@
                         <!--file upload -->
                         <label for="documents">File Upload</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
-                            <input type="file" class="file-input file-input-bordered file-input-info" style="flex-grow: 1;">
+                            <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;">
 
                             
                             <br>
@@ -553,8 +556,8 @@
                     <!--Submit btn-->
                     <div class="task-btn">
                         <!-- <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a> -->
-                        <a href="#" class="finish-task-btn">Save</a>
-                        <button type="submit" class="finish-task-btn" name="finish_task">Completed</button>
+                        <input type="submit" class="finish-task-btn" name="save_task" value="Save">
+                        <input type="submit" class="finish-task-btn" name="finish_task" value = "Completed">
                     </div>
                 </form> 
         </div>
