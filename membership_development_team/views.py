@@ -265,7 +265,7 @@ def member_details(request,ieee_id):
             if request.POST.get('delete_member'):
                 #Deleting a member from database
                 member_to_delete=Members.objects.get(ieee_id=ieee_id)
-                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
+                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the IEEE NSU SB Registered Members Database.")
                 member_to_delete.delete()
                 return redirect('membership_development_team:members_list')
                 
@@ -760,10 +760,10 @@ def renewal_request_details(request,pk,request_id):
                         )
                         new_member_from_renewal.save()
                     except:
-                        messages.error(request,f"Can not update this application to INSB Registered Members Database!")
+                        messages.error(request,f"Can not update this application to IEEE NSU SB Registered Members Database!")
 
                     #show message
-                    messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
+                    messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the IEEE NSU SB Registered Member Database!\nHowever, the system kept the Data of renewal!")
                     
                     # Send an Email to the Applicants Associated Email
                     email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])

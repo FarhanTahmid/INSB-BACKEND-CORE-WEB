@@ -324,11 +324,11 @@ def recruitee_details(request,session_id,nsu_id):
                                 session=recruitment_session.objects.get(id=int(getMember[0]['session_id']))
                             )
                             newMember.save()
-                            messages.success(request, "Member Updated in INSB Database")
+                            messages.success(request, "Member Updated in IEEE NSU SB Database")
                             return redirect('recruitment:recruitee_details',session_id, nsu_id)
                         except IntegrityError:
                             messages.error(
-                                "The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
+                                "The member is already registered in IEEE NSU SB Database or you have not entered IEEE ID of the member!")
                             return redirect('recruitment:recruitee_details',session_id, nsu_id)
                         except:
                             messages.info(
