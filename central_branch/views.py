@@ -4453,6 +4453,11 @@ def create_task(request):
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
     all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
+    user = request.user.username
+    faculty_advisor_access = Access_Render.faculty_advisor_access(user)
+    eb_access = Access_Render.eb_access(user)
+    super_user_Access = Access_Render.system_administrator_superuser_access(user)
+    staff_access = Access_Render.system_administrator_staffuser_access(user)
     context = {
         'is_new_task':True, #Task is being created. Use it to disable some ui in the template
         'task_categories':task_categories,
@@ -4460,6 +4465,10 @@ def create_task(request):
         'all_members':all_members,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
+        'faculty_access':faculty_advisor_access,
+        'eb_access':eb_access,
+        'super_user_access':super_user_Access,
+        'staff_access':staff_access,
     }
 
     return render(request,"create_task.html",context)
@@ -4684,7 +4693,7 @@ def task_edit(request, task_id):
                     member_name = request.POST.getlist(member_id + '_task_type[]')
                     task_types_per_member[member_id] = member_name
 
-            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member,task_types_per_member)):
+            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
                 messages.success(request,"Task Updated successfully!")
             else:
                 messages.warning(request,"Something went wrong while updating the task!")
@@ -4701,16 +4710,13 @@ def task_edit(request, task_id):
     task = Task.objects.get(id=task_id)
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
-    members_task_type = Member_Task_Upload_Types.objects.filter(task = task)
-    members_task_type = Task_Assignation.load_task_members_task_type(members_task_type)
+    all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
 
     #this is being done to ensure that he can click start button only if it is his task
     try:
         logged_in_user = Members.objects.get(ieee_id = user)
     except:
         logged_in_user = adminUsers.objects.get(username=user)
-    print(members_task_type)
 
     context = {
         'task':task,
@@ -4719,7 +4725,6 @@ def task_edit(request, task_id):
         'all_members':all_members,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
-        'members_task_type':members_task_type,
         'faculty_access':faculty_advisor_access,
         'eb_access':eb_access,
         'super_user_access':super_user_Access,

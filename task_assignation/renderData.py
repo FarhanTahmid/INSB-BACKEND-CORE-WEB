@@ -329,12 +329,17 @@ class Task_Assignation:
             #Add those members to task
             task.members.add(*members)
 
+            for member in Member_Task_Upload_Types.objects.filter(task=task):
+                if member.task_member not in task_types_per_member.items():
+                    member.delete()
+
             #saving members task type as per needed
             for ieee_id,task_ty in task_types_per_member.items():
                 memb = Members.objects.get(ieee_id = ieee_id)
-                member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
+                member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
                 member_task_type.save()
                 message = ""
+
                 for i in task_ty:
                     if i=="permission_paper":
                         member_task_type.has_permission_paper = True
@@ -480,8 +485,6 @@ class Task_Assignation:
         return team_members
     
     def load_insb_members_for_task_assignation(request):
-        ''' This function load all insb members whose positions are below the position of the requesting user. Works for both admin and regular user '''
-        #Check the type of requesting user
         try:
             #If the requesting user is a member
             requesting_member = Members.objects.get(ieee_id=request.user.username)
@@ -498,29 +501,64 @@ class Task_Assignation:
         else:
             #Admin user so load all members
             members = Members.objects.all()
-        return members
-    
-    def load_task_members_task_type(members_task_type_list):
-
-        #This function will load all the members id as key and task typer list as value
-        dic={}
-        #Iterate over each item in the list
-        for i in members_task_type_list:
-            task_types = []
-            if i.has_permission_paper:
-                task_types.append(f"permission_paper")
-            if i.has_drive_link:
-                task_types.append("drive_link")
-            if i.has_file_upload:
-                task_types.append("file_upload")
-            if i.has_content:
-                task_types.append("content")
-            if i.has_media:
-                task_types.append("media")
-            
-            dic[i.task_member] = task_types
-        
+        dic = {}
+        for member in members:
+            dic.update({member:None})
         return dic
+    
+    def load_insb_members_with_upload_types_for_task_assignation(request, task):
+        ''' This function load all insb members whose positions are below the position of the requesting user. Works for both admin and regular user '''
+        #Check the type of requesting user
+        try:
+            #If the requesting user is a member
+            requesting_member = Members.objects.get(ieee_id=request.user.username)
+        except:
+            #If the requesting user is an admin
+            requesting_member = adminUsers.objects.get(username=request.user.username)
+
+        dic = {}
+        for member in task.members.all():
+            try:
+                types = Member_Task_Upload_Types.objects.get(task=task, task_member=member)
+            except:
+                types = None
+            dic.update({member : types})
+
+        #If member
+        if type(requesting_member) is Members:
+            #If the position is below the position of the requesting user then add it to the list
+            #Here rank is used to determine the position. Higher the rank, less the position
+            #Here __gt is "Greater Than"
+            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank).exclude(ieee_id__in=task.members.all())
+        else:
+            #Admin user so load all members
+            members = Members.objects.filter().exclude(ieee_id__in=task.members.all())
+        
+        for member in members:
+            dic.update({member : None})
+        return dic
+    
+    # def load_task_members_task_type(members_task_type_list):
+
+    #     #This function will load all the members id as key and task typer list as value
+    #     dic={}
+    #     #Iterate over each item in the list
+    #     for i in members_task_type_list:
+    #         task_types = []
+    #         if i.has_permission_paper:
+    #             task_types.append(f"permission_paper")
+    #         if i.has_drive_link:
+    #             task_types.append("drive_link")
+    #         if i.has_file_upload:
+    #             task_types.append("file_upload")
+    #         if i.has_content:
+    #             task_types.append("content")
+    #         if i.has_media:
+    #             task_types.append("media")
+            
+    #         dic[i.task_member] = task_types
+        
+    #     return dic
     
     def load_user_tasks(user):
         
