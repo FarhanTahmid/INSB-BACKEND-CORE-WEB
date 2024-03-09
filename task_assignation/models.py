@@ -36,6 +36,7 @@ class Task(models.Model):
 
     class Meta:
         verbose_name="Task"
+        ordering = ['-deadline']
     
     def __str__(self) -> str:
         return str(self.pk)

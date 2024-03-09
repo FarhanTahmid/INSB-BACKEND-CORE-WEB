@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>{% if is_new_task %}Create{% else %}Update{% endif %} Task | IEEE NSU Student Branch</title>
+    <title>My Tasks | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -183,7 +183,7 @@
       <!-- navbar -->
       <div id="content" class="app-content" role="main">
         {% block navbar %}
-         {% include 'navbar.html' %} 
+         {% include 'users/navbar.html' %} 
         {% endblock navbar %}
       </div>
 
@@ -194,7 +194,7 @@
           <!--contents of page-->
           <div class="form-wrapper">
               
-              <h4>My tasks</h4>
+              <h4>My Tasks</h4>
               
               <!--Messages-->
               <div class="tooltip-container">
@@ -239,6 +239,7 @@
                 <table class="table box" id="individuals-table">
                     <thead>
                       <tr>
+                          <th>SL</th>
                           <th>Name</th>
                           <th>Deadline</th>
                           <th>Points</th>
@@ -246,25 +247,23 @@
                       </tr>
                     </thead>
                     <tbody>
+                      {% for task in all_tasks %}
                       <tr>
-                          <td>Upload media of recent event</td>
-                          <td>30th January,2024 12:00PM</td>
-                          <td>50</td>
+                        <td>{{forloop.counter }}</td>
+                          <td><a href="{% url 'central_branch:task_edit' task.pk %}">{{task.title}}</a></td>
+                          <td>{{task.deadline}}</td>
+                          <td>{{task.task_category.points}}</td>
                           <td>
-                            <img src="/static/admin/img/icon-yes.svg" alt="True" />
+                            {% comment  %}
+                            give boolean field here
+                            {% endcomment %}
+                            <img src="/static/admin/img/icon-yes.svg" alt="{% if task.is_task_completed %} True {% else %} False {% endif %}" />
                           </td>
                       </tr>
+                      {% endfor %}
                     </tbody>
-                    <tbody>
-                      <tr>
-                          <td>Upload media of recent event</td>
-                          <td>30th January,2024 12:00PM</td>
-                          <td>50</td>
-                          <td>
-                            <img src="/static/admin/img/icon-yes.svg" alt="True" />
-                          </td>
-                      </tr>
-                    </tbody>
+                    
+                    
                 </table>
                 </div>
 

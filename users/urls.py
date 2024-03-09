@@ -33,6 +33,7 @@ urlpatterns = [
     path('reset_password/<str:username>/<str:token>/',views.forgotPassword_resetPassword,name="reset_password"),
     #Invalid URL Handling
     path('invalid_url',views.invalidURL,name="invalid_url"), #this page will prompt if an user has used an "used" or invalid url
-
+    #my task url
+    path('my_tasks/',views.my_tasks,name="my_tasks")
  
 ]

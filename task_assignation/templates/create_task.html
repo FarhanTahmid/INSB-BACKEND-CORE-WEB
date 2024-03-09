@@ -560,8 +560,10 @@
               <!--buttons showed when viewing task-->
               <div class="task-btn">
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
-                  <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">Check or Start Task</a>
+                  {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
+                  {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check {% else %}Start {% endif %}Task</a>
+                  {% endif %}
                 </div>
                 {% endif %}
 
@@ -591,6 +593,7 @@
             <!--delete and complete toggle btn-->
             <div class="delete_complete_toggle">
                 {% if not is_new_task %}
+                {% if faculty_access or eb_access or super_user_access or staff_access%}
                 <button type="button" class="delete_task_btn">Delete</button>
                 <div style="display: flex;">
                     <p class="complete_text">Mark as complete?</p>
@@ -600,6 +603,7 @@
                     </label>
                 </div>
                 {% endif %}
+                {% endif %}
             </div>
 
                 {% csrf_token %}
@@ -608,7 +612,7 @@
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
                     <input
@@ -618,13 +622,15 @@
                         class="title-box"
                         style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
                         value="{{task.deadline|date:'Y-m-d H:i'}}"
-                        required />
+                        required
+                        {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %} />
                     </div>
                 </div>
                 <!-- <input class="title-box" type="text" placeholder="Title (eg: Get permission paper for venue)"> -->
                 
 
                 <!--task category-->
+                {% if faculty_access or eb_access or  super_user_access or staff_access%}
                 <div class="category">
                     <label class="category_label">Task category:</label>                    
 
@@ -634,8 +640,9 @@
                         {% endfor %}
                     </select>
                 </div>
+                {% endif %}
                 <div class="category">
-                    <div>Task point: <span class="task_point">50</span></div>
+                    <div>Task point: <span class="task_point">{{task.task_category.points}}</span></div>
                 </div>
 
 
@@ -643,12 +650,12 @@
                 <label class="description_label">Describe your task:</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details">{{task.description}}</textarea>
+                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     </div>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
-
+                {% if faculty_access or eb_access or  super_user_access or staff_access%}
                 <!--task type-->
                 <div class="task_type ">
                     <label class="task_type_label">Select task type and individuals:</label>
@@ -710,13 +717,13 @@
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
                             <td>
                                 <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true" multiselect-select-all="true"> 
-                                    <option value="permission_paper">Permission paper</option>
-                                    <option value="content">Content</option>
-                                    <option value="file_upload">File Upload</option>
-                                    <option value="media">Media</option>
-                                    <option value="drive_link">Drive Link</option>
+                                    <option value="permission_paper" {% if 'permission_paper_'|add:member.ieee_id in members_task_type|default_if_none:"" %}selected{% endif %}>Permission Paper</option>
+                                    <option value="content" {% if member.ieee_id == members_task_type.task_member.ieee_id  %}selected{% endif %}>Content </option>
+                                    <option value="file_upload" {% if member in members_task_type and members_task_type.has_file_upload %}selected{% endif %}>File Upload </option>
+                                    <option value="media" {% if member in members_task_type and members_task_type.has_media %}selected{% endif %}>Media </option>
+                                    <option value="drive_link" {% if member in members_task_type and members_task_type.drive_link %}selected{% endif %}>Drive Link </option>
                                 </select>
-                            </td>
+                            </td>                
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -766,6 +773,7 @@
                     <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
                     {% endif %}
                 </div>
+                {% endif %}
             </form>
         </div>
     </div>

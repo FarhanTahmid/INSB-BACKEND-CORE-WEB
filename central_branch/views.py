@@ -51,7 +51,7 @@ from membership_development_team.models import Renewal_Sessions
 from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
-import random
+from task_assignation.models import Member_Task_Upload_Types
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -4421,7 +4421,7 @@ def create_task(request):
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-
+    
     if request.method == 'POST':
         title = request.POST.get('task_title')
         description = request.POST.get('task_description_details')
@@ -4473,11 +4473,19 @@ def task_home(request):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     all_tasks = Task.objects.all().order_by('-pk')
-
+    user = request.user.username
+    faculty_advisor_access = Access_Render.faculty_advisor_access(user)
+    eb_access = Access_Render.eb_access(user)
+    super_user_Access = Access_Render.system_administrator_superuser_access(user)
+    staff_access = Access_Render.system_administrator_staffuser_access(user)
     context = {
         'all_tasks':all_tasks,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
+        'faculty_access':faculty_advisor_access,
+        'eb_access':eb_access,
+        'super_user_access':super_user_Access,
+        'staff_access':staff_access,
     }
 
     return render(request,"task_home.html",context)
@@ -4485,15 +4493,39 @@ def task_home(request):
 def upload_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
-
-    if request.method == 'POST':
+    user = request.user.username
+    faculty_advisor_access = Access_Render.faculty_advisor_access(user)
+    eb_access = Access_Render.eb_access(user)
+    super_user_Access = Access_Render.system_administrator_superuser_access(user)
+    staff_access = Access_Render.system_administrator_staffuser_access(user)
+    this_is_users_task = False
+    #to check if this is users task
+    try:
+        logged_in_user = Members.objects.get(ieee_id = user)
+        if logged_in_user in task.members.all():
+            this_is_users_task = True
+    except:
         pass
 
-    context = {
-        'task':task,
-    }
+    if faculty_advisor_access or eb_access or super_user_Access or staff_access or this_is_users_task:
+        try:
+            member_task_type = Member_Task_Upload_Types.objects.get(task = task,task_member = logged_in_user)
+        except:
+            #else admin who can see all
+            member_task_type = None
+        if request.method == 'POST':
+            
+            pass
 
-    return render(request,"task_page.html",context)
+        context = {
+            'task':task,
+            'members_task_type':member_task_type,
+
+        }
+
+        return render(request,"task_page.html",context)
+    else:
+        return render(request,"access_denied2.html")
 
 @login_required
 @member_login_permission
@@ -4581,6 +4613,11 @@ def task_edit(request, task_id):
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+    user = request.user.username
+    faculty_advisor_access = Access_Render.faculty_advisor_access(user)
+    eb_access = Access_Render.eb_access(user)
+    super_user_Access = Access_Render.system_administrator_superuser_access(user)
+    staff_access = Access_Render.system_administrator_staffuser_access(user)
 
     if request.method == 'POST':
         if 'update_task' in request.POST:
@@ -4598,8 +4635,12 @@ def task_edit(request, task_id):
                 team_select = request.POST.getlist('team_select')
             elif task_type == "Individuals":
                 member_select = request.POST.getlist('member_select')
+                task_types_per_member = {}
+                for member_id in member_select:
+                    member_name = request.POST.getlist(member_id + '_task_type[]')
+                    task_types_per_member[member_id] = member_name
 
-            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed)):
+            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member,task_types_per_member)):
                 messages.success(request,"Task Updated successfully!")
             else:
                 messages.warning(request,"Something went wrong while updating the task!")
@@ -4617,6 +4658,15 @@ def task_edit(request, task_id):
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
     all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
+    members_task_type = Member_Task_Upload_Types.objects.filter(task = task)
+    members_task_type = Task_Assignation.load_task_members_task_type(members_task_type)
+
+    #this is being done to ensure that he can click start button only if it is his task
+    try:
+        logged_in_user = Members.objects.get(ieee_id = user)
+    except:
+        logged_in_user = adminUsers.objects.get(username=user)
+    print(members_task_type)
 
     context = {
         'task':task,
@@ -4625,9 +4675,14 @@ def task_edit(request, task_id):
         'all_members':all_members,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
+        'members_task_type':members_task_type,
+        'faculty_access':faculty_advisor_access,
+        'eb_access':eb_access,
+        'super_user_access':super_user_Access,
+        'staff_access':staff_access,
+        'logged_in_user':logged_in_user
+
     }
 
     return render(request,"create_task.html",context)
 
-def my_tasks(request):
-    return render(request,"my_tasks.html")

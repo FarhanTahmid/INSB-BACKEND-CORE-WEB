@@ -170,7 +170,7 @@ class Task_Assignation:
 
             return True
         
-    def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed):
+    def update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member):
         ''' This function is used to update task for both Branch and SC_AG '''
 
         #Get the task using the task_id
@@ -327,6 +327,39 @@ class Task_Assignation:
             #Add those members to task
             task.members.add(*members)
 
+            #saving members task type as per needed
+            for ieee_id,task_ty in task_types_per_member.items():
+                memb = Members.objects.get(ieee_id = ieee_id)
+                member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
+                member_task_type.save()
+                message = ""
+                for i in task_ty:
+                    if i=="permission_paper":
+                        member_task_type.has_permission_paper = True
+                        member_task_type.save()
+                        message += "Permission Paper,"
+                    if i=="content":
+                        member_task_type.has_content = True
+                        member_task_type.save()
+                        message += "Content,"
+                    if i=="file_upload":
+                        member_task_type.has_file_upload = True
+                        member_task_type.save()
+                        message += "File Upload,"
+                    if i=="media":
+                        member_task_type.has_media = True
+                        member_task_type.save()
+                        message += "Media,"
+                    if i=="drive_link":
+                        member_task_type.has_drive_link = True
+                        member_task_type.save()
+                        message += "drive link"
+                if message!="":
+                    message+=f" were updated as task type by {request.user.username} to {memb.ieee_id}"
+                    task_log_details.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log_details.update_task_number}"]= f'Task Name: {title}, {message}'
+                    task_log_details.update_task_number+=1
+                    task_log_details.save()
+
             #getting members IEEE_ID
             members_ieee_id = []
             for member in members:
@@ -464,4 +497,39 @@ class Task_Assignation:
             #Admin user so load all members
             members = Members.objects.all()
         return members
+    
+    def load_task_members_task_type(members_task_type_list):
+
+        #This function will load all the members id as key and task typer list as value
+        dic={}
+        #Iterate over each item in the list
+        for i in members_task_type_list:
+            task_types = []
+            if i.has_permission_paper:
+                task_types.append(f"permission_paper")
+            if i.has_drive_link:
+                task_types.append("drive_link")
+            if i.has_file_upload:
+                task_types.append("file_upload")
+            if i.has_content:
+                task_types.append("content")
+            if i.has_media:
+                task_types.append("media")
+            
+            dic[i.task_member] = task_types
+        
+        return dic
+    
+    def load_user_tasks(user):
+        
+        '''This function will load all the tasks of logged in user along with their respective points'''
+        try:
+            user = Members.objects.get(ieee_id = user)
+        except:
+            user = adminUsers.objects.get(username=user)
+            #TODO:set it to all after making changes
+            return Task.objects.filter(task_type = "Individuals")
+        #TODO:set to all instead of individuals
+        user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
+        return user_tasks
         

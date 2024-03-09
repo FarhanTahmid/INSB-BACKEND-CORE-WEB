@@ -448,7 +448,7 @@
               </div>
   
               <!--Messages-->
-                    {% if task.has_permission_paper %}
+                    {% if members_task_type.has_permission_paper or members_task_type == None %}
                     <!-- Paper permission -->
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
@@ -466,7 +466,7 @@
                     
                     
                     
-                    {% if task.has_content %}
+                    {% if members_task_type.has_content or members_task_type == None %}
                     <!--content-->
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
@@ -489,7 +489,7 @@
                         <br>
                         
                         
-                        {% if task.has_file_upload %}
+                        {% if members_task_type.has_file_upload or members_task_type == None %}
                         <!--file upload -->
                         <label for="documents">File Upload</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
@@ -507,7 +507,7 @@
 
                         
                         
-                        {% if task.has_media %}
+                        {% if members_task_type.has_media or members_task_type == None %}
                         <!-- Media -->
                     <label for="images" >Media Upload</label>
                     <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
@@ -523,7 +523,7 @@
                     
 
 
-                        {% if task.has_drive_link %}
+                        {% if members_task_type.has_drive_link or members_task_type == None %}
                         <!-- Drive link -->
                         <div class="form-group">
                             <label>Folder Drive Link</label>
