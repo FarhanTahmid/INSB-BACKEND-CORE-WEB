@@ -8,7 +8,7 @@ from system_administration.models import adminUsers
 
 from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types,Task_Drive_Link,Task_Content,Permission_Paper,Task_Document,Task_Media
 from users.models import Members, Panel_Members
-from datetime import datetime
+from datetime import datetime,timedelta
 from django.utils import timezone
 from central_branch.renderData import Branch
 from pytz import timezone as tz
@@ -647,6 +647,48 @@ class Task_Assignation:
         task_category.save()
         return True
             
+    def deduct_points_for_members(task):
+
+        '''This function will deduct point according the late duration'''
+
+        #1 week late = 20% marks dedcuted
+        #2 week late = 50% of previous mark
+        #more than 2 weeks no more marks deducted
+
+        #getting all members of specific task
+        all_members_of_task = Member_Task_Point.objects.filter(task=task)
+        deadline_of_task = task.deadline
+        current_date = datetime.datetime.now()
+        
+        # Calculate late duration in days
+        late_duration = (current_date - deadline_of_task).days
+        # Calculate late duration in days
+        late_duration = (current_date - deadline_of_task).days
+        is_late = False
+        # Deduct points based on late duration
+        if late_duration == 7:
+            deduction_percentage = 0.2
+            is_late = True
+        elif late_duration == 14:
+            deduction_percentage = 0.5
+            is_late = True
+        else:
+            deduction_percentage = 0 
+
+        # Deduct points for each member
+        for member in all_members_of_task:
+            current_points = member.completion_points
+            deduction_amount = current_points * deduction_percentage
+            new_points = current_points - deduction_amount
+            member.completion_points = new_points
+            member.save()
+        
+        return is_late
+
+
+
+
+
 
 
 

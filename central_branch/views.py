@@ -4704,6 +4704,8 @@ def task_edit(request, task_id):
     super_user_Access = Access_Render.system_administrator_superuser_access(user)
     staff_access = Access_Render.system_administrator_staffuser_access(user)
 
+    
+    
     if request.method == 'POST':
         if 'update_task' in request.POST:
             title = request.POST.get('task_title')
@@ -4743,7 +4745,8 @@ def task_edit(request, task_id):
     task_categories = Task_Category.objects.all()
     teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
     all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
-
+    #checking to see if points to be deducted
+    late = Task_Assignation.deduct_points_for_members(task)
     #this is being done to ensure that he can click start button only if it is his task
     try:
         logged_in_user = Members.objects.get(ieee_id = user)
