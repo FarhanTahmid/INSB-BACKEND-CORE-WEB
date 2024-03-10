@@ -538,28 +538,6 @@ class Task_Assignation:
             dic.update({member : None})
         return dic
     
-    # def load_task_members_task_type(members_task_type_list):
-
-    #     #This function will load all the members id as key and task typer list as value
-    #     dic={}
-    #     #Iterate over each item in the list
-    #     for i in members_task_type_list:
-    #         task_types = []
-    #         if i.has_permission_paper:
-    #             task_types.append(f"permission_paper")
-    #         if i.has_drive_link:
-    #             task_types.append("drive_link")
-    #         if i.has_file_upload:
-    #             task_types.append("file_upload")
-    #         if i.has_content:
-    #             task_types.append("content")
-    #         if i.has_media:
-    #             task_types.append("media")
-            
-    #         dic[i.task_member] = task_types
-        
-    #     return dic
-    
     def load_user_tasks(user):
         
         '''This function will load all the tasks of logged in user along with their respective points'''
@@ -615,7 +593,7 @@ class Task_Assignation:
                 file_upload_save.save()
         if drive_link!=None:
             try:
-                drive_link_save = Task_Drive_Link.objects.get(tas=task,uploaded_by = member.ieee_id)
+                drive_link_save = Task_Drive_Link.objects.get(task=task,uploaded_by = member.ieee_id)
                 drive_link_save.drive_link = drive_link
                 drive_link_save.save()
             except:
@@ -623,6 +601,45 @@ class Task_Assignation:
                 drive_link_save.save()
 
         return True
+    
+    def load_all_task_upload_type(task):
+
+        current_task = Task.objects.get(pk=task.pk)
+        dic={}
+        for member in current_task.members.all():
+            member_task_list = []
+            member_obj = Members.objects.get(ieee_id = str(member))
+            try:
+                permission_paper = Permission_Paper.objects.get(task=task,uploaded_by = str(member))
+            except:
+                permission_paper = None
+            member_task_list.append(permission_paper)
+            try:
+                drive_link = Task_Drive_Link.objects.get(task=task,uploaded_by = str(member))
+            except:
+                drive_link = None
+            member_task_list.append(drive_link)
+            try:
+                content = Task_Content.objects.get(task=task,uploaded_by = str(member))
+            except:
+                content = None
+            member_task_list.append(content)
+            files_uploaded = Task_Document.objects.filter(task=task,uploaded_by = str(member))
+            medias = Task_Media.objects.filter(task=task,uploaded_by = str(member))
+            if len(files_uploaded)==0:
+                files_uploaded = None
+            if len(medias) == 0:
+                medias = None
+            member_task_list.append(files_uploaded)
+            member_task_list.append(medias)
+
+            dic[member_obj] = member_task_list
+        
+        return dic
+        
+
+            
+
 
 
         

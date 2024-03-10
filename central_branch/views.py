@@ -4534,14 +4534,22 @@ def upload_task(request, task_id):
             drive_link_loaded = Task_Drive_Link.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
         except:
             drive_link_loaded = None
-       
+        try:
+            file_uploads = Task_Document.objects.filter(task=task,uploaded_by = logged_in_user.ieee_id)
+            media_uploads = Task_Media.objects.filter(task=task,uploaded_by = logged_in_user.ieee_id)
+        except:
+            file_uploads= None
+            media_uploads = None
+
+        task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
+   
+
         if request.method == 'POST':
             
             if request.POST.get('save_task'):
 
                 file_upload = None
                 media = None
-                drive_link = None
                 if member_task_type.has_permission_paper:
                     permission_paper = request.POST.get('permission_paper')
                     if permission_paper == None:
@@ -4572,7 +4580,15 @@ def upload_task(request, task_id):
             'members_task_type':member_task_type,
             'permission_paper_loaded':permission_paper_loaded,
             'content_loaded':content_loaded,
-            'drive_link_loaded':drive_link_loaded
+            'drive_link_loaded':drive_link_loaded,
+            'file_uploads':file_uploads,
+            'media_uploads':media_uploads,
+            'faculty_advisor_access':faculty_advisor_access,
+            'eb_access':eb_access,
+            'super_user_Access':super_user_Access,
+            'staff_access':staff_access,
+            'task_type_per_member':task_type_per_member,
+            'media_url':settings.MEDIA_URL,
 
         }
 

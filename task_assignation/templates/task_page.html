@@ -431,28 +431,37 @@
 
         <!--PAGE START-->
         <div ui-view class="app-body" id="view">
+            <div class="tooltip-container">
+                <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                  <img src="/static/back-arrow.png" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back</span>
+            </div>
                 
             <!--contents of page-->
+            {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
             <div class="form-wrapper">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- task page heading-->
                     <h4>Finish Task</h4>
                     <br><br>
-                    <!--Messages-->
-            <div class="tooltip-container">
-                <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                  <img src="/static/back-arrow.png" alt="Go back to session">
-                </a>
-                <span class="tooltip-text">Go back</span>
-              </div>
-  
-              <!--Messages-->
+                    
                     <div class="center">
                         {{members_task_type.task_member.name}}
                         {{members_task_type.task_member.ieee_id}}
                     </div>
-                    {% if members_task_type.has_permission_paper or members_task_type == None %}
+                    {% if members_task_type.has_drive_link %}
+                    <!-- Drive link -->
+                    <div class="form-group">
+                        <label>Folder Drive Link</label>
+                        <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
+                        value="{{drive_link_loaded.drive_link}}" name="content_drive" />
+                    </div>
+                    <br>
+                    {% endif %}
+
+                    {% if members_task_type.has_permission_paper %}
                     <!-- Paper permission -->
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
@@ -469,12 +478,12 @@
                     
                     
                     
-                    {% if members_task_type.has_content or members_task_type == None %}
+                    {% if members_task_type.has_content %}
                     <!--content-->
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
                         <div>
-                            <textarea class="form-control" type="text" name="content_details"></textarea>
+                            <textarea class="form-control" type="text" name="content_details" >{{content_loaded.content}}</textarea>
                         </div>
                             <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
                         </div>
@@ -492,13 +501,22 @@
                         <br>
                         
                         
-                        {% if members_task_type.has_file_upload or members_task_type == None %}
+                        {% if members_task_type.has_file_upload %}
                         <!--file upload -->
                         <label for="documents">File Upload</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
                             <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;">
 
-                            
+                            {% if file_uploads|length > 0 %}
+                            <p>Uploaded Files</p>
+                            <ol>
+                            {% for file in file_uploads %}
+                                <li>
+                                <a href = {{media_url}}{{file.document}}>{{file.document}}
+                                </li>
+                            {% endfor %}
+                            </ol>
+                            {% endif %}
                             <br>
                             <div id="content-selected-docs-container"></div>
                             <input type="hidden" name="selected_documents" id="content-selected-documents">
@@ -510,48 +528,29 @@
 
                         
                         
-                        {% if members_task_type.has_media or members_task_type == None %}
+                        {% if members_task_type.has_media %}
                         <!-- Media -->
                     <label for="images" >Media Upload</label>
                     <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
                         <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple>
                     </div>
                     
-                    
+                    {% if media_uploads|length > 0 %}
+                    <p>Uploaded Images</p>
+                    <ol>
+                    {% for media in media_uploads %}
+                    <li>
+                    <a href = {{media_url}}{{media.media}}>{{media.media}}
+                    </li>
+                    {% endfor %}
+                    </ol>
+                    {% endif %}
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
                     {% endif %}
                     
+                    <br><br>
                     
-                    
-
-
-                        {% if members_task_type.has_drive_link or members_task_type == None %}
-                        <!-- Drive link -->
-                        <div class="form-group">
-                            <label>Folder Drive Link</label>
-                            <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
-                            value="{{media_links.logo_link}}" name="content_drive" />
-                        </div>
-                        <br>
-                        {% endif %}
-                        
-                        
-
-                        
-                        <!--other content-->
-                        <!-- <label class="description_label">Other Contents</label>
-                        <div class="ckeditor">
-                            <div>
-                                <textarea class="form-control" type="text" name="other_content_details"></textarea>
-                            </div>
-                        
-                        </div> -->
-                        
-                        
-
-                    
-            </div> 
 
                     <!--Submit btn-->
                     <div class="task-btn">
@@ -560,7 +559,126 @@
                         <input type="submit" class="finish-task-btn" name="finish_task" value = "Completed">
                     </div>
                 </form> 
+            
+            </div>
+            {% endif %}
+            {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
+            
+            <div class="form-wrapper">
+                {% for member,task_type  in task_type_per_member.items %}
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- task page heading-->
+                    <h4>Task Progess of</h4>
+                    {{member.name}}
+                    {{member.ieee_id}}
+                    <br><br>
+
+                    <!-- Drive link -->
+                    <div class="form-group">
+                        <label>Folder Drive Link</label>
+                        <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
+                        value="{{task_type.1.drive_link}}" name="content_drive" disabled />
+                    </div>
+                    <br>
+
+
+                    <!-- Paper permission -->
+                    <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                    <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
+                        
+                            <select id="paper_permission_dropdown" name = "permission_paper" class="form-control" disabled>
+                                <option value="completed"{% if task_type.0.permission_paper == "completed" %}selected{% endif %}>Completed </option>
+                                <option value="not_completed"{% if task_type.0.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
+                            </select>                                  
+                        </div>
+                        <br>
+
+                    
+                    
+                    <!--content-->
+                    <label class="description_label">Content</label>
+                    <div class="ckeditor">
+                        <div>
+                            <textarea class="form-control" type="text" name="content_details" disabled >{{task_type.2.content}}</textarea>
+                        </div>
+                            <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
+                        </div>
+                        <br>
+                
+                        <div id="media-selected-images-container"></div>
+                        <input type="hidden" name="selected_images" id="media-selected-images">
+                        
+                        
+                        <br>
+                        
+                        
+                        <!--file upload -->
+                        <label for="documents">File Upload</label>
+                        <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
+                            <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;" disabled>
+
+                            
+                            <p>Uploaded Files</p>
+                            <ol>
+                            {% for file in task_type.3 %}
+                                <li>
+                                <a href = {{media_url}}{{file.document}}>{{file.document}}
+                                </li>
+                            {% endfor %}
+                            </ol>
+                            
+                            <br>
+                            <div id="content-selected-docs-container"></div>
+                            <input type="hidden" name="selected_documents" id="content-selected-documents">
+                        </div>
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    <br>
+                    
+
+                        
+                    
+                        <!-- Media -->
+                    <label for="images" >Media Upload</label>
+                    <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
+                        <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple disabled>
+                    </div>
+                    
+                    <p>Uploaded Images</p>
+                    <ol>
+                    {% for media in task_type.4 %}
+                    <li>
+                    <a href = {{media_url}}{{media.media}}>{{media.media}}</a>
+                    </li>
+                    {% endfor %}
+                    </ol>
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    <br>
+                    
+                    <br><br>
+                    
+                        <label class="description_label">Comment</label>
+                        <div class="ckeditor">
+                            <div>
+                                <textarea class="form-control" type="text" name="other_content_details"></textarea>
+                            </div>
+                        
+                        </div> 
+
+                    
+                    </div> 
+
+                    <!--Submit btn-->
+                    <div class="task-btn">
+                        
+                        <input type="submit" class="finish-task-btn" name="add_comment" value = "Send Comment as Email">
+                    </div>
+                </form> 
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
+
         
     </div>
     
