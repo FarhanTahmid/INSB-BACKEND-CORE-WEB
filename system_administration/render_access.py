@@ -102,6 +102,19 @@ class Access_Render:
         except:
             return False
     
+    def team_officer_access(team_id,username):
+        try:
+            if (Access_Render.is_panel_member(username=username)):
+                get_officer=Members.objects.get(ieee_id=int(username))
+                if(get_officer.position.is_officer and (get_officer.team.id==team_id)):
+                    return True
+                else:
+                    return False
+        except Members.DoesNotExist:
+            return False
+        except:
+            return False
+    
     def officer_access(username):
         try:
             if(Access_Render.is_panel_member(username=username)):

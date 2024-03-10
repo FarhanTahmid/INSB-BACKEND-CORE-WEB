@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Renewal_Sessions,Renewal_requests,Portal_Joining_Requests,Renewal_Form_Info
+from . models import Renewal_Sessions,Renewal_requests,Portal_Joining_Requests,Renewal_Form_Info,Birthday_Email_Records
 # Register your models here.
 @admin.register(Renewal_Sessions)
 class Renewal_Sessions(admin.ModelAdmin):
@@ -13,3 +13,6 @@ class Joining_Requests(admin.ModelAdmin):
 @admin.register(Renewal_Form_Info)
 class Renewal_Form_Info(admin.ModelAdmin):
     list_display=['form_id','session']
+@admin.register(Birthday_Email_Records)
+class Birthday_Email_Records(admin.ModelAdmin):
+    list_display = ['confirm_message']

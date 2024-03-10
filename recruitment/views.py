@@ -3,11 +3,11 @@ from django.db import DatabaseError, IntegrityError, InternalError
 from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
 from port.renderData import PortData
 from recruitment.models import recruitment_session, recruited_members
-from users.models import Members
+import users
+from users.models import MemberSkillSets, Members
 from . import renderData
 from django.contrib.auth.decorators import login_required
 from . forms import StudentForm
-from . models import recruited_members,recruitment_session
 from django.contrib import messages
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -157,6 +157,8 @@ def recruitee_details(request,session_id,nsu_id):
                 address=data.home_address
                 
                 checkIfMemberIsRegistered=Members.objects.filter(nsu_id=nsu_id).exists()
+                # load all skill types
+                all_skills=users.renderData.load_all_skill_types(request)
                 
                 # Getting the next member for next button
                 current_member=recruited_members.objects.get(pk=data.pk)
@@ -185,6 +187,7 @@ def recruitee_details(request,session_id,nsu_id):
                     'has_next_member':has_next_member,
                     'next_member_nsu_id':next_member_nsu_id,
                     'all_sc_ag':sc_ag,
+                    'all_skills':all_skills
                 }
 
                 if request.method == "POST":
@@ -194,13 +197,15 @@ def recruitee_details(request,session_id,nsu_id):
                     # # Upon entering IEEE id this registers members to the main database of members
                     if request.POST.get('save_edit'):
                         
-                    #     # checks the marked check-boxes
+                        # checks the marked check-boxes
                         cash_payment_status = False
                         if request.POST.get('cash_payment_status'):
                             cash_payment_status = True
                         ieee_payment_status = False
                         if request.POST.get('ieee_payment_status'):
                             ieee_payment_status = True
+                        skill_set_list = request.POST.getlist("skill_sets")
+
                         # Collecting all infos
                         info_dict = {
                             'first_name': request.POST['first_name'],
@@ -219,24 +224,26 @@ def recruitee_details(request,session_id,nsu_id):
                             'recruited_by': request.POST['recruited_by'],
                             'cash_payment_status': cash_payment_status,
                             'ieee_payment_status': ieee_payment_status,
+                            'skill_set_list':skill_set_list,
                             'comment':request.POST['comment']
                         }
                         
 
                         # Getting returned values and handling the exceptions
+                        updateRecruiteeDetails = renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict)
 
-                        if (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == "no_ieee_id"):
+                        if (updateRecruiteeDetails == "no_ieee_id"):
                             messages.error(
                                 request, "Please Enter IEEE ID if you have completed payment")
                             return redirect('recruitment:recruitee_details', session_id,nsu_id)
-                        elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == IntegrityError):
+                        elif (updateRecruiteeDetails == IntegrityError):
                             messages.error(
                                 request, "There is already a member registered with this IEEE ID")
                             return redirect('recruitment:recruitee_details',session_id, nsu_id)
-                        elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict) == InternalError):
+                        elif (updateRecruiteeDetails == InternalError):
                             messages.error(request, "A Server Error Occured!")
                             return redirect('recruitment:recruitee_details',session_id ,nsu_id)
-                        elif (renderData.Recruitment.updateRecruiteeDetails(nsu_id=nsu_id, values=info_dict)):
+                        elif (updateRecruiteeDetails):
                             messages.success(request, "Information Updated")
                             return redirect('recruitment:recruitee_details', session_id,nsu_id)
                         else:
@@ -288,43 +295,36 @@ def recruitee_details(request,session_id,nsu_id):
                     # ##### REGISTERING MEMBER IN INSB DATABASE####
                     if request.POST.get("register_member"):
                         
-                        getMember = recruited_members.objects.filter(nsu_id=nsu_id).values(
-                            'ieee_id',
-                            'first_name', 'middle_name', 'last_name',
-                            'nsu_id',
-                            'email_personal',
-                            'email_nsu',
-                            'major',
-                            'contact_no',
-                            'home_address',
-                            'date_of_birth',
-                            'gender',
-                            'facebook_url',
-                            'session_id',
-                            'ieee_payment_status',
-                            'recruitment_time'
-                        )
-                        print(type(getMember[0]['recruitment_time']))
+                        getMember = recruited_members.objects.filter(nsu_id=nsu_id)
+                        #print(type(getMember[0]['recruitment_time']))
                         # Registering member to the main database
                         try:
+                            name = getMember[0].first_name + " "
+                            if getMember[0].middle_name:
+                                name += getMember[0].middle_name + " "
+                            name += getMember[0].last_name
                             newMember = Members(
-                                ieee_id=int(getMember[0]['ieee_id']),
-                                name=getMember[0]['first_name'] + " " +
-                                getMember[0]['middle_name']+" " +
-                                getMember[0]['last_name'],
-                                nsu_id=getMember[0]['nsu_id'],
-                                email_personal=getMember[0]['email_personal'],
-                                email_nsu=getMember[0]['email_nsu'],
-                                major=getMember[0]['major'],
-                                contact_no=getMember[0]['contact_no'],
-                                home_address=getMember[0]['home_address'],
-                                date_of_birth=getMember[0]['date_of_birth'],
-                                gender=getMember[0]['gender'],
-                                facebook_url=getMember[0]['facebook_url'],
-                                session=recruitment_session.objects.get(id=int(getMember[0]['session_id']))
+                                ieee_id=getMember[0].ieee_id,
+                                name=name,
+                                nsu_id=getMember[0].nsu_id,
+                                email_personal=getMember[0].email_personal,
+                                email_nsu=getMember[0].email_nsu,
+                                major=getMember[0].major,
+                                contact_no=getMember[0].contact_no,
+                                home_address=getMember[0].home_address,
+                                date_of_birth=getMember[0].date_of_birth,
+                                gender=getMember[0].gender,
+                                facebook_url=getMember[0].facebook_url,
+                                session=recruitment_session.objects.get(id=getMember[0].session_id)
                             )
                             newMember.save()
-                            messages.success(request, "Member Updated in IEEE NSU SB Database")
+
+                            #After registering the member, register the member's skills
+                            member_skill_sets = MemberSkillSets.objects.create(member=newMember)
+                            member_skill_sets.skills.add(*getMember[0].skills.all())
+                            member_skill_sets.save()
+
+                            messages.success(request, "Member Updated in INSB Database")
                             return redirect('recruitment:recruitee_details',session_id, nsu_id)
                         except IntegrityError:
                             messages.error(
@@ -359,13 +359,16 @@ def recruit_member(request, session_id):
             Session = renderData.Recruitment.getSessionid(
                 session_id=session_id)
             form = StudentForm
+            # load all skill types
+            all_skills=users.renderData.load_all_skill_types(request)
 
             context = {
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'form': form,
                 'session_name': Session.session,
-                'session_id': Session.id
+                'session_id': Session.id,
+                'all_skills':all_skills
             }
 
             # this method is for the POST from the recruitment form
@@ -379,6 +382,8 @@ def recruit_member(request, session_id):
                     ieee_payment_status = False
                     if request.POST.get("ieee_payment_status"):
                         ieee_payment_status = True
+                    skill_set_list = request.POST.getlist("skill_sets")
+
                     time = datetime.now()
                     # getting all data from form and registering user upon validation
                     if(recruited_members.objects.filter(nsu_id=request.POST['nsu_id'],session_id=Session.id).exists()):
@@ -412,11 +417,17 @@ def recruit_member(request, session_id):
                             unique_code=renderData.Recruitment.generateUniqueCode(nsu_id=recruited_member.nsu_id,session=recruited_member.session_id,request=request)
                             recruited_member.unique_code=unique_code
                             recruited_member.save()  # Saving the member to the database
+
+                            #Check if any skills were selected
+                            if skill_set_list[0] != 'null':
+                                #If yes then add them
+                                recruited_member.skills.add(*skill_set_list)
+                                recruited_member.save()  # Saving the member to the database
                             
                             #send an email now to the recruited member
                             email_status=email_sending.send_email_to_recruitees_upon_recruitment(
                                 recruited_member.first_name,recruited_member.nsu_id,recruited_member.email_personal,Session.session,unique_code)
-                            
+
                             if(email_status)==False:
                                 messages.warning(request,"The system could not send email to the recruited member due to some errors! Please contact the system administrator")
                             elif(email_status):

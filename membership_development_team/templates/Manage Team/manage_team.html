@@ -303,12 +303,14 @@
                                         {% endif %}
 
 
-                                        {% if data_access.renewal_data_access %}
-                                        <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
-                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
-                                        {% else %}
-                                        <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
-                                        <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                        {% if has_eb_admin_access %}
+                                            {% if data_access.renewal_data_access %}
+                                            <input type="checkbox" checked="True" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                                            <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                            {% else %}
+                                            <input type="checkbox" class="checkbox" value="renewal_data_access" name="renewal_data_access">
+                                            <label for="renewal_data_access">Membership Renewal Data Access Permission</label><br>
+                                            {% endif %}
                                         {% endif %}
                                             
                                     </td>

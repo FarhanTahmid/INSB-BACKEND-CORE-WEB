@@ -232,7 +232,7 @@ class Branch:
             return False
 
     
-    def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_date,event_time,event_organiser=None):
+    def register_event_page1(super_event_id,event_name,event_type_list,event_description,event_start_date,event_end_date,event_organiser=None):
             '''This method creates an event and registers data which are provided in event page1. Returns the id of the event if the method can create a new event successfully
             TAKES SUPER EVENT NAME, EVENT NAME, EVENT DESCRIPTION AS STRING. TAKES PROBABLE & FINAL DATE ALSO AS INPUT'''
             if event_organiser==None:
@@ -241,14 +241,14 @@ class Branch:
             if(super_event_id=="null"):
                     
                     #now create the event as super event is null
-                    if(event_date==''):
+                    if(event_end_date==''):
                         
                         try:
                             #create event without final date included
                             new_event=Events.objects.create(
                             event_name=event_name,
                             event_description=event_description,
-                            event_time = event_time,
+                            start_date = event_start_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -264,8 +264,8 @@ class Branch:
                             new_event=Events(
                             event_name=event_name,
                             event_description=event_description,
-                            event_date=event_date,
-                            event_time=event_time,
+                            start_date = event_start_date,
+                            end_date = event_end_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -278,7 +278,7 @@ class Branch:
             else:
                     #now create the event under super event in the event models
                     
-                    if(event_date==''):
+                    if(event_end_date==''):
                         
                         try:
                             get_super_event_id = SuperEvents.objects.get(id = super_event_id)
@@ -287,7 +287,7 @@ class Branch:
                             super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
-                            event_time=event_time,
+                            start_date = event_start_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -304,8 +304,8 @@ class Branch:
                             super_event_id=get_super_event_id,
                             event_name=event_name,
                             event_description=event_description,
-                            event_date=event_date,
-                            event_time=event_time,
+                            start_date = event_start_date,
+                            end_date = event_end_date,
                             event_organiser = Chapters_Society_and_Affinity_Groups.objects.get(primary = str(event_organiser))
                             )
                             new_event.save()
@@ -460,19 +460,20 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_date, event_time, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
                              flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
-        ''' Update event details and save to database '''
+            ''' Update event details and save to database '''
 
-        try:
+        
             #Get the selected event details from database
             event = Events.objects.get(pk=event_id)
-
+            if event_end_date == "":
+                event_end_date = None
             #Check if super id is null
             if(super_event_id == 'null'):
 
                 #Check if date is empty
-                if(event_date == ""):
+                if(event_end_date == ""):
                     #Update without date and super id
                     event.event_name = event_name
                     event.event_description = event_description
@@ -480,12 +481,12 @@ class Branch:
                     #Update without super id
                     event.event_name = event_name
                     event.event_description = event_description
-                    event.event_date = event_date
+                    event.end_date = event_end_date
             else:
                 ''' Super ID is not null '''
 
                 #Check if date is empty
-                if(event_date == ""):
+                if(event_end_date == ""):
                     #Update without date
                     event.event_name = event_name
                     event.event_description = event_description
@@ -495,13 +496,14 @@ class Branch:
                     event.event_name = event_name
                     event.event_description = event_description
                     event.super_event_id = SuperEvents.objects.get(id=super_event_id)
-                    event.event_date = event_date
+                    event.end_date = event_end_date
                     
             #Clear event type
             event.event_type.clear()
             #Add the event types from event_type_list
             event.event_type.add(*event_type_list)
-            event.event_time=event_time
+            event.start_date = event_start_date
+            event.end_date = event_end_date
             event.publish_in_main_web = publish_event
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
@@ -560,8 +562,7 @@ class Branch:
                     IntraBranchCollaborations.objects.create(event_id=event, collaboration_with=intra_branch_collaboration)
 
             return True
-        except:
-            return False
+        
         
     def add_feedback(event_id, name, email, satisfaction, comment):
         try:
@@ -913,7 +914,7 @@ class Branch:
             return None
         
     def load_all_events():
-        return Events.objects.all().order_by('-event_date')
+        return Events.objects.all().order_by('-start_date','-event_date')
     
     def load_all_inter_branch_collaborations_with_events(primary):
         '''This fuction returns a dictionary with key as events id and values as a list of inter collaborations 
@@ -1024,7 +1025,7 @@ class Branch:
         events = Events.objects.filter(event_organiser= Chapters_Society_and_Affinity_Groups.objects.get(primary=primary))
         collaborations_list = InterBranchCollaborations.objects.filter(collaboration_with=Chapters_Society_and_Affinity_Groups.objects.get(primary=primary)).values_list('event_id')
         events_with_collaborated_events = events.union(Events.objects.filter(pk__in=collaborations_list))
-        return events_with_collaborated_events.order_by('-event_date')
+        return events_with_collaborated_events.order_by('-start_date','-event_date')
         
     
     def event_page_access(request):
@@ -1067,7 +1068,7 @@ class Branch:
     
     def load_insb_organised_events():
         
-        return Events.objects.filter(event_organiser=5).order_by('-event_date')
+        return Events.objects.filter(event_organiser=5).order_by('-start_date','-event_date')
     
 
     def delete_event(event_id):

@@ -96,6 +96,25 @@
               width: 100%;
             }
           }
+
+          /* Banner styles */
+          .banner {
+              background-color: #b4252b;
+              color: white;
+              padding: 10px;
+              text-align: center;
+          }
+      
+          .banner p {
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+          }
+      
+          .lock-icon {
+              margin-right: 10px;
+          }
     </style>
 </head>
 <body>
@@ -157,9 +176,18 @@
               <br>
             </div>
             <!--for error messages end-->
-
+            
             <div class="container" style="justify-content:center;text-align:center;">    
               <div class="btn-container">
+                  {% if show_restriction_banner %}
+                  <div class="banner">
+                      <p>
+                          <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                          All updates to Society and Affinity groups have been locked by the administrator
+                      </p>
+                  </div>
+                  <br>
+                  {% endif %}
                   {% if is_branch %}
                   <a href="{% url 'central_branch:mega_events' %}" class="btn btn-outline b-success text-success" style="margin-bottom:15px";>Mega Events</a>
                   {% else %}
@@ -176,7 +204,7 @@
                   {% if is_branch %}
                   {% if common_access %}
                   <div>
-                    <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
+                    <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yearly Events</button>
                     <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
                       {% for year in all_event_years %}
                       <a href="{% url 'central_branch:generateExcelSheet_events_by_year' year %}" class="dropdown-item">{{year}}</a>
@@ -187,7 +215,7 @@
                   {% else %}
                   {% if common_access %}
                   <div>
-                    <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yealy Events</button>
+                    <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yearly Events</button>
                           <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
                             {% for year in all_event_years %}
                             <a href="{% url 'chapters_and_affinity_group:generateExcelSheet_events_by_year_sc_ag' sc_ag_info.primary year %}" class="dropdown-item">{{year}}</a>
@@ -274,7 +302,7 @@
                               
                               {% endfor %}
                             </td>
-                            <td>{{ key.event_date }}</td>
+                            <td>{% if key.event_date and key.start_date == None %}{{ key.event_date }}{% else %}{{ key.start_date|date:"M. d, Y"  }}{% endif %}</td>
                         </tr>
                         {% endfor %}
                         
@@ -323,7 +351,7 @@
                   {% csrf_token %}
                 
                 <label for="label">Event Type:</label>
-                <input type="text" id="label" name="event_type">
+                <input type="text" id="label" name="event_type" required>
               </div>
               <div class="modal-footer">
                 <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_event_type" value="Add">

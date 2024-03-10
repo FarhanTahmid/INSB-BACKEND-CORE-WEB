@@ -1,6 +1,6 @@
 {% load static %}
 {% block event_details_form %}
-
+<script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
 
 <style>
     .publish-switch {
@@ -106,30 +106,30 @@
                         {% endfor %}
                     </select>
                 </div>
-                
+                {% if event_details.event_date and event_details.start_date == None %}
                 <br>
                 <div class="form-group">
-                    <label for="exampleInputPassword3">Add a date for the Event</label>
+
+                    <label for="exampleInputPassword3">(Update Starting Date of Event According to this date)</label>
                     <input
                         placeholder="Event Date"
                         name="event_date"
                         type="date"
                         class="form-control"
                         value="{{event_details.event_date|date:"Y-m-d"}}"
+                        disabled
                     />
                 </div>
-                <br>  
+                {% endif %}
+                <br>
                 <div class="form-group">
-                    <label>Event Time: </label> 
-                    <input
-                        placeholder="Event Time"
-                        class="form-control"
-                        type="text"
-                        autocomplete="off"
-                        name="event_time"
-                        value="{{event_details.event_time|default:""}}" 
-                    />
-                        
+                    <label for="exampleInputPassword3">Add a (tentative) start date for the Event: </label>
+                    <input type="datetime-local" id="date_time" name="start_date_time" required value = "{{event_details.start_date|date:"Y-m-d\TH:i" }}">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="exampleInputPassword3">Add a end date for the Event (if any): </label>
+                    <input type="datetime-local" id="date_time" name="end_date_time" value = "{{event_details.end_date|date:"Y-m-d\TH:i" }}">
                 </div>
                 <br>
                 <div class="form-group">
@@ -199,15 +199,14 @@
                 
                 <div class="form-group registration-hidden-field" id="registrationFeeInput">
                     <label for="registrationFeeValue">Enter amount:</label>
-                    <input
+                    <textarea
                         type="text"
                         name="registration_fee_amount"
                         id="registrationFeeValue"
                         class="form-control"
-                        placeholder="Enter Registration Fee"
-                        value="{{event_details.registration_fee_amount}}"
+                        value = "{{event_details.registration_fee_amount | safe }}"
                         {% if is_registration_fee_required %} required {% endif %}
-                    />
+                    >{{event_details.registration_fee_amount | safe }}</textarea>
                 </div>
 
                 <div class="form-group">
@@ -269,10 +268,13 @@
                 <br>
                 <div style="text-align: center;">
                     
-                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     {% if is_branch %}
+                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        {% endif %}
                     <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% endif %}
                 </div>
@@ -300,7 +302,7 @@
                         {% csrf_token %}
                         
                         <label for="venue">Venue:</label>
-                        <input type="text" id="venue" name="venue">
+                        <input type="text" id="venue" name="venue" required>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-outline-success txt-success buttons" name="add_venues" value="Add">Add</button>
@@ -314,6 +316,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+          CKEDITOR.replace('registration_fee_amount');
           var form = document.getElementById('myForm');
           var isFormDirty = false;
         
@@ -350,7 +353,7 @@
             checkbox.change(function () {
                 if (checkbox.is(':checked')) {
                     // Show the textfield with a fixed height
-                    feeInput.css({ opacity: 1, height: '85px', visibility: 'visible' }); // Adjust the height value as needed
+                    feeInput.css({ opacity: 1, height: 'auto', visibility: 'visible' }); // Adjust the height value as needed
                 } else {
                     // Hide the textfield with a fixed height
                     feeInput.css({ opacity: 0, height: 0, visibility: 'hidden' });
@@ -359,8 +362,6 @@
             checkbox.change();
         });
     </script>
-    
-    
     
     
 {% endblock event_details_form %}

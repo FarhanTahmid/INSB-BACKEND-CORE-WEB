@@ -1,6 +1,7 @@
 from system_administration.render_access import Access_Render
 from system_administration.models import SC_AG_Data_Access
 from system_administration.system_error_handling import ErrorHandling
+from system_administration.models import system
 from .models import SC_AG_Members
 from port.models import Chapters_Society_and_Affinity_Groups
 from users.models import Members
@@ -46,6 +47,33 @@ class SC_Ag_Render_Access:
         except Exception as e:
             # SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             return False
+        
+    def access_for_sc_ag_updates(request):
+        try:
+            # get the user and username. Username will work as IEEE ID and Developer username both
+            user=request.user
+            username=user.username
+            #Get the value of sc_ag update restriction from system
+            is_update_access_restricted = system.objects.filter(restrict_sc_ag_updates=True).first()
+
+            # generate superuser or staff user access
+            system_manager_access=False
+            if(Access_Render.system_administrator_superuser_access(username=username) or Access_Render.system_administrator_staffuser_access(username=username)):
+                system_manager_access=True
+
+            #If systemadmin then give access. Otherwise if access not restricted then give access
+            if system_manager_access or not is_update_access_restricted:
+                return True
+            else:
+                return False
+            
+        except Exception as e:
+            if(Access_Render.system_administrator_superuser_access(username=username) or Access_Render.system_administrator_staffuser_access(username=username)):
+                return True
+            else:
+                SC_Ag_Render_Access.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+                # ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+                return False
     
     def access_for_member_details(request,sc_ag_primary):
         try:

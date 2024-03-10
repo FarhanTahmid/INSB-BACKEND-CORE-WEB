@@ -1,4 +1,4 @@
-from . models import Renewal_Form_Info,Renewal_Sessions
+from . models import Renewal_Form_Info,Renewal_Sessions,Birthday_Email_Records
 from membership_development_team.models import Renewal_requests
 from users.models import Members
 from port.models import Teams,Roles_and_Position
@@ -208,7 +208,7 @@ class MDT_DATA:
         '''in here all the username = ieee_id '''
         faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
         eb_access=Access_Render.eb_access(username=username)
-        team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
+        # team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
         custom_data_access=False
         try:
             try:
@@ -226,8 +226,8 @@ class MDT_DATA:
             return True
         elif(eb_access):
             return True
-        elif(team_co_ordinator_access):
-            return True
+        # elif(team_co_ordinator_access):
+        #     return True
         elif(custom_data_access):
             return True
         else:
@@ -435,3 +435,8 @@ From every individuals of IEEE NSU SB community."""
                                 email_list,
                                 )
                     email.send()
+
+                    #saving email records
+                    message = f"Birthday Email sent to {members.ieee_id}-{members.name}, Date: {str(today)}"
+                    log = Birthday_Email_Records.objects.create(confirm_message = message)
+                    log.save()

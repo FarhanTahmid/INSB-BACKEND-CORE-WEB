@@ -101,7 +101,7 @@
                         <button type="button" class="btn btn-outline-success buttons mt-2" data-toggle="modal" data-target="#EventTypeModal">Add Event Type</button>
                     </div>
                     <br>
-                    <div class="form-group">
+                    {% comment %} <div class="form-group">
                         <label for="exampleInputPassword3">Add a date for the Event</label>
                         <input
                             placeholder="Event Date"
@@ -123,8 +123,18 @@
                             value="{{event_details.event_name}}" 
                         />
                             
+                    </div> {% endcomment %}
+                    <div class="form-group">
+                        <label for="exampleInputPassword3">Add a (tentative) start date for the Event: </label>
+                        <input type="datetime-local" id="date_time" name="start_date_time" required>
                     </div>
-                    <br>  
+                    <br>
+                    <div class="form-group">
+                        <label for="exampleInputPassword3">Add a end date for the Event (if any): </label>
+                        <input type="datetime-local" id="date_time" name="end_date_time">
+                    </div>
+                    <br>
+
                     <div style="text-align: center;">
                         {% if is_branch %}
                         <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>

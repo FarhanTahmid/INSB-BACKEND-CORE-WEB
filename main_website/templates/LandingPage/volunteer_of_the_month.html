@@ -1,8 +1,8 @@
 {% load static %}
 {% block volunteer_of_the_month %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <style>
     #content-section-2{
-        max-height: 900px;
         background-image: url('{% static 'upload/service-bg.jpg' %}');
         padding-top: 20px;
         padding-bottom: 20px;
@@ -31,7 +31,7 @@
     #content-section-2 .section1 .section2 .section3 .section4 .gdlr-heading-shortcode .break{
         display: none;
     }
-    #content-section-2 .section1 .section2 .section3 .section4 .bar{
+    #content-section-2 .section1 .section2 .section3 .bar{
         background-color: #002855; width: 200px; height: 5px; text-align: center; border-radius: 5px;
     }
     #content-section-2 .section1 .section2 .section3 .carousal{
@@ -86,7 +86,7 @@
         /* top: 50%; */
         border: none;
         color: 	#6d6d6d;
-        margin-top: 465px;
+        margin-top: 470px;
         outline: none;
         transition: all 0.3s;
         
@@ -131,10 +131,21 @@
             width: 80%;
         }
     }
+    #content-section-2 .section1.dropdown{
+        justify-content: flex-end;
+        margin-right: 20px;
+    }
     @media screen and (max-width: 665px) {
         #content-section-2 .section1 .prev,
         #content-section-2 .section1 .next {
             margin-top: 830px;
+        }
+        #content-section-2 .section1.dropdown{
+            justify-content: center;
+            margin-right: 0;
+        }
+        #content-section-2 .section1 .section2 .section3{
+            margin-top: 20px;
         }
     }
     @media screen and (max-width: 575px) {
@@ -144,7 +155,7 @@
     }
     @media screen and (max-width: 420px) {
         #content-section-2 .section1 .section2 .section3 .carousal .container .content .con .details {
-            width: 50%;
+            width: 60%;
         }
     }
     #content-section-2 .section1 .prev {
@@ -155,43 +166,30 @@
         margin-right: -30px;
     }
 </style>
-<section id="content-section-2"
-    >
-    <div class="section1">
+<section id="content-section-2">
+    <div class="section1 dropdown">
+        <div class="filter">
+            <select id="filter-dropdown" style="width: 200px; height: 40px; border-radius: 5px; padding: 5px;">
+                <option value="" selected disabled>Select Award</option>
+                {% for i in awards %}
+                    <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
+                {% endfor %}
+                
+            </select>
+        </div>
+    </div>
+    <div class="section1 loop">
         <div class="section2">
             <div class="section3">
                 <div class="section4">
-                    <h1 class="gdlr-heading-shortcode">
-                        Volunteer <br class="break"> of <br class="break">the month</h1>
-                    <div class="bar">
-                    </div>
+                    <h1 class="gdlr-heading-shortcode" id="award_name">
+                        {% comment %} Volunteer <br class="break"> of <br class="break">the month</h1> {% endcomment %}
                 </div>
+                <div class="bar">
+                    </div>
                 <div class="carousal">
-                    <div class="container">
-                        {% for i in all_vom %}
-                        <div class="content">
-                            <div class="con">
-                                <div class="circle">
-                                    <img src="/media_files/{{i.ieee_id.user_profile_picture}}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
-                                </div>
-                                <div class="details">
-                                    <div class="list-with-icon-caption">
-                                        <p style="text-align: left;">Name: <span style="color: #002855;">{{i.ieee_id.name}}</span></p>
-                                        <p style="text-align: left;">Team: <span style="color: #002855;">{{i.ieee_id.team}}</span></p>
-                                        <p style="text-align: left;">Position: <span style="color: #002855;">{{i.ieee_id.position}}</span></p>
-                                    </div>
-                                    <div class="list-with-icon-content">
-                                        <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
-                                            Contributions
-                                        </div>
-                                        <div class="list-with-icon-caption">
-                                            <p style="text-align: justify;">{{i.contributions | safe}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+                    <div class="container" id="award_winner">
+                        
                     </div>
                 </div>
             </div>
@@ -199,37 +197,33 @@
         <button class="prev" onclick="prevSlide()"><i class="icon-angle-left gdlr-flex-prev"></i></button>
         <button class="next" onclick="nextSlide()"><i class="icon-angle-right gdlr-flex-next"></i></button>
     </div>
+    
 </section>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
+
+    <script>
+        $(document).ready(function () {
+            const awardWinnersContainer = document.getElementById('award_winner');
+            const awardNameContainer=document.getElementById('award_name')
+
+        // Function to show slide
+        function showSlide(index, container) {
+            if (container) {
+                const percentage = -index * 100;
+                container.style.transform = `translateX(${percentage}%)`;
+            }
+        }
+
+        // Initialize variables
         let currentIndex = 0;
         let startX = 0;
         let isDragging = false;
         let autoSwipeInterval;
+        let totalSlides = 0;
 
-        const slides = document.querySelectorAll('#content-section-2 .section1 .section2 .section3 .carousal .container .content');
-        const totalSlides = slides.length;
-
-        function showSlide(index) {
-            const percentage = -index * 100;
-            document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container').style.transform = `translateX(${percentage}%)`;
-        }
-
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-            showSlide(currentIndex);
-            restartAutoSwipe();
-        }
-
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % totalSlides;
-            showSlide(currentIndex);
-            restartAutoSwipe();
-        }
-
+        // Function to handle touch interactions
         function handleTouchStart(e) {
-            startX = e.touches[0].clientX;
             isDragging = true;
+            startX = e.touches[0].clientX;
         }
 
         function handleTouchMove(e) {
@@ -251,54 +245,318 @@
             isDragging = false;
         }
 
-        function handleMouseDown(e) {
-            startX = e.clientX;
-            isDragging = true;
+        function highest_ranked_award_show(){
+            var selectedAwardID = '0';
+            // Display loading indicator while fetching data
+            awardWinnersContainer.innerHTML = '<div class="loading">Loading...</div>';
+
+            // Make an AJAX request to retrieve data for the selected role
+            
+            $.ajax({
+                url: "{% url 'main_website:load_awards' %}",
+                type: "GET",
+                data: {'award_pk': selectedAwardID},
+                success: function (data) {
+                    const award_name=data.award_name
+                    awardNameContainer.innerHTML=award_name;
+
+                    if (Array.isArray(data.winners)) {
+                        // Dynamically create individual award winner elements
+                        const awardWinnerElements = data.winners.map(awardWinner => {
+                            
+                            const award_name=awardWinner.award_name;
+                            const imgSrc=awardWinner.picture;
+                            const name=awardWinner.name;
+                            const team=awardWinner.team;
+                            const position = awardWinner.position;
+                            const contributions = awardWinner.contributions;
+
+                            return `
+                            <div class="content">
+                                <div class="con">
+                                    <div class="circle">
+                                        <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                    </div>
+                                    <div class="details">
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                            <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
+                                            <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
+                                        </div>
+                                        <div class="list-with-icon-content">
+                                            <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                Contributions
+                                            </div>
+                                            <div class="list-with-icon-caption">
+                                                <p style="text-align: justify;">${contributions}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
+                        });
+                        
+                        // Update the award winner container content
+                        awardWinnersContainer.innerHTML = awardWinnerElements.join('');
+                        totalSlides = awardWinnerElements.length;
+                        showSlide(currentIndex, awardWinnersContainer);
+                        } else {
+                        // If only one object is returned, handle it as such
+                        const awardWinner = data;
+                        console.log("has one")
+                        // ... (extract and update winner details using individual data)
+                        }
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
         }
+        highest_ranked_award_show();
 
-        function handleMouseMove(e) {
-            if (!isDragging) return;
-            const currentX = e.clientX;
-            const diff = startX - currentX;
+        // AJAX request on dropdown change
+        $("#filter-dropdown").change(function () {
 
-            if (diff > 0) {
-                nextSlide();
-            } else {
-                prevSlide();
-            }
+            var selectedAwardID = $(this).val();
+            // Display loading indicator while fetching data
+            awardWinnersContainer.innerHTML = '<div class="loading">Loading...</div>';
 
-            isDragging = false;
+            // Make an AJAX request to retrieve data for the selected role
+            
+            $.ajax({
+                url: "{% url 'main_website:load_awards' %}",
+                type: "GET",
+                data: {'award_pk': selectedAwardID},
+                success: function (data) {
+                    // Update other form fields based on the received data
+                    // $("#award_name").val(data.volunteer_award_name);
+                    const award_name=data.award_name
+                    awardNameContainer.innerHTML=award_name;
+
+                    if (Array.isArray(data.winners)) {
+                        // Dynamically create individual award winner elements
+                        const awardWinnerElements = data.winners.map(awardWinner => {
+                            
+                            const award_name=awardWinner.award_name;
+                            const imgSrc=awardWinner.picture;
+                            const name=awardWinner.name;
+                            const team=awardWinner.team;
+                            const position = awardWinner.position;
+                            const contributions = awardWinner.contributions;
+
+                            return `
+                            <div class="content">
+                                <div class="con">
+                                    <div class="circle">
+                                        <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                    </div>
+                                    <div class="details">
+                                        <div class="list-with-icon-caption">
+                                            <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                            <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
+                                            <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
+                                        </div>
+                                        <div class="list-with-icon-content">
+                                            <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                Contributions
+                                            </div>
+                                            <div class="list-with-icon-caption">
+                                                <p style="text-align: justify;">${contributions}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            `;
+                        });
+                        
+                        // Update the award winner container content
+                        awardWinnersContainer.innerHTML = awardWinnerElements.join('');
+                        totalSlides = awardWinnerElements.length;
+                        showSlide(currentIndex, awardWinnersContainer);
+                        }
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
+        });
+
+            // Function to show previous slide
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentIndex, awardWinnersContainer);
             restartAutoSwipe();
         }
 
-        function handleMouseUp() {
-            isDragging = false;
+        // Function to show next slide
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            showSlide(currentIndex, awardWinnersContainer);
+            restartAutoSwipe();
         }
+        // Event listeners for touch and click events on prev and next buttons
+        $('.prev').on('click', function () {
+            prevSlide();
+        });
 
+        $('.next').on('click', function () {
+            nextSlide();
+        });
+        // Function to restart auto-swipe interval
         function restartAutoSwipe() {
             clearInterval(autoSwipeInterval);
-            autoSwipeInterval = setInterval(nextSlide, 3000);
+            autoSwipeInterval = setInterval(nextSlide, 7000);
         }
 
-        const container = document.querySelector('#content-section-2 .section1 .section2 .section3 .carousal .container');
-        container.addEventListener('touchstart', handleTouchStart);
-        container.addEventListener('touchmove', handleTouchMove);
-        container.addEventListener('touchend', handleTouchEnd);
+        // Attach touch event listeners to container element
+        if (awardWinnersContainer) {
+            awardWinnersContainer.addEventListener('touchstart', handleTouchStart);
+            awardWinnersContainer.addEventListener('touchmove', handleTouchMove);
+            awardWinnersContainer.addEventListener('touchend', handleTouchEnd);
+        }
 
-        container.addEventListener('mousedown', handleMouseDown);
-        container.addEventListener('mousemove', handleMouseMove);
-        container.addEventListener('mouseup', handleMouseUp);
-
-        document.querySelector('.prev').addEventListener('click', prevSlide);
-        document.querySelector('.next').addEventListener('click', nextSlide);
-
-        container.addEventListener('mouseenter', stopAutoSwipe);
-        container.addEventListener('mouseleave', restartAutoSwipe);
-
-        restartAutoSwipe(); // Start auto-swipe on page load
-        showSlide(currentIndex);
+        // Start auto-swipe on page load
+        autoSwipeInterval = setInterval(nextSlide, 7000);
     });
-</script>
+    </script>
+
+
+{% comment %} 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let currentIndex = 0;
+        let startX = 0;
+        let isDragging = false;
+        let autoSwipeInterval;
+
+        function showSlide(index, container) {
+            if (container) { // Check if container is not null
+                const percentage = -index * 100;
+                container.style.transform = `translateX(${percentage}%)`;
+            }
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentIndex, currentContainer);
+            restartAutoSwipe();
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            showSlide(currentIndex, currentContainer);
+            restartAutoSwipe();
+        }
+
+            function handleTouchStart(e) {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            }
+
+            function handleTouchMove(e) {
+                if (!isDragging) return;
+                const currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+
+                isDragging = false;
+                restartAutoSwipe();
+            }
+
+            function handleTouchEnd() {
+                isDragging = false;
+            }
+
+            function handleMouseDown(e) {
+                startX = e.clientX;
+                isDragging = true;
+            }
+
+            function handleMouseMove(e) {
+                if (!isDragging) return;
+                const currentX = e.clientX;
+                const diff = startX - currentX;
+
+                if (diff > 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+
+                isDragging = false;
+                restartAutoSwipe();
+            }
+
+            function handleMouseUp() {
+                isDragging = false;
+            }
+
+            function restartAutoSwipe() {
+                clearInterval(autoSwipeInterval);
+                autoSwipeInterval = setInterval(nextSlide, 3000);
+            }
+
+                 const filterDropdown = document.getElementById('filter-dropdown');
+                if (filterDropdown) {
+                    filterDropdown.addEventListener('change', function() {
+                        const selectedValue = this.value.toLowerCase();
+                        const sections = document.querySelectorAll('.section1.loop');
+                        sections.forEach(function(section) {
+                            const category = section.getAttribute('data-category');
+                            if ((category && category.toLowerCase() === selectedValue)) {
+                                section.style.display = 'flex';
+                            } else {
+                                section.style.display = 'none';
+                            }
+                        });
+
+                        const selectedSection = document.querySelector(`[data-category="${selectedValue}"]`);
+                        if (selectedSection) {
+                            currentIndex = 0;
+                            currentContainer = selectedSection.querySelector('.section1.loop .container');
+                            totalSlides = currentContainer.querySelectorAll('.content').length;
+                            showSlide(currentIndex, currentContainer);
+                            restartAutoSwipe();
+                        }
+                    });
+                } 
+
+            const container = document.querySelector('#content-section-2 .section1.loop .section2 .section3 .carousal .container');
+            let totalSlides = container ? container.querySelectorAll('.content').length : 0;
+        let currentContainer = container;
+
+            if (container) { // Check if container is not null
+                container.addEventListener('touchstart', handleTouchStart);
+                container.addEventListener('touchmove', handleTouchMove);
+                container.addEventListener('touchend', handleTouchEnd);
+
+                container.addEventListener('mousedown', handleMouseDown);
+                container.addEventListener('mousemove', handleMouseMove);
+                container.addEventListener('mouseup', handleMouseUp);
+
+                container.addEventListener('mouseenter', restartAutoSwipe);
+                container.addEventListener('mouseleave', restartAutoSwipe);
+            }
+
+            const prevButton = document.querySelector('.prev');
+            const nextButton = document.querySelector('.next');
+
+            if (prevButton && nextButton) { // Check if prevButton and nextButton are not null
+                prevButton.addEventListener('click', prevSlide);
+                nextButton.addEventListener('click', nextSlide);
+            }
+
+            restartAutoSwipe(); // Start auto-swipe on page load
+        showSlide(currentIndex, container);
+        });
+    </script> {% endcomment %}
 
 
     

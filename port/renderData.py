@@ -61,7 +61,10 @@ class HandleVolunteerAwards:
     def load_award_winners(request,award_pk):
         try:
             get_award_winners=VolunteerAwardRecievers.objects.filter(award=VolunteerAwards.objects.get(pk=award_pk))
-            return get_award_winners
+            if(get_award_winners is not None):
+                return get_award_winners
+            else:
+                return False
         
         except Exception as e:
             PortData.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

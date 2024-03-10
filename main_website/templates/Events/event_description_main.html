@@ -493,7 +493,7 @@
                                 </div>
                                 <div class="event_header" style="text-transform: uppercase;    margin-bottom: 15px;">
                                     <!--Event Date and Time-->
-                                    <h4 style="color: #00629B;">{{event.event_date | date:"l, F d Y"}}</h4>
+                                    <h4 style="color: #00629B;">{% if event.event_date and event.start_date == None %}{{event.event_date | date:"l, F d Y"}}{% else %}{{event.start_date | date:"l, F d Y"}}{% endif %}</h4>      
                                 </div>
                                 <div class="event_header" style="text-transform: uppercase; margin-bottom: 15px;">
                                     <!--Event Header-->
@@ -529,18 +529,34 @@
                             <div class="register-bottom-for-pc">
                                 <!--Register Box-->
                                 <div class="box">
-                                    {% if event.event_time %}
+                                    {% if event.event_time and event.start_date == None %}
                                     <div class="inner_box">
                                         <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">Time</span></h6>
                                         <h6 class="adjust_placement">{{event.event_time}}</h6>
                                     </div>
+                                    {% else %}
+                                        {% if event.start_date %}
+                                        <div class="inner_box">
+                                            <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                    style="margin-left: 10px;">Start Time</span></h6>
+                                            <h6 class="adjust_placement">{{event.start_date|date:"g:i A, jS M, Y"}}</h6>
+                                        </div>
+                                        {% endif %}
+                                        {% if event.end_date %}
+                                        <div class="inner_box">
+                                            <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                    style="margin-left: 10px;">End Time</span></h6>
+                                            <h6 class="adjust_placement">{{event.end_date|date:"g:i A, jS M, Y"}}</h6>
+                                        </div>
+                                        {% endif %}
                                     {% endif %}
+
                                     <div class="inner_box">
                                         <h6><i class="fa-solid fa-wallet" style="color: #E87722;"></i><span
                                                 style="margin-left: 10px;">COST</span></h6>
                                         {% if event.registration_fee %}
-                                        <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
+                                        <h6 class="adjust_placement">{{event.registration_fee_amount|safe}}</h6>
                                         {% else %}
                                         <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                         {% endif %}
@@ -601,18 +617,33 @@
                         <section class="register-bottom-for-tablet-view">
                             <!--Register Box-->
                             <div class="box">
-                                {% if event.event_time %}
-                                <div class="inner_box">
-                                    <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
-                                            style="margin-left: 10px;">Time</span></h6>
-                                    <h6 class="adjust_placement">{{event.event_time}}</h6>
-                                </div>
-                                {% endif %}
+                                {% if event.event_time and event.start_date == None %}
+                                    <div class="inner_box">
+                                        <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                style="margin-left: 10px;">Time</span></h6>
+                                        <h6 class="adjust_placement">{{event.event_time}}</h6>
+                                    </div>
+                                    {% else %}
+                                    {% if event.start_date %}
+                                    <div class="inner_box">
+                                        <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                style="margin-left: 10px;">Start Time</span></h6>
+                                        <h6 class="adjust_placement">{{event.start_date|date:"g:i A, jS M, Y"}}</h6>
+                                    </div>
+                                    {% endif %}
+                                    {% if event.end_date %}
+                                    <div class="inner_box">
+                                        <h6><i class="fa-regular fa-clock" style="color: #E87722;"></i><span
+                                                style="margin-left: 10px;">End Time</span></h6>
+                                        <h6 class="adjust_placement">{{event.end_date|date:"g:i A, jS M, Y"}}</h6>
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
                                 <div class="inner_box">
                                     <h6><i class="fa-solid fa-wallet" style="color: 		#E87722;"></i><span
                                             style="margin-left: 10px;">COST</span></h6>
                                     {% if event.registration_fee %}
-                                    <h6 class="adjust_placement">BDT {{event.registration_fee_amount}}</h6>
+                                    <h6 class="adjust_placement">{{event.registration_fee_amount|safe}}</h6>
                                     {% else %}
                                     <h6 class="adjust_placement" style="color: #5e5e5e;">Free</h6>
                                     {% endif %}
