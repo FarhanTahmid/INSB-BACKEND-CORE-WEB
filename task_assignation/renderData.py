@@ -659,7 +659,7 @@ class Task_Assignation:
         #getting all members of specific task
         all_members_of_task = Member_Task_Point.objects.filter(task=task)
         deadline_of_task = task.deadline
-        current_date = datetime.datetime.now()
+        current_date = datetime.now().replace(tzinfo=timezone.utc)
         
         # Calculate late duration in days
         late_duration = (current_date - deadline_of_task).days
