@@ -435,13 +435,13 @@
             <!--contents of page-->
             {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
             <div class="form-wrapper">
-                <div class="tooltip-container">
-                    <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                      <img src="/static/back-arrow.png" alt="Go back to session">
-                    </a>
-                    <span class="tooltip-text">Go back</span>
-                </div>
                 <form method="POST" enctype="multipart/form-data">
+                    <div class="tooltip-container">
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                          <img src="/static/back-arrow.png" alt="Go back to session">
+                        </a>
+                        <span class="tooltip-text">Go back</span>
+                    </div>
                     {% csrf_token %}
                     <!-- task page heading-->
                     <h4>Finish Task</h4>
