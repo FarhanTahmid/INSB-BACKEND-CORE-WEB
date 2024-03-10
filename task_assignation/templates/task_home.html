@@ -243,10 +243,17 @@
             </div>
             <div class="modal-body">
               <form method="POST">
-               
-              
+                {% csrf_token %}
+               <ol>
+              {% for task_category in all_task_categories %}
+              <li><p>Task Name : {{ task_category.name }}</p>
+                <p>Task Points : {{task_category.points }}
+              </li>
+
+              {% endfor %}
+               </ol>
               <label for="label">Task Type Name:</label>
-              <input type="text" id="label" name="task_type" required>
+              <input type="text" id="label" name="task_type_name" required>
               <div>
               <label for="label">Task Point:</label>
               <input type="number" id="label" name="task_point" required>

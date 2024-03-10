@@ -575,15 +575,18 @@
                     <br><br>
 
                     <!-- Drive link -->
+                    {% if task_type.5.has_drive_link %}
                     <div class="form-group">
                         <label>Folder Drive Link</label>
                         <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
                         value="{{task_type.1.drive_link}}" name="content_drive" disabled />
                     </div>
+                    {% endif %}
                     <br>
 
 
                     <!-- Paper permission -->
+                    {% if task_type.5.has_permission_paper %}
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                         
@@ -591,12 +594,14 @@
                                 <option value="completed"{% if task_type.0.permission_paper == "completed" %}selected{% endif %}>Completed </option>
                                 <option value="not_completed"{% if task_type.0.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
                             </select>                                  
-                        </div>
-                        <br>
+                    </div>
+                    {% endif %}
+                    <br>
 
                     
                     
                     <!--content-->
+                    {% if task_type.5.has_content %}
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
                         <div>
@@ -608,12 +613,13 @@
                 
                         <div id="media-selected-images-container"></div>
                         <input type="hidden" name="selected_images" id="media-selected-images">
-                        
+                    {% endif%}
                         
                         <br>
                         
                         
                         <!--file upload -->
+                        {% if task_type.5.has_file_upload %}
                         <label for="documents">File Upload</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
                             <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;" disabled>
@@ -634,11 +640,11 @@
                         </div>
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
+                    {% endif%}
                     
-
-                        
                     
                         <!-- Media -->
+                    {% if task_type.5.has_media %}
                     <label for="images" >Media Upload</label>
                     <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
                         <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple disabled>
@@ -654,6 +660,7 @@
                     </ol>
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
+                    {% endif %}
                     
                     <br><br>
                     
@@ -674,6 +681,7 @@
                         <input type="submit" class="finish-task-btn" name="add_comment" value = "Send Comment as Email">
                     </div>
                 </form> 
+                <hr>
                 {% endfor %}
             </div>
             {% endif %}

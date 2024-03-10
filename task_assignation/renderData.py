@@ -609,6 +609,7 @@ class Task_Assignation:
         for member in current_task.members.all():
             member_task_list = []
             member_obj = Members.objects.get(ieee_id = str(member))
+            task_type_of_members= Member_Task_Upload_Types.objects.get(task_member = member_obj,task = current_task)
             try:
                 permission_paper = Permission_Paper.objects.get(task=task,uploaded_by = str(member))
             except:
@@ -632,12 +633,19 @@ class Task_Assignation:
                 medias = None
             member_task_list.append(files_uploaded)
             member_task_list.append(medias)
+            member_task_list.append(task_type_of_members)
 
             dic[member_obj] = member_task_list
         
         return dic
         
+    def add_task_category(task_name,task_point):
 
+        #This function adds the task name and points
+
+        task_category = Task_Category.objects.create(name = task_name,points = task_point)
+        task_category.save()
+        return True
             
 
 

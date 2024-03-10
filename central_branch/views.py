@@ -4487,6 +4487,21 @@ def task_home(request):
     eb_access = Access_Render.eb_access(user)
     super_user_Access = Access_Render.system_administrator_superuser_access(user)
     staff_access = Access_Render.system_administrator_staffuser_access(user)
+    #getting all task categories
+    all_task_categories = Task_Category.objects.all()
+
+    if request.method == "POST":
+
+        if request.POST.get('add_task_type'):
+
+            task_name = request.POST.get('task_type_name')
+            task_point = request.POST.get('task_point')
+
+            if Task_Assignation.add_task_category(task_name,task_point):
+                messages.success(request,"Task Category Created successfully!")
+            else:
+                messages.warning(request,"Something went wrong while creating the task category!")
+
     context = {
         'all_tasks':all_tasks,
         'all_sc_ag':sc_ag,
@@ -4495,6 +4510,7 @@ def task_home(request):
         'eb_access':eb_access,
         'super_user_access':super_user_Access,
         'staff_access':staff_access,
+        'all_task_categories':all_task_categories,
     }
 
     return render(request,"task_home.html",context)
@@ -4542,7 +4558,7 @@ def upload_task(request, task_id):
             media_uploads = None
 
         task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
-   
+        print(task_type_per_member)
 
         if request.method == 'POST':
             
