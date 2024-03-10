@@ -663,14 +663,13 @@ class Task_Assignation:
         
         # Calculate late duration in days
         late_duration = (current_date - deadline_of_task).days
-        # Calculate late duration in days
-        late_duration = (current_date - deadline_of_task).days
+        print(late_duration)
         is_late = False
         # Deduct points based on late duration
-        if late_duration == 7:
+        if late_duration >= 7:
             deduction_percentage = 0.2
             is_late = True
-        elif late_duration == 14:
+        elif late_duration >= 14:
             deduction_percentage = 0.5
             is_late = True
         else:
