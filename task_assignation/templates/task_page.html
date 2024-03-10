@@ -564,8 +564,8 @@
             {% endif %}
             {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
             
+            {% for member,task_type  in task_type_per_member.items %}
             <div class="form-wrapper">
-                {% for member,task_type  in task_type_per_member.items %}
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- task page heading-->
@@ -574,33 +574,38 @@
                     {{member.ieee_id}}
                     <br><br>
 
+                    {% if task_type.0.has_drive_link %}
                     <!-- Drive link -->
                     <div class="form-group">
                         <label>Folder Drive Link</label>
                         <input placeholder="Provide Link for contents" class="form-control" type="url" autocomplete="off"
-                        value="{{task_type.1.drive_link}}" name="content_drive" disabled />
+                        value="{{task_type.1}}" name="content_drive" disabled />
                     </div>
                     <br>
+                    {% endif %}
 
 
+                    {% if task_type.0.has_permission_paper %}
                     <!-- Paper permission -->
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                         
                             <select id="paper_permission_dropdown" name = "permission_paper" class="form-control" disabled>
-                                <option value="completed"{% if task_type.0.permission_paper == "completed" %}selected{% endif %}>Completed </option>
-                                <option value="not_completed"{% if task_type.0.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
+                                <option value="completed"{% if task_type.1 == "completed" %}selected{% endif %}>Completed </option>
+                                <option value="not_completed"{% if task_type.1 == "not_completed" %}selected{% endif %}>Not Completed</option>
                             </select>                                  
                         </div>
                         <br>
+                    {% endif %}
 
                     
                     
+                    {% if task_type.0.has_content %}
                     <!--content-->
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
                         <div>
-                            <textarea class="form-control" type="text" name="content_details" disabled >{{task_type.2.content}}</textarea>
+                            <textarea class="form-control" type="text" name="content_details" disabled >{{task_type.3}}</textarea>
                         </div>
                             <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
                         </div>
@@ -611,8 +616,10 @@
                         
                         
                         <br>
+                    {% endif %}
                         
                         
+                        {% if task_type.0.has_file_upload %}
                         <!--file upload -->
                         <label for="documents">File Upload</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
@@ -621,7 +628,7 @@
                             
                             <p>Uploaded Files</p>
                             <ol>
-                            {% for file in task_type.3 %}
+                            {% for file in task_type.4 %}
                                 <li>
                                 <a href = {{media_url}}{{file.document}}>{{file.document}}
                                 </li>
@@ -634,10 +641,12 @@
                         </div>
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
+                        {% endif %}
                     
 
                         
                     
+                        {% if task_type.0.has_media %}
                         <!-- Media -->
                     <label for="images" >Media Upload</label>
                     <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
@@ -646,7 +655,7 @@
                     
                     <p>Uploaded Images</p>
                     <ol>
-                    {% for media in task_type.4 %}
+                    {% for media in task_type.5 %}
                     <li>
                     <a href = {{media_url}}{{media.media}}>{{media.media}}</a>
                     </li>
@@ -654,13 +663,14 @@
                     </ol>
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
+                        {% endif %}
                     
                     <br><br>
                     
                         <label class="description_label">Comment</label>
                         <div class="ckeditor">
                             <div>
-                                <textarea class="form-control" type="text" name="other_content_details"></textarea>
+                                <textarea class="form-control" type="text" id="other_content_details_{{forloop.counter}}" name="other_content_details"></textarea>
                             </div>
                         
                         </div> 
@@ -674,8 +684,8 @@
                         <input type="submit" class="finish-task-btn" name="add_comment" value = "Send Comment as Email">
                     </div>
                 </form> 
-                {% endfor %}
             </div>
+            {% endfor %}
             {% endif %}
         </div>
 
@@ -697,9 +707,12 @@
         document.addEventListener("DOMContentLoaded", function () {
           // Replace the textareas with CKEditor instances
           CKEDITOR.replace("content_details");
+          {% for member,task_type  in task_type_per_member.items %}
+          CKEDITOR.replace("other_content_details_{{forloop.counter}}");
+          {% endfor %}
 
           // Attach a function to the change event for each CKEditor instance
-          ["content"].forEach(function (editorId) {
+          ["content","other_content"].forEach(function (editorId) {
             var editor = CKEDITOR.instances[editorId + "_details"];
 
             editor.on("change", function () {
@@ -739,53 +752,7 @@
           }
         }
     </script>
-    <script>
-        // character count function
-        document.addEventListener("DOMContentLoaded", function () {
-          // Replace the textareas with CKEditor instances
-          CKEDITOR.replace("other_content_details");
 
-          // Attach a function to the change event for each CKEditor instance
-          ["other_content"].forEach(function (editorId) {
-            var editor = CKEDITOR.instances[editorId + "_details"];
-
-            editor.on("change", function () {
-              // Update character count display for each CKEditor instance
-              updateCharacterCount(editorId);
-            });
-
-            // Update character count initially
-            updateCharacterCount(editorId);
-          });
-        });
-
-        function updateCharacterCount(editorId) {
-          var editorContent =
-            CKEDITOR.instances[editorId + "_details"].getData();
-
-          // Handle special space representations
-          var cleanedContent = editorContent
-            .replace(/<[^>]*>/g, "")
-            .replace(/&nbsp;/g, " ")
-            .trim();
-
-          // Count each character (including spaces)
-          var characterCount = cleanedContent.length;
-
-          var characterCountElement = document.getElementById(
-            editorId + "CharacterCount"
-          );
-
-          // Check conditions and update text color and content
-          if (characterCount === 0) {
-            characterCountElement.style.color = "black";
-            characterCountElement.innerText = "Character Count: 0";
-          } else {
-            characterCountElement.innerText =
-              "Character Count: " + characterCount;
-          }
-        }
-    </script>
     <script>
             
             //filtering for individual table
