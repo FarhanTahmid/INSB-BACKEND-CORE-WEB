@@ -431,16 +431,16 @@
 
         <!--PAGE START-->
         <div ui-view class="app-body" id="view">
-            <div class="tooltip-container">
-                <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                  <img src="/static/back-arrow.png" alt="Go back to session">
-                </a>
-                <span class="tooltip-text">Go back</span>
-            </div>
                 
             <!--contents of page-->
             {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
             <div class="form-wrapper">
+                <div class="tooltip-container">
+                    <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                      <img src="/static/back-arrow.png" alt="Go back to session">
+                    </a>
+                    <span class="tooltip-text">Go back</span>
+                </div>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- task page heading-->
@@ -564,15 +564,25 @@
             {% endif %}
             {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
             
+            <div class="form-wrapper">
+                <form>
+                    <div class="tooltip-container">
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                        <img src="/static/back-arrow.png" alt="Go back to session">
+                        </a>
+                        <span class="tooltip-text">Go back</span>
+                    </div>
+                </form>
+            </div>
+
             {% for member,task_type  in task_type_per_member.items %}
             <div class="form-wrapper">
+                <!-- task page heading-->
+                <h4>Task Progess of</h4>
+                <h5 style="text-align: center;">{{member.name}} {{member.ieee_id}}</h5>
+                <br>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <!-- task page heading-->
-                    <h4>Task Progess of</h4>
-                    {{member.name}}
-                    {{member.ieee_id}}
-                    <br><br>
 
 
                     <!-- Drive link -->
