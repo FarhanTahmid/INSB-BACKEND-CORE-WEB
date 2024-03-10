@@ -331,6 +331,7 @@ class Task_Assignation:
 
             for member in Member_Task_Upload_Types.objects.filter(task=task):
                 if member.task_member not in task_types_per_member.items():
+                    
                     member.delete()
 
             #saving members task type as per needed
@@ -418,9 +419,9 @@ class Task_Assignation:
         ''' This function is used to delete a task. It takes a task_id as parameter '''
         
         task = Task.objects.get(id=task_id)
-        Task_Drive_Link.objects.get(task=task).delete()
-        Task_Content.objects.get(task=task).delete()
-        Permission_Paper.objects.get(task=task).delete()
+        Task_Drive_Link.objects.filter(task=task).delete()
+        Task_Content.objects.filter(task=task).delete()
+        Permission_Paper.objects.filter(task=task).delete()
 
         files = Task_Document.objects.filter(task=task)
         for file in files:
@@ -436,9 +437,9 @@ class Task_Assignation:
                 os.remove(path)
             media_file.delete()
 
-        Member_Task_Upload_Types.objects.get(task=task).delete()
+        Member_Task_Upload_Types.objects.filter(task=task).delete()
         
-        Task_Log.objects.get(task_number=task).delete()
+        Task_Log.objects.filter(task_number=task).delete()
 
         task.delete()
 
@@ -587,7 +588,7 @@ class Task_Assignation:
             except:
                 permission_paper_save = Permission_Paper.objects.create(task=task,permission_paper = permission_paper,uploaded_by = member.ieee_id)
                 permission_paper_save.save()
-        if len(media)!=0:
+        if media:
             medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
             for m in medias:
                 path = settings.MEDIA_ROOT+str(m.media)
@@ -605,7 +606,7 @@ class Task_Assignation:
             except:
                 content_save = Task_Content.objects.create(task=task, content = content,uploaded_by = member.ieee_id)
                 content_save.save()
-        if len(file_upload)!=0:
+        if file_upload:
             file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
             for file in file_upload_save:
                 path = settings.MEDIA_ROOT+str(file.document)
