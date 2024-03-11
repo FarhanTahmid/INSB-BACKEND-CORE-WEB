@@ -120,6 +120,7 @@ class Member_Task_Point(models.Model):
     member = models.CharField(null=False,blank=False,max_length=15)
     completion_points = models.FloatField(null=False,blank=False,default=0)
     is_task_completed = models.BooleanField(null=False,blank=False,default=False)
+    comments = models.TextField(null=True,blank=True,default="")
 
     class Meta:
         verbose_name="Member Task Point"

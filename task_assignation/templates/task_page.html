@@ -431,10 +431,18 @@
 
         <!--PAGE START-->
         <div ui-view class="app-body" id="view">
-                
             <!--contents of page-->
             {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
             <div class="form-wrapper">
+                <!--Messages-->
+                <div style="justify-content: center; text-align: center">
+                    {% if messages %} 
+                    {% for message in messages %}
+                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
+                    {% endfor %}
+                    <br />
+                    {% endif %}
+                </div>
                 <form method="POST" enctype="multipart/form-data">
                     <div class="tooltip-container">
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
@@ -548,6 +556,14 @@
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
                     {% endif %}
+
+                    <label class="description_label">Comment</label>
+                        <div class="ckeditor">
+                            <div>
+                                <textarea class="form-control" type="text" id="comments" name="comments_details" disabled>{{comments|safe}}</textarea>
+                            </div>
+                        
+                        </div>
                     
                     <br><br>
                     
@@ -565,6 +581,15 @@
             {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
             
             <div class="form-wrapper">
+                <!--Messages-->
+                <div style="justify-content: center; text-align: center">
+                    {% if messages %} 
+                    {% for message in messages %}
+                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
+                    {% endfor %}
+                    <br />
+                    {% endif %}
+                </div>
                 <form>
                     <div class="tooltip-container">
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
@@ -680,7 +705,8 @@
                         <label class="description_label">Comment</label>
                         <div class="ckeditor">
                             <div>
-                                <textarea class="form-control" type="text" id="other_content_details_{{forloop.counter}}" name="other_content_details"></textarea>
+                                <input type="hidden" name="comments_member" value="{{member}}"></input>
+                                <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details">{{task_type.6.comments|safe}}</textarea>
                             </div>
                         
                         </div> 
@@ -717,158 +743,13 @@
         document.addEventListener("DOMContentLoaded", function () {
           // Replace the textareas with CKEditor instances
           CKEDITOR.replace("content_details");
+          CKEDITOR.replace("comments")
           {% for member,task_type  in task_type_per_member.items %}
-          CKEDITOR.replace("other_content_details_{{forloop.counter}}");
+          CKEDITOR.replace("comments_{{forloop.counter}}");
           {% endfor %}
-
-          // Attach a function to the change event for each CKEditor instance
-          ["content","other_content"].forEach(function (editorId) {
-            var editor = CKEDITOR.instances[editorId + "_details"];
-
-            editor.on("change", function () {
-              // Update character count display for each CKEditor instance
-              updateCharacterCount(editorId);
-            });
-
-            // Update character count initially
-            updateCharacterCount(editorId);
-          });
+          
         });
-
-        function updateCharacterCount(editorId) {
-          var editorContent =
-            CKEDITOR.instances[editorId + "_details"].getData();
-
-          // Handle special space representations
-          var cleanedContent = editorContent
-            .replace(/<[^>]*>/g, "")
-            .replace(/&nbsp;/g, " ")
-            .trim();
-
-          // Count each character (including spaces)
-          var characterCount = cleanedContent.length;
-
-          var characterCountElement = document.getElementById(
-            editorId + "CharacterCount"
-          );
-
-          // Check conditions and update text color and content
-          if (characterCount === 0) {
-            characterCountElement.style.color = "black";
-            characterCountElement.innerText = "Character Count: 0";
-          } else {
-            characterCountElement.innerText =
-              "Character Count: " + characterCount;
-          }
-        }
     </script>
-
-    <script>
-            
-            //filtering for individual table
-        function filter_individual_table() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("search_input_individuals");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("individuals-table");
-            tr = table.getElementsByTagName("tr");
-            
-            // Loop through all table rows and hide those that don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                // Skip the header row
-                if (i === 0) continue;
-                
-                // Loop through all table cells in the current row
-                var rowContainsSearchTerm = false;
-                for (var j = 0; j < tr[i].cells.length; j++) {
-                    td = tr[i].cells[j];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        rowContainsSearchTerm = true;
-                        break;
-                    }
-                    }
-                }
-                
-                // Toggle the visibility of the row based on whether it contains the search term
-                if (rowContainsSearchTerm) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-                }
-        }
-
-    
-        //filtering for team table
-        function filter_team_table() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("search_input_team");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("team-table");
-            tr = table.getElementsByTagName("tr");
-            
-            // Loop through all table rows and hide those that don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                // Skip the header row
-                if (i === 0) continue;
-                
-                // Loop through all table cells in the current row
-                var rowContainsSearchTerm = false;
-                for (var j = 0; j < tr[i].cells.length; j++) {
-                    td = tr[i].cells[j];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            rowContainsSearchTerm = true;
-                            break;
-                        }
-                    }
-                }
-            
-                // Toggle the visibility of the row based on whether it contains the search term
-                if (rowContainsSearchTerm) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    </script>   
-    <script>
-        //determining which table to show depending on the selected radio button
-        let radioButtons = document.querySelectorAll(".radio-btns_content");
-        let searchIndividuals = document.querySelector('.search_input_individuals');
-        let searchTeam = document.querySelector('.search_input_team');
-        let individualsTable = document.querySelector('.individuals-table');
-        let teamTable = document.querySelector('.team-table');
-
-
-        radioButtons.forEach((button) => {
-        button.addEventListener("change", () => {
-            let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
-
-            if(checkedRadioButton.id == 'btn05'){
-                searchIndividuals.classList.add('hide_table');
-                individualsTable.classList.add('hide_table');
-                searchTeam.classList.remove('hide_table');
-                teamTable.classList.remove('hide_table');
-            }
-            else if(checkedRadioButton.id == 'btn06'){
-                searchIndividuals.classList.remove('hide_table');
-                individualsTable.classList.remove('hide_table');
-                searchIndividuals.classList.remove('hide_table');
-                individualsTable.classList.remove('hide_table');
-                searchTeam.classList.add('hide_table');
-                teamTable.classList.add('hide_table');
-            }
-        });
-        });
-
-    </script> 
   </body>
 </html>
 
