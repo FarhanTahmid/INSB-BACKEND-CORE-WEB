@@ -4602,6 +4602,25 @@ def upload_task(request, task_id):
                     messages.warning(request,"Something went wrong while adding the comments!")
                 
                 return redirect('central_branch:upload_task',task_id)
+            
+            elif request.POST.get('save_marks'):
+
+                member_id = request.POST.get('member_id')
+                marks = request.POST.get('completed_points')
+
+                if Task_Assignation.update_marks(task,member_id,marks):
+                    messages.success(request,f"Member {member_id}'s mark Updated")
+                else:
+                    messages.warning(request,"Something went wrong while updating!")
+                return redirect('central_branch:upload_task',task_id)
+            
+            elif request.POST.get('finish_task'):
+                
+                if Task_Assignation.task_email_to_eb(task,logged_in_user):
+                    messages.success(request,"You task has been requested for reviewing!")
+                else:
+                    messages.warning(request,"Something went wrong while saving!")
+                return redirect('central_branch:upload_task',task_id)
 
         context = {
             'task':task,

@@ -696,12 +696,9 @@
                         <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
                         <div style="font-size: 20px;">
                             Marks:
-                            <input type="text" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
-                            <button type="submit" name = "save_marks" class="task-mark-save">
-                                <span class="shadow"></span>
-                                <span class="edge"></span>
-                                <span class="front text">Save</span>
-                            </button>
+                            <input type="text" name = "completed_points" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
+                            <input type="hidden" name="member_id" value="{{member}}"></input>
+                            <input type="submit" name = "save_marks" class="task-mark-save" style="border:5px solid black;">
                         </div>
                     </div>
 
@@ -809,7 +806,7 @@
                     <!--Submit btn-->
                     <div class="task-btn">
                         
-                        <input type="submit" class="finish-task-btn" name="add_comment" value = "Send Comment as Email" style="cursor: pointer;">
+                        <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer;">
                         <div style="    width: 60%;
                         height: 1px;
                         background-color: #333;"></div>

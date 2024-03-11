@@ -13,7 +13,9 @@ from django.utils import timezone
 from central_branch.renderData import Branch
 from pytz import timezone as tz
 from insb_port import settings
-import os,math
+import os
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
 class Task_Assignation:
     
@@ -771,9 +773,73 @@ class Task_Assignation:
         member_task = Member_Task_Point.objects.get(task=task, member=member_id)
         member_task.comments = comments
         member_task.save()
+
+        member = Members.objects.get(ieee_id = member_id)
+        email_to = []
+        email_to.append(member.email_nsu)
+        email_to.append(member.email_ieee)
+        email_to.append(member.email_personal)
+        email_from = settings.EMAIL_HOST_USER
+        subject = f"BAD WORK! DO IT AGAIN!"
+        message = f'''Greetings {member.name},
+It's such a shame to see you, not being able to handle a simple task. Two more days and if
+not corrected you're out! May the odds be never in your favour.
+
+From MD.Sakib Sami - the rising star
+
+XOXOXOX'''
+        email=EmailMultiAlternatives(subject,message,
+                            email_from,
+                            email_to
+                            )
+        email.send()
+
         return True
 
+    def update_marks(task,ieee_id,marks):
 
+        #This function will update the marks
+
+        member_task = Member_Task_Point.objects.get(task = task, member = ieee_id)
+        member_task.completion_points = marks
+        member_task.save()
+        return True
+    
+    def task_email_to_eb(task,logged_in_user):
+
+        #This function will send an email to the Eb who created this task once user finishes
+
+        username = task.task_created_by
+        email_to = []
+        try:
+            member = Members.objects.get(ieee_id = username)
+            email_to.append(member.email_nsu)
+            email_to.append(member.email_ieee)
+        except:
+            member = adminUsers.objects.get(username=username)
+            email_to.append(member.email)
+
+        email_from = settings.EMAIL_HOST_USER
+        subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
+        message = f'''Hello {username},
+You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
+
+Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
+dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
+in the task edit page.
+
+From MD.Sakib Sami - the rising star
+
+XOXOXOX'''
+        email=EmailMultiAlternatives(subject,message,
+                            email_from,
+                            email_to
+                            )
+        email.send()
+        return True
+        
+
+        
 
 
 
