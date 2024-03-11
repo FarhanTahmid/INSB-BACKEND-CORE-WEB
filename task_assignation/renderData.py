@@ -711,6 +711,9 @@ class Task_Assignation:
             member_task_list.append(files_uploaded)
             member_task_list.append(medias)
             member_task_list.append(task_points)
+            comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
+            print(comments)
+            member_task_list.append(comments)
 
 
             dic[member_obj] = member_task_list
@@ -764,7 +767,11 @@ class Task_Assignation:
         
         return is_late
 
-
+    def add_comments(task, member_id, comments):
+        member_task = Member_Task_Point.objects.get(task=task, member=member_id)
+        member_task.comments = comments
+        member_task.save()
+        return True
 
 
 

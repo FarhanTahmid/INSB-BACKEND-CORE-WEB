@@ -4526,11 +4526,13 @@ def upload_task(request, task_id):
     super_user_Access = Access_Render.system_administrator_superuser_access(user)
     staff_access = Access_Render.system_administrator_staffuser_access(user)
     this_is_users_task = False
+    comments = None
     #to check if this is users task
     try:
         logged_in_user = Members.objects.get(ieee_id = user)
         if logged_in_user in task.members.all():
             this_is_users_task = True
+            comments = Member_Task_Point.objects.get(task=task, member=str(logged_in_user.ieee_id)).comments
     except:
         pass
 
@@ -4562,7 +4564,7 @@ def upload_task(request, task_id):
         task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
 
         if request.method == 'POST':
-            
+
             if request.POST.get('save_task'):
 
                 file_upload = None
@@ -4583,13 +4585,22 @@ def upload_task(request, task_id):
                 if member_task_type.has_file_upload:
                     file_upload = request.FILES.getlist('document')
                 if member_task_type.has_media:
-                    media = request.FILES.getlist('images')
-              
+                    media = request.FILES.getlist('images')            
 
                 if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
                     messages.success(request,"Task Saved! Please finish it as soon as you can")
                 else:
                     messages.warning(request,"Something went wrong while saving the task!")
+                return redirect('central_branch:upload_task',task_id)
+            elif request.POST.get('add_comment'):
+                member_id = request.POST.get('comments_member')
+                comments = request.POST.get('comments_details')
+
+                if Task_Assignation.add_comments(task, member_id, comments):
+                    messages.success(request,f"Comments added for {member_id} successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while adding the comments!")
+                
                 return redirect('central_branch:upload_task',task_id)
 
         context = {
@@ -4606,7 +4617,7 @@ def upload_task(request, task_id):
             'staff_access':staff_access,
             'task_type_per_member':task_type_per_member,
             'media_url':settings.MEDIA_URL,
-
+            'comments':comments
         }
 
         return render(request,"task_page.html",context)
