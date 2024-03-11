@@ -4802,3 +4802,11 @@ def task_edit(request, task_id):
 
     return render(request,"create_task.html",context)
 
+class GetTaskCategoryPointsAjax(View):
+    def get(self,request):
+        task_category_name = request.GET.get('selectedTaskCategory')
+        try:
+            points = Task_Category.objects.get(name=task_category_name).points
+            return JsonResponse({'points':points})
+        except:
+            pass

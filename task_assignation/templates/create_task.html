@@ -654,7 +654,10 @@
                 <div class="category">
                     <label class="category_label">Task Category:</label>                    
 
-                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                    <select name="task_category" class="title-box" style="width: 130px;" id="task_category" required>
+                        {% if is_new_task %}
+                        <option value="" disabled selected style="display:none;">--Select Category--</option>
+                        {% endif %}
                         {% for task_category in task_categories %}
                         <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
                         {% endfor %}
@@ -662,7 +665,7 @@
                 </div>
                 {% endif %}
                 <div class="category">
-                    <div>Task Point: <span class="task_point">{{task.task_category.points}}</span></div>
+                    <div>Task Point: <span class="task_point" id="task_points">{{task.task_category.points}}</span></div>
                 </div>
 
 
@@ -807,6 +810,29 @@
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
+
+    <!--Ajax Function to override Form data with select option change-->
+    <script>
+        $(document).ready(function () {
+            $("#task_category").change(function () {
+                var selectedCategory = $(this).val();
+                // Make an AJAX request to retrieve data for the selected role
+                $.ajax({
+                    url: "{% url 'central_branch:get_task_category_points' %}",
+                    type: "GET",
+                    data: {'selectedTaskCategory': selectedCategory},
+                    success: function (data) {
+                        // Update other form fields based on the received data
+                        $("#task_points").text(data.points.toFixed(1));
+                        console.log(data.points)
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
     
     <script>
         // character count function
