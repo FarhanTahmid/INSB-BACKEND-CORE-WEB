@@ -4515,6 +4515,8 @@ def task_home(request):
 
     return render(request,"task_home.html",context)
 
+@login_required
+@member_login_permission
 def upload_task(request, task_id):
 
     task = Task.objects.get(id=task_id)
@@ -4558,7 +4560,6 @@ def upload_task(request, task_id):
             media_uploads = None
 
         task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
-        print(task_type_per_member)
 
         if request.method == 'POST':
             
@@ -4566,26 +4567,26 @@ def upload_task(request, task_id):
 
                 file_upload = None
                 media = None
+
                 if member_task_type.has_permission_paper:
                     permission_paper = request.POST.get('permission_paper')
-                    if permission_paper == None:
-                        permission_paper = permission_paper_loaded
+                    if permission_paper != None:
+                        permission_paper_loaded = permission_paper
                 if member_task_type.has_content:
                     content = request.POST.get('content_details')
-                    if content == None:
-                        content = content_loaded
+                    if content != None:
+                        content_loaded = content 
                 if member_task_type.has_drive_link:
                     drive_link = request.POST.get('content_drive')
-                    if drive_link == None:
-                        drive_link = drive_link_loaded
+                    if drive_link != None:
+                        drive_link_loaded = drive_link
                 if member_task_type.has_file_upload:
                     file_upload = request.FILES.getlist('document')
-                    print(file_upload)
                 if member_task_type.has_media:
                     media = request.FILES.getlist('images')
               
 
-                if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper,media,content,file_upload,drive_link):
+                if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
                     messages.success(request,"Task Saved! Please finish it as soon as you can")
                 else:
                     messages.warning(request,"Something went wrong while saving the task!")

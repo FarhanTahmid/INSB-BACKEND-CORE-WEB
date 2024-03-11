@@ -330,7 +330,27 @@ class Task_Assignation:
             task.members.add(*members)
 
             for member in Member_Task_Upload_Types.objects.filter(task=task):
-                if member.task_member not in task_types_per_member.items():
+                if str(member.task_member) not in task_types_per_member:
+                    if member.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for file in files:
+                            path = settings.MEDIA_ROOT+str(file.document)
+                            if os.path.isfile(path):
+                                os.remove(path)
+                            file.delete()
+                    if member.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for media_file in media_files:
+                            path = settings.MEDIA_ROOT+str(media_file.media)
+                            if os.path.isfile(path):
+                                os.remove(path)
+                            media_file.delete()
                     member.delete()
 
             #saving members task type as per needed
@@ -340,27 +360,58 @@ class Task_Assignation:
                 member_task_type.save()
                 message = ""
 
-                for i in task_ty:
-                    if i=="permission_paper":
-                        member_task_type.has_permission_paper = True
-                        member_task_type.save()
-                        message += "Permission Paper,"
-                    if i=="content":
-                        member_task_type.has_content = True
-                        member_task_type.save()
-                        message += "Content,"
-                    if i=="file_upload":
-                        member_task_type.has_file_upload = True
-                        member_task_type.save()
-                        message += "File Upload,"
-                    if i=="media":
-                        member_task_type.has_media = True
-                        member_task_type.save()
-                        message += "Media,"
-                    if i=="drive_link":
-                        member_task_type.has_drive_link = True
-                        member_task_type.save()
-                        message += "drive link"
+                if "permission_paper" in task_ty:
+                    member_task_type.has_permission_paper = True
+                    message += "Permission Paper,"
+                else:
+                    if member_task_type.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                    member_task_type.has_permission_paper = False
+
+                if "content" in task_ty:
+                    member_task_type.has_content = True
+                    message += "Content,"
+                else:
+                    if member_task_type.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                    member_task_type.has_content = False
+
+                if "drive_link" in task_ty:
+                    member_task_type.has_drive_link = True
+                    message += "Drive Link,"
+                else:
+                    if member_task_type.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                    member_task_type.has_drive_link = False
+
+                if "file_upload" in task_ty:
+                    member_task_type.has_file_upload = True
+                    message += "File Upload,"
+                else:
+                    if member_task_type.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
+                        for file in files:
+                            path = settings.MEDIA_ROOT+str(file.document)
+                            if os.path.isfile(path):
+                                os.remove(path)
+                            file.delete()
+                    member_task_type.has_file_upload = False
+
+                if "media" in task_ty:
+                    member_task_type.has_media = True
+                    message += "Media,"
+                else:
+                    if member_task_type.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
+                        for media_file in media_files:
+                            path = settings.MEDIA_ROOT+str(media_file.media)
+                            if os.path.isfile(path):
+                                os.remove(path)
+                            media_file.delete()
+                    member_task_type.has_media = False                     
+
+                member_task_type.save()
+
                 if message!="":
                     message+=f" were updated as task type by {request.user.username} to {memb.ieee_id}"
                     task_log_details.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log_details.update_task_number}"]= f'Task Name: {title}, {message}'
@@ -417,7 +468,31 @@ class Task_Assignation:
     def delete_task(task_id):
         ''' This function is used to delete a task. It takes a task_id as parameter '''
         
-        Task.objects.get(id=task_id).delete()
+        task = Task.objects.get(id=task_id)
+        Task_Drive_Link.objects.filter(task=task).delete()
+        Task_Content.objects.filter(task=task).delete()
+        Permission_Paper.objects.filter(task=task).delete()
+
+        files = Task_Document.objects.filter(task=task)
+        for file in files:
+            path = settings.MEDIA_ROOT+str(file.document)
+            if os.path.isfile(path):
+                os.remove(path)
+            file.delete()
+
+        media_files = Task_Media.objects.filter(task=task)
+        for media_file in media_files:
+            path = settings.MEDIA_ROOT+str(media_file.media)
+            if os.path.isfile(path):
+                os.remove(path)
+            media_file.delete()
+
+        Member_Task_Upload_Types.objects.filter(task=task).delete()
+        
+        Task_Log.objects.filter(task_number=task).delete()
+
+        task.delete()
+
         return True
 
     def add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description):
@@ -563,13 +638,13 @@ class Task_Assignation:
             except:
                 permission_paper_save = Permission_Paper.objects.create(task=task,permission_paper = permission_paper,uploaded_by = member.ieee_id)
                 permission_paper_save.save()
-        if len(media)!=0:
+        if media:
             medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
             for m in medias:
                 path = settings.MEDIA_ROOT+str(m.media)
                 if os.path.isfile(path):
                     os.remove(path)
-                    m.delete()
+                m.delete()
             for m in media:
                 media_save = Task_Media.objects.create(task=task,media = m,uploaded_by = member.ieee_id)
                 media_save.save()
@@ -581,13 +656,13 @@ class Task_Assignation:
             except:
                 content_save = Task_Content.objects.create(task=task, content = content,uploaded_by = member.ieee_id)
                 content_save.save()
-        if len(file_upload)!=0:
+        if file_upload:
             file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
             for file in file_upload_save:
                 path = settings.MEDIA_ROOT+str(file.document)
                 if os.path.isfile(path):
                     os.remove(path)
-                    file.delete()
+                file.delete()
             for file in file_upload:
                 file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
                 file_upload_save.save()
