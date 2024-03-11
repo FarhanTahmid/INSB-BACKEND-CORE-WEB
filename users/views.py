@@ -584,8 +584,15 @@ def my_tasks(request):
     #Get current logged in user
     user = request.user.username
     all_user_tasks = Task_Assignation.load_user_tasks(user)
-    print(all_user_tasks)
+    total_point = 0
+    try:
+        user = Members.objects.get(ieee_id = user)
+        total_point = user.completed_task_points
+    except:
+        user = adminUsers.objects.get(username=user)
+
     context = {
-        'all_tasks':all_user_tasks
+        'all_tasks':all_user_tasks,
+        'total_points':total_point
     }
     return render(request,"users/my_tasks.html",context)
