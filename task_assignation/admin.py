@@ -34,7 +34,7 @@ class Task_Log(admin.ModelAdmin):
 
 @admin.register(Member_Task_Point)
 class Member_Task_Point(admin.ModelAdmin):
-    list_display = ['member','task','completion_points','is_task_completed']
+    list_display = ['member','task','completion_points','is_task_completed','deducted_points_logs']
 
 @admin.register(Team_Task_Point)
 class Team_Task_Point(admin.ModelAdmin):
