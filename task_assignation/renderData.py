@@ -711,7 +711,8 @@ class Task_Assignation:
             member_task_list.append(files_uploaded)
             member_task_list.append(medias)
             member_task_list.append(task_points)
-            comments = Member_Task_Point.objects.get(task=task, member=str(member))
+            comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
+            print(comments)
             member_task_list.append(comments)
 
 

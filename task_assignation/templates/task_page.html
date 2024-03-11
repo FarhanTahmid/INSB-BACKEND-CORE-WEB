@@ -639,6 +639,14 @@
                     <div id="media-selected-images-container"></div>
                     <input type="hidden" name="selected_images" id="media-selected-images">
                     {% endif %}
+
+                    <label class="description_label">Comment</label>
+                        <div class="ckeditor">
+                            <div>
+                                <textarea class="form-control" type="text" id="comments" name="comments_details" disabled>{{comments|safe}}</textarea>
+                            </div>
+
+                        </div>
                     
                     <br><br>
                     
@@ -656,12 +664,22 @@
             {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
             
             <div class="form-wrapper">
+                <!--Messages-->
+                <div style="justify-content: center; text-align: center">
+                    {% if messages %} 
+                    {% for message in messages %}
+                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
+                    {% endfor %}
+                    <br />
+                    {% endif %}
+                </div>
                 <form>
                     <div class="tooltip-container">
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
                           <img src="/static/back-arrow.png" alt="Go back to session">
                         </a>
                         <span class="tooltip-text">Go back</span>
+                    </form>
             </div>
             
             {% for member,task_type  in task_type_per_member.items %}
@@ -719,7 +737,7 @@
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
                         <div>
-                            <textarea class="form-control" type="text" name="content_details_{{forloop.counter}}" disabled >{{task_type.3.content}}</textarea>
+                            <textarea class="form-control" type="text" name="content_details" disabled >{{task_type.3.content}}</textarea>
                         </div>
                             <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
                     </div>
@@ -780,7 +798,7 @@
                         <div class="ckeditor">
                             <div>
                                 <input type="hidden" name="comments_member" value="{{member}}"></input>
-                                <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details">{{task_type.6.comments|safe}}</textarea>
+                                <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details">{{task_type.7|safe}}</textarea>
                             </div>
                         
                         </div> 
@@ -822,7 +840,7 @@
           CKEDITOR.replace("content_details");
           CKEDITOR.replace("comments")
           {% for member,task_type  in task_type_per_member.items %}
-          CKEDITOR.replace("other_content_details_{{forloop.counter}}");
+          CKEDITOR.replace("comments_{{forloop.counter}}");
           {% endfor %}
           
         });
