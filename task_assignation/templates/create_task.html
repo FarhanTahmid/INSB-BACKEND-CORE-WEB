@@ -824,7 +824,6 @@
                     success: function (data) {
                         // Update other form fields based on the received data
                         $("#task_points").text(data.points.toFixed(1));
-                        console.log(data.points)
                     },
                     error: function (error) {
                         console.log("Error:", error);
