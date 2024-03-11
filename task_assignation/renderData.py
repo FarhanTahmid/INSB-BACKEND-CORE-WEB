@@ -13,7 +13,7 @@ from django.utils import timezone
 from central_branch.renderData import Branch
 from pytz import timezone as tz
 from insb_port import settings
-import os
+import os,math
 
 class Task_Assignation:
     
@@ -685,6 +685,7 @@ class Task_Assignation:
             member_task_list = []
             member_obj = Members.objects.get(ieee_id = str(member))
             task_upload_types = Member_Task_Upload_Types.objects.get(task=current_task, task_member=member)
+            task_points = Member_Task_Point.objects.get(task = current_task, member = str(member))
             member_task_list.append(task_upload_types)
             try:
                 permission_paper = Permission_Paper.objects.get(task=task,uploaded_by = str(member))
@@ -709,8 +710,10 @@ class Task_Assignation:
                 medias = None
             member_task_list.append(files_uploaded)
             member_task_list.append(medias)
+            member_task_list.append(task_points)
             comments = Member_Task_Point.objects.get(task=task, member=str(member))
             member_task_list.append(comments)
+
 
             dic[member_obj] = member_task_list
         
@@ -728,37 +731,38 @@ class Task_Assignation:
 
         '''This function will deduct point according the late duration'''
 
-        #1 week late = 20% marks dedcuted
-        #2 week late = 50% of previous mark
-        #more than 2 weeks no more marks deducted
+        #Marks will be decucted every day 5% of current score
 
         #getting all members of specific task
         all_members_of_task = Member_Task_Point.objects.filter(task=task)
         deadline_of_task = task.deadline
         current_date = datetime.now().replace(tzinfo=timezone.utc)
-        
-        # Calculate late duration in days
-        late_duration = (current_date - deadline_of_task).days
-        # Calculate late duration in days
-        late_duration = (current_date - deadline_of_task).days
         is_late = False
-        # Deduct points based on late duration
-        if late_duration == 7:
-            deduction_percentage = 0.2
-            is_late = True
-        elif late_duration == 14:
-            deduction_percentage = 0.5
-            is_late = True
-        else:
-            deduction_percentage = 0 
-
-        # Deduct points for each member
-        for member in all_members_of_task:
-            current_points = member.completion_points
-            deduction_amount = current_points * deduction_percentage
-            new_points = current_points - deduction_amount
-            member.completion_points = new_points
-            member.save()
+        # Calculate late duration in days
+        if current_date > deadline_of_task:
+            late_duration = (current_date - deadline_of_task).days
+            late_duration = abs(late_duration)
+            print(late_duration)
+            
+            # Deduct points everyday
+            if late_duration >0:
+                deduction_percentage = 0.05
+                is_late = True
+                # Deduct points for each member
+                for member in all_members_of_task:
+                    dic = member.deducted_points_logs
+                    search = f"{late_duration}_{member.member}"
+                    
+                    if search not in dic:
+                        current_points = member.completion_points
+                        #if marks is almost 0 then just return 
+                        if int(current_points) == 0:
+                            return is_late
+                        deduction_amount = current_points * deduction_percentage * late_duration
+                        new_points = current_points - deduction_amount
+                        member.completion_points = new_points
+                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"{deduction_amount}"
+                        member.save()
         
         return is_late
 

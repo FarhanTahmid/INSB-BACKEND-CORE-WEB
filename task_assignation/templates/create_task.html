@@ -124,7 +124,8 @@
         }
         .individuals-table, .team-table{
             border-radius: 4px;
-            max-height: 400px;
+            min-height: 400px;
+            max-height: 500px;
         }
         .box{
             padding: 2px 25px 0px 9px;
@@ -537,7 +538,7 @@
               
               {% if is_new_task %}
               <!--create task heading-->
-              <h4>Create task</h4>
+              <h4>Create Task</h4>
               {% else %}
               <h4>Task: {{task.title}}</h4>
               {% endif %}
@@ -595,20 +596,35 @@
 
             <form method="post">
             <!--delete and complete toggle btn-->
-            <div class="delete_complete_toggle">
-                {% if not is_new_task %}
-                {% if faculty_access or eb_access or super_user_access or staff_access%}
-                <button type="button" class="delete_task_btn">Delete</button>
-                <div style="display: flex;">
-                    <p class="complete_text">Mark as complete?</p>
-                    <label class="switch">
-                        <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
-                        <span class="slider round"></span>
-                    </label>
+                <div class="delete_complete_toggle">
+                    {% if not is_new_task %}
+                    {% if faculty_access or eb_access or super_user_access or staff_access%}
+                    <button type="button" class="delete_task_btn">Delete</button>
+                    <div style="display: flex; margin: 0 10px;">
+                        <p class="complete_text">Mark as complete?</p>
+                        <label class="switch">
+                            <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
+                            <span class="slider round"></span>
+                        </label>
+                        {% if is_late %}
+                        <p style="    color: red;
+                        margin-left: 20px;
+                        font-weight: 600;">LATEEEE</p>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="delete_complete_toggle">
+                        <div style="display: flex; margin: 0 10px;">
+                            {% if is_late %}
+                            <p style="    color: red;
+                            margin-right: 20px;
+                            font-weight: 600;">LATEEEE</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
                 </div>
-                {% endif %}
-                {% endif %}
-            </div>
 
                 {% csrf_token %}
 
@@ -636,7 +652,7 @@
                 <!--task category-->
                 {% if faculty_access or eb_access or  super_user_access or staff_access%}
                 <div class="category">
-                    <label class="category_label">Task category:</label>                    
+                    <label class="category_label">Task Category:</label>                    
 
                     <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
                         {% for task_category in task_categories %}
@@ -646,15 +662,15 @@
                 </div>
                 {% endif %}
                 <div class="category">
-                    <div>Task point: <span class="task_point">{{task.task_category.points}}</span></div>
+                    <div>Task Point: <span class="task_point">{{task.task_category.points}}</span></div>
                 </div>
 
 
                 <!--task description-->
-                <label class="description_label">Describe your task:</label>
+                <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
+                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     </div>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
@@ -662,7 +678,7 @@
                 {% if faculty_access or eb_access or  super_user_access or staff_access%}
                 <!--task type-->
                 <div class="task_type ">
-                    <label class="task_type_label">Select task type and individuals:</label>
+                    <label class="task_type_label">Select Task Type and Individuals:</label>
                     <div class="radio-btns">
                         <div class="radio-btns_content box">
                             {% if is_new_task %}
