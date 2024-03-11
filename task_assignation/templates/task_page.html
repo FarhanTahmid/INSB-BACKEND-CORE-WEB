@@ -668,7 +668,7 @@
                         <div style="font-size: 20px;">
                             Marks:
                             <input type="text" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
-                            <button type="submit" class="task-mark-save">
+                            <button type="submit" name = "save_marks" class="task-mark-save">
                                 <span class="shadow"></span>
                                 <span class="edge"></span>
                                 <span class="front text">Save</span>
@@ -802,7 +802,6 @@
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
-    
     <script>
         // character count function
         document.addEventListener("DOMContentLoaded", function () {
