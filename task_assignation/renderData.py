@@ -813,13 +813,13 @@ class Task_Assignation:
                         if new_points < 0:
                             member.completion_points = 0
                             member.save()
-                            member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{deduction_amount}"
+                            member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{deduction_amount}, delayed by {late_duration} days"
                             member.save()
                             continue
                         member.completion_points = new_points
                         #stores the decducted amount as values along with the date when it was deducted
                         #key value is late_duration number the and the member's id
-                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{deduction_amount}"
+                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{deduction_amount}, delayed by {late_duration} days"
                         member.save()
         
         return is_late
