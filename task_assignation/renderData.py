@@ -184,16 +184,13 @@ class Task_Assignation:
         task_log_details = Task_Log.objects.get(task_number = task)
         #formatting deadline
         deadline = datetime.strptime(deadline, '%Y-%m-%dT%H:%M')
-        #formatting current time
-        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
 
         if is_task_completed:
             task_flag = task.is_task_completed
             if task_flag == False:
                 task.is_task_completed = True
-                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"]=f"Task marked completed by {request.user.username}"
-                task_log_details.update_task_number+=1
-                task_log_details.save()
+                task_log_message = f"Task marked completed by {request.user.username}"
+                Task_Assignation.save_task_logs(task,task_log_message)
                 task.save()
                 #For each member in the selected members for the task
                 for member in task.members.all():
@@ -219,9 +216,8 @@ class Task_Assignation:
             if task_flag == False:
                 pass
             else:
-                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"]=f"Task marked undone by {request.user.username}"
-                task_log_details.update_task_number+=1
-                task_log_details.save()
+                task_log_message = f"Task marked undone by {request.user.username}"
+                Task_Assignation.save_task_logs(task,task_log_message)
                 task.save()
                 #For each member in the selected members for the task
                 for member in task.members.all():
@@ -265,22 +261,18 @@ class Task_Assignation:
 
         #making necessary updates in task log history
         if prev_title != title:
-            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"]=f"Task Title changed from {prev_title} to {title} by {request.user.username}"
-            task_log_details.update_task_number+=1
-            task_log_details.save()
+            task_log_message = f"Task Title changed from {prev_title} to {title} by {request.user.username}"
+            Task_Assignation.save_task_logs(task,task_log_message)
         if description_without_tags != prev_description:
-            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f"Task Description changed from {prev_description} to {description_without_tags} by {request.user.username}"
-            task_log_details.update_task_number+=1
-            task_log_details.save()
+            task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {request.user.username}"
+            Task_Assignation.save_task_logs(task,task_log_message)
         if new_task_category != prev_task_category:
-            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f"Task Category changed from {prev_task_category.name} to {task_category} by {request.user.username}"
-            task_log_details.update_task_number+=1
-            task_log_details.save()
+            task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {request.user.username}"
+            Task_Assignation.save_task_logs(task,task_log_message)
         #deadline saving not correct
         if prev_deadline != str(deadline):
-            task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
-            task_log_details.update_task_number+=1
-            task_log_details.save()
+            task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
+            Task_Assignation.save_task_logs(task,task_log_message)
 
         prev_task_type = task.task_type
 
@@ -312,9 +304,8 @@ class Task_Assignation:
             team_names = ", ".join(team_names)
             if changed:
                 #updating task_log details only if changed
-                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {team_names}'
-                task_log_details.update_task_number+=1
-                task_log_details.save()
+                task_log_message = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {team_names}'
+                Task_Assignation.save_task_logs(task,task_log_message)
 
         #Else if task_type is Individuals
         elif task_type == "Individuals":
@@ -417,9 +408,7 @@ class Task_Assignation:
 
                 if message!="":
                     message+=f" were updated as task type by {request.user.username} to {memb.ieee_id}"
-                    task_log_details.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log_details.update_task_number}"]= f'Task Name: {title}, {message}'
-                    task_log_details.update_task_number+=1
-                    task_log_details.save()
+                    Task_Assignation.save_task_logs(task,message)
 
             #getting members IEEE_ID
             members_ieee_id = []
@@ -429,9 +418,8 @@ class Task_Assignation:
             members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
             if changed:
                 #updating task_log details on if changed
-                task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {members_ieee_id}'
-                task_log_details.update_task_number+=1
-                task_log_details.save()
+                task_log_message = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {members_ieee_id}'
+                Task_Assignation.save_task_logs(task,task_log_message)
         
         #Save the task with the new changes
         task.save()
@@ -491,7 +479,6 @@ class Task_Assignation:
             media_file.delete()
 
         Member_Task_Upload_Types.objects.filter(task=task).delete()
-        
         Task_Log.objects.filter(task_number=task).delete()
 
         task.delete()
@@ -827,9 +814,6 @@ class Task_Assignation:
     def add_comments(task, member_id, comments):
 
         '''This function adds the comment to a particular members profile '''
-
-        #getting curretn time
-        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
 
         member_task = Member_Task_Point.objects.get(task=task, member=member_id)
         member_task.comments = comments
