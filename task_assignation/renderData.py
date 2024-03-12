@@ -71,9 +71,8 @@ class Task_Assignation:
                 team_names.append(name.team_name)
             team_names = ", ".join(team_names)
             #updating task_log details
-            task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]= f'Task Name: {title}, assigned to Teams: {team_names}'
-            task_log.update_task_number+=1
-            task_log.save()
+            task_log_message = f'Task Name: {title}, assigned to Teams: {team_names}'
+            Task_Assignation.save_task_logs(new_task,task_log_message)
 
             get_current_panel_members = None
             #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
@@ -147,9 +146,8 @@ class Task_Assignation:
                 #saving task log/ updating it
                 if message!="":
                     message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
-                    task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]= f'Task Name: {title}, {message}'
-                    task_log.update_task_number+=1
-                    task_log.save()
+                    task_log_message = f'Task Name: {title}, {message}'
+                    Task_Assignation.save_task_logs(new_task,task_log_message)
             
             #getting members IEEE_ID
             members_ieee_id = []
@@ -169,9 +167,8 @@ class Task_Assignation:
                 Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=points_for_members)
 
             #updating task log details
-            task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]=f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
-            task_log.update_task_number += 1
-            task_log.save()
+            task_log_message = f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
+            Task_Assignation.save_task_logs(new_task,task_log_message)
 
             return True
         
