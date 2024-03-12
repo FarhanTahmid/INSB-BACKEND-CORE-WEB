@@ -4739,7 +4739,12 @@ def task_edit(request, task_id):
     super_user_Access = Access_Render.system_administrator_superuser_access(user)
     staff_access = Access_Render.system_administrator_staffuser_access(user)
 
-    
+    my_task = False
+    if 'HTTP_REFERER' in request.META:
+        if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
+            my_task = True
+    else:
+        my_task = True
     
     if request.method == 'POST':
         if 'update_task' in request.POST:
@@ -4800,8 +4805,8 @@ def task_edit(request, task_id):
         'super_user_access':super_user_Access,
         'staff_access':staff_access,
         'logged_in_user':logged_in_user,
-        'is_late':late
-
+        'is_late':late,
+        'my_task':my_task
     }
 
     return render(request,"create_task.html",context)
