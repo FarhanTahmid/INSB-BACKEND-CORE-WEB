@@ -144,6 +144,7 @@ class Task_Assignation:
                         member_task_type.has_drive_link = True
                         member_task_type.save()
                         message += "drive link"
+                #saving task log/ updating it
                 if message!="":
                     message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
                     task_log.task_log_details[str(datetime.now().strftime('%I:%M:%S %p'))+f"_{task_log.update_task_number}"]= f'Task Name: {title}, {message}'
@@ -525,6 +526,7 @@ class Task_Assignation:
         return True
     
     def load_team_members_for_task_assignation(request, team_primary):
+
         '''This function loads all the team members whose positions are below the position of the requesting user, and also checks if the member is included in the current panel. Works for both admin and regular user'''
         
         team=Teams.objects.get(primary=team_primary)
@@ -622,64 +624,109 @@ class Task_Assignation:
             user = Members.objects.get(ieee_id = user)
         except:
             user = adminUsers.objects.get(username=user)
-            #TODO:set it to all after making changes
+            #TODO:set it to all after making team
             return Task.objects.filter(task_type = "Individuals")
-        #TODO:set to all instead of individuals
+        #TODO:set to all instead of individuals after making teams
         user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
         return user_tasks
     
     def save_task_uploads(task,member,permission_paper,media,content,file_upload,drive_link):
 
-        #This function saves the documents uploaded by the user
-
+        '''This function saves the documents uploaded by the user'''
+        
         if permission_paper!=None:
             try:
                 permission_paper_save = Permission_Paper.objects.get(task=task,uploaded_by = member.ieee_id)
                 permission_paper_save.permission_paper = permission_paper
                 permission_paper_save.save()
+                message = f'Task Name: {task.title}, permission paper category was updated by {member.ieee_id}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
+            #permission paper does not exist
             except:
                 permission_paper_save = Permission_Paper.objects.create(task=task,permission_paper = permission_paper,uploaded_by = member.ieee_id)
                 permission_paper_save.save()
+                message = f'Task Name: {task.title}, new permission paper category was saved by {member.ieee_id}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
         if media:
             medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
             for m in medias:
+                #deleting existing ones from datase base and file system
                 path = settings.MEDIA_ROOT+str(m.media)
                 if os.path.isfile(path):
                     os.remove(path)
+                message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
                 m.delete()
             for m in media:
+                #saving new one
                 media_save = Task_Media.objects.create(task=task,media = m,uploaded_by = member.ieee_id)
                 media_save.save()
+                message = f'Task Name: {task.title}, new media was uploaded by {member.ieee_id}, name = {media_save}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
         if content!=None:
             try:
                 content_save = Task_Content.objects.get(task=task,uploaded_by = member.ieee_id)
                 content_save.content = content
                 content_save.save()
+                #updating task_log details
+                message = f'Task Name: {task.title}, previous content was updated by {member.ieee_id}'
+                Task_Assignation.save_task_logs(task,message)
             except:
+                #content does not exist new one is created
                 content_save = Task_Content.objects.create(task=task, content = content,uploaded_by = member.ieee_id)
                 content_save.save()
+                message = f'Task Name: {task.title}, new content was saved by {member.ieee_id}'
+                Task_Assignation.save_task_logs(task,message)
         if file_upload:
             file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
             for file in file_upload_save:
+                #deleting existing ones from datase base and file system
                 path = settings.MEDIA_ROOT+str(file.document)
                 if os.path.isfile(path):
                     os.remove(path)
+                message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
                 file.delete()
             for file in file_upload:
                 file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
                 file_upload_save.save()
+                message = f'Task Name: {task.title}, new document was uploaded by = {member.ieee_id}, document name = {file}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
         if drive_link!=None:
             try:
                 drive_link_save = Task_Drive_Link.objects.get(task=task,uploaded_by = member.ieee_id)
                 drive_link_save.drive_link = drive_link
                 drive_link_save.save()
+                message = f'Task Name: {task.title}, previous drive link was updated by = {member.ieee_id}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
             except:
+                #cdrive link does not exist new one is created
                 drive_link_save = Task_Drive_Link.objects.create(task=task,drive_link = drive_link,uploaded_by = member.ieee_id)
                 drive_link_save.save()
+                message = f'Task Name: {task.title}, new drive link was saved by = {member.ieee_id}'
+                #updating task_log details
+                Task_Assignation.save_task_logs(task,message)
 
         return True
     
     def load_all_task_upload_type(task):
+
+        '''This function returns memers task list as dictionary where
+            key is member object and value of each key is a list'''
+        #0 index of list contains task_upload+type of that member
+        #1 index of list contains permission paper object of that member
+        #2 index of list contains drive link object of that member
+        #3 index of list contains files uploaded of that member
+        #4 index of list contains media uploaded
+        #5 index of list contains task points
+        #6 index contains the comments
 
         current_task = Task.objects.get(pk=task.pk)
         dic={}
@@ -723,7 +770,7 @@ class Task_Assignation:
         
     def add_task_category(task_name,task_point):
 
-        #This function adds the task name and points
+        #This function adds the task name and points to the database
 
         task_category = Task_Category.objects.create(name = task_name,points = task_point)
         task_category.save()
@@ -737,14 +784,16 @@ class Task_Assignation:
 
         #getting all members of specific task
         all_members_of_task = Member_Task_Point.objects.filter(task=task)
+        #getting the deadline
         deadline_of_task = task.deadline
+        #getting todays date
         current_date = datetime.now().replace(tzinfo=timezone.utc)
         is_late = False
+        string_current_Date = str(current_date.date())
         # Calculate late duration in days
         if current_date > deadline_of_task:
             late_duration = (current_date - deadline_of_task).days
             late_duration = abs(late_duration)
-            print(late_duration)
             
             # Deduct points everyday
             if late_duration >0:
@@ -758,21 +807,36 @@ class Task_Assignation:
                     if search not in dic:
                         current_points = member.completion_points
                         #if marks is almost 0 then just return 
-                        if int(current_points) == 0:
-                            return is_late
                         deduction_amount = current_points * deduction_percentage * late_duration
                         new_points = current_points - deduction_amount
+                        #if amount after subtraction is less than 0 then just store 0 and move on to next member
+                        if new_points < 0:
+                            member.completion_points = 0
+                            member.save()
+                            member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"{string_current_Date}_{deduction_amount}"
+                            member.save()
+                            continue
                         member.completion_points = new_points
-                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"{deduction_amount}"
+                        #stores the decducted amount as values along with the date when it was deducted
+                        #key value is late_duration number the and the member's id
+                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"{string_current_Date}_{deduction_amount}"
                         member.save()
         
         return is_late
 
     def add_comments(task, member_id, comments):
+
+        '''This function adds the comment to a particular members profile '''
+
+        #getting curretn time
+        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
+
         member_task = Member_Task_Point.objects.get(task=task, member=member_id)
         member_task.comments = comments
         member_task.save()
 
+        #sending email to the member whose task is this to remind them there is a comment from
+        #the member who assigned the task
         member = Members.objects.get(ieee_id = member_id)
         email_to = []
         email_to.append(member.email_nsu)
@@ -793,6 +857,10 @@ XOXOXOX'''
                             )
         email.send()
 
+        task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
+        #saving logs
+        Task_Assignation.save_task_logs(task,task_log_message)
+
         return True
 
     def update_marks(task,ieee_id,marks):
@@ -800,13 +868,21 @@ XOXOXOX'''
         #This function will update the marks
 
         member_task = Member_Task_Point.objects.get(task = task, member = ieee_id)
+        #saving old marks
+        previous_marks = member_task.completion_points
         member_task.completion_points = marks
         member_task.save()
+
+        task_log_message =  f'Task Name: {task.title}, marks updated for {ieee_id} from {previous_marks} to {member_task.completion_points}'
+        #updating logs
+        Task_Assignation.save_task_logs(task,task_log_message)
+
         return True
     
     def task_email_to_eb(task,logged_in_user):
 
-        #This function will send an email to the Eb who created this task once user finishes
+        #This function will send an email to the Eb who created this task once task assignee finishes and hits
+        #the complete button
 
         username = task.task_created_by
         email_to = []
@@ -825,7 +901,7 @@ You're requested task has been completed and is ready for review! The task is su
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
 dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
-in the task edit page.
+in the task edit page, if you think the entire task is completed.
 
 From MD.Sakib Sami - the rising star
 
@@ -835,6 +911,20 @@ XOXOXOX'''
                             email_to
                             )
         email.send()
+        task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
+        #setting message
+        Task_Assignation.save_task_logs(task,task_log_message)
+
         return True
+    def save_task_logs(task,message):
+
+        '''This function saves the task log whenever needed'''
         
-        
+        #getting current time
+        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
+        #getting the task log
+        task_log_details = Task_Log.objects.get(task_number = task)
+        #updating task_log details
+        task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = message
+        task_log_details.update_task_number+=1
+        task_log_details.save()
