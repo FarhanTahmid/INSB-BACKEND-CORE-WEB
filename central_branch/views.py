@@ -4608,7 +4608,7 @@ def upload_task(request, task_id):
                 member_id = request.POST.get('member_id')
                 marks = request.POST.get('completed_points')
                 #checking to see if mark provided is negative or not if so send error message
-                if int(marks)<0:
+                if float(marks)<0:
                     messages.warning(request,"Please provide 0 but not negative marks!")
                     return redirect('central_branch:upload_task',task_id)
                 
