@@ -253,12 +253,15 @@
                           <td><a href="{% url 'central_branch:task_edit' task.pk %}">{{task.title}}</a></td>
                           <td>{{task.deadline}}</td>
                           <td>{{task.task_category.points}}</td>
+                          {% if task.is_task_completed %}
                           <td>
-                            {% comment  %}
-                            give boolean field here
-                            {% endcomment %}
-                            <img src="/static/admin/img/icon-yes.svg" alt="{% if task.is_task_completed %} True {% else %} False {% endif %}" />
+                            <img src="/static/admin/img/icon-yes.svg" alt="True" />
                           </td>
+                          {% else %}
+                          <td>
+                            <img src="/static/admin/img/icon-no.svg" alt="False" />
+                          </td>
+                          {% endif %}
                       </tr>
                       {% endfor %}
                     </tbody>
