@@ -611,18 +611,22 @@
                             <span class="slider round"></span>
                         </label>
                         {% if is_late %}
+                        {% if not task.is_task_completed%}
                         <p style="    color: red;
                         margin-left: 20px;
                         font-weight: 600;">LATEEEE</p>
+                        {% endif %}
                         {% endif %}
                     </div>
                     {% else %}
                     <div class="delete_complete_toggle">
                         <div style="display: flex; margin: 0 10px;">
                             {% if is_late %}
+                            {% if not task.is_task_completed%}
                             <p style="    color: red;
                             margin-right: 20px;
                             font-weight: 600;">LATEEEE</p>
+                            {% endif %}
                             {% endif %}
                         </div>
                     </div>

@@ -197,7 +197,7 @@ class Task_Assignation:
                     member_points.save()
                     member.completed_task_points += member_points.completion_points
                     member.save()
-                return True
+
             else:
                 #Not sure what this else is for
                 task.is_task_completed = True
@@ -207,7 +207,7 @@ class Task_Assignation:
                     member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                     member_points.is_task_completed = True
                     member_points.save()
-                return True
+
         else:
             task_flag = task.is_task_completed
             if task_flag == False:
