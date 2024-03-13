@@ -665,14 +665,15 @@
             
             <div class="form-wrapper">
                 <!--Messages-->
-                <div style="justify-content: center; text-align: center">
-                    {% if messages %} 
-                    {% for message in messages %}
-                    <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}</h4>
-                    {% endfor %}
-                    <br />
-                    {% endif %}
+                <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
+                    <div id="messageBox" class="alert alert-success" role="alert">
+                        <span id="messageText"></span>
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 </div>
+                <!--Messages-->
                 <form>
                     <div class="tooltip-container">
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
@@ -684,27 +685,28 @@
             
             {% for member,task_type  in task_type_per_member.items %}
             <div class="form-wrapper">
-                <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <!-- task page heading-->
-                    <h4 style="margin-top: 25px;">Task Progess of</h4>
-                    <div style="    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 20px;">
-                        <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
-                        <div style="font-size: 20px;">
-                            Marks:
-                            <input type="text" name = "completed_points" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
-                            <input type="hidden" name="member_id" value="{{member}}"></input>
-                            <button type="submit" value = "save_marks" name = "save_marks" class="task-mark-save">
-                                <span class="shadow"></span>
-                                <span class="edge"></span>
-                                <span class="front text">Save</span>
-                            </button>
-                        </div>
+                <!-- task page heading-->
+                <h4 style="margin-top: 25px;">Task Progess of</h4>
+                <div style="    display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;">
+                <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
+                    <div style="font-size: 20px;">
+                        Marks:
+                        <input type="text" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
+                        <input type="hidden" id="member_id" name="member_id" value="{{member}}"></input>
+                        <input type="hidden" id="task_id" name="task_id" value="{{task.pk}}"></input>
+                        <button type="button" class="task-mark-save">
+                            <span class="shadow"></span>
+                            <span class="edge"></span>
+                            <span class="front text">Save</span>
+                        </button>
                     </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
 
 
                     <!-- Drive link -->
@@ -843,6 +845,51 @@
           CKEDITOR.replace("comments_{{forloop.counter}}");
           {% endfor %}
           
+        });
+    </script>
+
+    <!--Ajax Function to override Form data with select option change-->
+    <script>
+        $(document).ready(function () {
+            $(".task-mark-save").click(function () {
+                var points = $(this).siblings('input[name="completed_points"]');
+                var member_id = $(this).siblings('input[name="member_id"]').val();
+                var task_id = $(this).siblings('input[name="task_id"]').val();
+
+                // Make an AJAX request to retrieve data for the selected category
+                $.ajax({
+                    url: "{% url 'central_branch:save_mem_task_points' %}",
+                    type: "GET",
+                    data: {'task_id':task_id, 
+                            'completed_points': points.val(), 
+                            'member_id':member_id},
+                    success: function (response) {
+                        // Update other form fields based on the received data
+                        showMessage(response.message);
+                        points.val(response.points.toFixed(1))
+                        document.body.scrollTop = 0; // For Safari
+                        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
+
+        function showMessage(message) {
+            $('#messageText').text(message);
+            $('#messageContainer').show();
+        }
+
+        // Function to hide the message box
+        function hideMessage() {
+            $('#messageContainer').hide();
+        }
+        // Add event listener to close button
+        $('#messageBox .close').click(function() {
+        // Hide the message box when the close button is clicked
+        hideMessage();
         });
     </script>
   </body>

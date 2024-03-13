@@ -824,7 +824,7 @@
         $(document).ready(function () {
             $("#task_category").change(function () {
                 var selectedCategory = $(this).val();
-                // Make an AJAX request to retrieve data for the selected role
+                // Make an AJAX request to retrieve data for the selected category
                 $.ajax({
                     url: "{% url 'central_branch:get_task_category_points' %}",
                     type: "GET",

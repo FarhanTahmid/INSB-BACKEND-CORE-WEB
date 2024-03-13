@@ -836,7 +836,7 @@ XOXOXOX'''
                             email_from,
                             email_to
                             )
-        email.send()
+        #email.send()
 
         task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
         #saving logs

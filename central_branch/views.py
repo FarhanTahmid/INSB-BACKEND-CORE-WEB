@@ -4605,17 +4605,7 @@ def upload_task(request, task_id):
             
             elif request.POST.get('save_marks'):
 
-                member_id = request.POST.get('member_id')
-                marks = request.POST.get('completed_points')
-                #checking to see if mark provided is negative or not if so send error message
-                if float(marks)<0:
-                    messages.warning(request,"Please provide 0 but not negative marks!")
-                    return redirect('central_branch:upload_task',task_id)
                 
-                if Task_Assignation.update_marks(task,member_id,marks):
-                    messages.success(request,f"Member {member_id}'s mark Updated")
-                else:
-                    messages.warning(request,"Something went wrong while updating!")
                 return redirect('central_branch:upload_task',task_id)
             
             elif request.POST.get('finish_task'):
@@ -4819,3 +4809,21 @@ class GetTaskCategoryPointsAjax(View):
             return JsonResponse({'points':points})
         except:
             pass
+
+class SaveMemberTaskPointsAjax(View):
+    def get(self,request):
+        task_id = request.GET.get('task_id')
+        member_id = request.GET.get('member_id')
+        marks = request.GET.get('completed_points')
+
+        task = Task.objects.get(id=task_id)
+        #checking to see if mark provided is negative or not if so send error message
+        if float(marks)<0:
+            message = "Please provide 0 but not negative marks!"
+        
+        if Task_Assignation.update_marks(task,member_id,marks):
+            message = f"Member {member_id}'s mark updated to {marks}"
+        else:
+            message = "Something went wrong while updating!"
+
+        return JsonResponse({'points':round(float(marks),1),'message':message})
