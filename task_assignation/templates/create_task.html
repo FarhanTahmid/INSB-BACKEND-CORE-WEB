@@ -124,7 +124,8 @@
         }
         .individuals-table, .team-table{
             border-radius: 4px;
-            max-height: 186px;
+            min-height: 400px;
+            max-height: 500px;
         }
         .box{
             padding: 2px 25px 0px 9px;
@@ -199,30 +200,30 @@
         .view-task-btn{
             padding: 5px 15px;
             color: white;
-            background: #10609D;
+            background: #75D481;
             margin: 16px 4px 16px; 
             border-radius: 4px;
-            border: 2px solid #10609D;
+            border: 2px solid #75D481;
             transition: all ease-in-out .3s;
         }
         .view-task-btn:hover{
             background: white;
-            border-color: #10609D;
-            color: #10609D;
+            border-color: #75D481;
+            color: #75D481;
         }
         .add-members-task-btn{
             padding: 5px 15px;
             color: white;
-            background: #72C2D6;
+            background: #75D481;
             margin: 16px 4px 16px; 
             border-radius: 4px;
-            border: 2px solid #72C2D6;
+            border: 2px solid #75D481;
             transition: all ease-in-out .3s;
         }
         .add-members-task-btn:hover{
-            color: #72C2D6;
+            color: #75D481;
             background: white;
-            border-color: #72C2D6;
+            border-color: #75D481;
         }
         .hide_table{
             display: none;
@@ -238,6 +239,22 @@
         }
         .table-responsive{
             overflow-x: hidden;
+        }
+        @media screen and (max-width: 700px) {
+            .table-responsive{
+                overflow-x: scroll;
+                width: 500px;
+            }
+        }
+        @media screen and (max-width: 600px) {
+            .table-responsive{
+                width: 400px;
+            }
+        }
+        @media screen and (max-width: 450px) {
+            .table-responsive{
+                width: 350px;
+            }
         }
         .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar{
             width: 6px;
@@ -435,15 +452,61 @@
             .table-responsive{
                 overflow-x: auto;
             }    
-            .individuals-table, .team-table{
-                max-height: 259px;
-            }
         }
         @media screen and (max-width:340px) {
             .radio-btns{
                 grid-template-columns: 1fr;
             }
         }
+        .tooltip-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+      }
+
+      .image-button:hover + .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(10px); /* Adjust the distance from the link */
+      }
+
+      .tooltip-text {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        background-color: #333;
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      }
+
+      .image-button img {
+        width: 32px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 50%; /* Add rounded corners if desired */
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
+      .task_point{
+        color: #75D481;
+        font-size: 20px;
+        font-style: italic;
+        font-weight: 900;
+      }
+      .multiselect-dropdown{
+        width: 150px!important;
+      }
+      input[type=checkbox]{
+        height: 20px;
+        width: 20px;
+      }
     </style>
   </head>
   <body>
@@ -475,7 +538,7 @@
               
               {% if is_new_task %}
               <!--create task heading-->
-              <h4>Create task</h4>
+              <h4>Create Task</h4>
               {% else %}
               <h4>Task: {{task.title}}</h4>
               {% endif %}
@@ -489,13 +552,27 @@
                 <br>
                 {% endif %}
             </div>
-              
+              <!--Messages-->
+            <div class="tooltip-container">
+                {% if my_task %}
+                <a href="{% url 'users:my_tasks' %}" class="image-button">
+                {% else %}
+                <a href="{% url 'central_branch:task_home' %}" class="image-button">
+                {% endif %}
+                  <img src="/static/back-arrow.png" alt="Go back to session">
+                </a>
+                <span class="tooltip-text">Go back</span>
+              </div>
+  
+              <!--Messages-->
               {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
-                  <a href="#" class="view-task-btn">View Task</a>
-                  <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">Start Task</a>
+                  {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
+                  {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
+                  {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check {% else %}Start {% endif %}Task</a>
+                  {% endif %}
                 </div>
                 {% endif %}
 
@@ -523,18 +600,39 @@
 
             <form method="post">
             <!--delete and complete toggle btn-->
-            <div class="delete_complete_toggle">
-                {% if not is_new_task %}
-                <button type="button" class="delete_task_btn">Delete</button>
-                <div style="display: flex;">
-                    <p class="complete_text">Mark as complete?</p>
-                    <label class="switch">
-                        <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
-                        <span class="slider round"></span>
-                    </label>
+                <div class="delete_complete_toggle">
+                    {% if not is_new_task %}
+                    {% if faculty_access or eb_access or super_user_access or staff_access%}
+                    <button type="button" class="delete_task_btn">Delete</button>
+                    <div style="display: flex; margin: 0 10px;">
+                        <p class="complete_text">Mark as complete?</p>
+                        <label class="switch">
+                            <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
+                            <span class="slider round"></span>
+                        </label>
+                        {% if is_late %}
+                        {% if not task.is_task_completed%}
+                        <p style="    color: red;
+                        margin-left: 20px;
+                        font-weight: 600;">LATEEEE</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="delete_complete_toggle">
+                        <div style="display: flex; margin: 0 10px;">
+                            {% if is_late %}
+                            {% if not task.is_task_completed%}
+                            <p style="    color: red;
+                            margin-right: 20px;
+                            font-weight: 600;">LATEEEE</p>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
                 </div>
-                {% endif %}
-            </div>
 
                 {% csrf_token %}
 
@@ -542,7 +640,7 @@
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
                     <input
@@ -552,37 +650,46 @@
                         class="title-box"
                         style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
                         value="{{task.deadline|date:'Y-m-d H:i'}}"
-                        required />
+                        required
+                        {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %} />
                     </div>
                 </div>
                 <!-- <input class="title-box" type="text" placeholder="Title (eg: Get permission paper for venue)"> -->
                 
 
                 <!--task category-->
+                {% if faculty_access or eb_access or  super_user_access or staff_access%}
                 <div class="category">
-                    <label class="category_label">Task category:</label>                    
+                    <label class="category_label">Task Category:</label>                    
 
-                    <select name="task_category" id="btn01" class="title-box" style="width: 130px;">
+                    <select name="task_category" class="title-box" style="width: 130px;" id="task_category" required>
+                        {% if is_new_task %}
+                        <option value="" disabled selected style="display:none;">--Select Category--</option>
+                        {% endif %}
                         {% for task_category in task_categories %}
                         <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
                         {% endfor %}
                     </select>
                 </div>
+                {% endif %}
+                <div class="category">
+                    <div>Task Point: <span class="task_point" id="task_points">{{task.task_category.points}}</span></div>
+                </div>
 
 
                 <!--task description-->
-                <label class="description_label">Describe your task:</label>
+                <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
                     <div>
-                        <textarea placeholder="Describe yourself here..." class="form-control" type="text" name="task_description_details">{{task.description}}</textarea>
+                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     </div>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
-
+                {% if faculty_access or eb_access or  super_user_access or staff_access%}
                 <!--task type-->
                 <div class="task_type ">
-                    <label class="task_type_label">Select task type and individuals:</label>
+                    <label class="task_type_label">Select Task Type and Individuals:</label>
                     <div class="radio-btns">
                         <div class="radio-btns_content box">
                             {% if is_new_task %}
@@ -623,21 +730,31 @@
                 <div class="table-responsive individuals-table {% if task.task_type == "Team" %}hide_table{% endif %}">
                 {% endif %}
                 <table class="table box" id="individuals-table">
-                    <thead>
+                    <thead style="position: relative; z-index: 101;">
                     <tr>
                         <th>Name</th>
                         <th>Team</th>
                         <th>Position</th>
                         <th>Select</th>
+                        <th>Task Type</th>
                     </tr>
                     </thead>
                     <tbody>
-                        {% for member in all_members %}
+                        {% for member,types in all_members.items %}
                         <tr>
                             <td>{{member.name}}</td>
                             <td>{{member.team.team_name}}</td>
                             <td>{{member.position.role}}</td>
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
+                            <td>
+                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                                </select>
+                            </td>                
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -687,6 +804,7 @@
                     <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
                     {% endif %}
                 </div>
+                {% endif %}
             </form>
         </div>
     </div>
@@ -700,6 +818,28 @@
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
+
+    <!--Ajax Function to override Form data with select option change-->
+    <script>
+        $(document).ready(function () {
+            $("#task_category").change(function () {
+                var selectedCategory = $(this).val();
+                // Make an AJAX request to retrieve data for the selected category
+                $.ajax({
+                    url: "{% url 'central_branch:get_task_category_points' %}",
+                    type: "GET",
+                    data: {'selectedTaskCategory': selectedCategory},
+                    success: function (data) {
+                        // Update other form fields based on the received data
+                        $("#task_points").text(data.points.toFixed(1));
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
     
     <script>
         // character count function
@@ -917,6 +1057,226 @@
         modal.style.opacity = '0';
       }
     }
+    </script>
+    <script>
+        var style = document.createElement('style');
+style.setAttribute("id","multiselect_dropdown_styles");
+style.innerHTML = `
+.multiselect-dropdown{
+  display: inline-block;
+  padding: 2px 5px 0px 5px;
+  border-radius: 4px;
+  border: solid 1px #ced4da;
+  background-color: white;
+  position: relative;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right .75rem center;
+  background-size: 16px 12px;
+}
+.multiselect-dropdown span.optext, .multiselect-dropdown span.placeholder{
+  margin-right:0.5em; 
+  margin-bottom:2px;
+  padding:1px 0; 
+  border-radius: 4px; 
+  display:inline-block;
+}
+.multiselect-dropdown span.optext{
+  background-color:lightgray;
+  padding:1px 0.75em; 
+}
+.multiselect-dropdown span.optext .optdel {
+  float: right;
+  margin: 0 -6px 1px 5px;
+  font-size: 0.7em;
+  margin-top: 2px;
+  cursor: pointer;
+  color: #666;
+}
+.multiselect-dropdown span.optext .optdel:hover { color: #c66;}
+.multiselect-dropdown span.placeholder{
+  color:#ced4da;
+}
+.multiselect-dropdown-list-wrapper{
+  box-shadow: gray 0 3px 8px;
+  z-index: 100;
+  padding:2px;
+  border-radius: 4px;
+  border: solid 1px #ced4da;
+  display: none;
+  margin: -1px;
+  position: absolute;
+  top:0;
+  left: 0;
+  right: 0;
+  background: white;
+}
+.multiselect-dropdown-list-wrapper .multiselect-dropdown-search{
+  margin-bottom:5px;
+}
+.multiselect-dropdown-list{
+  padding:2px;
+  height: 15rem;
+  overflow-y:auto;
+  overflow-x: hidden;
+}
+.multiselect-dropdown-list::-webkit-scrollbar {
+  width: 6px;
+}
+.multiselect-dropdown-list::-webkit-scrollbar-thumb {
+  background-color: #bec4ca;
+  border-radius:3px;
+}
+
+.multiselect-dropdown-list div{
+  padding: 5px;
+}
+.multiselect-dropdown-list input{
+  height: 1.15em;
+  width: 1.15em;
+  margin-right: 0.35em;  
+}
+.multiselect-dropdown-list div.checked{
+}
+.multiselect-dropdown-list div:hover{
+  background-color: #ced4da;
+}
+.multiselect-dropdown span.maxselected {width:100%;}
+.multiselect-dropdown-all-selector {border-bottom:solid 1px #999;}
+`;
+document.head.appendChild(style);
+
+function MultiselectDropdown(options){
+  var config={
+    search:true,
+    height:'15rem',
+    placeholder:'Select task type',
+    txtSelected:'selected',
+    txtAll:'All',
+    txtRemove: 'Remove',
+    txtSearch:'search',
+    ...options
+  };
+  function newEl(tag,attrs){
+    var e=document.createElement(tag);
+    if(attrs!==undefined) Object.keys(attrs).forEach(k=>{
+      if(k==='class') { Array.isArray(attrs[k]) ? attrs[k].forEach(o=>o!==''?e.classList.add(o):0) : (attrs[k]!==''?e.classList.add(attrs[k]):0)}
+      else if(k==='style'){  
+        Object.keys(attrs[k]).forEach(ks=>{
+          e.style[ks]=attrs[k][ks];
+        });
+       }
+      else if(k==='text'){attrs[k]===''?e.innerHTML='&nbsp;':e.innerText=attrs[k]}
+      else e[k]=attrs[k];
+    });
+    return e;
+  }
+
+  
+  document.querySelectorAll("select[multiple]").forEach((el,k)=>{
+    
+    var div=newEl('div',{class:'multiselect-dropdown',style:{width:config.style?.width??el.clientWidth+'px',padding:config.style?.padding??''}});
+    el.style.display='none';
+    el.parentNode.insertBefore(div,el.nextSibling);
+    var listWrap=newEl('div',{class:'multiselect-dropdown-list-wrapper'});
+    var list=newEl('div',{class:'multiselect-dropdown-list',style:{height:config.height}});
+    var search=newEl('input',{class:['multiselect-dropdown-search'].concat([config.searchInput?.class??'form-control']),style:{width:'100%',display:el.attributes['multiselect-search']?.value==='true'?'block':'none'},placeholder:config.txtSearch});
+    listWrap.appendChild(search);
+    div.appendChild(listWrap);
+    listWrap.appendChild(list);
+
+    el.loadOptions=()=>{
+      list.innerHTML='';
+      
+      if(el.attributes['multiselect-select-all']?.value=='true'){
+        var op=newEl('div',{class:'multiselect-dropdown-all-selector'})
+        var ic=newEl('input',{type:'checkbox'});
+        op.appendChild(ic);
+        op.appendChild(newEl('label',{text:config.txtAll}));
+  
+        op.addEventListener('click',()=>{
+          op.classList.toggle('checked');
+          op.querySelector("input").checked=!op.querySelector("input").checked;
+          
+          var ch=op.querySelector("input").checked;
+          list.querySelectorAll(":scope > div:not(.multiselect-dropdown-all-selector)")
+            .forEach(i=>{if(i.style.display!=='none'){i.querySelector("input").checked=ch; i.optEl.selected=ch}});
+  
+          el.dispatchEvent(new Event('change'));
+        });
+        ic.addEventListener('click',(ev)=>{
+          ic.checked=!ic.checked;
+        });
+  
+        list.appendChild(op);
+      }
+
+      Array.from(el.options).map(o=>{
+        var op=newEl('div',{class:o.selected?'checked':'',optEl:o})
+        var ic=newEl('input',{type:'checkbox',checked:o.selected});
+        op.appendChild(ic);
+        op.appendChild(newEl('label',{text:o.text}));
+
+        op.addEventListener('click',()=>{
+          op.classList.toggle('checked');
+          op.querySelector("input").checked=!op.querySelector("input").checked;
+          op.optEl.selected=!!!op.optEl.selected;
+          el.dispatchEvent(new Event('change'));
+        });
+        ic.addEventListener('click',(ev)=>{
+          ic.checked=!ic.checked;
+        });
+        o.listitemEl=op;
+        list.appendChild(op);
+      });
+      div.listEl=listWrap;
+
+      div.refresh=()=>{
+        div.querySelectorAll('span.optext, span.placeholder').forEach(t=>div.removeChild(t));
+        var sels=Array.from(el.selectedOptions);
+        if(sels.length>(el.attributes['multiselect-max-items']?.value??5)){
+          div.appendChild(newEl('span',{class:['optext','maxselected'],text:sels.length+' '+config.txtSelected}));          
+        }
+        else{
+          sels.map(x=>{
+            var c=newEl('span',{class:'optext',text:x.text, srcOption: x});
+            if((el.attributes['multiselect-hide-x']?.value !== 'true'))
+              c.appendChild(newEl('span',{class:'optdel',text:'🗙',title:config.txtRemove, onclick:(ev)=>{c.srcOption.listitemEl.dispatchEvent(new Event('click'));div.refresh();ev.stopPropagation();}}));
+
+            div.appendChild(c);
+          });
+        }
+        if(0==el.selectedOptions.length) div.appendChild(newEl('span',{class:'placeholder',text:el.attributes['placeholder']?.value??config.placeholder}));
+      };
+      div.refresh();
+    }
+    el.loadOptions();
+    
+    search.addEventListener('input',()=>{
+      list.querySelectorAll(":scope div:not(.multiselect-dropdown-all-selector)").forEach(d=>{
+        var txt=d.querySelector("label").innerText.toUpperCase();
+        d.style.display=txt.includes(search.value.toUpperCase())?'block':'none';
+      });
+    });
+
+    div.addEventListener('click',()=>{
+      div.listEl.style.display='block';
+      search.focus();
+      search.select();
+    });
+    
+    document.addEventListener('click', function(event) {
+      if (!div.contains(event.target)) {
+        listWrap.style.display='none';
+        div.refresh();
+      }
+    });    
+  });
+}
+
+window.addEventListener('load',()=>{
+  MultiselectDropdown(window.MultiselectDropdownOptions);
+});
     </script>
   </body>
 </html>

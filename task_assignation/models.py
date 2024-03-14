@@ -6,7 +6,7 @@ from users.models import Members
 # Create your models here.
 class Task_Category(models.Model):
     name = models.TextField(null=False,blank=False)
-    points = models.IntegerField(null=False,blank=False)
+    points = models.FloatField(null=False,blank=False)
 
     class Meta:
         verbose_name="Task Category"
@@ -36,13 +36,29 @@ class Task(models.Model):
 
     class Meta:
         verbose_name="Task"
+        ordering = ['-deadline']
     
     def __str__(self) -> str:
         return str(self.pk)
     
+class Member_Task_Upload_Types(models.Model):
+    task_member = models.ForeignKey(Members, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    has_drive_link = models.BooleanField(null=False,blank=False,default=False)
+    has_file_upload = models.BooleanField(null=False,blank=False,default=False)
+    has_content = models.BooleanField(null=False,blank=False,default=False)
+    has_media = models.BooleanField(null=False,blank=False,default=False)
+    has_permission_paper = models.BooleanField(null=False,blank=False,default=False)
+
+    class Meta:
+        verbose_name="Member Task Upload Types"
+    def __str__(self) -> str:
+        return str(self.pk)
+
 class Task_Drive_Link(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     drive_link = models.URLField(null=True,blank=True)
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Drive Link"
@@ -53,16 +69,22 @@ class Task_Drive_Link(models.Model):
 class Task_Content(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     content = models.TextField(null=True,blank=True)
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Content"
 
     def __str__(self) -> str:
         return str(self.pk)
-
+class Permission_Paper(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    permission_paper = models.CharField(max_length=50,default = "")
+    uploaded_by = models.CharField(max_length = 50,default = "")
+    
 class Task_Document(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     document = models.FileField(null=True,blank=True,upload_to="Task_Assignation/Task_Documents/")
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Document"
@@ -73,6 +95,7 @@ class Task_Document(models.Model):
 class Task_Media(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     media = models.ImageField(upload_to='Task_Assignation/Task_Media_Images/',null=True,blank=True)
+    uploaded_by = models.CharField(max_length = 50,default = "")
 
     class Meta:
         verbose_name="Task Media"
@@ -91,3 +114,29 @@ class Task_Log(models.Model):
 
     def __str__(self) ->str:
         return self.task_number.title
+
+class Member_Task_Point(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    member = models.CharField(null=False,blank=False,max_length=15)
+    completion_points = models.FloatField(null=False,blank=False,default=0)
+    is_task_completed = models.BooleanField(null=False,blank=False,default=False)
+    deducted_points_logs = models.JSONField(default = dict)
+    comments = models.TextField(null=True,blank=True,default="")
+
+    class Meta:
+        verbose_name="Member Task Point"
+
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class Team_Task_Point(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    team = models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE)
+    completion_points = models.FloatField(null=False,blank=False,default=0)
+    is_task_completed = models.BooleanField(null=False,blank=False,default=False)
+
+    class Meta:
+        verbose_name="Team Task Point"
+
+    def __str__(self) -> str:
+        return str(self.pk)

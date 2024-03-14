@@ -1,6 +1,6 @@
-from users.models import Members
+from users.models import Members,MemberSkillSets
 from system_administration.models import adminUsers
-from port.models import Roles_and_Position,Teams
+from port.models import Roles_and_Position, SkillSetTypes,Teams
 import os
 from django.conf import settings
 from django.db import DatabaseError
@@ -465,6 +465,25 @@ def getMonthName(numb: int)->str:
     elif numb==12:
         return "December"
 
+def add_new_skill_type(request,skill_type):
+    try:
+        new_skill_type=SkillSetTypes.objects.create(skill_type=skill_type)
+        new_skill_type.save()
+        messages.success(request,"New Skillset type was added.")
+        return True
+    except Exception as e:
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        messages.error(request,"Something went wrong while adding new skill type")
+        return False
+
+def load_all_skill_types(request):
+    try:
+        all_skills=SkillSetTypes.objects.all()
+        return all_skills
+    except Exception as e:
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        messages.error(request,"Something went wrong while loading all skill type")
+        return False
 
     
 

@@ -208,7 +208,7 @@ class MDT_DATA:
         '''in here all the username = ieee_id '''
         faculty_advisor_access=Access_Render.faculty_advisor_access(username=username)
         eb_access=Access_Render.eb_access(username=username)
-        team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
+        # team_co_ordinator_access=Access_Render.team_co_ordinator_access(team_id=MDT_DATA.get_team_id(),username=username)
         custom_data_access=False
         try:
             try:
@@ -226,8 +226,8 @@ class MDT_DATA:
             return True
         elif(eb_access):
             return True
-        elif(team_co_ordinator_access):
-            return True
+        # elif(team_co_ordinator_access):
+        #     return True
         elif(custom_data_access):
             return True
         else:

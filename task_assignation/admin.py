@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media,Task_Log
+from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media,Task_Log,Member_Task_Point,Team_Task_Point,Member_Task_Upload_Types,Permission_Paper
 
 # Register your models here.
 @admin.register(Task_Category)
@@ -30,4 +30,23 @@ class Task_Media(admin.ModelAdmin):
 class Task_Log(admin.ModelAdmin):
     list_display=[
         'task_number','task_log_details','update_task_number'
+    ]
+
+@admin.register(Member_Task_Point)
+class Member_Task_Point(admin.ModelAdmin):
+    list_display = ['member','task','completion_points','is_task_completed','deducted_points_logs']
+
+@admin.register(Team_Task_Point)
+class Team_Task_Point(admin.ModelAdmin):
+    list_display = ['team','task','completion_points','is_task_completed']
+
+@admin.register(Member_Task_Upload_Types)
+class Member_Task_Upload_Types(admin.ModelAdmin):
+    list_display = [
+        'task_member','task','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper'
+    ]
+@admin.register(Permission_Paper)
+class Permission_Paper(admin.ModelAdmin):
+    list_display = [
+        'task','permission_paper'
     ]

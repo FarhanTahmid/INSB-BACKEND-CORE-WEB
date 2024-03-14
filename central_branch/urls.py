@@ -1,7 +1,7 @@
 import imp
 from django.urls import path,include
 from . import views
-from .views import UpdatePositionAjax,UpdateAwardAjax
+from .views import GetTaskCategoryPointsAjax, SaveMemberTaskPointsAjax, UpdatePositionAjax,UpdateAwardAjax
 from .views import UpdatePositionAjax,UpdateRestrictionAjax,AwardRanking
 
 app_name='central_branch'
@@ -132,5 +132,7 @@ urlpatterns = [
     path('task_home/',views.task_home,name="task_home"),
     path('task/<int:task_id>/upload_task/',views.upload_task,name="upload_task"),
     path('task/<int:task_id>/add_task/',views.add_task,name="add_task"),
-    path('task/<int:task_id>',views.task_edit,name="task_edit")
+    path('task/<int:task_id>',views.task_edit,name="task_edit"),
+    path('task/get_task_category_points',GetTaskCategoryPointsAjax.as_view(),name="get_task_category_points"),
+    path('task/save_mem_task_points',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points")
 ]
