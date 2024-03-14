@@ -37,6 +37,7 @@ class Members(models.Model):
     last_renewal_session=models.ForeignKey(Renewal_Sessions,null=True,blank=True,on_delete=models.CASCADE) #last renewal session    
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     is_blocked = models.BooleanField(null=False,blank=False,default=False)
+    completed_task_points = models.FloatField(null=False,blank=False,default=0)
 
     def save(self, *args, **kwargs):
 

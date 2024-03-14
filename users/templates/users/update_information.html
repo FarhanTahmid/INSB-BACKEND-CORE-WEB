@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Update Profile Information | IEEE NSU Student Branch</title>
+    <title>Update Profile | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
 
@@ -181,7 +181,7 @@
                         <h2 style="font-weight: 600;
                         text-align: center;
                         margin-bottom: 20px;
-                        text-transform: uppercase;">Update Information</h2>
+                        text-transform: uppercase;">Update Profile</h2>
                         <div style="text-align:center">
                             {% for message in messages %}
                             <p>{{message}}</p>
@@ -214,8 +214,8 @@
                                 <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                   
                                 <label for="address">Address</label>
                                 <input class="input" type="text" name="address" value="{{ user_data.home_address }}"><br>
-                                <label for="email_personal">Email</label>
-                                <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}" required><br>
+                                <label for="email_personal">Personal Email</label>
+                                <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}"><br>
                                 <label for="email_nsu">NSU Email</label>
                                 <input class="input" type="email" name="email_nsu" value="{{ user_data.email_nsu }}" required><br>
                                 <label for="contact_no">Contact</label>
