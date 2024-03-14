@@ -101,9 +101,18 @@ class Members(models.Model):
     
     def get_image_url(self):
         return self.user_profile_picture
-    
-    
 
+
+class MemberSkillSets(models.Model):
+    
+    '''This stores all the skill sets for Members'''
+    member=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    skills=models.ManyToManyField(SkillSetTypes,blank=True)
+    
+    class Meta:
+        verbose_name="Member Skill Sets"
+    def __str__(self) -> str:
+        return str(self.pk)
 
 '''This table will be used to get the data of the EX Panel Members of IEEE NSU SB '''
 

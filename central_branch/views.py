@@ -21,7 +21,8 @@ from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Grou
 from django.db import DatabaseError
 from central_branch.renderData import Branch
 from main_website.models import Research_Papers,Blog
-from users.models import Members,Panel_Members
+import users
+from users.models import MemberSkillSets, Members,Panel_Members
 from django.conf import settings
 from users.renderData import LoggedinUser
 import os
@@ -3634,6 +3635,10 @@ def insb_members_list(request):
         if request.method=="POST":
             if request.POST.get("site_register"):
                 return redirect('membership_development_team:site_registration')
+            if(request.POST.get('add_new_skill')):
+                skill_name=request.POST['skillset']
+                if(renderData.add_new_skill_type(request,skill_name)):
+                    return redirect('central_branch:members_list')
             
         members=Members.objects.all()
         totalNumber=Members.objects.all().count()
@@ -3642,6 +3647,9 @@ def insb_members_list(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
+        # load all skill types
+        get_all_skills=renderData.load_all_skill_types(request)
+                
         context={
             'is_branch':True,
             'user_data':user_data,
@@ -3650,7 +3658,8 @@ def insb_members_list(request):
             'totalNumber':totalNumber,
             'has_view_permission':has_view_permission,
             'user_data':user_data,
-            'is_MDT':False
+            'is_MDT':False,
+            'all_skills':get_all_skills,
         }
         
         return render(request,'INSB Members/members_list.html',context=context)
@@ -3674,6 +3683,11 @@ def member_details(request,ieee_id):
         
         member_data=renderData.MDT_DATA.get_member_data(ieee_id=ieee_id)
         try:
+            member_skills=MemberSkillSets.objects.get(member=member_data)
+        except:
+            member_skills=None
+
+        try:
             dob = datetime.strptime(str(
                 member_data.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
         except:
@@ -3685,17 +3699,21 @@ def member_details(request,ieee_id):
         renewal_session=Renewal_Sessions.objects.all().order_by('-id')
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
+        # load all skill types
+        all_skills=users.renderData.load_all_skill_types(request)
         
         context={
             'is_branch':True,
             'all_sc_ag':sc_ag,
             'member_data':member_data,
+            'member_skills':member_skills,
             'dob':dob,
             'sessions':sessions,
             'renewal_session':renewal_session,
             'media_url':settings.MEDIA_URL,
             'active_status':active_status,
             'user_data':user_data,
+            'all_skills':all_skills
         }
         if request.method=="POST":
             if request.POST.get('save_edit'):
