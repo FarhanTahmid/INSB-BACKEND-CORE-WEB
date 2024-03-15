@@ -713,12 +713,12 @@
                 <h4 style="margin-top: 25px;">Check Task Progress</h4>
 
                 <div class="name_tab">
-                    <li class="active_tab" onclick="showProgressOf1">Rahiq</li>
-                    <li onclick="showProgressOf1">Sakib</li>
-                    <li onclick="showProgressOf1">John Doe</li>
-                    <li onclick="showProgressOf1">Shakib Shahariar Junayed</li>
-                    <li onclick="showProgressOf1">Person 1</li>
-                    <li onclick="showProgressOf1">Person 2</li>
+                    <li class="tab active_tab" onclick="showProgressOf1">Rahiq</li>
+                    <li class="tab" onclick="showProgressOf1">Sakib</li>
+                    <li class="tab" onclick="showProgressOf1">John Doe</li>
+                    <li class="tab" onclick="showProgressOf1">Shakib Shahariar Junayed</li>
+                    <li class="tab" onclick="showProgressOf1">Person 1</li>
+                    <li class="tab" onclick="showProgressOf1">Person 2</li>
                 </div>
                 <div style="    display: flex;
                 flex-wrap: wrap;
@@ -923,6 +923,16 @@
         // Hide the message box when the close button is clicked
         hideMessage();
         });
+    </script>
+    <script>
+        let nameTabs = document.querySelectorAll('.tab');
+
+        nameTabs.forEach(nameTabs =>{
+        nameTabs.addEventListener('click', ()=> {
+            document.querySelector('.active_tab')?.classList.remove('active_tab');
+            nameTabs.classList.add('active_tab');
+        });
+    });
     </script>
   </body>
 </html>
