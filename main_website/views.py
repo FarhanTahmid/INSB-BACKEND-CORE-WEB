@@ -1582,7 +1582,7 @@ def join_insb(request):
         #loading all the teams of Branch
         branch_teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1)
         context={
-                'page_title':"Join INSB",
+                'page_title':"Join IEEE NSU SB",
                 'branch_teams':branch_teams,
             }
     
