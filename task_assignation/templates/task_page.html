@@ -499,6 +499,31 @@
     outline: none;
     }
 
+    .name_tab{
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        margin-bottom: 50px;
+        border: 1px solid rgba(0, 0, 0, 0.7);
+    }
+    .name_tab li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+        text-align: center;
+        border: 1px solid rgba(0, 0, 0, 0.7);
+        font-style: italic;
+        transition: all .2s ease-in-out;
+    }
+    .name_tab li:hover{
+        background: #002855ad;
+        color: white;
+    }
+    .active_tab{
+        background: #002855ad;
+        color: white;
+    }
     </style>
   </head>
   <body>
@@ -684,9 +709,17 @@
             </div>
             
             {% for member,task_type  in task_type_per_member.items %}
-            <div class="form-wrapper">
                 <!-- task page heading-->
-                <h4 style="margin-top: 25px;">Task Progess of</h4>
+                <h4 style="margin-top: 25px;">Check Task Progress</h4>
+
+                <div class="name_tab">
+                    <li class="active_tab" onclick="showProgressOf1">Rahiq</li>
+                    <li onclick="showProgressOf1">Sakib</li>
+                    <li onclick="showProgressOf1">John Doe</li>
+                    <li onclick="showProgressOf1">Shakib Shahariar Junayed</li>
+                    <li onclick="showProgressOf1">Person 1</li>
+                    <li onclick="showProgressOf1">Person 2</li>
+                </div>
                 <div style="    display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
@@ -820,7 +853,6 @@
                 </form> 
                 {% endfor %}
                 {% endif %}
-            </div>
         </div>
 
         
