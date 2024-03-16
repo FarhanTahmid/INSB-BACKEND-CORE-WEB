@@ -507,6 +507,68 @@
         height: 20px;
         width: 20px;
       }
+      .queue_btn{
+        color: #7575d4;
+        background-color: #75d48200;
+        display: inline;
+        padding: 10px;
+        margin: 3px;
+        border: 1px;
+        border-style: solid;
+        border-color: #7575d4;
+        border-radius: 4px;
+        transition-duration: 500ms;
+      }
+      .queue_btn:hover{
+        color: #ffffff;
+        background-color: #7575d4;
+        transition-duration: 500ms;
+        cursor: pointer;
+      }
+      .queue{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+        /* The Modal (background) */
+        .modals {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        padding-left: 200px;
+        }
+
+        /* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
     </style>
   </head>
   <body>
@@ -539,6 +601,26 @@
               {% if is_new_task %}
               <!--create task heading-->
               <h4>Create Task</h4>
+              <div class="queue">
+                <h6 class="queue_btn" onclick="createTaskModal()">How to create task</h6>
+                <h6 class="queue_btn" onclick="completeTaskModal()">How to complete task</h6>
+              </div>
+              <div id="createTaskModal" class="modals">
+                <div class="modal-content">
+                  <span class="close">&times;</span>
+                  <!-- Content for Create Task Modal -->
+                  <h3 style="display: flex; justify-content: center; align-items: center;">How to create a task</h3>
+                  <ul></ul>
+                </div>
+              </div>
+              <div id="completeTaskModal" class="modals">
+                <!-- Content for Complete Task Modal -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <!-- Content for Complete Task Modal -->
+                  <h3 style="display: flex; justify-content: center; align-items: center;">How to complete a task</h3>
+                </div>
+              </div>
               {% else %}
               <h4>Task: {{task.title}}</h4>
               {% endif %}
@@ -820,6 +902,34 @@
     {% endblock common_js %}
 
     <!--Ajax Function to override Form data with select option change-->
+    <script>
+        var modal1 = document.getElementById("createTaskModal");
+        var modal2 = document.getElementById("completeTaskModal");
+        var span = document.getElementsByClassName("close")[0];
+
+        function createTaskModal(){
+            modal1.style.display = "block";
+        }
+        function completeTaskModal(){
+            modal2.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal1.style.display = "none";
+            modal2.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal1 || event.target == modal2) {
+                modal1.style.display = "none";
+                modal2.style.display = "none";
+            }
+        }
+
+    </script>
+
     <script>
         $(document).ready(function () {
             $("#task_category").change(function () {
