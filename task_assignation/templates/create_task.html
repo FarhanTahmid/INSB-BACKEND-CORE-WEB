@@ -559,6 +559,7 @@
         .close {
         color: #aaaaaa;
         float: right;
+        margin-left: 97%;
         font-size: 28px;
         font-weight: bold;
         }
@@ -607,18 +608,31 @@
               </div>
               <div id="createTaskModal" class="modals">
                 <div class="modal-content">
-                  <span class="close">&times;</span>
+                  <span class="close1 close">&times;</span>
                   <!-- Content for Create Task Modal -->
                   <h3 style="display: flex; justify-content: center; align-items: center;">How to create a task</h3>
-                  <ul></ul>
+                  <ul style="font-size: 16px; padding-top: 10px;">
+                    <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                    <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                    <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                    <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                    <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                  </ul>
                 </div>
               </div>
               <div id="completeTaskModal" class="modals">
                 <!-- Content for Complete Task Modal -->
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close2 close">&times;</span>
                     <!-- Content for Complete Task Modal -->
                   <h3 style="display: flex; justify-content: center; align-items: center;">How to complete a task</h3>
+                  <ul style="font-size: 16px; padding-top: 10px;">
+                    <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                    <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                    <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                    <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                    <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                  </ul>
                 </div>
               </div>
               {% else %}
@@ -905,7 +919,8 @@
     <script>
         var modal1 = document.getElementById("createTaskModal");
         var modal2 = document.getElementById("completeTaskModal");
-        var span = document.getElementsByClassName("close")[0];
+        var span1 = document.getElementsByClassName("close1")[0];
+        var span2 = document.getElementsByClassName("close2")[0];
 
         function createTaskModal(){
             modal1.style.display = "block";
@@ -915,8 +930,12 @@
         }
 
         // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
+        span1.onclick = function() {
             modal1.style.display = "none";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span2.onclick = function() {
             modal2.style.display = "none";
         }
 
