@@ -3731,6 +3731,9 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
+
+                if date_of_birth == '':
+                    date_of_birth = None
                 
                 #checking if the recruitment and renewal session exists
                 try:
