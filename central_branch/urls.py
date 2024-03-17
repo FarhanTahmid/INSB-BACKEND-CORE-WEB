@@ -1,10 +1,9 @@
 import imp
 from django.urls import path,include
 from . import views
-from .views import UpdatePositionAjax,UpdateAwardAjax
+from .views import GetTaskCategoryPointsAjax, SaveMemberTaskPointsAjax, UpdatePositionAjax,UpdateAwardAjax
 from .views import UpdatePositionAjax,UpdateRestrictionAjax,AwardRanking
-from task_assignation.views import task_homepage
-from task_assignation.views import task_home
+
 app_name='central_branch'
 
 ##defining the urls to work with
@@ -127,7 +126,13 @@ urlpatterns = [
     path('generateExcelSheet_events_by_year/<int:year>',views.generateExcelSheet_events_by_year,name="generateExcelSheet_events_by_year"),
     path('members/user_access/',views.user_access,name="user_access"),
     path('update_restricted_members/',UpdateRestrictionAjax.as_view(),name="update_restricted_members"),
-    path('task_assignation/',task_homepage,name="task_homepage"),
-    path('task_home/',task_home,name="task_home"),
 
+    #task assignation urls
+    path('create_task/',views.create_task,name="create_task"),
+    path('task_home/',views.task_home,name="task_home"),
+    path('task/<int:task_id>/upload_task/',views.upload_task,name="upload_task"),
+    path('task/<int:task_id>/add_task/',views.add_task,name="add_task"),
+    path('task/<int:task_id>',views.task_edit,name="task_edit"),
+    path('task/get_task_category_points',GetTaskCategoryPointsAjax.as_view(),name="get_task_category_points"),
+    path('task/save_mem_task_points',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points")
 ]

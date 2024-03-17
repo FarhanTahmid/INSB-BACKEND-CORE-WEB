@@ -177,10 +177,13 @@
                     </div>
                     <br>
                     <div style="text-align: center;">
-                        <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success" style="margin-bottom:15px;">
                         {% if is_branch %}
+                        <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success" style="margin-bottom:15px;">
                         <a href="{% url 'central_branch:mega_events' %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
                         {% else %}
+                            {% if has_access_for_sc_ag_updates %}
+                            <input type="submit" value="Submit" name="Submit" class="btn btn-outline b-success text-success" style="margin-bottom:15px;">
+                            {% endif %}
                         <a href="{% url 'chapters_and_affinity_group:mega_events' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger" style="margin-bottom:15px;">Cancel</a>
                         {% endif %}
                     </div>
@@ -226,10 +229,19 @@
                     </div>
                     </div>
                 
+                    {% if is_branch %}
                     <!-- Cross button to trigger modal -->
                     <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal2" onclick="openModal('{{mega_event.banner_image}}')">
-                    &times; <!-- Use the "times" symbol (X) as a close icon -->
-                    </button>
+                        &times; <!-- Use the "times" symbol (X) as a close icon -->
+                        </button>
+                    {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <!-- Cross button to trigger modal -->
+                    <button type="button" class="cross-button" data-toggle="modal" data-target="#deleteModal2" onclick="openModal('{{mega_event.banner_image}}')">
+                        &times; <!-- Use the "times" symbol (X) as a close icon -->
+                        </button>
+                        {% endif %}
+                    {% endif %}
                 
                     <!-- Confirm Delete Modal -->
                     <div id="deleteModal2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

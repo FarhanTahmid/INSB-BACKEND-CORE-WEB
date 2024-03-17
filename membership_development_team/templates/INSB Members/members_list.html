@@ -263,14 +263,14 @@
         </div>
         {% if is_branch %}
         <div style="margin-left:5px;">
-          <a href="{% url 'central_branch:user_access' %}" class="btn btn-outline b-primary text-primary">Restrict Users</a>
+          <a href="{% url 'central_branch:user_access' %}" class="btn btn-outline b-danger text-danger">Restrict Users</a>
         </div>
-        {% endif %}
-
-        
-      
+        {% endif %}        
+        <div style="margin-left:5px;">
+          <button type="submit" class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-s" ui-toggle-class="bounce" ui-target="#animate">Add a new type of Skillset</button>
+        </div>
       </div>
-  </div>
+    </div>
     {% endif %}
 
 
@@ -348,6 +348,49 @@
   </div>
 
 </div>
+
+<!--Modal for adding member to team-->
+<div id="m-s-s" class="modal" data-backdrop="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title">Add new Skillset Type</h5>
+      </div>
+      <div class="modal-body p-lg">
+        <p>Do not add multiple Skillset of same type</p>
+        <p>Check the existing skillset list before you add new skills.</p>
+        <br>
+      </div>
+     
+      <!--Search table-->
+      <form method="POST">
+          {% csrf_token %}
+          
+          <div class="md-6 mx-auto form-group">
+            <label style="margin-left:15px;">Skillset Type</label>
+            <input type="text" name="skillset" placeholder="Skillset Name" required> </input>
+          </div>
+          
+          <div class="col-md-12">
+            {% if all_skills %}
+            <p style="margin-left:15px;">Existing Slillsets:</p>
+              {% for i in all_skills %}
+                <span style="display: inline-block; padding: 5px 10px; border-radius: 5px; background-color: #9E9290; color: #333;">{{ i.skill_type }}</span>
+              {% endfor %}
+          {% endif %}
+          </div>
+          
+          <div class="modal-footer">
+          <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+      
+              <input type="submit" class="btn primary p-x-md" name="add_new_skill" value="Add Skill"></input>  
+          </div>
+      </form>
+
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+<!--End of Modal-->
 
 <!-- ############ PAGE END-->
 

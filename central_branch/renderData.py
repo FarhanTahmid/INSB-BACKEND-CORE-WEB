@@ -1068,7 +1068,7 @@ class Branch:
     
     def load_insb_organised_events():
         
-        return Events.objects.filter(event_organiser=5).order_by('-event_date')
+        return Events.objects.filter(event_organiser=5).order_by('-start_date','-event_date')
     
 
     def delete_event(event_id):

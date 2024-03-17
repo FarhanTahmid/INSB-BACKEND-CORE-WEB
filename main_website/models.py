@@ -8,6 +8,8 @@ from users.models import Members
 from PIL import Image, ExifTags
 from io import BytesIO
 from django.core.files import File
+import os
+from django.forms import ValidationError
 # Create your models here.
     
 # Tables for Homepage
@@ -289,9 +291,18 @@ class IEEE_NSU_Student_Branch(models.Model):
         return str(self.pk)
     
 class Toolkit(models.Model):
+    def validate_file_extension(file):
+        extension=os.path.splitext(file.name)[1]
+        
+        valid_extension_list=['.ai']
+        if not extension in valid_extension_list:
+            raise ValidationError(u'Unsupported file extension. Please use .ai files only!')
+
     title=models.CharField(null=False,blank=False,max_length=100)
     picture=ResizedImageField(null=True,blank=True,upload_to='main_website_files/toolkit_pictures/')
+    ai_files=models.FileField(null=True,blank=True,upload_to='main_website_files/toolkit_ai_files/',validators=[validate_file_extension],verbose_name="Logo AI file")
     color_codes=RichTextField(null=True,blank=True,max_length=500)
+    
     
     class Meta:
         verbose_name="Toolkit"
