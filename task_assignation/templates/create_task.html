@@ -705,7 +705,8 @@
                 <!-- Modal content -->
                 <div class="modal-1-content">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #75D481; padding: 10px 20px; position: sticky; top: 0px;">
-                        <h5 style="color: #fefefe;">How to create task?</h5>
+                        <h5 style="color: #fefefe;    position: relative;
+                        top: 3px">How to create task?</h5>
                         <span class="close" style="color: white;">&times;</span>
                     </div>
                         <ol style="font-size: 16px;">
@@ -738,7 +739,8 @@
                     <!-- Modal content -->
                     <div class="modal-2-content">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #75D481; padding: 10px 20px; position: sticky; top: 0px;">
-                            <h5 style="color: #fefefe;">How to complete task?</h5>
+                            <h5 style="color: #fefefe;    position: relative;
+                            top: 3px">How to complete task?</h5>
                             <span class="close" style="color: white;">&times;</span>
                         </div>
                             <ol style="font-size: 16px;">
@@ -1313,7 +1315,7 @@
     </script>
 <script>
     // Get the modal
-    var modal = document.getElementById("modal1");
+    var modal1 = document.getElementById("modal1");
     var modal2 = document.getElementById("modal2");
     
     // Get the button that opens the modal
@@ -1326,15 +1328,13 @@
     
     // When the user clicks the button, open the modal 
     btn.onclick = function() {
-    //   modal.style.display = "block";
-    modal.style.transform = 'translateY(0px)';
-    modal.style.zIndex = '103100';
-    modal.style.opacity = '1';
+    modal1.style.transform = 'translateY(0px)';
+    modal1.style.zIndex = '103100';
+    modal1.style.opacity = '1';
     }
 
     // When the user clicks the button, open the modal 
     btn2.onclick = function() {
-    //   modal.style.display = "block";
     modal2.style.transform = 'translateY(0px)';
     modal2.style.zIndex = '103100';
     modal2.style.opacity = '1';
@@ -1342,9 +1342,9 @@
     
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
-    modal.style.transform = 'translateY(-50px)';
-    modal.style.zIndex = '-100';
-    modal.style.opacity = '0';
+    modal1.style.transform = 'translateY(-50px)';
+    modal1.style.zIndex = '-100';
+    modal1.style.opacity = '0';
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -1358,10 +1358,10 @@
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-      if (event.target == modal || event.target == modal2) {
-        modal.style.transform = 'translateY(-50px)';
-        modal.style.zIndex = '-100';
-        modal.style.opacity = '0';
+      if (event.target == modal1 || event.target == modal2) {
+        modal1.style.transform = 'translateY(-50px)';
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
         modal2.style.transform = 'translateY(-50px)';
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
