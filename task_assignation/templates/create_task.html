@@ -382,6 +382,21 @@
         position: sticky;
         top: -2px;
         }
+        /* The Modal (background) */
+        .modals {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-left: 200px;
+        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -402,6 +417,9 @@
                 width: 50%;
                 margin: auto;
             }
+            .modals {
+                padding-left: 0;
+            }
 
         }
         @media screen and (max-width: 750px){
@@ -419,6 +437,9 @@
             }
             .modal-content{
                 width: 90%;
+            }
+            .modals{
+                padding-left: 0px;
             }
         }
         @media screen and (max-width: 500px) {
@@ -451,11 +472,17 @@
             }
             .table-responsive{
                 overflow-x: auto;
-            }    
+            }   
+            .modals{
+                padding-left: 0px;
+            } 
         }
         @media screen and (max-width:340px) {
             .radio-btns{
                 grid-template-columns: 1fr;
+            }
+            .modals{
+                padding-left: 0px;
             }
         }
         .tooltip-container {
@@ -530,45 +557,30 @@
         justify-content: center;
         align-items: center;
       }
-        /* The Modal (background) */
-        .modals {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        padding-top: 100px; /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        padding-left: 200px;
-        }
 
         /* Modal Content */
         .modal-content {
-        background-color: #fefefe;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
         }
 
         /* The Close Button */
         .close {
-        color: #aaaaaa;
-        float: right;
-        margin-left: 97%;
-        font-size: 28px;
-        font-weight: bold;
+            color: #aaaaaa;
+            float: right;
+            margin-left: 97%;
+            font-size: 28px;
+            font-weight: bold;
         }
 
         .close:hover,
         .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
   </head>
