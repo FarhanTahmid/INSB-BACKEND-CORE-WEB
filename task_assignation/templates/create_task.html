@@ -257,16 +257,16 @@
                 width: 350px;
             }
         }
-        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar{
+        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar{
             width: 6px;
             height: 6px;
         }
-        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb{
+        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb{
             background-color: #e7eeef;
             transition: all .4s ease-in-out;
             border-radius: 4px;
         }
-        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover{
+        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover{
             background-color: rgb(169, 170, 170);
         }
         .switch {
@@ -353,11 +353,11 @@
         transform: translateY(-50px);
         overflow: auto;
         }
-       .create_modal{
+       .create_modal , .complete_modal{
          /* Hidden by default */
-        /* opacity: 0; */
+        opacity: 0;
         position: fixed; /* Stay in place */
-        z-index: 100000000;
+        z-index: -1;
         padding-top: 50px; /* Location of the box */
         left: 0;
         top: 0;
@@ -378,15 +378,17 @@
         border: 1px solid rgb(136, 136, 136);
         width: 40%;
         }
-        .modal-1-content{
+        .modal-1-content , .modal-2-content{
             background-color: #fefefe;
-            margin: auto 31%;
+            margin: auto;
             border: 1px solid rgb(136, 136, 136);
-            width: 50%;
-            height: 70vh;
+            max-width: 850px;
+            max-height: 70vh;
             overflow-y: scroll;
             border-radius: 6px;
             box-shadow: 2px 2px 5px 0px #80808054;
+            position: relative;
+            left: 100px;
         }
         /* The Close Button */
         .close {
@@ -552,6 +554,10 @@
             .task-queue{
                 max-height: 50%;
             }
+            .modal-1-content , .modal-2-content{
+                left: 0px;
+                margin: 10%;
+            }
         }
         @media screen and (max-width: 991px) {
             .modals {
@@ -635,6 +641,9 @@
             .image-button img {
                 width: 32px;
             }
+            .modal-1-content , .modal-2-content{
+                margin: 5%;
+            }
         }
         @media screen and (max-width:340px) {
             .radio-btns{
@@ -688,66 +697,51 @@
               <!--create task heading-->
               <h4>Create Task</h4>
               <div class="queue">
-                <button type="button" class="queue_btn">How to create task</button>
-                <h6 class="queue_btn" onclick="completeTaskModal()">How to complete task</h6>
+                <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>
+                <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
               </div>
-              <div id="createTaskModal" class="modals">
-                <div class="modal-queue">
-                  <span class="close1 closer">&times;</span>
-                  <!-- Content for Create Task Modal -->
-                  <h3 style="display: flex; justify-content: center; align-items: center;">HOW TO CREATE A TASK</h3>
-                  <div class="task-queue">
-                      <ul style="font-size: 16px; padding-top: 10px; max-height: 50%;">
-                        <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                        <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                        <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                        <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                        <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                        <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                        <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                        <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                        <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                        <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                        <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                        <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                        <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                        <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                        <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                        <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                        <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                        <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                        <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                        <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                      </ul>
-                  </div>
+            <!-- How to create a task modal -->
+            <div id="modal1" class="create_modal">
+                <!-- Modal content -->
+                <div class="modal-1-content">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #75D481; padding: 10px 20px; position: sticky; top: 0px;">
+                        <h5 style="color: #fefefe;">How to create task?</h5>
+                        <span class="close" style="color: white;">&times;</span>
+                    </div>
+                        <ol style="font-size: 16px;">
+                            <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                            <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                            <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                            <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                            <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                            <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                            <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                            <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                            <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                            <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                            <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                            <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                            <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                            <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                            <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                            <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                            <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                            <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                            <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                            <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                        </ol>
                 </div>
-              </div>
-
-                <!-- The Modal -->
-                <div id="modal1" class="create_modal">
+            </div>
+                <!-- How to complete a task modal -->
+                <div id="modal2" class="complete_modal">
 
                     <!-- Modal content -->
-                    <div class="modal-1-content">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #75D481; padding: 10px 20px; ">
-                            <h5 style="color: #fefefe;">How to create task?</h5>
+                    <div class="modal-2-content">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #75D481; padding: 10px 20px; position: sticky; top: 0px;">
+                            <h5 style="color: #fefefe;">How to complete task?</h5>
                             <span class="close" style="color: white;">&times;</span>
                         </div>
                             <ol style="font-size: 16px;">
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
                                 <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
                                 <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
                                 <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
@@ -1320,14 +1314,15 @@
 <script>
     // Get the modal
     var modal = document.getElementById("modal1");
+    var modal2 = document.getElementById("modal2");
     
     // Get the button that opens the modal
     var btn = document.querySelector(".create_task_modal_btn");
+    var btn2 = document.querySelector(".complete_task_modal_btn");
     
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
-
-    var cancel = document.getElementsByClassName('cancel_delete_task_btn')[0];
+    var span1 = document.getElementsByClassName("close")[1];
     
     // When the user clicks the button, open the modal 
     btn.onclick = function() {
@@ -1336,29 +1331,40 @@
     modal.style.zIndex = '103100';
     modal.style.opacity = '1';
     }
-    
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-    //   modal.style.display = "none";
-    modal.style.transform = 'translateY(-50px)';
-    modal.style.zIndex = '-100';
-    modal.style.opacity = '0';
+
+    // When the user clicks the button, open the modal 
+    btn2.onclick = function() {
+    //   modal.style.display = "block";
+    modal2.style.transform = 'translateY(0px)';
+    modal2.style.zIndex = '103100';
+    modal2.style.opacity = '1';
     }
     
     // When the user clicks on <span> (x), close the modal
-    cancel.onclick = function() {
-    //   modal.style.display = "none";
+    span.onclick = function() {
     modal.style.transform = 'translateY(-50px)';
     modal.style.zIndex = '-100';
     modal.style.opacity = '0';
     }
 
+    // When the user clicks on <span> (x), close the modal
+    span1.onclick = function() {
+    modal2.style.transform = 'translateY(-50px)';
+    modal2.style.zIndex = '-100';
+    modal2.style.opacity = '0';
+    }
+    
+
+
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-      if (event.target == modal) {
+      if (event.target == modal || event.target == modal2) {
         modal.style.transform = 'translateY(-50px)';
         modal.style.zIndex = '-100';
         modal.style.opacity = '0';
+        modal2.style.transform = 'translateY(-50px)';
+        modal2.style.zIndex = '-100';
+        modal2.style.opacity = '0';
       }
     }
     </script>
