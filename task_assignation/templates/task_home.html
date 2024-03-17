@@ -91,6 +91,7 @@
       margin: 16px 4px 16px;
       border-radius: 4px;
       border: 2px solid #75d481;
+      cursor: pointer;
       transition: all ease-in-out 0.3s;
     }
 
@@ -138,9 +139,9 @@
       </h2>
       {% if faculty_access or eb_access or  super_user_access or staff_access%}
       <div class="task-btn">
-        <a href="{% url 'central_branch:create_task' %}" class="create-task-btn">+ Create Task</a>
+        <a href="{% url 'central_branch:create_task' %}" class="create-task-btn">Create Task</a>
         
-        <button type="button" class="create-task-btn" data-toggle="modal" data-target="#TaskTypeModal" style="margin-bottom:15px;">+ Create Task Type</button>
+        <button type="button" class="create-task-btn" data-toggle="modal" data-target="#TaskTypeModal" style="margin-bottom:15px; cursor:pointer;">Create Task Type</button>
       </div>
       {% endif %}
       <!--Messages-->

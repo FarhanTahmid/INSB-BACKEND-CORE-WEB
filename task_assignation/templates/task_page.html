@@ -504,7 +504,6 @@
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         margin-bottom: 50px;
-        border: 1px solid rgba(0, 0, 0, 0.7);
     }
     .name_tab li {
         display: flex;
@@ -516,6 +515,7 @@
         font-style: italic;
         transition: all .2s ease-in-out;
         padding: 10px;
+        cursor: pointer;
     }
     .name_tab li:hover{
         background: #002855ad;
@@ -710,7 +710,7 @@
             </div>
             
             <!-- task page heading-->
-            <h4 style="margin-top: 25px;">Check Task Progress</h4>
+            <h4 style="margin-top: 25px;">Click to see their Task Progress</h4>
 
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}

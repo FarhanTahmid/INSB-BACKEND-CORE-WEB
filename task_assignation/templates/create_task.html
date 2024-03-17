@@ -69,6 +69,10 @@
             transition: .4s;
             box-shadow: 2px 2px 5px 0px #80808054;
             border: 2px solid white;
+            cursor: pointer;
+        }
+        .title-box option{
+            cursor: pointer;
         }
         .title-box:focus{
             border: 2px solid white;
@@ -178,6 +182,7 @@
             transition: all ease-in-out .3s;
             position: relative;
             bottom: 21px;
+            cursor: pointer;
         }
         .delete_task_btn:hover , .confirm_delete_task_btn:hover{
             color: white;
@@ -192,6 +197,7 @@
             border-radius: 4px;
             border: 2px solid #75D481;
             transition: all ease-in-out .3s;
+            cursor: pointer;
         }
         .create-task-btn:hover , .start-task-btn:hover{
             color: #75D481;
@@ -763,33 +769,38 @@
                   
                 </div>
                 {% endif %}
-                
                 <!--Messages-->
-              <div class="tooltip-container">
-                  {% if my_task %}
-                  <a href="{% url 'users:my_tasks' %}" class="image-button">
-                  {% else %}
-                  <a href="{% url 'central_branch:task_home' %}" class="image-button">
-                  {% endif %}
-                    <img src="/static/back-arrow.png" alt="Go back to session">
-                  </a>
-                  <span class="tooltip-text">Go back</span>
+                <div class="tooltip-container">
+                    {% if my_task %}
+                    <a href="{% url 'users:my_tasks' %}" class="image-button">
+                        {% else %}
+                        <a href="{% url 'central_branch:task_home' %}" class="image-button">
+                            {% endif %}
+                            <img src="/static/back-arrow.png" alt="Go back to session">
+                        </a>
+                        <span class="tooltip-text">Go back</span>
                 </div>
-
-
-            <!--delete and complete toggle btn-->
-                <div class="delete_complete_toggle">
-                    {% if not is_new_task %}
-                    {% if faculty_access or eb_access or super_user_access or staff_access%}
-                    <button type="button" class="delete_task_btn">Delete</button>
-                    <div style="display: flex; margin: 0 10px;">
-                        <p class="complete_text">Mark as complete?</p>
-                        <label class="switch">
-                            <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
-                            <span class="slider round"></span>
-                        </label>
-                        
+                    <!--create task btn-->
+                    <div style="text-align: center;">
+                        {% if is_new_task %}
+                        <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
+                        {% endif %}
                     </div>
+                    
+                    
+                    <!--delete and complete toggle btn-->
+                    <div class="delete_complete_toggle">
+                        {% if not is_new_task %}
+                        {% if faculty_access or eb_access or super_user_access or staff_access%}
+                        <button type="button" class="delete_task_btn">Delete</button>
+                        <div style="display: flex; margin: 0 10px;">
+                            <p class="complete_text">Mark as complete?</p>
+                            <label class="switch">
+                                <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
+                                <span class="slider round"></span>
+                            </label>
+                            
+                        </div>
                     {% else %}
 
                     </div>
@@ -964,12 +975,7 @@
                 </div>
 
 
-                <!--create task btn-->
-                <div style="text-align: center;">
-                    {% if is_new_task %}
-                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
-                    {% endif %}
-                </div>
+                
                 {% endif %}
             </form>
         </div>
