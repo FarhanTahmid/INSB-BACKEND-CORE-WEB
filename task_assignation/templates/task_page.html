@@ -709,18 +709,18 @@
                     </form>
             </div>
             
-            {% for member,task_type  in task_type_per_member.items %}
-                <!-- task page heading-->
-                <h4 style="margin-top: 25px;">Check Task Progress</h4>
+            <!-- task page heading-->
+            <h4 style="margin-top: 25px;">Check Task Progress</h4>
 
-                <div class="name_tab">
-                    <li class="tab active_tab" onclick="showProgressOf1">Rahiq</li>
-                    <li class="tab" onclick="showProgressOf1">Sakib</li>
-                    <li class="tab" onclick="showProgressOf1">John Doe</li>
-                    <li class="tab" onclick="showProgressOf1">Shakib Shahariar Junayed</li>
-                    <li class="tab" onclick="showProgressOf1">Person 1</li>
-                    <li class="tab" onclick="showProgressOf1">Person 2</li>
-                </div>
+            <div class="name_tab">
+                {% for member,task_type  in task_type_per_member.items %}
+                <li class="tab" onclick="showProgressOf">{{member.name}} - {{member.ieee_id}}</li>
+                {% endfor %}
+            </div>
+
+            {% for member,task_type  in task_type_per_member.items %}
+
+            <form method="POST" enctype="multipart/form-data" id="{{member.ieee_id}}">
                 <div style="    display: flex;
                 flex-wrap: wrap;
                 justify-content: space-between;
@@ -739,7 +739,6 @@
                         </button>
                     </div>
             </div>
-            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
 
@@ -846,10 +845,8 @@
                     <!--Submit btn-->
                     <div class="task-btn">
                         
-                        <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer;">
-                        <div style="    width: 60%;
-                        height: 1px;
-                        background-color: #333;"></div>
+                        <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer; margin-top: 40px;">
+                        <div style="width: 100%; height: 1px; background-color:#d3d3d3; margin: 25px 0 50px;"></div>
                     </div>
                 </form> 
                 {% endfor %}
