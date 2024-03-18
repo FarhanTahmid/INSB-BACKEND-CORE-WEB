@@ -508,6 +508,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         margin-bottom: 50px;
+        margin-top: 20px;
     }
     .name_tab li {
         display: flex;
@@ -567,22 +568,20 @@
                     {% endif %}
                 </div>
                 <form method="POST" enctype="multipart/form-data">
-                    <div class="tooltip-container" style="    left: 10%;
-                    margin-top: 40px;">
-                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                          <img src="/static/back-arrow.png" alt="Go back to session">
-                        </a>
-                        <span class="tooltip-text">Go back</span>
-                    </div>
                     {% csrf_token %}
                     <!-- task page heading-->
                     <h4>Finish Task</h4>
-                    <br>
                     <!--Submit btn-->
                     <div class="task-btn">
                         <!-- <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a> -->
                         <input type="submit" class="finish-task-btn" name="save_task" value="Save for later">
                         <input type="submit" class="finish-task-btn" name="finish_task" value="Task Completed">
+                    </div>
+                    <div class="tooltip-container" style="margin-top: 40px; margin-bottom: 20px;">
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                          <img src="/static/back-arrow.png" alt="Go back to session">
+                        </a>
+                        <span class="tooltip-text">Go back</span>
                     </div>
                     
                     <div style="font-size: 20px; font-weight: 500; font-style: italic;">
@@ -705,17 +704,17 @@
                     </div>
                 </div>
                 <!--Messages-->
+                
+                <!-- task page heading-->
+                <h4 style="margin-top: 25px;">Click to see their Task Progress</h4>
                 <form>
                     <div class="tooltip-container">
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
                           <img src="/static/back-arrow.png" alt="Go back to session">
                         </a>
                         <span class="tooltip-text">Go back</span>
-                    </form>
-            </div>
-            
-            <!-- task page heading-->
-            <h4 style="margin-top: 25px;">Click to see their Task Progress</h4>
+                    </div>
+                </form>
 
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}

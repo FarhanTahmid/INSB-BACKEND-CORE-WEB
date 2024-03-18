@@ -43,6 +43,7 @@
       white-space: normal;
       word-wrap: break-word;
       font-size: 16px;
+      height: 36px;
     }
 
     .btn_flex {
@@ -106,10 +107,7 @@
       justify-content: center;
       text-align: center;
     }
-    .modal-header{
-      display: flex;
-      justify-content: end;
-    }
+
     .title-box{
       padding: 6px 10px;
       border-radius: 3px;
@@ -145,6 +143,80 @@
     .modal-title{
       font-weight: bold;
     }
+    .modal-footer{
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .all_task_type_btn{
+        padding: 5px 15px;
+        color: white;
+        background: #00629b;
+        margin: 16px 4px 16px; 
+        border-radius: 4px;
+        border: 2px solid #00629b;
+        transition: all ease-in-out .3s;
+    }
+    .all_task_type_btn:hover{
+        background: white;
+        border-color: #00629b;
+        color: #00629b;
+    }
+    .delete_modal{
+         /* Hidden by default */
+        opacity: 0;
+        position: fixed; /* Stay in place */
+        z-index: -1;
+        padding-top: 50px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 150%;
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        transition: all .3s ease-in-out;
+        transform: translateY(-50px);
+        overflow: auto;
+        }
+         /* Modal Content */
+         .modal-content1 {
+        background-color: #fefefe;
+        margin: auto 45%;
+        padding: 20px;
+        border: 1px solid rgb(136, 136, 136);
+        width: 20%;
+        border-radius: 6px;
+        height: 70vh;
+        overflow-y: scroll;
+        }
+        .modal-content1::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .modal-content1::-webkit-scrollbar-thumb {
+            background-color: #e7eeef;
+            transition: all .4s ease-in-out;
+            border-radius: 4px;
+        }
+        .modal-content1::-webkit-scrollbar-thumb:hover{
+            background-color: rgb(169, 170, 170);
+        }
+        /* The Close Button */
+        .close {
+        color: #000;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
     @media screen and (max-width:1000px){
       .modal-dialog{
       left: 56px;
@@ -160,7 +232,24 @@
     .task_type{
       left: 0%;
     }
+    .modal-footer{
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: center;
+      flex-wrap: wrap;
     }
+    }
+    @media screen and (max-width: 1024px) {
+            .modal-content1{
+                width: 50%;
+                margin: auto;
+            }
+        }
+        @media screen and (max-width: 650px){
+            .modal-content1{
+                width: 90%;
+            }
+        }
   </style>
 </head>
 
@@ -292,7 +381,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <!-- <h5 class="modal-title" id="addModalLabel">Add Task Type</h5> -->
+                <h5 class="modal-title" id="addModalLabel">Add Task Type</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -300,17 +389,6 @@
             <div class="modal-body">
               <form method="POST">
                 {% csrf_token %}
-                <label for="task_type">See all task type</label>
-                <select name="task_type" class="title-box task_type">
-                  <option value="" disabled="" selected="" style="display:none;">--Taskname - Points--</option>
-                  {% for task_category in all_task_categories %}
-                  <option><li><p>{{ task_category.name }} - {{task_category.points }}
-                  </li></option>
-                  {% endfor %}
-                </select>             
-                 
-              <hr>
-              <h6 class="modal-title" id="addModalLabel" >Add Task Type</h6>
               <br>
                 <div class="add_tasktype">
                   <label for="label">Task Name:</label>
@@ -318,19 +396,43 @@
                   <label for="label">Points:</label>
                   <input type="number" id="label" class="title-box" name="task_point" required>
                 </div>
-              <div>
-            </div>
             </div>
             <div class="modal-footer">
-              <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_task_type" value="Add">
-              <button  class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
-
+              <div style="display: inline-block;">
+                <input type="submit" class="btn btn-outline-success txt-success buttons" name="add_task_type" value="Add">
+                <button  class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+            <div>
+              <button  class="all_task_type_btn">Click to see all task type</button>
             </div>
-          </form>
+            </div>
         </div>
     </div>
   </div>
 
+  <!-- All task type modal -->
+  <div id="myModal" class="delete_modal">
+
+    <!-- Modal content -->
+    <div class="modal-content1">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+            <h5 style="font-weight: bold;">All task types</h5>
+            <span class="close">&times;</span>
+        </div>
+        <ol style="padding: 0 18px;">
+          {% for task_category in all_task_categories %}
+          <li><p>
+            {{ task_category.name }} - {{task_category.points }} Points
+          </p></li>
+          {% endfor %}
+        </ol>
+        <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; margin-top: 20px;">
+            <a href="#" class="btn btn-outline-danger cancel_view_btn">Cancel</a>
+    </div>
+    </div>
+
+</div>
 
   <!-- build:js scripts/app.html.js -->
   <!-- jQuery -->
@@ -546,6 +648,51 @@
       });
     });
   </script>
+  <script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    
+    // Get the button that opens the modal
+    var btn = document.querySelector(".all_task_type_btn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[1];
+
+    var cancel = document.getElementsByClassName('cancel_view_btn')[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+    //   modal.style.display = "block";
+    modal.style.transform = 'translateY(0px)';
+    modal.style.zIndex = '103100';
+    modal.style.opacity = '1';
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+    //   modal.style.display = "none";
+    modal.style.transform = 'translateY(-50px)';
+    modal.style.zIndex = '-100';
+    modal.style.opacity = '0';
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    cancel.onclick = function() {
+    //   modal.style.display = "none";
+    modal.style.transform = 'translateY(-50px)';
+    modal.style.zIndex = '-100';
+    modal.style.opacity = '0';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.transform = 'translateY(-50px)';
+        modal.style.zIndex = '-100';
+        modal.style.opacity = '0';
+      }
+    }
+    </script>
   <!-- endbuild -->
 </body>
 
