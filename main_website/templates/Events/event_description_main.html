@@ -569,10 +569,12 @@
                                         <!--READ MORE LINK-->
                                         <h6 class="adjust_placement"><a href="{{event.more_info_link}}" class="read_more_btn">Read More</a></h6>
                                     </div>
+                                    {% if event.form_link %}
                                     <div class="register">
                                         <!--Registration button-->
                                         <a href="{{event.form_link}}" class="register_btn">REGISTER</a>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 <div class="box">
                                     <!--Share event box-->
