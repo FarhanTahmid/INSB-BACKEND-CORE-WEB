@@ -311,6 +311,10 @@ class Task_Assignation:
             for member in member_select:
                 #Get member reference and store it in volunteer
                 volunteer = Members.objects.get(ieee_id=member)
+                mem_task_points, created =  Member_Task_Point.objects.get_or_create(task=task,member=volunteer.ieee_id)
+                mem_task_points.completion_points = task.task_category.points/len(member_select)
+                mem_task_points.save()
+
                 #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
                 ##
@@ -319,6 +323,11 @@ class Task_Assignation:
 
             #Add those members to task
             task.members.add(*members)
+
+            task_members = task.members.all()
+            for member in Member_Task_Point.objects.filter(task=task):
+                if Members.objects.get(ieee_id=member.member) not in task_members:
+                    member.delete()
 
             for member in Member_Task_Upload_Types.objects.filter(task=task):
                 if str(member.task_member) not in task_types_per_member:
