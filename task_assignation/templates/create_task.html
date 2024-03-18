@@ -247,32 +247,16 @@
         .table-responsive{
             overflow-x: hidden;
         }
-        @media screen and (max-width: 700px) {
-            .table-responsive{
-                overflow-x: scroll;
-                width: 500px;
-            }
-        }
-        @media screen and (max-width: 600px) {
-            .table-responsive{
-                width: 400px;
-            }
-        }
-        @media screen and (max-width: 450px) {
-            .table-responsive{
-                width: 350px;
-            }
-        }
-        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar{
+        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar{
             width: 6px;
             height: 6px;
         }
-        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb{
+        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb{
             background-color: #e7eeef;
             transition: all .4s ease-in-out;
             border-radius: 4px;
         }
-        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover{
+        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover{
             background-color: rgb(169, 170, 170);
         }
         .switch {
@@ -333,58 +317,75 @@
         .slider.round:before {
         border-radius: 50%;
         }
+
         .delete_complete_toggle{
             display: flex;
             justify-content: space-between;
             margin-top: 18px;
         }
+
         .complete_text{
             margin-right: 8px;
             font-weight: 600;
             color: #000000a2;
         }
+
        .delete_modal{
-         /* Hidden by default */
         opacity: 0;
-        position: fixed; /* Stay in place */
+        position: fixed;
         z-index: -1;
-        padding-top: 50px; /* Location of the box */
+        padding-top: 50px; 
         left: 0;
         top: 0;
         width: 100%;
         height: 150%;
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
         transition: all .3s ease-in-out;
         transform: translateY(-50px);
         overflow: auto;
         }
-       .create_modal , .complete_modal{
-         /* Hidden by default */
+
+       .create_modal , .complete_modal , .distribute_modal{
         opacity: 0;
-        position: fixed; /* Stay in place */
+        position: fixed;
         z-index: -1;
-        padding-top: 50px; /* Location of the box */
+        padding-top: 50px;
         left: 0;
         top: 0;
         width: 100%;
         height: 120%;
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
         transition: all .3s ease-in-out;
         transform: translateY(-20px);
         overflow: auto;
         }
-
-        /* Modal Content */
-        .modal-content {
-        background-color: #fefefe;
-        margin: auto 35%;
-        padding: 20px;
-        border: 1px solid rgb(136, 136, 136);
-        width: 40%;
+        @media screen and (max-width: 700px) {
+            .table-responsive{
+                overflow-x: scroll;
+                width: 500px;
+            }
         }
-        .modal-1-content , .modal-2-content{
+        @media screen and (max-width: 600px) {
+            .table-responsive{
+                width: 400px;
+            }
+        }
+        @media screen and (max-width: 450px) {
+            .table-responsive{
+                width: 350px;
+            }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto 35%;
+            padding: 20px;
+            border: 1px solid rgb(136, 136, 136);
+            width: 40%;
+        }
+        .modal-1-content , .modal-2-content , .modal-3-content{
             background-color: #fefefe;
             margin: auto;
             border: 1px solid rgb(136, 136, 136);
@@ -396,74 +397,53 @@
             position: relative;
             left: 100px;
         }
-        /* The Close Button */
-        .close {
-        color: #000;
-        font-size: 28px;
-        font-weight: bold;
-        display: flex;
-        justify-content: flex-end;
+
+        .close , .close1 , .close2 , .close3{
+            color: #000;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            justify-content: flex-end;
         }
 
         .close:hover,
-        .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
+        .close:focus,
+        .close1:hover,
+        .close1:focus,
+        .close2:hover,
+        .close2:focus,
+        .close3:hover,
+        .close3:focus{
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .table-responsive thead th {
-        position: sticky;
-        top: -2px;
+            position: sticky;
+            top: -2px;
         }
-        /* The Modal (background) */
-        .modals {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 100px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-            padding-left: 200px;
-        }
-        /* Modal Content */
-        .modal-queue {
-            background-color: #fefefe;
-            margin: auto;
-            border-radius: 4px;
-            padding: 20px;
-            width: 60%;
-            max-height: 85%;
-        }
-        .task-queue{
-            max-height: 50%;
-            overflow-y: auto;
-        }
+
         .late_text{
             float: right;
             position: relative;
             top: 3px;
         }
         .tooltip-container {
-        position: relative;
-        display: inline-block;
-        margin-bottom: 5px;
-      }
+            position: relative;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
 
       .tooltip-container.right {
-        float: right; /* Float the container to the right */
-        margin-right: 0; /* Reset the margin for the right-aligned button */
+        float: right;
+        margin-right: 0;
       }
 
       .image-button:hover + .tooltip-text {
         opacity: 1;
         visibility: visible;
-        transform: translateX(10px); /* Adjust the distance from the link */
+        transform: translateX(10px);
       }
 
       .tooltip-text {
@@ -522,21 +502,6 @@
         justify-content: center;
         align-items: center;
       }
-
-        /* The Close Button */
-        .closer {
-            color: #aaaaaa;
-            margin-left: 97%;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .closer:hover,
-        .closer:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -560,14 +525,9 @@
             .task-queue{
                 max-height: 50%;
             }
-            .modal-1-content , .modal-2-content{
+            .modal-1-content , .modal-2-content , .modal-3-content{
                 left: 0px;
                 margin: 10%;
-            }
-        }
-        @media screen and (max-width: 991px) {
-            .modals {
-                padding-left: 0;
             }
         }
         @media screen and (max-width: 750px){
@@ -584,16 +544,6 @@
                 margin-bottom: -20px;
             }
             .modal-content{
-                width: 90%;
-            }
-            .modals{
-                padding-top: 170px;
-                padding-left: 0px;
-            }
-            .task-queue{
-                max-height: 50%;
-            }
-            .modal-queue {
                 width: 90%;
             }
             .category{
@@ -631,39 +581,19 @@
             .table-responsive{
                 overflow-x: auto;
             }   
-            .modals{
-                padding-top: 170px;
-                padding-left: 0px;
-            } 
-            .task-queue{
-                max-height: 50%;
-            }
-            .modal-queue {
-                width: 90%;
-            }
             .late_text{
                 float: left;
             }
             .image-button img {
                 width: 32px;
             }
-            .modal-1-content , .modal-2-content{
+            .modal-1-content , .modal-2-content , .modal-3-content{
                 margin: 5%;
             }
         }
         @media screen and (max-width:340px) {
             .radio-btns{
                 grid-template-columns: 1fr;
-            }
-            .modals{
-                padding-top: 170px;
-                padding-left: 0px;
-            }
-            .task-queue{
-                max-height: 50%;
-            }
-            .modal-queue {
-                width: 90%;
             }
             .table-responsive{
                 width: 290px;
@@ -705,6 +635,7 @@
               <div class="queue">
                 <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>
                 <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                <button type="button" class="queue_btn distribute_task_modal_btn">How to distribute a task</button>
               </div>
                 <!-- How to create a task modal -->
                 <div id="modal1" class="create_modal">
@@ -713,7 +644,7 @@
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
                             <h5 style="color: #fff;    position: relative;
                             top: 3px">How to create task?</h5>
-                            <span class="close" style="color: white;">&times;</span>
+                            <span class="close1" style="color: white;">&times;</span>
                         </div>
                             <ol style="font-size: 16px; margin: 15px">
                                 <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
@@ -741,13 +672,12 @@
                 </div>
                 <!-- How to complete a task modal -->
                 <div id="modal2" class="complete_modal">
-
                     <!-- Modal content -->
                     <div class="modal-2-content">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
                             <h5 style="color: #fff;    position: relative;
                             top: 3px">How to complete task?</h5>
-                            <span class="close" style="color: white;">&times;</span>
+                            <span class="close2" style="color: white;">&times;</span>
                         </div>
                             <ol style="font-size: 16px; margin: 15px;">
                                 <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
@@ -757,7 +687,24 @@
                                 <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
                             </ol>
                     </div>
-
+                </div>
+                <!-- How to distribute a task modal -->
+                <div id="modal3" class="distribute_modal">
+                    <!-- Modal content -->
+                    <div class="modal-3-content">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                            <h5 style="color: #fff;    position: relative;
+                            top: 3px">How to distribute a task?</h5>
+                            <span class="close3" style="color: white;">&times;</span>
+                        </div>
+                            <ol style="font-size: 16px; margin: 15px;">
+                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
+                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
+                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
+                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
+                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                            </ol>
+                    </div>
                 </div>
                 
               {% else %}
@@ -1033,39 +980,7 @@
     {% include "common_js.html" %}
     {% endblock common_js %}
 
-    <!--Ajax Function to override Form data with select option change-->
-    <script>
-        var modal1 = document.getElementById("createTaskModal");
-        var modal2 = document.getElementById("completeTaskModal");
-        var span1 = document.getElementsByClassName("close1")[0];
-        var span2 = document.getElementsByClassName("close2")[0];
 
-        function createTaskModal(){
-            modal1.style.display = "block";
-        }
-        function completeTaskModal(){
-            modal2.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span1.onclick = function() {
-            modal1.style.display = "none";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span2.onclick = function() {
-            modal2.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal1 || event.target == modal2) {
-                modal1.style.display = "none";
-                modal2.style.display = "none";
-            }
-        }
-
-    </script>
 
     <script>
         $(document).ready(function () {
@@ -1309,17 +1224,20 @@
     // Get the modal
     var modal1 = document.getElementById("modal1");
     var modal2 = document.getElementById("modal2");
+    var modal3 = document.getElementById("modal3");
     
     // Get the button that opens the modal
-    var btn = document.querySelector(".create_task_modal_btn");
+    var btn1 = document.querySelector(".create_task_modal_btn");
     var btn2 = document.querySelector(".complete_task_modal_btn");
+    var btn3 = document.querySelector(".distribute_task_modal_btn");
     
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-    var span1 = document.getElementsByClassName("close")[1];
+    var span1 = document.getElementsByClassName("close1")[0];
+    var span2 = document.getElementsByClassName("close2")[0];
+    var span3 = document.getElementsByClassName("close3")[0];
     
     // When the user clicks the button, open the modal 
-    btn.onclick = function() {
+    btn1.onclick = function() {
     modal1.style.transform = 'translateY(0px)';
     modal1.style.zIndex = '103100';
     modal1.style.opacity = '1';
@@ -1332,31 +1250,50 @@
     modal2.style.opacity = '1';
     }
     
+    // When the user clicks the button, open the modal 
+    btn3.onclick = function() {
+    modal3.style.transform = 'translateY(0px)';
+    modal3.style.zIndex = '103100';
+    modal3.style.opacity = '1';
+    }
+    
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+    span1.onclick = function() {
     modal1.style.transform = 'translateY(-50px)';
     modal1.style.zIndex = '-100';
     modal1.style.opacity = '0';
     }
 
     // When the user clicks on <span> (x), close the modal
-    span1.onclick = function() {
+    span2.onclick = function() {
     modal2.style.transform = 'translateY(-50px)';
     modal2.style.zIndex = '-100';
     modal2.style.opacity = '0';
     }
-    
 
+    // When the user clicks on <span> (x), close the modal
+    span3.onclick = function() {
+    modal3.style.transform = 'translateY(-50px)';
+    modal3.style.zIndex = '-100';
+    modal3.style.opacity = '0';
+    }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-      if (event.target == modal1 || event.target == modal2) {
+      if (event.target == modal1) {
         modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
+      }
+      else if (event.target == modal2) {
         modal2.style.transform = 'translateY(-50px)';
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
+      }
+      else if (event.target == modal3) {
+        modal3.style.transform = 'translateY(-50px)';
+        modal3.style.zIndex = '-100';
+        modal3.style.opacity = '0';
       }
     }
     </script>
