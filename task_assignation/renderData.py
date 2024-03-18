@@ -311,6 +311,10 @@ class Task_Assignation:
             for member in member_select:
                 #Get member reference and store it in volunteer
                 volunteer = Members.objects.get(ieee_id=member)
+                mem_task_points, created =  Member_Task_Point.objects.get_or_create(task=task,member=volunteer.ieee_id)
+                mem_task_points.completion_points = task.task_category.points/len(member_select)
+                mem_task_points.save()
+
                 #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
                 ##
@@ -319,6 +323,11 @@ class Task_Assignation:
 
             #Add those members to task
             task.members.add(*members)
+
+            task_members = task.members.all()
+            for member in Member_Task_Point.objects.filter(task=task):
+                if Members.objects.get(ieee_id=member.member) not in task_members:
+                    member.delete()
 
             for member in Member_Task_Upload_Types.objects.filter(task=task):
                 if str(member.task_member) not in task_types_per_member:
@@ -331,17 +340,12 @@ class Task_Assignation:
                     if member.has_file_upload:
                         files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
                         for file in files:
-                            path = settings.MEDIA_ROOT+str(file.document)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            file.delete()
+                            Task_Assignation.delete_task_document(file)
                     if member.has_media:
                         media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
                         for media_file in media_files:
-                            path = settings.MEDIA_ROOT+str(media_file.media)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            media_file.delete()
+                            Task_Assignation.delete_task_media(media_file)
+
                     member.delete()
 
             #saving members task type as per needed
@@ -382,10 +386,7 @@ class Task_Assignation:
                     if member_task_type.has_file_upload:
                         files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
                         for file in files:
-                            path = settings.MEDIA_ROOT+str(file.document)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            file.delete()
+                            Task_Assignation.delete_task_document(file)
                     member_task_type.has_file_upload = False
 
                 if "media" in task_ty:
@@ -395,10 +396,7 @@ class Task_Assignation:
                     if member_task_type.has_media:
                         media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
                         for media_file in media_files:
-                            path = settings.MEDIA_ROOT+str(media_file.media)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            media_file.delete()
+                            Task_Assignation.delete_task_media(media_file)
                     member_task_type.has_media = False                     
 
                 member_task_type.save()
@@ -463,17 +461,11 @@ class Task_Assignation:
 
         files = Task_Document.objects.filter(task=task)
         for file in files:
-            path = settings.MEDIA_ROOT+str(file.document)
-            if os.path.isfile(path):
-                os.remove(path)
-            file.delete()
+            Task_Assignation.delete_task_document(file)
 
         media_files = Task_Media.objects.filter(task=task)
         for media_file in media_files:
-            path = settings.MEDIA_ROOT+str(media_file.media)
-            if os.path.isfile(path):
-                os.remove(path)
-            media_file.delete()
+            Task_Assignation.delete_task_media(media_file)
 
         Member_Task_Upload_Types.objects.filter(task=task).delete()
         Task_Log.objects.filter(task_number=task).delete()
@@ -637,13 +629,11 @@ class Task_Assignation:
             medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
             for m in medias:
                 #deleting existing ones from datase base and file system
-                path = settings.MEDIA_ROOT+str(m.media)
-                if os.path.isfile(path):
-                    os.remove(path)
+                Task_Assignation.delete_task_media(m)
                 message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
                 #updating task_log details
                 Task_Assignation.save_task_logs(task,message)
-                m.delete()
+
             for m in media:
                 #saving new one
                 media_save = Task_Media.objects.create(task=task,media = m,uploaded_by = member.ieee_id)
@@ -669,13 +659,11 @@ class Task_Assignation:
             file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
             for file in file_upload_save:
                 #deleting existing ones from datase base and file system
-                path = settings.MEDIA_ROOT+str(file.document)
-                if os.path.isfile(path):
-                    os.remove(path)
+                Task_Assignation.delete_task_document(file)
                 message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
                 #updating task_log details
                 Task_Assignation.save_task_logs(task,message)
-                file.delete()
+
             for file in file_upload:
                 file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
                 file_upload_save.save()
@@ -758,6 +746,20 @@ class Task_Assignation:
 
         task_category = Task_Category.objects.create(name = task_name,points = task_point)
         task_category.save()
+        return True
+    
+    def delete_task_document(file):
+        path = settings.MEDIA_ROOT+str(file.document)
+        if os.path.isfile(path):
+            os.remove(path)
+        file.delete()
+        return True
+    
+    def delete_task_media(media_file):
+        path = settings.MEDIA_ROOT+str(media_file.media)
+        if os.path.isfile(path):
+            os.remove(path)
+        media_file.delete()
         return True
             
     def deduct_points_for_members(task):
