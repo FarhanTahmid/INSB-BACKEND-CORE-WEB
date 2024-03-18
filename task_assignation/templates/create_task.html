@@ -819,6 +819,8 @@
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
                   {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check {% else %}Start {% endif %}Task</a>
+                  {% endif %}
+                  {% if faculty_access or eb_access or super_user_access or staff_access%}
                   <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
                   {% endif %}
                   
@@ -845,9 +847,9 @@
                     
                     
                     <!--delete and complete toggle btn-->
+                    {% if not is_new_task %}
+                    {% if faculty_access or eb_access or super_user_access or staff_access%}
                     <div class="delete_complete_toggle">
-                        {% if not is_new_task %}
-                        {% if faculty_access or eb_access or super_user_access or staff_access%}
                         <button type="button" class="delete_task_btn">Delete</button>
                         <div style="display: flex; margin: 0 10px;">
                             <p class="complete_text">Mark as complete?</p>
@@ -857,12 +859,12 @@
                             </label>
                             
                         </div>
+                    </div>
                     {% else %}
 
-                    </div>
                     {% endif %}
                     {% endif %}
-                </div>
+
 
                 {% csrf_token %}
 
