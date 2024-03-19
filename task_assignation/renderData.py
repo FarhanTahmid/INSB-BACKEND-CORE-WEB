@@ -889,7 +889,7 @@ class Task_Assignation:
         email_to.append(member.email_ieee)
         email_to.append(member.email_personal)
         email_from = settings.EMAIL_HOST_USER
-        subject = f"BAD WORK! DO IT AGAIN!"
+        subject = f"Request to review your work"
         message = f'''Greetings {member.name},
 The work you have done so far is great! However, your task assignee seems to have
 commented on your completed work for more better outcome. Please view the task
@@ -976,7 +976,7 @@ This is an automated message. Do not reply
                             email_from,
                             email_to
                             )
-        # email.send()
+        #email.send()
         task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
         #setting message
         Task_Assignation.save_task_logs(task,task_log_message)
@@ -1033,7 +1033,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-        # email.send()
+        #email.send()
         task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
         #setting message
         Task_Assignation.save_task_logs(task,task_log_message)

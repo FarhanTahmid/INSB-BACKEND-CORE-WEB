@@ -903,7 +903,7 @@
                 <div class="title-deadline">
                     <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
-                        <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
+                        <label style="margin: 0;text-align: center; font-size: 14px;">{% if faculty_access or eb_access or  super_user_access or staff_access%}Set deadline:{% else %}Deadline{% endif %}</label>
                     <input
                         id="deadline"
                         type="datetime-local"
