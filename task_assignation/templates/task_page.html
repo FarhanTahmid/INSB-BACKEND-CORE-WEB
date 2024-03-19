@@ -788,7 +788,7 @@
                 <li class="tab" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
                 {% endfor %}
             </div>
-            
+
             <!-- logs modal -->
             <div class="modal__wrapper">
                 <div class="modal__container">
@@ -796,20 +796,22 @@
                     <h2>Task Logs</h2>
                     <div class="modal__wrapper__container">
                         <ol>
-                            <li>Lorem ipsum dolor sit amet consec</li>
-                            <li>Lorem ipsum dolor sit amet consec</li>
-                            <li>Lorem ipsum dolor sit amet consec</li>
-                            <li>Lorem ipsum dolor sit amet consec</li>
-                            <li>Lorem ipsum dolor sit amet consec</li>
-                            <li>Lorem ipsum dolor sit amet consec</li>
+                            {% for date, log in task_type.8.items %}
+                            <li><b>{{date}}</b><br>{{log}}</li>
+                            {% endfor %}
                         </ol>
                     </div>
                 </div>
             </div>
 
-
             {% for member,task_type  in task_type_per_member.items %}
-
+            <div class="center">
+                <ol>
+                    {% for date,log in task_type.8.items %}
+                    <li><b>{{date}}</b><br>{{log}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
             <div id="details_{{ member.ieee_id }}" class="details" style="display: none;">
                 <form method="POST" enctype="multipart/form-data" id="{{member.ieee_id}}">
                     <div style="    display: flex;

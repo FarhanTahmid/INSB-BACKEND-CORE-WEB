@@ -816,14 +816,9 @@
                         <button class="close-4">&times;</button>
                         <h2>Task Logs</h2>
                         <div class="modal__wrapper__container">
-                            <ol>
-                                <li>Lorem ipsum dolor sit amet consec</li>
-                                <li>Lorem ipsum dolor sit amet consec</li>
-                                <li>Lorem ipsum dolor sit amet consec</li>
-                                <li>Lorem ipsum dolor sit amet consec</li>
-                                <li>Lorem ipsum dolor sit amet consec</li>
-                                <li>Lorem ipsum dolor sit amet consec</li>
-                            </ol>
+                            {% for date,logs in task_logs.items %}
+                            <li><b>{{date}}:</b><br> {{logs}}</li>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

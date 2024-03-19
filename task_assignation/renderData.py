@@ -256,6 +256,7 @@ class Task_Assignation:
 
         new_task_category = Task_Category.objects.get(name = task_category)
 
+        task_category_changed = False
         #making necessary updates in task log history
         if prev_title != title:
             task_log_message = f"Task Title changed from {prev_title} to {title} by {request.user.username}"
@@ -266,11 +267,29 @@ class Task_Assignation:
         if new_task_category != prev_task_category:
             task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {request.user.username}"
             Task_Assignation.save_task_logs(task,task_log_message)
+            task_category_changed = True
         #deadline saving not correct
         if prev_deadline != str(deadline):
             task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
             Task_Assignation.save_task_logs(task,task_log_message)
 
+        #changing all points to members if task category is changed
+        if task_category_changed:
+            #getting previous and new ones
+            prev_task_category_points = prev_task_category.points
+            new_task_category_points = new_task_category.points
+            #chaning points for every member in that task
+            for member in Member_Task_Point.objects.filter(task=task):
+                old_completion_points = member.completion_points
+                member.completion_points = (member.completion_points / prev_task_category_points ) * new_task_category_points * 1.0
+                member.save()
+                #if task is completed then directly updating the marks in their profile
+                if task.is_task_completed:
+                    mem = Members.objects.get(ieee_id = member.member)
+                    mem.completed_task_points -= old_completion_points
+                    mem.completed_task_points += member.completion_points
+                    mem.save()
+        
         prev_task_type = task.task_type
 
         #Check the task's task_type and clear their respective fields
@@ -729,6 +748,7 @@ class Task_Assignation:
         #4 index of list contains media uploaded
         #5 index of list contains task points
         #6 index contains the comments
+        #7 index contains the task points log dictionary
 
         current_task = Task.objects.get(pk=task.pk)
         dic={}
@@ -764,8 +784,15 @@ class Task_Assignation:
             member_task_list.append(task_points)
             comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
             member_task_list.append(comments)
-
-
+            #using a dictionary to store the task points log history
+            task_points_log = {}
+            try:
+                for key,value in task_points.deducted_points_logs.items():
+                    split_string = value.split(':')
+                    task_points_log[split_string[0]]=split_string[1]
+                member_task_list.append(task_points_log)
+            except:
+                member_task_list.append(task_points_log)
             dic[member_obj] = member_task_list
         
         return dic
@@ -942,7 +969,8 @@ XOXOXOX'''
         '''This function saves the task log whenever needed'''
         
         #getting current time
-        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
+        current_datetime = datetime.now()
+        current_time = current_datetime.strftime('%d-%m-%Y %I:%M:%S %p')
         #getting the task log
         task_log_details = Task_Log.objects.get(task_number = task)
         #updating task_log details

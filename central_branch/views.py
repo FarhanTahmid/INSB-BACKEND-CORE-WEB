@@ -4562,6 +4562,9 @@ def upload_task(request, task_id):
             media_uploads = None
 
         task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
+        for key,value in task_type_per_member.items():
+            print(key)
+            print(value)
 
         if request.method == 'POST':
 
@@ -4782,6 +4785,9 @@ def task_edit(request, task_id):
         logged_in_user = Members.objects.get(ieee_id = user)
     except:
         logged_in_user = adminUsers.objects.get(username=user)
+    #getting all task logs for this task
+    task_logs = Task_Log.objects.get(task_number = task)
+    
 
     context = {
         'task':task,
@@ -4796,7 +4802,8 @@ def task_edit(request, task_id):
         'staff_access':staff_access,
         'logged_in_user':logged_in_user,
         'is_late':late,
-        'my_task':my_task
+        'my_task':my_task,
+        'task_logs':task_logs.task_log_details,
     }
 
     return render(request,"create_task.html",context)
