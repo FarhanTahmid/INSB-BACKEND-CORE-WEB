@@ -748,11 +748,12 @@ class Task_Assignation:
         #0 index of list contains task_upload+type of that member
         #1 index of list contains permission paper object of that member
         #2 index of list contains drive link object of that member
-        #3 index of list contains files uploaded of that member
-        #4 index of list contains media uploaded
-        #5 index of list contains task points
-        #6 index contains the comments
-        #7 index contains the task points log dictionary
+        #3 index of list contains content of that member
+        #4 index of list contains files uploaded of that member
+        #5 index of list contains media uploaded
+        #6 index of list contains task points
+        #7 index contains the comments
+        #8 index contains the task points log dictionary
 
         current_task = Task.objects.get(pk=task.pk)
         dic={}
