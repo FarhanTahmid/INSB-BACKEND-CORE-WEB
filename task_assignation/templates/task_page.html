@@ -757,7 +757,7 @@
             
             </div>
             {% endif %}
-            {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
+            {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access %}
             
             <div class="form-wrapper">
                 <form>
@@ -789,11 +789,14 @@
                 {% endfor %}
             </div>
 
+            
+
+            {% for member,task_type  in task_type_per_member.items %}
             <!-- logs modal -->
-            <div class="modal__wrapper">
+            <div class="modal__wrapper" id="modal__wrapper_{{ member.ieee_id }}">
                 <div class="modal__container">
-                    <button class="close-4">&times;</button>
-                    <h2>Task Logs</h2>
+                    <button class="close-4" id="close-4_{{ member.ieee_id }}">&times;</button>
+                    <h4>Task Logs - {{ member.name }}</h4>
                     <div class="modal__wrapper__container">
                         <ol>
                             {% for date, log in task_type.8.items %}
@@ -802,15 +805,6 @@
                         </ol>
                     </div>
                 </div>
-            </div>
-
-            {% for member,task_type  in task_type_per_member.items %}
-            <div class="center">
-                <ol>
-                    {% for date,log in task_type.8.items %}
-                    <li><b>{{date}}</b><br>{{log}}</li>
-                    {% endfor %}
-                </ol>
             </div>
             <div id="details_{{ member.ieee_id }}" class="details" style="display: none;">
                 <form method="POST" enctype="multipart/form-data" id="{{member.ieee_id}}">
@@ -832,7 +826,7 @@
                             </button>
                         </div>
                     </div>
-                    <button type="button" class="btn__purple" id="trigger">Task Logs</button>
+                    <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Task Logs</button>
                     <br>
                     <br>
 
@@ -979,37 +973,40 @@
     {% endblock common_js %}
 
 
+    {% for member,task_type  in task_type_per_member.items %}
     <script>
-        const trigger = document.querySelector('#trigger');
-        const modalWrapper = document.querySelector('.modal__wrapper');
-        const closeBtn = document.querySelector('.close-4');
+            const trigger_{{ member.ieee_id }} = document.querySelector('#trigger_{{ member.ieee_id }}');
+            const modalWrapper_{{ member.ieee_id }} = document.querySelector('#modal__wrapper_{{ member.ieee_id }}');
+            const closeBtn_{{ member.ieee_id }} = document.querySelector('#close-4_{{ member.ieee_id }}');
 
-        trigger.addEventListener('click', function(){
-            openModal();
-        });
+            trigger_{{ member.ieee_id }}.addEventListener('click', function(){
+                openModal_{{ member.ieee_id }}();
+            });
 
-        closeBtn.addEventListener('click', function(){
-            closeModal();
-        });
+            closeBtn_{{ member.ieee_id }}.addEventListener('click', function(){
+                closeModal_{{ member.ieee_id }}();
+            });
 
-        modalWrapper.addEventListener('click', function(e){
-            if(e.target !== this) return;
-            closeModal();
-        });
+            modalWrapper_{{ member.ieee_id }}.addEventListener('click', function(e){
+                if(e.target !== this) return;
+                closeModal_{{ member.ieee_id }}();
+            });
 
-        document.addEventListener('keydown', function(e){
-            if(e.key === 'Escape') {
-                closeModal();
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'Escape') {
+                    closeModal_{{ member.ieee_id }}();
+                }
+            })
+
+            function openModal_{{ member.ieee_id }}() {
+                modalWrapper_{{ member.ieee_id }}.classList.add('active');
             }
-        })
 
-        function openModal() {
-            modalWrapper.classList.add('active');
-        }
-        function closeModal() {
-            modalWrapper.classList.remove('active');
-        }
-    </script>
+            function closeModal_{{ member.ieee_id }}() {
+                modalWrapper_{{ member.ieee_id }}.classList.remove('active');
+            }
+        </script>
+        {% endfor %}
 
 
     <script>
