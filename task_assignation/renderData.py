@@ -907,7 +907,7 @@ This is an automated message. Do not reply
                             email_from,
                             email_to
                             )
-        email.send()
+        #email.send()
 
         task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
         #saving logs
@@ -976,7 +976,7 @@ This is an automated message. Do not reply
                             email_from,
                             email_to
                             )
-        email.send()
+        # email.send()
         task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
         #setting message
         Task_Assignation.save_task_logs(task,task_log_message)
@@ -1002,6 +1002,11 @@ This is an automated message. Do not reply
 
         email_from = settings.EMAIL_HOST_USER
         email_to = []
+        try:
+            task_created_by = Members.objects.get(ieee_id = task.task_created_by)
+            task_created_by = task_created_by.position.role
+        except:
+            task_created_by = "Admin"
         email_to.append(member.email_ieee)
         email_to.append(member.email_personal)
         email_to.append(member.email_nsu)
@@ -1017,7 +1022,7 @@ You are requested to complete the task with in the due date. If not, you will be
 Please follow the link or go through the portal for more details.
 
 Deadline: {task.deadline}
-Task Assigned by: {task.task_created_by}, {task.task_created_by.position.role}
+Task Assigned by: {task.task_created_by}, {task_created_by}
 
 Best Regards
 IEEE NSU SB Portal
@@ -1028,7 +1033,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-        email.send()
+        # email.send()
         task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
         #setting message
         Task_Assignation.save_task_logs(task,task_log_message)
