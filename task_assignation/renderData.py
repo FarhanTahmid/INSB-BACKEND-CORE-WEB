@@ -1028,3 +1028,6 @@ This is an automated message. Do not reply
                                 email_to
                                 )
         # email.send()
+        task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
+        #setting message
+        Task_Assignation.save_task_logs(task,task_log_message)
