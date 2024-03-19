@@ -4416,104 +4416,115 @@ class AwardRanking(View):
 @member_login_permission
 def create_task(request):
 
-    # get all sc ag for sidebar
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    # get user data for side bar
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
-    
-    if request.method == 'POST':
-        title = request.POST.get('task_title')
-        description = request.POST.get('task_description_details')
-        task_category = request.POST.get('task_category')
-        deadline = request.POST.get('deadline')
-        task_type = request.POST.get('task_type')
+    create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+    create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
 
-        team_select = None
-        member_select = None
-        #Checking task types and get list accordingly
-        if task_type == "Team":
-            team_select = request.POST.getlist('team_select')
-        elif task_type == "Individuals":
-            member_select = request.POST.getlist('member_select')
-            task_types_per_member = {}
-            for member_id in member_select:
-                member_name = request.POST.getlist(member_id + '_task_type[]')
-                task_types_per_member[member_id] = member_name
-    
-        task_of = 1 #Setting task_of as 1 for Branch primary
-        if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
-            messages.success(request,"Task Created successfully!")
-        else:
-            messages.warning(request,"Something went wrong while creating the task!")
+    if create_individual_task_access or create_team_task_access:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        
+        if request.method == 'POST':
+            title = request.POST.get('task_title')
+            description = request.POST.get('task_description_details')
+            task_category = request.POST.get('task_category')
+            deadline = request.POST.get('deadline')
+            task_type = request.POST.get('task_type')
 
-        return redirect('central_branch:task_home')
-    
-    task_categories = Task_Category.objects.all()
-    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-    all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
+            team_select = None
+            member_select = None
+            #Checking task types and get list accordingly
+            if task_type == "Team":
+                team_select = request.POST.getlist('team_select')
+            elif task_type == "Individuals":
+                member_select = request.POST.getlist('member_select')
+                task_types_per_member = {}
+                for member_id in member_select:
+                    member_name = request.POST.getlist(member_id + '_task_type[]')
+                    task_types_per_member[member_id] = member_name
+        
+            task_of = 1 #Setting task_of as 1 for Branch primary
+            if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
+                messages.success(request,"Task Created successfully!")
+            else:
+                messages.warning(request,"Something went wrong while creating the task!")
 
-    user = request.user.username
-    faculty_advisor_access = Access_Render.faculty_advisor_access(user)
-    eb_access = Access_Render.eb_access(user)
-    super_user_Access = Access_Render.system_administrator_superuser_access(user)
-    staff_access = Access_Render.system_administrator_staffuser_access(user)
-    context = {
-        'is_new_task':True, #Task is being created. Use it to disable some ui in the template
-        'task_categories':task_categories,
-        'teams':teams,
-        'all_members':all_members,
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-        'faculty_access':faculty_advisor_access,
-        'eb_access':eb_access,
-        'super_user_access':super_user_Access,
-        'staff_access':staff_access,
-    }
+            return redirect('central_branch:task_home')
+        
+        task_categories = Task_Category.objects.all()
+        teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+        all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
-    return render(request,"create_task.html",context)
+        user = request.user.username
+        faculty_advisor_access = Access_Render.faculty_advisor_access(user)
+        eb_access = Access_Render.eb_access(user)
+        super_user_Access = Access_Render.system_administrator_superuser_access(user)
+        staff_access = Access_Render.system_administrator_staffuser_access(user)
+
+        context = {
+            'is_new_task':True, #Task is being created. Use it to disable some ui in the template
+            'task_categories':task_categories,
+            'teams':teams,
+            'all_members':all_members,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'faculty_access':faculty_advisor_access,
+            'eb_access':eb_access,
+            'super_user_access':super_user_Access,
+            'staff_access':staff_access,
+            'create_individual_task_access':create_individual_task_access,
+            'create_team_task_access':create_team_task_access
+        }
+
+        return render(request,"create_task.html",context)
+    else:
+        return render(request,'access_denied2.html')
 
 @login_required
 @member_login_permission
 def task_home(request):
+
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    all_tasks = Task.objects.all().order_by('-pk')
-    user = request.user.username
-    faculty_advisor_access = Access_Render.faculty_advisor_access(user)
-    eb_access = Access_Render.eb_access(user)
-    super_user_Access = Access_Render.system_administrator_superuser_access(user)
-    staff_access = Access_Render.system_administrator_staffuser_access(user)
-    #getting all task categories
-    all_task_categories = Task_Category.objects.all()
 
-    if request.method == "POST":
+    has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
+    
+    if has_task_create_access:
+        if user_data['is_admin_user'] == True:
+            all_tasks = Task.objects.all().order_by('-pk')
+        else:   
+            all_tasks = Task.objects.exclude(members__ieee_id=request.user.username).order_by('-pk')
 
-        if request.POST.get('add_task_type'):
+        #getting all task categories
+        all_task_categories = Task_Category.objects.all()
 
-            task_name = request.POST.get('task_type_name')
-            task_point = request.POST.get('task_point')
+        if request.method == "POST":
 
-            if Task_Assignation.add_task_category(task_name,task_point):
-                messages.success(request,"Task Category Created successfully!")
-            else:
-                messages.warning(request,"Something went wrong while creating the task category!")
+            if request.POST.get('add_task_type'):
 
-    context = {
-        'all_tasks':all_tasks,
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-        'faculty_access':faculty_advisor_access,
-        'eb_access':eb_access,
-        'super_user_access':super_user_Access,
-        'staff_access':staff_access,
-        'all_task_categories':all_task_categories,
-    }
+                task_name = request.POST.get('task_type_name')
+                task_point = request.POST.get('task_point')
 
-    return render(request,"task_home.html",context)
+                if Task_Assignation.add_task_category(task_name,task_point):
+                    messages.success(request,"Task Category Created successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while creating the task category!")
+
+        context = {
+            'all_tasks':all_tasks,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'all_task_categories':all_task_categories,
+        }
+
+        return render(request,"task_home.html",context)
+    else:
+        return render(request,'access_denied2.html')
 
 @login_required
 @member_login_permission

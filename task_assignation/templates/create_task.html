@@ -964,31 +964,39 @@
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
-                {% if faculty_access or eb_access or  super_user_access or staff_access%}
+                {% if faculty_access or eb_access or  super_user_access or staff_access or create_team_task_access or create_individual_task_access %}
                 <!--task type-->
                 <div class="task_type ">
                     <label class="task_type_label">Select Task Type and Individuals:</label>
                     <div class="radio-btns">
+                        {% if create_team_task_access %}
                         <div class="radio-btns_content box">
                             {% if is_new_task %}
-                            <input type="radio" id='btn05' name="task_type" value="Team" checked required>
+                            <input type="radio" id='btn05' name="task_type" value="Team" checked>
                             {% else %}
                             <input type="radio" id='btn05' name="task_type" value="Team" {% if task.task_type == "Team" %}checked{% endif %} required>
-
+                            
                             {% endif %}
                             <label for="btn05">Teams</label>
                         </div>
+                        {% endif %}
+                        {% if create_individual_task_access %}
                         <div class="radio-btns_content box">
+                            {% if is_new_task %}
+                            <input type="radio" id='btn06'name="task_type" value="Individuals" {% if not create_team_task_access %}checked{% endif %}>
+                            {% else %}
                             <input type="radio" id='btn06'name="task_type" value="Individuals" {% if task.task_type == "Individuals" %}checked{% endif %}>
+                            {% endif %}
                             <label for="btn06">Individuals</label>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
 
-
+                {% if create_individual_task_access %}
                 <!--Search bar for individuals-->
                 {% if is_new_task %}
-                <div class="tb_search search_input_individuals hide_table">
+                <div class="tb_search search_input_individuals {% if create_team_task_access %}hide_table{% endif %}">
                 {% else %}
                 <div class="tb_search search_input_individuals {% if task.task_type == "Team" %}hide_table{% endif %}">
                 {% endif %}
@@ -1003,7 +1011,7 @@
 
                 <!--Table for individuals-->
                 {% if is_new_task %}
-                <div class="table-responsive individuals-table hide_table" >
+                <div class="table-responsive individuals-table {% if create_team_task_access %}hide_table{% endif %}" >
                 {% else %}
                 <div class="table-responsive individuals-table {% if task.task_type == "Team" %}hide_table{% endif %}">
                 {% endif %}
@@ -1038,7 +1046,9 @@
                     </tbody>
                 </table>
                 </div>
+                {% endif %}
 
+                {% if create_team_task_access %}
                 <!--Search bar for teams-->
                 <div class="tb_search  search_input_team {% if task.task_type == "Individuals" %}hide_table{% endif %}" >
                     <input
@@ -1071,6 +1081,7 @@
                     </tbody>
                 </table>
                 </div>
+                {% endif %}
 
 
                 
