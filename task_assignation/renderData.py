@@ -872,12 +872,20 @@ XOXOXOX'''
     def update_marks(task,ieee_id,marks):
 
         #This function will update the marks
-
+        marks = float(marks)
         member_task = Member_Task_Point.objects.get(task = task, member = ieee_id)
         #saving old marks
         previous_marks = member_task.completion_points
         member_task.completion_points = marks
         member_task.save()
+
+        #if task is completed and later marks are updated
+        if task.is_task_completed:
+            print("here")
+            member = Members.objects.get(ieee_id = ieee_id)
+            member.completed_task_points -= previous_marks
+            member.completed_task_points += marks
+            member.save()
 
         task_log_message =  f'Task Name: {task.title}, marks updated for {ieee_id} from {previous_marks} to {member_task.completion_points}'
         #updating logs
