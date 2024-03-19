@@ -209,6 +209,36 @@
             transition: all ease-in-out .3s;
             cursor: pointer;
         }
+        .check-task-button{
+            padding: 5px 15px;
+            color: white;
+            background: #003f69;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #003f69;
+            transition: all ease-in-out .3s;
+            cursor: pointer;
+        }
+        .check-task-button:hover{
+            color: #003f69;
+            background: white;
+            border-color: #003f69;
+        }
+        .log-task-button{
+            padding: 5px 15px;
+            color: white;
+            background: #694400;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #694400;
+            transition: all ease-in-out .3s;
+            cursor: pointer;
+        }
+        .log-task-button:hover{
+            color: #694400;
+            background: white;
+            border-color: #694400;
+        }
         .create-task-btn:hover , .start-task-btn:hover{
             color: #75D481;
             background: white;
@@ -855,12 +885,11 @@
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
                   {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check task progress {% else %}Start the task{% endif %}</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if faculty_access or eb_access or super_user_access or staff_access%}Check task progress {% else %}Start the task{% endif %}</a>
                   {% endif %}
                   {% if faculty_access or eb_access or super_user_access or staff_access%}
+                  <button type="button" class="log-task-button" id="trigger">View Task Logs</button>
                   <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
-                  <button type="button" class="create-task-btn" id="trigger">Task Logs</button>
-
                   {% endif %}
                   
                   
