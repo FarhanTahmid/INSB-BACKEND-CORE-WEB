@@ -90,6 +90,16 @@
             margin-top: 0px;
             margin-bottom: 25px;
         }
+        .category.user{
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+        }
+        @media screen and (max-width: 400px) {
+            .category.user{
+                flex-direction: column-reverse;
+            }
+        }
         .category_label{
             margin-bottom: 8px;
             margin-right: 25px;
@@ -628,16 +638,45 @@
           
           <!--contents of page-->
           <div class="form-wrapper">
-              
-              {% if is_new_task %}
+                <!--back button-->
+                <div class="tooltip-container">
+                {% if my_task %}
+                <a href="{% url 'users:my_tasks' %}" class="image-button">
+                    {% else %}
+                    <a href="{% url 'central_branch:task_home' %}" class="image-button">
+                        {% endif %}
+                        <img src="/static/back-arrow.png" alt="Go back to session">
+                    </a>
+                    <span class="tooltip-text">Go back</span>
+                </div>
+                <!--Messages-->
+                <div style="justify-content:center; text-align:center;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <h4 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                        {% endfor %}
+                    <br>
+                    {% endif %}
+                </div>
+                {% if not is_new_task %}
+                <h4>Task: {{task.title}}</h4>
+                {% endif %}
               <!--create task heading-->
-              <h4>Create Task</h4>
               <div class="queue">
+                {% if is_new_task %}
                 <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>
-                <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
-                <button type="button" class="queue_btn distribute_task_modal_btn">How to distribute a task</button>
+                {% else %}
+                    {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
+                        {% if faculty_access or eb_access or super_user_access or staff_access%}
+                        <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
+                        {% else %}
+                        <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
               </div>
                 <!-- How to create a task modal -->
+                {% if is_new_task %}
                 <div id="modal1" class="create_modal">
                     <!-- Modal content -->
                     <div class="modal-1-content">
@@ -647,79 +686,68 @@
                             <span class="close1" style="color: white;">&times;</span>
                         </div>
                             <ol style="font-size: 16px; margin: 15px">
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
+                                <li>To create a task you must have to fill title of the task, set deadline and write the task description</li>
+                                <li>Also you have to select a task category based on the task and if you want to create your own task category then press back arrow icon and create a new task category</li>
+                                <li>You can give the task either for teams or for individuals</li>
+                                <ol style="margin-top: 20px;">
+                                    <span style="font-weight: 600;">If you select teams</span>
+                                    <li>You can choose multiple teams to complete the task</li>
+                                </ol>
+                                <ol style="margin-top: 20px;">
+                                    <span style="font-weight: 600;">If you select individuals</span>
+                                    <li>You can choose multiple individuals to complete the task</li>
+                                    <li>After choosing the individuals by select button, you have to assign them what type of fields you want them to fill to complete the task</li>
+                                </ol>
+                                <li>Must press <span style="font-weight: 600;">Create Task</span> button to save the task and then it will send a mail to that assigned individuals or teams co-ordinator</li>
                             </ol>
                     </div>
                 </div>
-                <!-- How to complete a task modal -->
-                <div id="modal2" class="complete_modal">
-                    <!-- Modal content -->
-                    <div class="modal-2-content">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
-                            <h5 style="color: #fff;    position: relative;
-                            top: 3px">How to complete task?</h5>
-                            <span class="close2" style="color: white;">&times;</span>
+                {% else %}
+                    {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
+                        {% if faculty_access or eb_access or super_user_access or staff_access%}
+                        <!-- How to distribute a task modal -->
+                        <div id="modal3" class="distribute_modal">
+                            <!-- Modal content -->
+                            <div class="modal-3-content">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                    <h5 style="color: #fff;    position: relative;
+                                    top: 3px">Instructions</h5>
+                                    <span class="close3" style="color: white;">&times;</span>
+                                </div>
+                                    <ol style="font-size: 16px; margin: 15px;">
+                                        <li>You can update the task as much as you want but after changing it you must have to press <span style="font-weight: 600;">Update Task</span> button</li>
+                                        <li>To delete the task simply press the <span style="font-weight: 600;">Delete</span> button</li>
+                                        <li>If the task is completed by the assigned individuals or teams then click <span style="font-weight: 600;">Mark as complete?</span> and then click <span style="font-weight: 600;">Update Task</span></li>
+                                        <li>If you want to distribute the task points for individuals by your own then go to the <span style="font-weight: 600;">Check task progress</span> and then simply update the <span style="font-weight: 600;">Points</span> of that individual and save it</li>
+                                    </ol>
+                            </div>
                         </div>
-                            <ol style="font-size: 16px; margin: 15px;">
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                            </ol>
-                    </div>
-                </div>
-                <!-- How to distribute a task modal -->
-                <div id="modal3" class="distribute_modal">
-                    <!-- Modal content -->
-                    <div class="modal-3-content">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
-                            <h5 style="color: #fff;    position: relative;
-                            top: 3px">How to distribute a task?</h5>
-                            <span class="close3" style="color: white;">&times;</span>
+                        {% else %}
+                        <!-- How to complete a task modal -->
+                        <div id="modal2" class="complete_modal">
+                            <!-- Modal content -->
+                            <div class="modal-2-content">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                    <h5 style="color: #fff;    position: relative;
+                                    top: 3px">How to complete task?</h5>
+                                    <span class="close2" style="color: white;">&times;</span>
+                                </div>
+                                    <ol style="font-size: 16px; margin: 15px;">
+                                        <li>To start the task, click <span style="font-weight: 600;">Start the task</span> button</li>
+                                        <li>Assigned tasks must be completed within the deadline</li>
+                                        <li>Not completing a task within deadline will deduct your Task Point</li>
+                                        <li>Task works can be saved by clicking the <span style="font-weight: 600;">Save for later</span> button and can be finished later</li>
+                                        <li>To submit a task click the <span style="font-weight: 600;">Task Completed</span> button and then a email will sent to the person who created the task</li>
+                                    </ol>
+                            </div>
                         </div>
-                            <ol style="font-size: 16px; margin: 15px;">
-                                <li>If the task is complex or large, break it down into smaller, manageable subtasks. This helps in better organization and tracking of progress.</li>
-                                <li>Establish clear goals for the task and set realistic deadlines for completion. This provides a clear direction and helps in prioritizing tasks effectively.</li>
-                                <li>Determine what resources are required to complete the task. This could include materials, information, tools, or assistance from others.</li>
-                                <li>Allocate sufficient time for each step of the task. Consider factors such as complexity, resource availability, and potential obstacles.</li>
-                                <li>Keep track of the task and its progress. Use tools such as to-do lists, project management software, or calendars to stay organized and on track.</li>
-                            </ol>
-                    </div>
-                </div>
-                
-              {% else %}
-              <h4>Task: {{task.title}}</h4>
-              {% endif %}
-              
-              <!--Messages-->
-            <div style="justify-content:center; text-align:center;">
-                {% if messages %}
-                    {% for message in messages %}
-                        <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
-                    {% endfor %}
-                <br>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
-            </div>
+
+
+              
+
             
             <form method="post">
                {% csrf_token %} 
@@ -749,26 +777,16 @@
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
                   {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check task progress {% else %}Click to start the task{% endif %}</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check task progress {% else %}Start the task{% endif %}</a>
                   {% endif %}
                   {% if faculty_access or eb_access or super_user_access or staff_access%}
-                  <button type="submit" class="create-task-btn" name="update_task">Update Task Details</button>
+                  <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
                   {% endif %}
                   
                   
                 </div>
                 {% endif %}
-                <!--Messages-->
-                <div class="tooltip-container">
-                    {% if my_task %}
-                    <a href="{% url 'users:my_tasks' %}" class="image-button">
-                        {% else %}
-                        <a href="{% url 'central_branch:task_home' %}" class="image-button">
-                            {% endif %}
-                            <img src="/static/back-arrow.png" alt="Go back to session">
-                        </a>
-                        <span class="tooltip-text">Go back</span>
-                </div>
+
                     <!--create task btn-->
                     <div style="text-align: center;">
                         {% if is_new_task %}
@@ -843,8 +861,19 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="category">
+                <div class="category user">
                     <div>Task Point: <span class="task_point" id="task_points">{{task.task_category.points}}</span></div>
+                    {% if faculty_access or eb_access or  super_user_access or staff_access%}
+                    {% else %}
+                    <div class="late_text">
+                        {% if is_late %}
+                        {% if not task.is_task_completed%}
+                        <p style="color: red;
+                        font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
                 </div>
 
 
@@ -867,7 +896,7 @@
                             <input type="radio" id='btn05' name="task_type" value="Team" {% if task.task_type == "Team" %}checked{% endif %} required>
 
                             {% endif %}
-                            <label for="btn05">Team</label>
+                            <label for="btn05">Teams</label>
                         </div>
                         <div class="radio-btns_content box">
                             <input type="radio" id='btn06'name="task_type" value="Individuals" {% if task.task_type == "Individuals" %}checked{% endif %}>

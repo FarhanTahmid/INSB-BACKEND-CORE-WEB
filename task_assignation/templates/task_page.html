@@ -558,6 +558,14 @@
             <!--contents of page-->
             {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
             <div class="form-wrapper">
+                <form>
+                    <div class="tooltip-container">
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                          <img src="/static/back-arrow.png" alt="Go back to session">
+                        </a>
+                        <span class="tooltip-text">Go back</span>
+                    </div>
+                </form>
                 <!--Messages-->
                 <div style="justify-content: center; text-align: center">
                     {% if messages %} 
@@ -570,19 +578,14 @@
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- task page heading-->
-                    <h4>Finish Task</h4>
+                    <h4>Task: {{task.title}}</h4>
                     <!--Submit btn-->
                     <div class="task-btn">
                         <!-- <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a> -->
                         <input type="submit" class="finish-task-btn" name="save_task" value="Save for later">
                         <input type="submit" class="finish-task-btn" name="finish_task" value="Task Completed">
                     </div>
-                    <div class="tooltip-container" style="margin-top: 40px; margin-bottom: 20px;">
-                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                          <img src="/static/back-arrow.png" alt="Go back to session">
-                        </a>
-                        <span class="tooltip-text">Go back</span>
-                    </div>
+
                     
                     <div style="font-size: 20px; font-weight: 500; font-style: italic;">
                         {{members_task_type.task_member.name}} - {{members_task_type.task_member.ieee_id}}
@@ -694,6 +697,14 @@
             {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access%}
             
             <div class="form-wrapper">
+                <form>
+                    <div class="tooltip-container">
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                          <img src="/static/back-arrow.png" alt="Go back to session">
+                        </a>
+                        <span class="tooltip-text">Go back</span>
+                    </div>
+                </form>
                 <!--Messages-->
                 <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
                     <div id="messageBox" class="alert alert-success" role="alert">
@@ -707,14 +718,7 @@
                 
                 <!-- task page heading-->
                 <h4 style="margin-top: 25px;">Click to see their Task Progress</h4>
-                <form>
-                    <div class="tooltip-container">
-                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                          <img src="/static/back-arrow.png" alt="Go back to session">
-                        </a>
-                        <span class="tooltip-text">Go back</span>
-                    </div>
-                </form>
+                
 
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}
@@ -733,7 +737,7 @@
                     margin-bottom: 20px;">
                     <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
                         <div style="font-size: 20px;">
-                            Marks:
+                            Points:
                             <input type="text" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
                             <input type="hidden" id="member_id" name="member_id" value="{{member}}"></input>
                             <input type="hidden" id="task_id" name="task_id" value="{{task.pk}}"></input>

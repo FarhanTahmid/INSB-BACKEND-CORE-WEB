@@ -107,7 +107,7 @@
       }
 
       .image-button img {
-        width: 32px; /* Adjust as needed */
+        width: 40px; /* Adjust as needed */
         height: auto; /* Maintain aspect ratio */
         border-radius: 50%; /* Add rounded corners if desired */
         box-shadow: 2px 2px 5px 0px #80808054;
@@ -250,7 +250,7 @@
                       {% for task in all_tasks %}
                       <tr>
                         <td>{{forloop.counter }}</td>
-                          <td><a href="{% url 'central_branch:task_edit' task.pk %}">{{task.title}}</a></td>
+                          <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
                           <td>{{task.deadline}}</td>
                           <td>{{task.task_category.points}}</td>
                           {% if task.is_task_completed %}
