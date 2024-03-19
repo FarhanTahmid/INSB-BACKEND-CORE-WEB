@@ -312,8 +312,11 @@ class Task_Assignation:
                 #Get member reference and store it in volunteer
                 volunteer = Members.objects.get(ieee_id=member)
                 mem_task_points, created =  Member_Task_Point.objects.get_or_create(task=task,member=volunteer.ieee_id)
-                mem_task_points.completion_points = task.task_category.points/len(member_select)
-                mem_task_points.save()
+                if mem_task_points:
+                    pass
+                else:
+                    mem_task_points.completion_points = task.task_category.points/len(member_select)
+                    mem_task_points.save()
 
                 #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
@@ -356,53 +359,73 @@ class Task_Assignation:
                 message = ""
 
                 if "permission_paper" in task_ty:
-                    member_task_type.has_permission_paper = True
-                    message += "Permission Paper,"
+                    if member_task_type.has_permission_paper:
+                        pass
+                    else:
+                        member_task_type.has_permission_paper = True
+                        message += "Permission Paper Added,"
                 else:
                     if member_task_type.has_permission_paper:
                         Permission_Paper.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Permission Paper Removed,"
                     member_task_type.has_permission_paper = False
 
                 if "content" in task_ty:
-                    member_task_type.has_content = True
-                    message += "Content,"
+                    if member_task_type.has_content:
+                        pass
+                    else:
+                        member_task_type.has_content = True
+                        message += "Content Added,"
                 else:
                     if member_task_type.has_content:
                         Task_Content.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Content Removed,"
                     member_task_type.has_content = False
 
                 if "drive_link" in task_ty:
-                    member_task_type.has_drive_link = True
-                    message += "Drive Link,"
+                    if member_task_type.has_drive_link:
+                        pass
+                    else:
+                        member_task_type.has_drive_link = True
+                        message += "Drive Link Added,"
                 else:
                     if member_task_type.has_drive_link:
                         Task_Drive_Link.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Drive Link Removed,"
                     member_task_type.has_drive_link = False
 
                 if "file_upload" in task_ty:
-                    member_task_type.has_file_upload = True
-                    message += "File Upload,"
+                    if member_task_type.has_file_upload:
+                        pass
+                    else:
+                        member_task_type.has_file_upload = True
+                        message += "File Upload Added,"
                 else:
                     if member_task_type.has_file_upload:
                         files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
                         for file in files:
+                            message += f"Document, {file}, Removed,"
                             Task_Assignation.delete_task_document(file)
                     member_task_type.has_file_upload = False
 
                 if "media" in task_ty:
-                    member_task_type.has_media = True
-                    message += "Media,"
+                    if member_task_type.has_media:
+                        pass
+                    else:
+                        member_task_type.has_media = True
+                        message += "Media Added,"
                 else:
                     if member_task_type.has_media:
                         media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
                         for media_file in media_files:
+                            message += f"Media, {media_file}, Removed,"
                             Task_Assignation.delete_task_media(media_file)
                     member_task_type.has_media = False                     
 
                 member_task_type.save()
 
                 if message!="":
-                    message+=f" were updated as task type by {request.user.username} to {memb.ieee_id}"
+                    message+=f" by {request.user.username} for {memb.ieee_id}"
                     Task_Assignation.save_task_logs(task,message)
 
             #getting members IEEE_ID
@@ -893,7 +916,7 @@ XOXOXOX'''
                             email_from,
                             email_to
                             )
-        email.send()
+        # email.send()
         task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
         #setting message
         Task_Assignation.save_task_logs(task,task_log_message)

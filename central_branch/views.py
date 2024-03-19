@@ -4826,4 +4826,4 @@ class SaveMemberTaskPointsAjax(View):
         else:
             message = "Something went wrong while updating!"
 
-        return JsonResponse({'points':round(float(marks),1),'message':message})
+        return JsonResponse({'points':marks,'message':message})

@@ -738,7 +738,7 @@
                     <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
                         <div style="font-size: 20px;">
                             Points:
-                            <input type="text" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points}}" placeholder="Task marks" style="width: 60px;">
+                            <input type="text" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" placeholder="Task marks" style="width: 60px;">
                             <input type="hidden" id="member_id" name="member_id" value="{{member}}"></input>
                             <input type="hidden" id="task_id" name="task_id" value="{{task.pk}}"></input>
                             <button type="button" class="task-mark-save">
