@@ -610,6 +610,70 @@
             }
         }
 
+
+
+        .modal__wrapper{
+    position: fixed;
+    left:0;
+    top:0;
+    background: rgba(0, 0, 0, 0.6);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all .3s ease-in-out;
+    z-index: 2000;
+}
+
+.modal__container {
+    background: #fff;
+    width: 560px;
+    max-width: 90%;
+    padding: 20px;
+    border-radius: 4px;
+    position: relative;
+    transform: translateY(-100%);
+    transition: all .3s ease-in-out;
+    max-height: 550px;
+    overflow: hidden;
+}
+.modal__wrapper__container{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-height: 400px;
+}
+
+.btn__purple {
+    background:  #002855;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.modal__container button.close-4 {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 32px;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+.modal__container button.close-4:hover {
+    color: #6B46C1;
+}
+.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal__wrapper.active .modal__container{
+    transform: translateY(0px);
+}
     </style>
   </head>
   <body>
@@ -746,6 +810,23 @@
                 {% endif %}
 
 
+                <!-- logs modal -->
+                <div class="modal__wrapper">
+                    <div class="modal__container">
+                        <button class="close-4">&times;</button>
+                        <h2>Task Logs</h2>
+                        <div class="modal__wrapper__container">
+                            <ol>
+                                <li>Lorem ipsum dolor sit amet consec</li>
+                                <li>Lorem ipsum dolor sit amet consec</li>
+                                <li>Lorem ipsum dolor sit amet consec</li>
+                                <li>Lorem ipsum dolor sit amet consec</li>
+                                <li>Lorem ipsum dolor sit amet consec</li>
+                                <li>Lorem ipsum dolor sit amet consec</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
               
 
             
@@ -781,6 +862,8 @@
                   {% endif %}
                   {% if faculty_access or eb_access or super_user_access or staff_access%}
                   <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
+                  <button type="button" class="create-task-btn" id="trigger">Task Logs</button>
+
                   {% endif %}
                   
                   
@@ -1009,7 +1092,37 @@
     {% include "common_js.html" %}
     {% endblock common_js %}
 
+    <script>
+        const trigger = document.querySelector('#trigger');
+        const modalWrapper = document.querySelector('.modal__wrapper');
+        const closeBtn = document.querySelector('.close-4');
 
+        trigger.addEventListener('click', function(){
+            openModal();
+        });
+
+        closeBtn.addEventListener('click', function(){
+            closeModal();
+        });
+
+        modalWrapper.addEventListener('click', function(e){
+            if(e.target !== this) return;
+            closeModal();
+        });
+
+        document.addEventListener('keydown', function(e){
+            if(e.key === 'Escape') {
+                closeModal();
+            }
+        })
+
+        function openModal() {
+            modalWrapper.classList.add('active');
+        }
+        function closeModal() {
+            modalWrapper.classList.remove('active');
+        }
+    </script>
 
     <script>
         $(document).ready(function () {
