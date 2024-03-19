@@ -4737,6 +4737,10 @@ def task_edit(request, task_id):
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
+
+    create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+    create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
     user = request.user.username
     faculty_advisor_access = Access_Render.faculty_advisor_access(user)
     eb_access = Access_Render.eb_access(user)
@@ -4815,6 +4819,8 @@ def task_edit(request, task_id):
         'is_late':late,
         'my_task':my_task,
         'task_logs':task_logs.task_log_details,
+        'create_individual_task_access':create_individual_task_access,
+        'create_team_task_access':create_team_task_access
     }
 
     return render(request,"create_task.html",context)
