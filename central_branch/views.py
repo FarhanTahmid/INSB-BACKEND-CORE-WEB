@@ -4271,8 +4271,6 @@ class UpdateRestrictionAjax(View):
             message = f"Member ID {member_id} does not exist."
             return JsonResponse({'message': message}, status=404)
 
-@login_required
-@member_login_permission
 class AwardRanking(View):
     def get(self,request):
         award_id = request.GET.get('award_id')

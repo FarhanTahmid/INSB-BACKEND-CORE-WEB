@@ -798,11 +798,11 @@
                     <button class="close-4" id="close-4_{{ member.ieee_id }}">&times;</button>
                     <h4>Task Logs - {{ member.name }}</h4>
                     <div class="modal__wrapper__container">
-                        <ol>
+                        <ul>
                             {% for date, log in task_type.8.items %}
-                            <li><b>{{date}}</b><br>{{log}}</li>
+                            <li><b>{{date}}:</b><br>{{log}}</li>
                             {% endfor %}
-                        </ol>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -826,7 +826,7 @@
                             </button>
                         </div>
                     </div>
-                    <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Task Logs</button>
+                    <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Task Points Logs</button>
                     <br>
                     <br>
 
