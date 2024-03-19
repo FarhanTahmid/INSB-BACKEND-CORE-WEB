@@ -112,9 +112,8 @@ class Task_Assignation:
                 volunteer = Members.objects.get(ieee_id=member)
                 #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
-                ##
-                ## Send email/notification here
-                ##
+                #sending email
+                Task_Assignation.task_creation_email(request,volunteer,new_task)
 
             #saving members task type as per needed
             for ieee_id,task_type in task_types_per_member.items():
@@ -292,6 +291,9 @@ class Task_Assignation:
         
         prev_task_type = task.task_type
 
+        existing_task_member = []
+        for mem in task.members.all():
+            existing_task_member.append(mem)
         #Check the task's task_type and clear their respective fields
         if task.task_type == "Team":
             task.team.clear()
@@ -333,7 +335,6 @@ class Task_Assignation:
             for member in member_select:
                 #Get member reference and store it in volunteer
                 volunteer = Members.objects.get(ieee_id=member)
-
                 mem_task_points, created =  Member_Task_Point.objects.get_or_create(task=task,member=volunteer.ieee_id)
                 
                 #If new member is being added or Old member has no previous point changes
@@ -344,11 +345,14 @@ class Task_Assignation:
                     mem_task_points.completion_points = (mem_task_points.completion_points - prev_points_div) + task.task_category.points/len(member_select)
                 mem_task_points.save()
 
-                #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
-                ##
-                ## Send email/notification here
-                ##
+                
+                # Send email to only those members who were assigned the task in the update section
+                if volunteer not in existing_task_member:
+                    message = f'Task Name: {title}, task assiged to {volunteer.ieee_id} when updating by {task.task_created_by}'
+                    Task_Assignation.save_task_logs(task,message)
+                    Task_Assignation.task_creation_email(request,volunteer,task)
+                    
 
             #Add those members to task
             task.members.add(*members)
@@ -867,7 +871,7 @@ class Task_Assignation:
         
         return is_late
 
-    def add_comments(task, member_id, comments):
+    def add_comments(request,task, member_id, comments):
 
         '''This function adds the comment to a particular members profile '''
 
@@ -878,6 +882,7 @@ class Task_Assignation:
         #sending email to the member whose task is this to remind them there is a comment from
         #the member who assigned the task
         member = Members.objects.get(ieee_id = member_id)
+        site_domain = request.META['HTTP_HOST']
         email_to = []
         email_to.append(member.email_nsu)
         email_to.append(member.email_ieee)
@@ -885,12 +890,18 @@ class Task_Assignation:
         email_from = settings.EMAIL_HOST_USER
         subject = f"BAD WORK! DO IT AGAIN!"
         message = f'''Greetings {member.name},
-It's such a shame to see you, not being able to handle a simple task. Two more days and if
-not corrected you're out! May the odds be never in your favour.
+The work you have done so far is great! However, your task assignee seems to have
+commented on your completed work for more better outcome. Please view the task
+and make necessary changes accordingly
 
-From MD.Sakib Sami - the rising star
+Please follow to link to redirect to your work:
+{site_domain}/portal/central_branch/task/{task.pk}/upload_task
 
-XOXOXOX'''
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+'''
         email=EmailMultiAlternatives(subject,message,
                             email_from,
                             email_to
@@ -927,7 +938,7 @@ XOXOXOX'''
 
         return True
     
-    def task_email_to_eb(task,logged_in_user):
+    def task_email_to_eb(request,task,logged_in_user):
 
         #This function will send an email to the Eb who created this task once task assignee finishes and hits
         #the complete button
@@ -943,6 +954,7 @@ XOXOXOX'''
             email_to.append(member.email)
 
         email_from = settings.EMAIL_HOST_USER
+        site_domain = request.META['HTTP_HOST']
         subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
         message = f'''Hello {username},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
@@ -951,9 +963,14 @@ Please review the task, and for futher improvements make sure to comment! You ca
 dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
 in the task edit page, if you think the entire task is completed.
 
-From MD.Sakib Sami - the rising star
+Please follow the link to view the completed task: 
+{site_domain}/portal/central_branch/task/{task.pk}/upload_task
 
-XOXOXOX'''
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+'''
         email=EmailMultiAlternatives(subject,message,
                             email_from,
                             email_to
@@ -977,3 +994,37 @@ XOXOXOX'''
         task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = message
         task_log_details.update_task_number+=1
         task_log_details.save()
+
+    def task_creation_email(request,member,task):
+
+        '''This function will send an email to the member who has been assigned with a task along with the link'''
+
+        email_from = settings.EMAIL_HOST_USER
+        email_to = []
+        email_to.append(member.email_ieee)
+        email_to.append(member.email_personal)
+        email_to.append(member.email_nsu)
+        subject = f"You have been Assigned a Task!"
+        site_domain = request.META['HTTP_HOST']
+        message = f'''Hello {member.name},
+You have been assigned a task - {task.title}.
+Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
+
+You are requested to complete the task with in the due date. If not, you will be penalised daily
+5% of your task points.
+
+Please follow the link or go through the portal for more details.
+
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task.task_created_by.position.role}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+'''
+        email=EmailMultiAlternatives(subject,message,
+                                email_from,
+                                email_to
+                                )
+        # email.send()

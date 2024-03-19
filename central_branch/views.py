@@ -4599,7 +4599,7 @@ def upload_task(request, task_id):
                 member_id = request.POST.get('comments_member')
                 comments = request.POST.get('comments_details')
 
-                if Task_Assignation.add_comments(task, member_id, comments):
+                if Task_Assignation.add_comments(request,task, member_id, comments):
                     messages.success(request,f"Comments added for {member_id} successfully!")
                 else:
                     messages.warning(request,"Something went wrong while adding the comments!")
@@ -4613,7 +4613,7 @@ def upload_task(request, task_id):
             
             elif request.POST.get('finish_task'):
                 
-                if Task_Assignation.task_email_to_eb(task,logged_in_user):
+                if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
                     messages.success(request,"You task has been requested for reviewing!")
                 else:
                     messages.warning(request,"Something went wrong while saving!")
