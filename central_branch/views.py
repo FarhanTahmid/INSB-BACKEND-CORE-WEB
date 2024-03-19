@@ -4820,6 +4820,7 @@ class SaveMemberTaskPointsAjax(View):
         #checking to see if mark provided is negative or not if so send error message
         if float(marks)<0:
             message = "Please provide 0 but not negative marks!"
+            return JsonResponse({'message':message})
         
         if Task_Assignation.update_marks(task,member_id,marks):
             message = f"Member {member_id}'s mark updated to {marks}"
