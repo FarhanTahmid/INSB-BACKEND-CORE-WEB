@@ -307,16 +307,23 @@ class Task_Assignation:
         #Else if task_type is Individuals
         elif task_type == "Individuals":
             members = []
+            prev_no_of_volunteers=Member_Task_Point.objects.filter(task=task).count()
+            prev_points_div = task.task_category.points / float(prev_no_of_volunteers)
+
             #For each member in member_select array
             for member in member_select:
                 #Get member reference and store it in volunteer
                 volunteer = Members.objects.get(ieee_id=member)
+
                 mem_task_points, created =  Member_Task_Point.objects.get_or_create(task=task,member=volunteer.ieee_id)
-                if mem_task_points:
-                    pass
-                else:
+                
+                #If new member is being added or Old member has no previous point changes
+                if mem_task_points.completion_points == 0 or mem_task_points.completion_points == prev_points_div:
                     mem_task_points.completion_points = task.task_category.points/len(member_select)
-                    mem_task_points.save()
+                else:
+                    #The old member has additional changes in his points
+                    mem_task_points.completion_points = (mem_task_points.completion_points - prev_points_div) + task.task_category.points/len(member_select)
+                mem_task_points.save()
 
                 #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
