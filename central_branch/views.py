@@ -2492,8 +2492,14 @@ def manage_view_access(request):
                     # Setting Data Access Fields to false initially
                     create_event_access=False
                     event_details_page_access=False
+                    create_individual_task_access=False
+                    create_team_task_access=False
                     create_panels_access=False
-                    panel_memeber_add_remove_access=False
+
+                    #############  MEME :) ################
+                    panel_memeber_add_remove_access=False #
+                    #######################################
+
                     team_details_page=False
                     manage_web_access=False
                     manage_award_access=False
@@ -2504,6 +2510,10 @@ def manage_view_access(request):
                         create_event_access=True
                     if(request.POST.get('event_details_page_access')):
                         event_details_page_access=True
+                    if(request.POST.get('create_individual_task_access')):
+                        create_individual_task_access=True
+                    if(request.POST.get('create_team_task_access')):
+                        create_team_task_access=True
                     if(request.POST.get('create_panels_access')):
                         create_panels_access=True
                     if(request.POST.get('panel_memeber_add_remove_access')):
@@ -2518,6 +2528,8 @@ def manage_view_access(request):
                     # ****The passed keys must match the field name in the models. otherwise it wont update access
                     if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
                                                             'event_details_page_access':event_details_page_access,
+                                                            'create_individual_task_access':create_individual_task_access,
+                                                            'create_team_task_access':create_team_task_access,
                                                             'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
                                                             'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access})):
                         return redirect('central_branch:manage_access')
