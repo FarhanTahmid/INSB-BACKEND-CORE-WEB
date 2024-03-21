@@ -4562,6 +4562,9 @@ def upload_task(request, task_id):
             media_uploads = None
 
         task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
+        for key,value in task_type_per_member.items():
+            print(key)
+            print(value)
 
         if request.method == 'POST':
 
@@ -4596,7 +4599,7 @@ def upload_task(request, task_id):
                 member_id = request.POST.get('comments_member')
                 comments = request.POST.get('comments_details')
 
-                if Task_Assignation.add_comments(task, member_id, comments):
+                if Task_Assignation.add_comments(request,task, member_id, comments):
                     messages.success(request,f"Comments added for {member_id} successfully!")
                 else:
                     messages.warning(request,"Something went wrong while adding the comments!")
@@ -4610,7 +4613,7 @@ def upload_task(request, task_id):
             
             elif request.POST.get('finish_task'):
                 
-                if Task_Assignation.task_email_to_eb(task,logged_in_user):
+                if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
                     messages.success(request,"You task has been requested for reviewing!")
                 else:
                     messages.warning(request,"Something went wrong while saving!")
@@ -4782,6 +4785,9 @@ def task_edit(request, task_id):
         logged_in_user = Members.objects.get(ieee_id = user)
     except:
         logged_in_user = adminUsers.objects.get(username=user)
+    #getting all task logs for this task
+    task_logs = Task_Log.objects.get(task_number = task)
+    
 
     context = {
         'task':task,
@@ -4796,7 +4802,8 @@ def task_edit(request, task_id):
         'staff_access':staff_access,
         'logged_in_user':logged_in_user,
         'is_late':late,
-        'my_task':my_task
+        'my_task':my_task,
+        'task_logs':task_logs.task_log_details,
     }
 
     return render(request,"create_task.html",context)
@@ -4820,10 +4827,11 @@ class SaveMemberTaskPointsAjax(View):
         #checking to see if mark provided is negative or not if so send error message
         if float(marks)<0:
             message = "Please provide 0 but not negative marks!"
+            return JsonResponse({'message':message})
         
         if Task_Assignation.update_marks(task,member_id,marks):
             message = f"Member {member_id}'s mark updated to {marks}"
         else:
             message = "Something went wrong while updating!"
 
-        return JsonResponse({'points':round(float(marks),1),'message':message})
+        return JsonResponse({'points':marks,'message':message})

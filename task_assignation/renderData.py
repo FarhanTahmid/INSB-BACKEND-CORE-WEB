@@ -112,9 +112,8 @@ class Task_Assignation:
                 volunteer = Members.objects.get(ieee_id=member)
                 #Add the volunteer to the array and send confirmation
                 members.append(volunteer)
-                ##
-                ## Send email/notification here
-                ##
+                #sending email
+                Task_Assignation.task_creation_email(request,volunteer,new_task)
 
             #saving members task type as per needed
             for ieee_id,task_type in task_types_per_member.items():
@@ -256,6 +255,7 @@ class Task_Assignation:
 
         new_task_category = Task_Category.objects.get(name = task_category)
 
+        task_category_changed = False
         #making necessary updates in task log history
         if prev_title != title:
             task_log_message = f"Task Title changed from {prev_title} to {title} by {request.user.username}"
@@ -266,13 +266,34 @@ class Task_Assignation:
         if new_task_category != prev_task_category:
             task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {request.user.username}"
             Task_Assignation.save_task_logs(task,task_log_message)
+            task_category_changed = True
         #deadline saving not correct
         if prev_deadline != str(deadline):
             task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
             Task_Assignation.save_task_logs(task,task_log_message)
 
+        #changing all points to members if task category is changed
+        if task_category_changed:
+            #getting previous and new ones
+            prev_task_category_points = prev_task_category.points
+            new_task_category_points = new_task_category.points
+            #chaning points for every member in that task
+            for member in Member_Task_Point.objects.filter(task=task):
+                old_completion_points = member.completion_points
+                member.completion_points = (member.completion_points / prev_task_category_points ) * new_task_category_points * 1.0
+                member.save()
+                #if task is completed then directly updating the marks in their profile
+                if task.is_task_completed:
+                    mem = Members.objects.get(ieee_id = member.member)
+                    mem.completed_task_points -= old_completion_points
+                    mem.completed_task_points += member.completion_points
+                    mem.save()
+        
         prev_task_type = task.task_type
 
+        existing_task_member = []
+        for mem in task.members.all():
+            existing_task_member.append(mem)
         #Check the task's task_type and clear their respective fields
         if task.task_type == "Team":
             task.team.clear()
@@ -307,18 +328,39 @@ class Task_Assignation:
         #Else if task_type is Individuals
         elif task_type == "Individuals":
             members = []
+            prev_no_of_volunteers=Member_Task_Point.objects.filter(task=task).count()
+            prev_points_div = task.task_category.points / float(prev_no_of_volunteers)
+
             #For each member in member_select array
             for member in member_select:
                 #Get member reference and store it in volunteer
                 volunteer = Members.objects.get(ieee_id=member)
-                #Add the volunteer to the array and send confirmation
+                mem_task_points, created =  Member_Task_Point.objects.get_or_create(task=task,member=volunteer.ieee_id)
+                
+                #If new member is being added or Old member has no previous point changes
+                if mem_task_points.completion_points == 0 or mem_task_points.completion_points == prev_points_div:
+                    mem_task_points.completion_points = task.task_category.points/len(member_select)
+                else:
+                    #The old member has additional changes in his points
+                    mem_task_points.completion_points = (mem_task_points.completion_points - prev_points_div) + task.task_category.points/len(member_select)
+                mem_task_points.save()
+
                 members.append(volunteer)
-                ##
-                ## Send email/notification here
-                ##
+                
+                # Send email to only those members who were assigned the task in the update section
+                if volunteer not in existing_task_member:
+                    message = f'Task Name: {title}, task assiged to {volunteer.ieee_id} when updating by {task.task_created_by}'
+                    Task_Assignation.save_task_logs(task,message)
+                    Task_Assignation.task_creation_email(request,volunteer,task)
+                    
 
             #Add those members to task
             task.members.add(*members)
+
+            task_members = task.members.all()
+            for member in Member_Task_Point.objects.filter(task=task):
+                if Members.objects.get(ieee_id=member.member) not in task_members:
+                    member.delete()
 
             for member in Member_Task_Upload_Types.objects.filter(task=task):
                 if str(member.task_member) not in task_types_per_member:
@@ -331,17 +373,12 @@ class Task_Assignation:
                     if member.has_file_upload:
                         files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
                         for file in files:
-                            path = settings.MEDIA_ROOT+str(file.document)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            file.delete()
+                            Task_Assignation.delete_task_document(file)
                     if member.has_media:
                         media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
                         for media_file in media_files:
-                            path = settings.MEDIA_ROOT+str(media_file.media)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            media_file.delete()
+                            Task_Assignation.delete_task_media(media_file)
+
                     member.delete()
 
             #saving members task type as per needed
@@ -352,59 +389,73 @@ class Task_Assignation:
                 message = ""
 
                 if "permission_paper" in task_ty:
-                    member_task_type.has_permission_paper = True
-                    message += "Permission Paper,"
+                    if member_task_type.has_permission_paper:
+                        pass
+                    else:
+                        member_task_type.has_permission_paper = True
+                        message += "Permission Paper Added,"
                 else:
                     if member_task_type.has_permission_paper:
                         Permission_Paper.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Permission Paper Removed,"
                     member_task_type.has_permission_paper = False
 
                 if "content" in task_ty:
-                    member_task_type.has_content = True
-                    message += "Content,"
+                    if member_task_type.has_content:
+                        pass
+                    else:
+                        member_task_type.has_content = True
+                        message += "Content Added,"
                 else:
                     if member_task_type.has_content:
                         Task_Content.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Content Removed,"
                     member_task_type.has_content = False
 
                 if "drive_link" in task_ty:
-                    member_task_type.has_drive_link = True
-                    message += "Drive Link,"
+                    if member_task_type.has_drive_link:
+                        pass
+                    else:
+                        member_task_type.has_drive_link = True
+                        message += "Drive Link Added,"
                 else:
                     if member_task_type.has_drive_link:
                         Task_Drive_Link.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Drive Link Removed,"
                     member_task_type.has_drive_link = False
 
                 if "file_upload" in task_ty:
-                    member_task_type.has_file_upload = True
-                    message += "File Upload,"
+                    if member_task_type.has_file_upload:
+                        pass
+                    else:
+                        member_task_type.has_file_upload = True
+                        message += "File Upload Added,"
                 else:
                     if member_task_type.has_file_upload:
                         files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
                         for file in files:
-                            path = settings.MEDIA_ROOT+str(file.document)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            file.delete()
+                            message += f"Document, {file}, Removed,"
+                            Task_Assignation.delete_task_document(file)
                     member_task_type.has_file_upload = False
 
                 if "media" in task_ty:
-                    member_task_type.has_media = True
-                    message += "Media,"
+                    if member_task_type.has_media:
+                        pass
+                    else:
+                        member_task_type.has_media = True
+                        message += "Media Added,"
                 else:
                     if member_task_type.has_media:
                         media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
                         for media_file in media_files:
-                            path = settings.MEDIA_ROOT+str(media_file.media)
-                            if os.path.isfile(path):
-                                os.remove(path)
-                            media_file.delete()
+                            message += f"Media, {media_file}, Removed,"
+                            Task_Assignation.delete_task_media(media_file)
                     member_task_type.has_media = False                     
 
                 member_task_type.save()
 
                 if message!="":
-                    message+=f" were updated as task type by {request.user.username} to {memb.ieee_id}"
+                    message+=f" by {request.user.username} for {memb.ieee_id}"
                     Task_Assignation.save_task_logs(task,message)
 
             #getting members IEEE_ID
@@ -463,17 +514,11 @@ class Task_Assignation:
 
         files = Task_Document.objects.filter(task=task)
         for file in files:
-            path = settings.MEDIA_ROOT+str(file.document)
-            if os.path.isfile(path):
-                os.remove(path)
-            file.delete()
+            Task_Assignation.delete_task_document(file)
 
         media_files = Task_Media.objects.filter(task=task)
         for media_file in media_files:
-            path = settings.MEDIA_ROOT+str(media_file.media)
-            if os.path.isfile(path):
-                os.remove(path)
-            media_file.delete()
+            Task_Assignation.delete_task_media(media_file)
 
         Member_Task_Upload_Types.objects.filter(task=task).delete()
         Task_Log.objects.filter(task_number=task).delete()
@@ -637,13 +682,11 @@ class Task_Assignation:
             medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
             for m in medias:
                 #deleting existing ones from datase base and file system
-                path = settings.MEDIA_ROOT+str(m.media)
-                if os.path.isfile(path):
-                    os.remove(path)
+                Task_Assignation.delete_task_media(m)
                 message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
                 #updating task_log details
                 Task_Assignation.save_task_logs(task,message)
-                m.delete()
+
             for m in media:
                 #saving new one
                 media_save = Task_Media.objects.create(task=task,media = m,uploaded_by = member.ieee_id)
@@ -669,13 +712,11 @@ class Task_Assignation:
             file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
             for file in file_upload_save:
                 #deleting existing ones from datase base and file system
-                path = settings.MEDIA_ROOT+str(file.document)
-                if os.path.isfile(path):
-                    os.remove(path)
+                Task_Assignation.delete_task_document(file)
                 message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
                 #updating task_log details
                 Task_Assignation.save_task_logs(task,message)
-                file.delete()
+
             for file in file_upload:
                 file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
                 file_upload_save.save()
@@ -707,10 +748,12 @@ class Task_Assignation:
         #0 index of list contains task_upload+type of that member
         #1 index of list contains permission paper object of that member
         #2 index of list contains drive link object of that member
-        #3 index of list contains files uploaded of that member
-        #4 index of list contains media uploaded
-        #5 index of list contains task points
-        #6 index contains the comments
+        #3 index of list contains content of that member
+        #4 index of list contains files uploaded of that member
+        #5 index of list contains media uploaded
+        #6 index of list contains task points
+        #7 index contains the comments
+        #8 index contains the task points log dictionary
 
         current_task = Task.objects.get(pk=task.pk)
         dic={}
@@ -746,8 +789,15 @@ class Task_Assignation:
             member_task_list.append(task_points)
             comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
             member_task_list.append(comments)
-
-
+            #using a dictionary to store the task points log history
+            task_points_log = {}
+            try:
+                for key,value in task_points.deducted_points_logs.items():
+                    split_string = value.split(':')
+                    task_points_log[split_string[0]]=split_string[1]
+                member_task_list.append(task_points_log)
+            except:
+                member_task_list.append(task_points_log)
             dic[member_obj] = member_task_list
         
         return dic
@@ -758,6 +808,20 @@ class Task_Assignation:
 
         task_category = Task_Category.objects.create(name = task_name,points = task_point)
         task_category.save()
+        return True
+    
+    def delete_task_document(file):
+        path = settings.MEDIA_ROOT+str(file.document)
+        if os.path.isfile(path):
+            os.remove(path)
+        file.delete()
+        return True
+    
+    def delete_task_media(media_file):
+        path = settings.MEDIA_ROOT+str(media_file.media)
+        if os.path.isfile(path):
+            os.remove(path)
+        media_file.delete()
         return True
             
     def deduct_points_for_members(task):
@@ -797,18 +861,18 @@ class Task_Assignation:
                         if new_points < 0:
                             member.completion_points = 0
                             member.save()
-                            member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{deduction_amount}, delayed by {late_duration} days"
+                            member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{round(deduction_amount, 2)}, delayed by {late_duration} days"
                             member.save()
                             continue
                         member.completion_points = new_points
                         #stores the decducted amount as values along with the date when it was deducted
                         #key value is late_duration number the and the member's id
-                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{deduction_amount}, delayed by {late_duration} days"
+                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{round(deduction_amount, 2)}, delayed by {late_duration} days"
                         member.save()
         
         return is_late
 
-    def add_comments(task, member_id, comments):
+    def add_comments(request,task, member_id, comments):
 
         '''This function adds the comment to a particular members profile '''
 
@@ -819,19 +883,26 @@ class Task_Assignation:
         #sending email to the member whose task is this to remind them there is a comment from
         #the member who assigned the task
         member = Members.objects.get(ieee_id = member_id)
+        site_domain = request.META['HTTP_HOST']
         email_to = []
         email_to.append(member.email_nsu)
         email_to.append(member.email_ieee)
         email_to.append(member.email_personal)
         email_from = settings.EMAIL_HOST_USER
-        subject = f"BAD WORK! DO IT AGAIN!"
+        subject = f"Request to review your work"
         message = f'''Greetings {member.name},
-It's such a shame to see you, not being able to handle a simple task. Two more days and if
-not corrected you're out! May the odds be never in your favour.
+The work you have done so far is great! However, your task assignee seems to have
+commented on your completed work for more better outcome. Please view the task
+and make necessary changes accordingly
 
-From MD.Sakib Sami - the rising star
+Please follow to link to redirect to your work:
+{site_domain}/portal/central_branch/task/{task.pk}/upload_task
 
-XOXOXOX'''
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+'''
         email=EmailMultiAlternatives(subject,message,
                             email_from,
                             email_to
@@ -847,12 +918,20 @@ XOXOXOX'''
     def update_marks(task,ieee_id,marks):
 
         #This function will update the marks
-
+        marks = float(marks)
         member_task = Member_Task_Point.objects.get(task = task, member = ieee_id)
         #saving old marks
         previous_marks = member_task.completion_points
         member_task.completion_points = marks
         member_task.save()
+
+        #if task is completed and later marks are updated
+        if task.is_task_completed:
+            print("here")
+            member = Members.objects.get(ieee_id = ieee_id)
+            member.completed_task_points -= previous_marks
+            member.completed_task_points += marks
+            member.save()
 
         task_log_message =  f'Task Name: {task.title}, marks updated for {ieee_id} from {previous_marks} to {member_task.completion_points}'
         #updating logs
@@ -860,7 +939,7 @@ XOXOXOX'''
 
         return True
     
-    def task_email_to_eb(task,logged_in_user):
+    def task_email_to_eb(request,task,logged_in_user):
 
         #This function will send an email to the Eb who created this task once task assignee finishes and hits
         #the complete button
@@ -876,6 +955,7 @@ XOXOXOX'''
             email_to.append(member.email)
 
         email_from = settings.EMAIL_HOST_USER
+        site_domain = request.META['HTTP_HOST']
         subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
         message = f'''Hello {username},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
@@ -884,14 +964,19 @@ Please review the task, and for futher improvements make sure to comment! You ca
 dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
 in the task edit page, if you think the entire task is completed.
 
-From MD.Sakib Sami - the rising star
+Please follow the link to view the completed task: 
+{site_domain}/portal/central_branch/task/{task.pk}/upload_task
 
-XOXOXOX'''
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+'''
         email=EmailMultiAlternatives(subject,message,
                             email_from,
                             email_to
                             )
-        email.send()
+        #email.send()
         task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
         #setting message
         Task_Assignation.save_task_logs(task,task_log_message)
@@ -902,10 +987,53 @@ XOXOXOX'''
         '''This function saves the task log whenever needed'''
         
         #getting current time
-        current_time = str(datetime.now().strftime('%I:%M:%S %p'))
+        current_datetime = datetime.now()
+        current_time = current_datetime.strftime('%d-%m-%Y %I:%M:%S %p')
         #getting the task log
         task_log_details = Task_Log.objects.get(task_number = task)
         #updating task_log details
         task_log_details.task_log_details[current_time+f"_{task_log_details.update_task_number}"] = message
         task_log_details.update_task_number+=1
         task_log_details.save()
+
+    def task_creation_email(request,member,task):
+
+        '''This function will send an email to the member who has been assigned with a task along with the link'''
+
+        email_from = settings.EMAIL_HOST_USER
+        email_to = []
+        try:
+            task_created_by = Members.objects.get(ieee_id = task.task_created_by)
+            task_created_by = task_created_by.position.role
+        except:
+            task_created_by = "Admin"
+        email_to.append(member.email_ieee)
+        email_to.append(member.email_personal)
+        email_to.append(member.email_nsu)
+        subject = f"You have been Assigned a Task!"
+        site_domain = request.META['HTTP_HOST']
+        message = f'''Hello {member.name},
+You have been assigned a task - {task.title}.
+Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
+
+You are requested to complete the task with in the due date. If not, you will be penalised daily
+5% of your task points.
+
+Please follow the link or go through the portal for more details.
+
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task_created_by}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+'''
+        email=EmailMultiAlternatives(subject,message,
+                                email_from,
+                                email_to
+                                )
+        #email.send()
+        task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
+        #setting message
+        Task_Assignation.save_task_logs(task,task_log_message)
