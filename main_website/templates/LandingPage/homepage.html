@@ -177,6 +177,7 @@
     <style>
         :root {
             --glow-color: #fff;
+            --glow-color-text: #000000;
         }
         .overlay-countdown {
             position: fixed;
@@ -185,7 +186,7 @@
             width: 100%;
             height: 100%;
             background-color: #f2f1ed;
-            background: URL("https://cdna.artstation.com/p/assets/images/images/024/538/828/original/pixel-jeff-clipc-s.gif?1582740521");
+            background: URL("https://scontent.xx.fbcdn.net/v/t1.15752-9/432277733_996373051819847_1979280328919131664_n.jpg?stp=dst-jpg_s370x247&_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGM3wBf5szEIVAOYEFhCWK7r7NZfO1uwaSvs1l87W7BpKdvxXoEaFwFdzr-kkSnx6Q61JtrtwSxKkxRikpghDal&_nc_ohc=zApK9LMqI2gAX_LLOs2&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRkCYMBb9U2_vdOzX6TSlZdrD8br_5n35kh9wGvuH_9Vw&oe=662464E2");
             background-size: cover;
             background-repeat: no-repeat;
             z-index: 29999;
@@ -368,7 +369,7 @@
 
         .glowing-btn {
             position: relative;
-            color: var(--glow-color);
+            color: var(--glow-color-text);
             cursor: pointer;
             padding: 0.35em 1em;
             border: 0.15em solid var(--glow-color);
@@ -577,6 +578,26 @@
                 font-size: 1em;
             }
         }
+        .overlay-another {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+        display: none; /* Initially hide the overlay */
+        z-index: 9999; /* Ensure it's on top of other content */
+    }
+
+    .overlay-another img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
     </style>
             {% comment %} overlay-countdown end {% endcomment %}
 
@@ -670,6 +691,9 @@
         <!-- Add the remove overlay-countdown button -->
         <button id="removeOverlay" class="glowing-btn"><span class='glowing-txt'>Are <span
                     class='faulty-letter'>You </span>Ready?</span></button>
+    </div>
+    <div class="overlay-another">
+        <img src="https://s1.ezgif.com/tmp/ezgif-1-42e1fdf57b.gif" alt="Full screen GIF">
     </div>
     {% comment %} overlay-countdown end {% endcomment %}
 
@@ -768,34 +792,33 @@
         // Function to calculate the time difference
         function calculateTimeDifference() {
             // Given date and time
-            var givenDate = new Date("2024-03-22T10:20:00"); // Example date and time
-
+            var givenDate = new Date("2024-03-22T11:32:00"); // Example date and time
+    
             // Current date and time
             var currentDate = new Date();
-
+    
             // Calculate the difference in milliseconds
             var difference = givenDate - currentDate;
-
-            if(difference <= 0){
+    
+            if (difference <= 0) {
                 var hours = 0;
                 var minutes = 0;
-                var seconds = 0;                
-            }
-            else{
+                var seconds = 0;
+            } else {
                 // Convert milliseconds to hours, minutes, and seconds
                 var hours = Math.floor(difference / (1000 * 60 * 60));
                 var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((difference % (1000 * 60)) / 1000);
             }
-
-
+    
+    
             // Set the value to the data attribute
             document.getElementById("hours").setAttribute("data-init-value", hours);
             document.getElementById("minutes").setAttribute("data-init-value", minutes);
             document.getElementById("seconds").setAttribute("data-init-value", seconds);
-
-
-
+    
+    
+    
             $(document).ready(function () {
                 var Countdown = {
                     $el: $('.countdown'),
@@ -806,7 +829,7 @@
                         minutes: 0,
                         seconds: 0
                     },
-                    init: function() {
+                    init: function () {
                         this.$ = {
                             hours: this.$el.find('.bloc-time.hours .figure'),
                             minutes: this.$el.find('.bloc-time.min .figure'),
@@ -818,13 +841,13 @@
                             seconds: parseInt(this.$.seconds.parent().attr('data-init-value'))
                         };
                         this.total_seconds = this.values.hours * 60 * 60 + (this.values.minutes * 60) + this.values.seconds;
-                        this.count();    
+                        this.count();
                     },
-                    count: function() {
+                    count: function () {
                         var that = this;
-                        this.countdown_interval = setInterval(function() {
+                        this.countdown_interval = setInterval(function () {
                             if (that.total_seconds > 0) {
-                                --that.values.seconds;              
+                                --that.values.seconds;
                                 if (that.values.minutes >= 0 && that.values.seconds < 0) {
                                     that.values.seconds = 59;
                                     --that.values.minutes;
@@ -841,10 +864,12 @@
                                 clearInterval(that.countdown_interval);
                                 $('#removeOverlay').show(); // Show remove overlay button
                                 $('.countdown').hide(); // Hide countdown
+    
+                                
                             }
-                        }, 1000);    
+                        }, 1000);
                     },
-                    animateFigure: function($el, value) {
+                    animateFigure: function ($el, value) {
                         var $top = $el.find('.top'),
                             $bottom = $el.find('.bottom'),
                             $back_top = $el.find('.top-back'),
@@ -855,20 +880,20 @@
                             rotationX: '-180deg',
                             transformPerspective: 300,
                             ease: Quart.easeOut,
-                            onComplete: function() {
+                            onComplete: function () {
                                 $top.html(value);
                                 $bottom.html(value);
                                 TweenMax.set($top, { rotationX: 0 });
                             }
                         });
-                        TweenMax.to($back_top, 0.8, { 
+                        TweenMax.to($back_top, 0.8, {
                             rotationX: 0,
                             transformPerspective: 300,
-                            ease: Quart.easeOut, 
-                            clearProps: 'all' 
-                        });    
+                            ease: Quart.easeOut,
+                            clearProps: 'all'
+                        });
                     },
-                    checkHour: function(value, $el_1, $el_2) {
+                    checkHour: function (value, $el_1, $el_2) {
                         var val_1 = value.toString().charAt(0),
                             val_2 = value.toString().charAt(1),
                             fig_1_value = $el_1.find('.top').html(),
@@ -879,17 +904,27 @@
                         } else {
                             if (fig_1_value !== '0') this.animateFigure($el_1, 0);
                             if (fig_2_value !== val_1) this.animateFigure($el_2, val_1);
-                        }    
+                        }
                     }
                 };
-                $('#removeOverlay').hide(); // Show remove overlay button
-
+                $('#removeOverlay').hide(); // Hide remove overlay button
+    
                 Countdown.init();
-            
+    
                 $('#removeOverlay').click(function () {
-                    $('.overlay-countdown').fadeOut(1500);
+                    
+                    // Show another overlay for a certain time
+                    $('.overlay-another').fadeIn(100, function () {
+                        // After certain time, hide overlay and show the desired div
+                        setTimeout(function () {
+                            $('.overlay-another').fadeOut(2000, function () {
+                                $('.body-wrapper.float-menu').fadeIn(1500);
+                            });
+                        }, 5000); // Change 5000 to the desired time in milliseconds
+                    });
+                    $('.overlay-countdown').fadeOut(1800);
                 });
-        
+    
                 // Hide countdown with smooth transition
                 $('.countdown').on('click', function () {
                     $(this).fadeOut(1500, function () {
@@ -898,13 +933,14 @@
                     });
                 });
             });
-        
+    
         }
-
+    
         // Call the function when the page loads
         window.onload = calculateTimeDifference;
-
+    
     </script>
+    
     {% comment %} overlay-countdown end {% endcomment %}
 
 
