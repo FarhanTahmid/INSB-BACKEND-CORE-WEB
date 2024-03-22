@@ -58,7 +58,7 @@ def homepage(request):
 
         #only for countdown
         countdown = system.objects.first()
-        if countdown.count_down is not None:
+        if countdown.count_down_bool:
             local_timezone = tz('Asia/Dhaka')
             start_time = countdown.count_down.astimezone(local_timezone)
             start_time = start_time.replace(tzinfo=None)
@@ -80,6 +80,7 @@ def homepage(request):
             'all_thoughts':all_thoughts,
             'all_vom':get_volunteers_of_the_month,
             'awards':awards_of_current_panel,
+            'count_down_bool':countdown.count_down_bool,
             'start_time':start_time,#only for countdown
         }
         return render(request,"LandingPage/homepage.html",context)
