@@ -58,12 +58,16 @@ def homepage(request):
 
         #only for countdown
         countdown = system.objects.first()
-        if countdown.count_down_bool:
+        if countdown.count_down is not None:
             local_timezone = tz('Asia/Dhaka')
             start_time = countdown.count_down.astimezone(local_timezone)
             start_time = start_time.replace(tzinfo=None)
         else:
             start_time = None
+
+        button_enabled = False
+        if request.user.is_superuser or request.user.is_staff:
+            button_enabled = True
 
     
         context={
@@ -80,8 +84,8 @@ def homepage(request):
             'all_thoughts':all_thoughts,
             'all_vom':get_volunteers_of_the_month,
             'awards':awards_of_current_panel,
-            'count_down_bool':countdown.count_down_bool,
             'start_time':start_time,#only for countdown
+            'button_enabled':button_enabled,
         }
         return render(request,"LandingPage/homepage.html",context)
     except Exception as e:
@@ -1797,7 +1801,6 @@ def update_count_down(request):
             
             if key == "launch":
                 change = system.objects.first()
-                change.main_website_under_maintenance = False
                 change.count_down = None
                 change.save()
 

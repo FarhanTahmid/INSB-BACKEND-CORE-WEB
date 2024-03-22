@@ -174,7 +174,7 @@
 
 
         {% comment %} overlay-countdown start {% endcomment %}
-    {% if start_time is not None%}
+    {% if start_time is not None %}
     <style>
         :root {
             --glow-color: #fff;
@@ -849,7 +849,7 @@
             </div>
         </div>
         <!-- Add the remove overlay-countdown button -->
-        <button class="button" id="removeOverlay">
+        <button class="button" id="removeOverlay" {% if not button_enabled %}disabled{% endif %}>
             Let's Unleash
             <div class="star-1">
               <svg
