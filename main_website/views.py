@@ -28,6 +28,7 @@ from central_branch import views as cv
 from central_events.models import InterBranchCollaborations,IntraBranchCollaborations
 from django.views import View
 from pytz import timezone as tz
+from system_administration.models import system
 
 
 logger=logging.getLogger(__name__)
@@ -55,6 +56,16 @@ def homepage(request):
         # get awards for the current panel
         awards_of_current_panel=HandleVolunteerAwards.load_awards_for_panels(request=request,panel_pk=current_panel_pk)
 
+        #only for countdown
+        countdown = system.objects.first()
+        if countdown.count_down is not None:
+            local_timezone = tz('Asia/Dhaka')
+            start_time = countdown.count_down.astimezone(local_timezone)
+            start_time = start_time.replace(tzinfo=None)
+        else:
+            start_time = None
+
+    
         context={
             'banner_item':bannerItems,
             'banner_pic_with_stat':bannerWithStat,
@@ -69,6 +80,7 @@ def homepage(request):
             'all_thoughts':all_thoughts,
             'all_vom':get_volunteers_of_the_month,
             'awards':awards_of_current_panel,
+            'start_time':start_time,#only for countdown
         }
         return render(request,"LandingPage/homepage.html",context)
     except Exception as e:
@@ -1777,3 +1789,15 @@ def sc_ag_panel_members(request,sc_ag_primary,panel_pk,panel_year):
     
     
     return render(request,"Members/Panel/SC_AG/sc_ag_panel_members.html",context=context)
+def update_count_down(request):
+        if request.method == 'POST':
+        # Handle the POST request data
+            key = request.POST.get('key')
+            
+            if key == "launch":
+                change = system.objects.first()
+                change.main_website_under_maintenance = False
+                change.count_down = None
+                change.save()
+
+            return JsonResponse({'status': 'success'})
