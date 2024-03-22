@@ -6,7 +6,10 @@
 
     <title>IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
-    
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Include GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     {% block common_css %}
         {% include "common_css_includes.html" %}
     {% endblock common_css %}
@@ -17,7 +20,7 @@
         }
 
         /* banner_with_numbers_overlay */
-        #gdlr-parallax-overlay {
+        #gdlr-parallax-overlay-countdown {
             position: absolute;
             top: 0;
             left: 0;
@@ -35,7 +38,7 @@
         }
         
         .gdlr-header-inner,
-        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay {
+        .gdlr-header-wrapper.header-style-2-wrapper .gdlr-header-inner-overlay-countdown {
             background-color: 	#002855;
         }
 
@@ -164,13 +167,512 @@
                 align-items: normal;
             }
         }
+        </style>
 
+
+
+
+
+        {% comment %} overlay-countdown start {% endcomment %}
+    <style>
+        :root {
+            --glow-color: #fff;
+        }
+        .overlay-countdown {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f1ed;
+            background: URL("https://cdna.artstation.com/p/assets/images/images/024/538/828/original/pixel-jeff-clipc-s.gif?1582740521");
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: 29999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .overlay-countdown a {
+            text-decoration: none;
+            color: #1a1a1a;
+        }
+
+        .overlay-countdown h1 {
+            margin-bottom: 60px;
+            text-align: center;
+            font-family: 'Roboto', Sans-serif;
+            font-size: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white
+        }
+
+        .overlay-countdown h1 strong {
+            font-family: 'Roboto', Sans-serif;
+            font-size: 50px;
+            font-weight: 700;
+            color: #fad400;
+        }
+        .countdown {
+            width: 720px;
+            margin: 0 auto;
+            padding: 0 5%;
+            margin-top: -10%;
+        }
+
+        .countdown .bloc-time {
+            float: left;
+            margin: 0 1%;
+            text-align: center;
+            width: calc(33.33% - 2%);
+        }
+
+        .countdown .count-title {
+            display: block;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-family: 'Roboto', Sans-serif;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+
+        .countdown .figure {
+            position: relative;
+            float: left;
+            height: 110px;
+            width: calc(50% - 4%);
+            text-align: center;
+            margin: 0 2%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .2), inset 2px 4px 0 0 rgba(255, 255, 255, .08);
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            >span {
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+                font: normal 95px 'Lato';
+                font-weight: 700;
+                color: #002855;
+            }
+
+            .top,
+            .bottom-back {
+                &:after {
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 100%;
+                    border-bottom: 1px solid rgba(0, 0, 0, .1);
+                }
+            }
+
+            .top {
+                z-index: 30000;
+                background-color: #f7f7f7;
+                transform-origin: 50% 100%;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                transform: perspective(200px);
+            }
+
+            .bottom {
+                z-index: 10000;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 50%;
+                    background-color: rgba(0, 0, 0, .02);
+                }
+            }
+
+            .bottom-back {
+                z-index: 20000;
+                top: 0;
+                height: 50%;
+                overflow: hidden;
+                background-color: #f7f7f7;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+
+                span {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                }
+            }
+
+            .top,
+            .top-back {
+                height: 50%;
+                overflow: hidden;
+                backface-visibility: hidden;
+            }
+
+            .top-back {
+                z-index: 40000;
+                bottom: 0;
+                background-color: #fff;
+                transform-origin: 50% 0;
+                transform: perspective(200px) rotateX(180deg);
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+
+                span {
+                    position: absolute;
+                    top: -100%;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                }
+            }
+        }
+        .countdown,
+        #removeOverlay {
+            transition: opacity 0.5s ease-in-out;
+        }
+    
+        .hidden {
+            opacity: 0;
+        }
+
+        @media (max-width: 760px) {
+            .countdown .figure {
+                height: 80px;
+            }
+
+            .countdown .figure>span {
+                font-size: 70px;
+            }
+        }
+
+
+
+
+        .glowing-btn {
+            position: relative;
+            color: var(--glow-color);
+            cursor: pointer;
+            padding: 0.35em 1em;
+            border: 0.15em solid var(--glow-color);
+            border-radius: 0.45em;
+            background: none;
+            perspective: 2em;
+            font-family: "Raleway", sans-serif;
+            font-size: 2em;
+            font-weight: 900;
+            letter-spacing: 1em;
+
+            -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
+                0px 0px 0.5em 0px var(--glow-color);
+            -moz-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
+                0px 0px 0.5em 0px var(--glow-color);
+            box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
+                0px 0px 0.5em 0px var(--glow-color);
+            animation: border-flicker 2s linear infinite;
+        }
+
+        .glowing-txt {
+            float: left;
+            margin-right: -0.8em;
+            -webkit-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
+                0 0 0.45em var(--glow-color);
+            -moz-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
+                0 0 0.45em var(--glow-color);
+            text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3), 0 0 0.45em var(--glow-color);
+            animation: text-flicker 3s linear infinite;
+        }
+
+        .faulty-letter {
+            opacity: 0.5;
+            animation: faulty-flicker 2s linear infinite;
+        }
+
+        .glowing-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0.7;
+            filter: blur(1em);
+            transform: translateY(120%) rotateX(95deg) scale(1, 0.35);
+            background: var(--glow-color);
+            pointer-events: none;
+        }
+
+        .glowing-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            z-index: -1;
+            background-color: var(--glow-color);
+            box-shadow: 0 0 2em 0.2em var(--glow-color);
+            transition: opacity 100ms linear;
+        }
+
+        .glowing-btn:hover {
+            color: rgba(0, 0, 0, 0.8);
+            text-shadow: none;
+            animation: none;
+        }
+
+        .glowing-btn:hover .glowing-txt {
+            animation: none;
+        }
+
+        .glowing-btn:hover .faulty-letter {
+            animation: none;
+            text-shadow: none;
+            opacity: 1;
+        }
+
+        .glowing-btn:hover:before {
+            filter: blur(1.5em);
+            opacity: 1;
+        }
+
+        .glowing-btn:hover:after {
+            opacity: 1;
+        }
+
+        @keyframes faulty-flicker {
+            0% {
+                opacity: 0.1;
+            }
+
+            2% {
+                opacity: 0.1;
+            }
+
+            4% {
+                opacity: 0.5;
+            }
+
+            19% {
+                opacity: 0.5;
+            }
+
+            21% {
+                opacity: 0.1;
+            }
+
+            23% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.5;
+            }
+
+            83% {
+                opacity: 0.4;
+            }
+
+            87% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes text-flicker {
+            0% {
+                opacity: 0.1;
+            }
+
+            2% {
+                opacity: 1;
+            }
+
+            8% {
+                opacity: 0.1;
+            }
+
+            9% {
+                opacity: 1;
+            }
+
+            12% {
+                opacity: 0.1;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            25% {
+                opacity: 0.3;
+            }
+
+            30% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 0.7;
+            }
+
+            72% {
+                opacity: 0.2;
+            }
+
+            77% {
+                opacity: 0.9;
+            }
+
+            100% {
+                opacity: 0.9;
+            }
+        }
+
+        @keyframes border-flicker {
+            0% {
+                opacity: 0.1;
+            }
+
+            2% {
+                opacity: 1;
+            }
+
+            4% {
+                opacity: 0.1;
+            }
+
+            8% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @media only screen and (max-width: 600px) {
+            .glowing-btn {
+                font-size: 1em;
+            }
+        }
     </style>
+            {% comment %} overlay-countdown end {% endcomment %}
+
 <!--Extra CSS-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+    {% comment %} overlay-countdown start {% endcomment %}
+    <div class="overlay-countdown">
+        <div class="countdown">
+            <h1>Website <strong>Launching</strong></h1>
+            <div class="bloc-time hours" id="hours">
+                <span class="count-title">Hours</span>
+
+                <div class="figure hours hours-1">
+                    <span class="top">0</span>
+                    <span class="top-back">
+                        <span>0</span>
+                    </span>
+                    <span class="bottom">0</span>
+                    <span class="bottom-back">
+                        <span>0</span>
+                    </span>
+                </div>
+
+                <div class="figure hours hours-2">
+                    <span class="top">0</span>
+                    <span class="top-back">
+                        <span>0</span>
+                    </span>
+                    <span class="bottom">0</span>
+                    <span class="bottom-back">
+                        <span>0</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="bloc-time min" id="minutes">
+                <span class="count-title">Minutes</span>
+
+                <div class="figure min min-1">
+                    <span class="top">0</span>
+                    <span class="top-back">
+                        <span>0</span>
+                    </span>
+                    <span class="bottom">0</span>
+                    <span class="bottom-back">
+                        <span>0</span>
+                    </span>
+                </div>
+
+                <div class="figure min min-2">
+                    <span class="top">0</span>
+                    <span class="top-back">
+                        <span>0</span>
+                    </span>
+                    <span class="bottom">0</span>
+                    <span class="bottom-back">
+                        <span>0</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="bloc-time sec" id="seconds">
+                <span class="count-title">Seconds</span>
+
+                <div class="figure sec sec-1">
+                    <span class="top">0</span>
+                    <span class="top-back">
+                        <span>0</span>
+                    </span>
+                    <span class="bottom">0</span>
+                    <span class="bottom-back">
+                        <span>0</span>
+                    </span>
+                </div>
+
+                <div class="figure sec sec-2">
+                    <span class="top">0</span>
+                    <span class="top-back">
+                        <span>0</span>
+                    </span>
+                    <span class="bottom">0</span>
+                    <span class="bottom-back">
+                        <span>0</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- Add the remove overlay-countdown button -->
+        <button id="removeOverlay" class="glowing-btn"><span class='glowing-txt'>Are <span
+                    class='faulty-letter'>You </span>Ready?</span></button>
+    </div>
+    {% comment %} overlay-countdown end {% endcomment %}
+
     <div class="body-wrapper  float-menu">
         
         {% block header %}
@@ -247,6 +749,7 @@
                         {% include "LandingPage/testimonial.html" %}
                     {% endblock testimonial %}
                     
+                </div>
             </div>
             <!-- gdlr-content -->
             <div class="clear"></div>
@@ -259,6 +762,152 @@
         {% endblock %}
         
     </div>
+
+    {% comment %} overlay-countdown start {% endcomment %}
+    <script>
+        // Function to calculate the time difference
+        function calculateTimeDifference() {
+            // Given date and time
+            var givenDate = new Date("2024-03-22T10:20:00"); // Example date and time
+
+            // Current date and time
+            var currentDate = new Date();
+
+            // Calculate the difference in milliseconds
+            var difference = givenDate - currentDate;
+
+            if(difference <= 0){
+                var hours = 0;
+                var minutes = 0;
+                var seconds = 0;                
+            }
+            else{
+                // Convert milliseconds to hours, minutes, and seconds
+                var hours = Math.floor(difference / (1000 * 60 * 60));
+                var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            }
+
+
+            // Set the value to the data attribute
+            document.getElementById("hours").setAttribute("data-init-value", hours);
+            document.getElementById("minutes").setAttribute("data-init-value", minutes);
+            document.getElementById("seconds").setAttribute("data-init-value", seconds);
+
+
+
+            $(document).ready(function () {
+                var Countdown = {
+                    $el: $('.countdown'),
+                    countdown_interval: null,
+                    total_seconds: 0,
+                    values: {
+                        hours: 0,
+                        minutes: 0,
+                        seconds: 0
+                    },
+                    init: function() {
+                        this.$ = {
+                            hours: this.$el.find('.bloc-time.hours .figure'),
+                            minutes: this.$el.find('.bloc-time.min .figure'),
+                            seconds: this.$el.find('.bloc-time.sec .figure')
+                        };
+                        this.values = {
+                            hours: parseInt(this.$.hours.parent().attr('data-init-value')),
+                            minutes: parseInt(this.$.minutes.parent().attr('data-init-value')),
+                            seconds: parseInt(this.$.seconds.parent().attr('data-init-value'))
+                        };
+                        this.total_seconds = this.values.hours * 60 * 60 + (this.values.minutes * 60) + this.values.seconds;
+                        this.count();    
+                    },
+                    count: function() {
+                        var that = this;
+                        this.countdown_interval = setInterval(function() {
+                            if (that.total_seconds > 0) {
+                                --that.values.seconds;              
+                                if (that.values.minutes >= 0 && that.values.seconds < 0) {
+                                    that.values.seconds = 59;
+                                    --that.values.minutes;
+                                }
+                                if (that.values.hours >= 0 && that.values.minutes < 0) {
+                                    that.values.minutes = 59;
+                                    --that.values.hours;
+                                }
+                                that.checkHour(that.values.hours, that.$.hours.eq(0), that.$.hours.eq(1));
+                                that.checkHour(that.values.minutes, that.$.minutes.eq(0), that.$.minutes.eq(1));
+                                that.checkHour(that.values.seconds, that.$.seconds.eq(0), that.$.seconds.eq(1));
+                                --that.total_seconds;
+                            } else {
+                                clearInterval(that.countdown_interval);
+                                $('#removeOverlay').show(); // Show remove overlay button
+                                $('.countdown').hide(); // Hide countdown
+                            }
+                        }, 1000);    
+                    },
+                    animateFigure: function($el, value) {
+                        var $top = $el.find('.top'),
+                            $bottom = $el.find('.bottom'),
+                            $back_top = $el.find('.top-back'),
+                            $back_bottom = $el.find('.bottom-back');
+                        $back_top.find('span').html(value);
+                        $back_bottom.find('span').html(value);
+                        TweenMax.to($top, 0.8, {
+                            rotationX: '-180deg',
+                            transformPerspective: 300,
+                            ease: Quart.easeOut,
+                            onComplete: function() {
+                                $top.html(value);
+                                $bottom.html(value);
+                                TweenMax.set($top, { rotationX: 0 });
+                            }
+                        });
+                        TweenMax.to($back_top, 0.8, { 
+                            rotationX: 0,
+                            transformPerspective: 300,
+                            ease: Quart.easeOut, 
+                            clearProps: 'all' 
+                        });    
+                    },
+                    checkHour: function(value, $el_1, $el_2) {
+                        var val_1 = value.toString().charAt(0),
+                            val_2 = value.toString().charAt(1),
+                            fig_1_value = $el_1.find('.top').html(),
+                            fig_2_value = $el_2.find('.top').html();
+                        if (value >= 10) {
+                            if (fig_1_value !== val_1) this.animateFigure($el_1, val_1);
+                            if (fig_2_value !== val_2) this.animateFigure($el_2, val_2);
+                        } else {
+                            if (fig_1_value !== '0') this.animateFigure($el_1, 0);
+                            if (fig_2_value !== val_1) this.animateFigure($el_2, val_1);
+                        }    
+                    }
+                };
+                $('#removeOverlay').hide(); // Show remove overlay button
+
+                Countdown.init();
+            
+                $('#removeOverlay').click(function () {
+                    $('.overlay-countdown').fadeOut(1500);
+                });
+        
+                // Hide countdown with smooth transition
+                $('.countdown').on('click', function () {
+                    $(this).fadeOut(1500, function () {
+                        // Show remove overlay button with smooth transition after countdown disappears
+                        $('#removeOverlay').fadeIn(1500);
+                    });
+                });
+            });
+        
+        }
+
+        // Call the function when the page loads
+        window.onload = calculateTimeDifference;
+
+    </script>
+    {% comment %} overlay-countdown end {% endcomment %}
+
+
     <!-- body-wrapper -->
     {% block common_js %}
         {% include "common_js_includes.html" %}
