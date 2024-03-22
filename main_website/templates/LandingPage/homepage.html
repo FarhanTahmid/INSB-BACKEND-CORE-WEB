@@ -174,6 +174,7 @@
 
 
         {% comment %} overlay-countdown start {% endcomment %}
+    {% if start_time is not None%}
     <style>
         :root {
             --glow-color: #fff;
@@ -186,7 +187,7 @@
             width: 100%;
             height: 100%;
             background-color: #f2f1ed;
-            background: URL("https://scontent.xx.fbcdn.net/v/t1.15752-9/432277733_996373051819847_1979280328919131664_n.jpg?stp=dst-jpg_s370x247&_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGM3wBf5szEIVAOYEFhCWK7r7NZfO1uwaSvs1l87W7BpKdvxXoEaFwFdzr-kkSnx6Q61JtrtwSxKkxRikpghDal&_nc_ohc=zApK9LMqI2gAX_LLOs2&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdRkCYMBb9U2_vdOzX6TSlZdrD8br_5n35kh9wGvuH_9Vw&oe=662464E2");
+            background: URL("https://scontent.fdac178-1.fna.fbcdn.net/v/t1.15752-9/432598170_912434723962589_508166130350646647_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGVs3Det2k4e-u9NwldysyZNM48Yd8y5Wc0zjxh3zLlZ6tqTDtXFFf2DDXubFbuXtvwa692C2xSp543igDXFUpX&_nc_ohc=8PtOrpDLzPgAX8wIXoN&_nc_ht=scontent.fdac178-1.fna&oh=03_AdTtbBH56vUYjdof25Dk5S6fleEdz0m1gytGMQe69TUBYg&oe=66247FF7");
             background-size: cover;
             background-repeat: no-repeat;
             z-index: 29999;
@@ -202,21 +203,20 @@
         .overlay-countdown h1 {
             margin-bottom: 60px;
             text-align: center;
-            font-family: 'Roboto', Sans-serif;
-            font-size: 50px;
+            font-family: 'poppins';
+            font-size: 60px;
             font-weight: 700;
             text-transform: uppercase;
             color: white
         }
 
         .overlay-countdown h1 strong {
-            font-family: 'Roboto', Sans-serif;
-            font-size: 50px;
+            font-family: 'poppins';
+            font-size: 60px;
             font-weight: 700;
-            color: #fad400;
+            color: #002855;
         }
         .countdown {
-            width: 720px;
             margin: 0 auto;
             padding: 0 5%;
             margin-top: -10%;
@@ -233,8 +233,8 @@
             display: block;
             margin-bottom: 15px;
             font-size: 20px;
-            font-family: 'Roboto', Sans-serif;
-            color: #fff;
+            font-family: 'poppins';
+            color: #002855;
             text-transform: uppercase;
         }
 
@@ -379,7 +379,7 @@
             font-family: "Raleway", sans-serif;
             font-size: 2em;
             font-weight: 900;
-            letter-spacing: 1em;
+            letter-spacing: 10px;
 
             -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
                 0px 0px 0.5em 0px var(--glow-color);
@@ -598,7 +598,166 @@
         width: 100%;
         height: 100%;
     }
+
+
+
+
+    .button {
+  position: relative;
+  padding: 12px 35px;
+  background: #002855;;
+  font-family: 'poppins';
+  font-size: 30px;
+  font-weight: 500;
+  color: #ffffff;
+  border: 3px solid #002855;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-shadow: 0 0 0 #fec1958c;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.star-1 {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 25px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 1s cubic-bezier(0.05, 0.83, 0.43, 0.96);
+}
+
+.star-2 {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-3 {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-4 {
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  width: 8px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-5 {
+  position: absolute;
+  top: 25%;
+  left: 45%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-6 {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 0.8s ease;
+}
+
+.button:hover {
+  background: transparent;
+  color: #002855;
+  box-shadow: 0 0 25px #fec1958c;
+}
+
+.button:hover .star-1 {
+  position: absolute;
+  top: -80%;
+  left: -30%;
+  width: 25px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-2 {
+  position: absolute;
+  top: -25%;
+  left: 10%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-3 {
+  position: absolute;
+  top: 55%;
+  left: 25%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-4 {
+  position: absolute;
+  top: 30%;
+  left: 80%;
+  width: 8px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-5 {
+  position: absolute;
+  top: 25%;
+  left: 115%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-6 {
+  position: absolute;
+  top: 5%;
+  left: 60%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.fil0 {
+  fill: #fffdef;
+}
+
+
+
     </style>
+    {% endif %}
             {% comment %} overlay-countdown end {% endcomment %}
 
 <!--Extra CSS-->
@@ -607,6 +766,7 @@
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     {% comment %} overlay-countdown start {% endcomment %}
+    {% if start_time is not None %}
     <div class="overlay-countdown">
         <div class="countdown">
             <h1>Website <strong>Launching</strong></h1>
@@ -689,12 +849,128 @@
             </div>
         </div>
         <!-- Add the remove overlay-countdown button -->
-        <button id="removeOverlay" class="glowing-btn"><span class='glowing-txt'>Are <span
-                    class='faulty-letter'>You </span>Ready?</span></button>
+        <button class="button" id="removeOverlay">
+            Let's Unleash
+            <div class="star-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+          </button>
     </div>
     <div class="overlay-another">
-        <img src="https://s1.ezgif.com/tmp/ezgif-1-42e1fdf57b.gif" alt="Full screen GIF">
+        <img src='{% static '/upload/launch.gif'%}' alt="Rocket Launching GIF">
     </div>
+    {% endif %}
     {% comment %} overlay-countdown end {% endcomment %}
 
     <div class="body-wrapper  float-menu">
@@ -788,12 +1064,13 @@
     </div>
 
     {% comment %} overlay-countdown start {% endcomment %}
+    {% if start_time is not None %}
     <script>
         // Function to calculate the time difference
         function calculateTimeDifference() {
             // Given date and time
-            var givenDate = new Date("2024-03-22T11:32:00"); // Example date and time
-    
+            var givenDate = new Date('{{start_time.isoformat}}'); // Example date and time
+
             // Current date and time
             var currentDate = new Date();
     
@@ -938,9 +1215,54 @@
     
         // Call the function when the page loads
         window.onload = calculateTimeDifference;
-    
+
+        $(document).ready(function() {
+            $('#removeOverlay').click(function() {
+                var csrftoken = getCookie('csrftoken');
+                // Send data to views.py using AJAX
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'main_website:count_down' %}", // Specify the URL endpoint in views.py
+                    data: {
+                        // Provide data you want to send to views.py
+                        key: "launch",
+                        // Add more key-value pairs as needed
+                    },
+                    headers: {
+                        // Include the CSRF token in the request headers
+                        'X-CSRFToken': csrftoken
+                    },
+                    success: function(response) {
+                        // Handle success response from the server
+                        // You can update the page content or perform other actions here
+                        console.log("Data sent successfully!");
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors if any
+                        console.error("Error occurred:", error);
+                    }
+                });
+            });
+        });
+        // Function to retrieve CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Check if the cookie name matches the CSRF token cookie name
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+    }
+
     </script>
-    
+    {% endif %}
     {% comment %} overlay-countdown end {% endcomment %}
 
 

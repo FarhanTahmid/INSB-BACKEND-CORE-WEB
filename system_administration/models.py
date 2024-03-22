@@ -18,6 +18,7 @@ class system(models.Model):
     portal_under_maintenance=models.BooleanField(null=False,blank=False,default=False)
     scheduling_under_maintenance = models.BooleanField(null=False,blank=False,default=False)
     restrict_sc_ag_updates = models.BooleanField(null=False,blank=False,default=False)
+    count_down = models.DateTimeField(null=True,blank=True)
     
     class Meta:
         verbose_name="System Handling"
