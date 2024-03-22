@@ -178,6 +178,7 @@
     <style>
         :root {
             --glow-color: #fff;
+            --glow-color-text: #000000;
         }
         .overlay-countdown {
             position: fixed;
@@ -186,7 +187,7 @@
             width: 100%;
             height: 100%;
             background-color: #f2f1ed;
-            background: URL("https://cdna.artstation.com/p/assets/images/images/024/538/828/original/pixel-jeff-clipc-s.gif?1582740521");
+            background: URL("https://scontent.fdac178-1.fna.fbcdn.net/v/t1.15752-9/432598170_912434723962589_508166130350646647_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGVs3Det2k4e-u9NwldysyZNM48Yd8y5Wc0zjxh3zLlZ6tqTDtXFFf2DDXubFbuXtvwa692C2xSp543igDXFUpX&_nc_ohc=8PtOrpDLzPgAX8wIXoN&_nc_ht=scontent.fdac178-1.fna&oh=03_AdTtbBH56vUYjdof25Dk5S6fleEdz0m1gytGMQe69TUBYg&oe=66247FF7");
             background-size: cover;
             background-repeat: no-repeat;
             z-index: 29999;
@@ -202,21 +203,20 @@
         .overlay-countdown h1 {
             margin-bottom: 60px;
             text-align: center;
-            font-family: 'Roboto', Sans-serif;
-            font-size: 50px;
+            font-family: 'poppins';
+            font-size: 60px;
             font-weight: 700;
             text-transform: uppercase;
             color: white
         }
 
         .overlay-countdown h1 strong {
-            font-family: 'Roboto', Sans-serif;
-            font-size: 50px;
+            font-family: 'poppins';
+            font-size: 60px;
             font-weight: 700;
-            color: #fad400;
+            color: #002855;
         }
         .countdown {
-            width: 720px;
             margin: 0 auto;
             padding: 0 5%;
             margin-top: -10%;
@@ -233,8 +233,8 @@
             display: block;
             margin-bottom: 15px;
             font-size: 20px;
-            font-family: 'Roboto', Sans-serif;
-            color: #fff;
+            font-family: 'poppins';
+            color: #002855;
             text-transform: uppercase;
         }
 
@@ -369,7 +369,7 @@
 
         .glowing-btn {
             position: relative;
-            color: var(--glow-color);
+            color: var(--glow-color-text);
             cursor: pointer;
             padding: 0.35em 1em;
             border: 0.15em solid var(--glow-color);
@@ -379,7 +379,7 @@
             font-family: "Raleway", sans-serif;
             font-size: 2em;
             font-weight: 900;
-            letter-spacing: 1em;
+            letter-spacing: 10px;
 
             -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
                 0px 0px 0.5em 0px var(--glow-color);
@@ -578,6 +578,184 @@
                 font-size: 1em;
             }
         }
+        .overlay-another {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+        display: none; /* Initially hide the overlay */
+        z-index: 9999; /* Ensure it's on top of other content */
+    }
+
+    .overlay-another img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+
+
+
+    .button {
+  position: relative;
+  padding: 12px 35px;
+  background: #002855;;
+  font-family: 'poppins';
+  font-size: 30px;
+  font-weight: 500;
+  color: #ffffff;
+  border: 3px solid #002855;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-shadow: 0 0 0 #fec1958c;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.star-1 {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 25px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 1s cubic-bezier(0.05, 0.83, 0.43, 0.96);
+}
+
+.star-2 {
+  position: absolute;
+  top: 45%;
+  left: 45%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-3 {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 1s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-4 {
+  position: absolute;
+  top: 20%;
+  left: 40%;
+  width: 8px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-5 {
+  position: absolute;
+  top: 25%;
+  left: 45%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01);
+}
+
+.star-6 {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 0 #fffdef);
+  z-index: -5;
+  transition: all 0.8s ease;
+}
+
+.button:hover {
+  background: transparent;
+  color: #002855;
+  box-shadow: 0 0 25px #fec1958c;
+}
+
+.button:hover .star-1 {
+  position: absolute;
+  top: -80%;
+  left: -30%;
+  width: 25px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-2 {
+  position: absolute;
+  top: -25%;
+  left: 10%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-3 {
+  position: absolute;
+  top: 55%;
+  left: 25%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-4 {
+  position: absolute;
+  top: 30%;
+  left: 80%;
+  width: 8px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-5 {
+  position: absolute;
+  top: 25%;
+  left: 115%;
+  width: 15px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.button:hover .star-6 {
+  position: absolute;
+  top: 5%;
+  left: 60%;
+  width: 5px;
+  height: auto;
+  filter: drop-shadow(0 0 10px #fffdef);
+  z-index: 2;
+}
+
+.fil0 {
+  fill: #fffdef;
+}
+
+
+
     </style>
     {% endif %}
             {% comment %} overlay-countdown end {% endcomment %}
@@ -671,8 +849,126 @@
             </div>
         </div>
         <!-- Add the remove overlay-countdown button -->
-        <button id="removeOverlay" class="glowing-btn"><span class='glowing-txt'>Are <span
-                    class='faulty-letter'>You </span>Ready?</span></button>
+        <button class="button" id="removeOverlay">
+            Let's Unleash
+            <div class="star-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-5">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+            <div class="star-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xml:space="preserve"
+                version="1.1"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 784.11 815.53"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+              >
+                <defs></defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer"></metadata>
+                  <path
+                    class="fil0"
+                    d="M392.05 0c-20.9,210.08 -184.06,378.41 -392.05,407.78 207.96,29.37 371.12,197.68 392.05,407.74 20.93,-210.06 184.09,-378.37 392.05,-407.74 -207.98,-29.38 -371.16,-197.69 -392.06,-407.78z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+          </button>
+    </div>
+    <div class="overlay-another">
+        <img src='{% static '/upload/launch.gif'%}' alt="Rocket Launching GIF">
     </div>
     {% endif %}
     {% comment %} overlay-countdown end {% endcomment %}
@@ -777,30 +1073,29 @@
 
             // Current date and time
             var currentDate = new Date();
-
+    
             // Calculate the difference in milliseconds
             var difference = givenDate - currentDate;
-
-            if(difference <= 0){
+    
+            if (difference <= 0) {
                 var hours = 0;
                 var minutes = 0;
-                var seconds = 0;                
-            }
-            else{
+                var seconds = 0;
+            } else {
                 // Convert milliseconds to hours, minutes, and seconds
                 var hours = Math.floor(difference / (1000 * 60 * 60));
                 var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((difference % (1000 * 60)) / 1000);
             }
-
-
+    
+    
             // Set the value to the data attribute
             document.getElementById("hours").setAttribute("data-init-value", hours);
             document.getElementById("minutes").setAttribute("data-init-value", minutes);
             document.getElementById("seconds").setAttribute("data-init-value", seconds);
-
-
-
+    
+    
+    
             $(document).ready(function () {
                 var Countdown = {
                     $el: $('.countdown'),
@@ -811,7 +1106,7 @@
                         minutes: 0,
                         seconds: 0
                     },
-                    init: function() {
+                    init: function () {
                         this.$ = {
                             hours: this.$el.find('.bloc-time.hours .figure'),
                             minutes: this.$el.find('.bloc-time.min .figure'),
@@ -823,13 +1118,13 @@
                             seconds: parseInt(this.$.seconds.parent().attr('data-init-value'))
                         };
                         this.total_seconds = this.values.hours * 60 * 60 + (this.values.minutes * 60) + this.values.seconds;
-                        this.count();    
+                        this.count();
                     },
-                    count: function() {
+                    count: function () {
                         var that = this;
-                        this.countdown_interval = setInterval(function() {
+                        this.countdown_interval = setInterval(function () {
                             if (that.total_seconds > 0) {
-                                --that.values.seconds;              
+                                --that.values.seconds;
                                 if (that.values.minutes >= 0 && that.values.seconds < 0) {
                                     that.values.seconds = 59;
                                     --that.values.minutes;
@@ -846,10 +1141,12 @@
                                 clearInterval(that.countdown_interval);
                                 $('#removeOverlay').show(); // Show remove overlay button
                                 $('.countdown').hide(); // Hide countdown
+    
+                                
                             }
-                        }, 1000);    
+                        }, 1000);
                     },
-                    animateFigure: function($el, value) {
+                    animateFigure: function ($el, value) {
                         var $top = $el.find('.top'),
                             $bottom = $el.find('.bottom'),
                             $back_top = $el.find('.top-back'),
@@ -860,20 +1157,20 @@
                             rotationX: '-180deg',
                             transformPerspective: 300,
                             ease: Quart.easeOut,
-                            onComplete: function() {
+                            onComplete: function () {
                                 $top.html(value);
                                 $bottom.html(value);
                                 TweenMax.set($top, { rotationX: 0 });
                             }
                         });
-                        TweenMax.to($back_top, 0.8, { 
+                        TweenMax.to($back_top, 0.8, {
                             rotationX: 0,
                             transformPerspective: 300,
-                            ease: Quart.easeOut, 
-                            clearProps: 'all' 
-                        });    
+                            ease: Quart.easeOut,
+                            clearProps: 'all'
+                        });
                     },
-                    checkHour: function(value, $el_1, $el_2) {
+                    checkHour: function (value, $el_1, $el_2) {
                         var val_1 = value.toString().charAt(0),
                             val_2 = value.toString().charAt(1),
                             fig_1_value = $el_1.find('.top').html(),
@@ -884,17 +1181,27 @@
                         } else {
                             if (fig_1_value !== '0') this.animateFigure($el_1, 0);
                             if (fig_2_value !== val_1) this.animateFigure($el_2, val_1);
-                        }    
+                        }
                     }
                 };
-                $('#removeOverlay').hide(); // Show remove overlay button
-
+                $('#removeOverlay').hide(); // Hide remove overlay button
+    
                 Countdown.init();
-            
+    
                 $('#removeOverlay').click(function () {
-                    $('.overlay-countdown').fadeOut(1500);
+                    
+                    // Show another overlay for a certain time
+                    $('.overlay-another').fadeIn(100, function () {
+                        // After certain time, hide overlay and show the desired div
+                        setTimeout(function () {
+                            $('.overlay-another').fadeOut(2000, function () {
+                                $('.body-wrapper.float-menu').fadeIn(1500);
+                            });
+                        }, 5000); // Change 5000 to the desired time in milliseconds
+                    });
+                    $('.overlay-countdown').fadeOut(1800);
                 });
-        
+    
                 // Hide countdown with smooth transition
                 $('.countdown').on('click', function () {
                     $(this).fadeOut(1500, function () {
@@ -903,9 +1210,9 @@
                     });
                 });
             });
-        
+    
         }
-
+    
         // Call the function when the page loads
         window.onload = calculateTimeDifference;
 
