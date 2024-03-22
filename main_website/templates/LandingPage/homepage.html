@@ -178,7 +178,7 @@
     <style>
         :root {
             --glow-color: #fff;
-            --glow-color-text: #000000;
+            --glow-color-text: #002855;
         }
         .overlay-countdown {
             position: fixed;
@@ -187,14 +187,42 @@
             width: 100%;
             height: 100%;
             background-color: #f2f1ed;
-            background: URL("https://scontent.fdac178-1.fna.fbcdn.net/v/t1.15752-9/432598170_912434723962589_508166130350646647_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGVs3Det2k4e-u9NwldysyZNM48Yd8y5Wc0zjxh3zLlZ6tqTDtXFFf2DDXubFbuXtvwa692C2xSp543igDXFUpX&_nc_ohc=8PtOrpDLzPgAX8wIXoN&_nc_ht=scontent.fdac178-1.fna&oh=03_AdTtbBH56vUYjdof25Dk5S6fleEdz0m1gytGMQe69TUBYg&oe=66247FF7");
-            background-size: cover;
-            background-repeat: no-repeat;
+            background: #2980b9 url('https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png') repeat 0 0;
+            -webkit-animation: 10s linear 0s normal none infinite animate;
+            -moz-animation: 10s linear 0s normal none infinite animate;
+            -ms-animation: 10s linear 0s normal none infinite animate;
+            -o-animation: 10s linear 0s normal none infinite animate;
+            animation: 10s linear 0s normal none infinite animate;
             z-index: 29999;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+        @-webkit-keyframes animate {
+            from {background-position:0 0;}
+            to {background-position: 500px 0;}
+        }
+         
+        @-moz-keyframes animate {
+            from {background-position:0 0;}
+            to {background-position: 500px 0;}
+        }
+         
+        @-ms-keyframes animate {
+            from {background-position:0 0;}
+            to {background-position: 500px 0;}
+        }
+         
+        @-o-keyframes animate {
+            from {background-position:0 0;}
+            to {background-position: 500px 0;}
+        }
+         
+        @keyframes animate {
+            from {background-position:0 0;}
+            to {background-position: 500px 0;}
+        }
+        
         .overlay-countdown a {
             text-decoration: none;
             color: #1a1a1a;
@@ -214,7 +242,7 @@
             font-family: 'poppins';
             font-size: 60px;
             font-weight: 700;
-            color: #002855;
+            color: #FFC72C;
         }
         .countdown {
             margin: 0 auto;
@@ -234,7 +262,7 @@
             margin-bottom: 15px;
             font-size: 20px;
             font-family: 'poppins';
-            color: #002855;
+            color: #ffffff;
             text-transform: uppercase;
         }
 
@@ -376,10 +404,10 @@
             border-radius: 0.45em;
             background: none;
             perspective: 2em;
-            font-family: "Raleway", sans-serif;
-            font-size: 2em;
-            font-weight: 900;
-            letter-spacing: 10px;
+            font-family: 'poppins';
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 5px;
 
             -webkit-box-shadow: inset 0px 0px 0.5em 0px var(--glow-color),
                 0px 0px 0.5em 0px var(--glow-color);
@@ -392,7 +420,7 @@
 
         .glowing-txt {
             float: left;
-            margin-right: -0.8em;
+            text-transform: uppercase;
             -webkit-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
                 0 0 0.45em var(--glow-color);
             -moz-text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3),
@@ -402,7 +430,7 @@
         }
 
         .faulty-letter {
-            opacity: 0.5;
+            opacity: 1;
             animation: faulty-flicker 2s linear infinite;
         }
 
@@ -573,11 +601,11 @@
             }
         }
 
-        @media only screen and (max-width: 600px) {
+        /* @media only screen and (max-width: 600px) {
             .glowing-btn {
                 font-size: 1em;
             }
-        }
+        } */
         .overlay-another {
         position: fixed;
         top: 0;
@@ -602,7 +630,7 @@
 
 
 
-    .button {
+    /* .button {
   position: relative;
   padding: 12px 35px;
   background: #002855;;
@@ -752,7 +780,7 @@
 
 .fil0 {
   fill: #fffdef;
-}
+} */
 
 
 
@@ -769,7 +797,7 @@
     {% if start_time is not None %}
     <div class="overlay-countdown">
         <div class="countdown">
-            <h1>Website <strong>Launching</strong></h1>
+            <h1>We are <strong>Launching</strong></h1>
             <div class="bloc-time hours" id="hours">
                 <span class="count-title">Hours</span>
 
@@ -849,7 +877,9 @@
             </div>
         </div>
         <!-- Add the remove overlay-countdown button -->
-        <button class="button" id="removeOverlay" {% if not button_enabled %}disabled{% endif %}>
+        <button id="removeOverlay" class="glowing-btn" {% if not button_enabled %}disabled{% endif %}><span class='glowing-txt'>Let's<span
+            class='faulty-letter'> Un</span>leash</span></button>
+        <!-- <button class="button" id="removeOverlay" {% if not button_enabled %}disabled{% endif %}>
             Let's Unleash
             <div class="star-1">
               <svg
@@ -965,7 +995,7 @@
                 </g>
               </svg>
             </div>
-          </button>
+        </button> -->
     </div>
     <div class="overlay-another">
         <img src='{% static '/upload/launch.gif'%}' alt="Rocket Launching GIF">
@@ -1202,13 +1232,13 @@
                     $('.overlay-countdown').fadeOut(1800);
                 });
     
-                // Hide countdown with smooth transition
-                $('.countdown').on('click', function () {
-                    $(this).fadeOut(1500, function () {
-                        // Show remove overlay button with smooth transition after countdown disappears
-                        $('#removeOverlay').fadeIn(1500);
-                    });
-                });
+                // // Hide countdown with smooth transition
+                // $('.countdown').on('click', function () {
+                //     $(this).fadeOut(1500, function () {
+                //         // Show remove overlay button with smooth transition after countdown disappears
+                //         // $('#removeOverlay').fadeIn(1500);
+                //     });
+                // });
             });
     
         }
@@ -1259,7 +1289,7 @@
                 }
             }
             return cookieValue;
-    }
+        }
 
     </script>
     {% endif %}
