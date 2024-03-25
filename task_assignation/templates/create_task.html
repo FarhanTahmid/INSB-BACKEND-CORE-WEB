@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>{% if is_new_task %}Create{% else %}Update{% endif %} Task | IEEE NSU Student Branch</title>
+    <title>{% if is_new_task %}Create Task{% elif is_member_view %}Task{% else %}Update Task{% endif %} | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -731,11 +731,9 @@
                 <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>
                 {% else %}
                     {% if create_individual_task_access or create_team_task_access%}
-                        {% if logged_in_user in task.members.all %}
-                            <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
-                        {% else %}
-                            <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
-                        {% endif %}
+                    <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
+                    {% else %}
+                    <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
                     {% endif %}
                 {% endif %}
               </div>
@@ -768,7 +766,7 @@
                 </div>
                 {% else %}
                     {% if create_individual_task_access or create_team_task_access %}
-                        {% if logged_in_user not in task.members.all %}
+                        {% if not is_member_view %}
                         <!-- How to distribute a task modal -->
                         <div id="modal3" class="distribute_modal">
                             <!-- Modal content -->
@@ -854,10 +852,9 @@
               <div class="task-btn">
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
-                  {% if create_individual_task_access or create_team_task_access or logged_in_user in task.members.all%}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if create_individual_task_access or create_team_task_access %}Check task progress {% else %}Start the task{% endif %}</a>
-                  {% endif %}
-                  {% if faculty_access or eb_access or super_user_access or staff_access%}
+
+                  {% if create_individual_task_access or create_team_task_access %}
                   <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
                   <button type="button" class="create-task-btn" id="trigger">Task Logs</button>
 
@@ -901,7 +898,7 @@
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if faculty_access or eb_access or  super_user_access or staff_access or create_individual_task_access or create_team_task_access%}{% else %}disabled {% endif %}>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if create_individual_task_access or create_team_task_access %}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">{% if create_individual_task_access or create_team_task_access %}Set deadline:{% else %}Deadline{% endif %}</label>
                     <input
@@ -960,11 +957,11 @@
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
-                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access or create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
+                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
-                {% if create_team_task_access or create_individual_task_access and not logged_in_user in task.members.all %}
+                {% if create_team_task_access or create_individual_task_access %}
                 <!--task type-->
                 <div class="task_type ">
                     <label class="task_type_label">Select Task Type and Individuals:</label>

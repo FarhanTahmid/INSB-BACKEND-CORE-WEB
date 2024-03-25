@@ -4811,7 +4811,11 @@ def task_edit(request, task_id):
         logged_in_user = adminUsers.objects.get(username=user)
     #getting all task logs for this task
     task_logs = Task_Log.objects.get(task_number = task)
-    
+
+    is_member_view = logged_in_user in task.members.all()
+    if is_member_view:
+        create_individual_task_access = False
+        create_team_task_access = False       
 
     context = {
         'task':task,
@@ -4826,6 +4830,7 @@ def task_edit(request, task_id):
         'task_logs':task_logs.task_log_details,
         'create_individual_task_access':create_individual_task_access,
         'create_team_task_access':create_team_task_access,
+        'is_member_view':is_member_view
     }
 
     return render(request,"create_task.html",context)
