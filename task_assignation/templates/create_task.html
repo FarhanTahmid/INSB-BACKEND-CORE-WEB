@@ -730,11 +730,11 @@
                 {% if is_new_task %}
                 <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>
                 {% else %}
-                    {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
-                        {% if faculty_access or eb_access or super_user_access or staff_access%}
-                        <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
+                    {% if create_individual_task_access or create_team_task_access%}
+                        {% if logged_in_user in task.members.all %}
+                            <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
                         {% else %}
-                        <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                            <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
                         {% endif %}
                     {% endif %}
                 {% endif %}
@@ -767,8 +767,8 @@
                     </div>
                 </div>
                 {% else %}
-                    {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
-                        {% if faculty_access or eb_access or super_user_access or staff_access%}
+                    {% if create_individual_task_access or create_team_task_access %}
+                        {% if logged_in_user not in task.members.all %}
                         <!-- How to distribute a task modal -->
                         <div id="modal3" class="distribute_modal">
                             <!-- Modal content -->
@@ -854,8 +854,8 @@
               <div class="task-btn">
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
-                  {% if faculty_access or eb_access or super_user_access or staff_access or logged_in_user in task.members.all%}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if faculty_access or eb_access or super_user_access or staff_access%}Check task progress {% else %}Start the task{% endif %}</a>
+                  {% if create_individual_task_access or create_team_task_access or logged_in_user in task.members.all%}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if create_individual_task_access or create_team_task_access %}Check task progress {% else %}Start the task{% endif %}</a>
                   {% endif %}
                   {% if faculty_access or eb_access or super_user_access or staff_access%}
                   <button type="submit" class="create-task-btn" name="update_task">Update Task</button>
@@ -877,7 +877,7 @@
                     
                     <!--delete and complete toggle btn-->
                     {% if not is_new_task %}
-                    {% if faculty_access or eb_access or super_user_access or staff_access%}
+                    {% if create_individual_task_access or create_team_task_access %}
                     <div class="delete_complete_toggle">
                         <button type="button" class="delete_task_btn">Delete</button>
                         <div style="display: flex; margin: 0 10px;">
@@ -901,9 +901,9 @@
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %}>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if faculty_access or eb_access or  super_user_access or staff_access or create_individual_task_access or create_team_task_access%}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
-                        <label style="margin: 0;text-align: center; font-size: 14px;">{% if faculty_access or eb_access or  super_user_access or staff_access%}Set deadline:{% else %}Deadline{% endif %}</label>
+                        <label style="margin: 0;text-align: center; font-size: 14px;">{% if create_individual_task_access or create_team_task_access %}Set deadline:{% else %}Deadline{% endif %}</label>
                     <input
                         id="deadline"
                         type="datetime-local"
@@ -912,14 +912,14 @@
                         style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
                         value="{{task.deadline|date:'Y-m-d H:i'}}"
                         required
-                        {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled {% endif %} />
+                        {% if create_individual_task_access or create_team_task_access %}{% else %}disabled {% endif %} />
                     </div>
                 </div>
                 <!-- <input class="title-box" type="text" placeholder="Title (eg: Get permission paper for venue)"> -->
                 
 
                 <!--task category-->
-                {% if faculty_access or eb_access or  super_user_access or staff_access%}
+                {% if create_individual_task_access or create_team_task_access %}
                 <div class="category">
                     <label class="category_label">Task Category:</label>                    
 
@@ -943,7 +943,7 @@
                 {% endif %}
                 <div class="category user">
                     <div>Task Point: <span class="task_point" id="task_points">{{task.task_category.points}}</span></div>
-                    {% if faculty_access or eb_access or  super_user_access or staff_access%}
+                    {% if create_individual_task_access or create_team_task_access %}
                     {% else %}
                     <div class="late_text">
                         {% if is_late %}
@@ -960,11 +960,11 @@
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
-                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
+                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if faculty_access or eb_access or  super_user_access or staff_access or create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
-                {% if faculty_access or eb_access or  super_user_access or staff_access or create_team_task_access or create_individual_task_access %}
+                {% if create_team_task_access or create_individual_task_access and not logged_in_user in task.members.all %}
                 <!--task type-->
                 <div class="task_type ">
                     <label class="task_type_label">Select Task Type and Individuals:</label>
@@ -992,14 +992,14 @@
                         {% endif %}
                     </div>
                 </div>
-
+                
                 {% if create_individual_task_access %}
                 <!--Search bar for individuals-->
                 {% if is_new_task %}
                 <div class="tb_search search_input_individuals {% if create_team_task_access %}hide_table{% endif %}">
                 {% else %}
                 <div class="tb_search search_input_individuals {% if task.task_type == "Team" %}hide_table{% endif %}">
-                {% endif %}
+                    {% endif %}
                     <input
                     type="text"
                     id="search_input_individuals"
@@ -1007,23 +1007,23 @@
                     placeholder="Search..."
                     class="form-control title-box"/>
                 </div>
-
-
+                
+                
                 <!--Table for individuals-->
                 {% if is_new_task %}
                 <div class="table-responsive individuals-table {% if create_team_task_access %}hide_table{% endif %}" >
-                {% else %}
-                <div class="table-responsive individuals-table {% if task.task_type == "Team" %}hide_table{% endif %}">
-                {% endif %}
-                <table class="table box" id="individuals-table">
+                    {% else %}
+                    <div class="table-responsive individuals-table {% if task.task_type == "Team" %}hide_table{% endif %}">
+                        {% endif %}
+                        <table class="table box" id="individuals-table">
                     <thead style="position: relative; z-index: 101;">
-                    <tr>
-                        <th>Name</th>
-                        <th>Team</th>
-                        <th>Position</th>
-                        <th>Select</th>
-                        <th>Task Type</th>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Team</th>
+                            <th>Position</th>
+                            <th>Select</th>
+                            <th>Task Type</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for member,types in all_members.items %}
@@ -1058,20 +1058,20 @@
                     placeholder="Search..."
                     class="form-control title-box"/>
                 </div>
-
-
+                
+                
                 <!--Table for teams-->
                 <div class="table-responsive team-table {% if task.task_type == "Individuals" %}hide_table{% endif %}">
-                <table class="table box" id="team-table">
+                    <table class="table box" id="team-table">
                     <thead>
-                    <tr>
-                        <th>SL no.</th>
+                        <tr>
+                            <th>SL no.</th>
                         <th>Team</th>
                         <th>Select</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                        {% for team in teams %}
+                </thead>
+                <tbody>
+                    {% for team in teams %}
                         <tr>
                             <td>{{forloop.counter}}.</td>
                             <td>{{team.team_name}}</td>
@@ -1082,8 +1082,8 @@
                 </table>
                 </div>
                 {% endif %}
-
-
+                
+                
                 
                 {% endif %}
             </form>

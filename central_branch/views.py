@@ -4755,9 +4755,6 @@ def task_edit(request, task_id):
 
     user = request.user.username
     faculty_advisor_access = Access_Render.faculty_advisor_access(user)
-    eb_access = Access_Render.eb_access(user)
-    super_user_Access = Access_Render.system_administrator_superuser_access(user)
-    staff_access = Access_Render.system_administrator_staffuser_access(user)
 
     my_task = False
     if 'HTTP_REFERER' in request.META:
@@ -4823,16 +4820,12 @@ def task_edit(request, task_id):
         'all_members':all_members,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
-        'faculty_access':faculty_advisor_access,
-        'eb_access':eb_access,
-        'super_user_access':super_user_Access,
-        'staff_access':staff_access,
         'logged_in_user':logged_in_user,
         'is_late':late,
         'my_task':my_task,
         'task_logs':task_logs.task_log_details,
         'create_individual_task_access':create_individual_task_access,
-        'create_team_task_access':create_team_task_access
+        'create_team_task_access':create_team_task_access,
     }
 
     return render(request,"create_task.html",context)
