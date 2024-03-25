@@ -1197,43 +1197,46 @@
     </script>
     <script>
             
+        {% if create_individual_task_access %}
             //filtering for individual table
-        function filter_individual_table() {
-            // Declare variables
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("search_input_individuals");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("individuals-table");
-            tr = table.getElementsByTagName("tr");
-            
-            // Loop through all table rows and hide those that don't match the search query
-            for (i = 0; i < tr.length; i++) {
-                // Skip the header row
-                if (i === 0) continue;
+            function filter_individual_table() {
+                // Declare variables
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("search_input_individuals");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("individuals-table");
+                tr = table.getElementsByTagName("tr");
                 
-                // Loop through all table cells in the current row
-                var rowContainsSearchTerm = false;
-                for (var j = 0; j < tr[i].cells.length; j++) {
-                    td = tr[i].cells[j];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        rowContainsSearchTerm = true;
-                        break;
+                // Loop through all table rows and hide those that don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    // Skip the header row
+                    if (i === 0) continue;
+                    
+                    // Loop through all table cells in the current row
+                    var rowContainsSearchTerm = false;
+                    for (var j = 0; j < tr[i].cells.length; j++) {
+                        td = tr[i].cells[j];
+                        if (td) {
+                            txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            rowContainsSearchTerm = true;
+                            break;
+                        }
+                        }
+                    }
+                    
+                    // Toggle the visibility of the row based on whether it contains the search term
+                    if (rowContainsSearchTerm) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
                     }
                     }
-                }
-                
-                // Toggle the visibility of the row based on whether it contains the search term
-                if (rowContainsSearchTerm) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-                }
-        }
+            }
+        {% endif %}
 
     
+        {% if create_team_task_access %}
         //filtering for team table
         function filter_team_table() {
             // Declare variables
@@ -1269,6 +1272,7 @@
                 }
             }
         }
+        {% endif %}
     </script>   
     <script>
         //determining which table to show depending on the selected radio button
@@ -1279,26 +1283,28 @@
         let teamTable = document.querySelector('.team-table');
 
 
+        {% if create_individual_task_access and create_team_task_access %}
         radioButtons.forEach((button) => {
-        button.addEventListener("change", () => {
-            let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
-
-            if(checkedRadioButton.id == 'btn05'){
-                searchIndividuals.classList.add('hide_table');
-                individualsTable.classList.add('hide_table');
-                searchTeam.classList.remove('hide_table');
-                teamTable.classList.remove('hide_table');
-            }
-            else if(checkedRadioButton.id == 'btn06'){
-                searchIndividuals.classList.remove('hide_table');
-                individualsTable.classList.remove('hide_table');
-                searchIndividuals.classList.remove('hide_table');
-                individualsTable.classList.remove('hide_table');
-                searchTeam.classList.add('hide_table');
-                teamTable.classList.add('hide_table');
-            }
+            button.addEventListener("change", () => {
+                let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
+    
+                if(checkedRadioButton.id == 'btn05'){
+                    searchIndividuals.classList.add('hide_table');
+                    individualsTable.classList.add('hide_table');
+                    searchTeam.classList.remove('hide_table');
+                    teamTable.classList.remove('hide_table');
+                }
+                else if(checkedRadioButton.id == 'btn06'){
+                    searchIndividuals.classList.remove('hide_table');
+                    individualsTable.classList.remove('hide_table');
+                    searchIndividuals.classList.remove('hide_table');
+                    individualsTable.classList.remove('hide_table');
+                    searchTeam.classList.add('hide_table');
+                    teamTable.classList.add('hide_table');
+                }
+            });
         });
-        });
+        {% endif %}
 
     </script> 
     <script>
