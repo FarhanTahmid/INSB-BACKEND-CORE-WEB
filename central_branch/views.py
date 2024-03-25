@@ -4846,19 +4846,31 @@ class GetTaskCategoryPointsAjax(View):
 
 class SaveMemberTaskPointsAjax(View):
     def get(self,request):
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
+        try:
+            logged_in_user = Members.objects.get(ieee_id = request.user.username)
+        except:
+            logged_in_user = adminUsers.objects.get(username=request.user.username)
+
         task_id = request.GET.get('task_id')
         member_id = request.GET.get('member_id')
         marks = request.GET.get('completed_points')
 
         task = Task.objects.get(id=task_id)
-        #checking to see if mark provided is negative or not if so send error message
-        if float(marks)<0:
-            message = "Please provide 0 but not negative marks!"
-            return JsonResponse({'message':message})
-        
-        if Task_Assignation.update_marks(task,member_id,marks):
-            message = f"Member {member_id}'s mark updated to {marks}"
-        else:
-            message = "Something went wrong while updating!"
 
-        return JsonResponse({'points':marks,'message':message})
+        if (create_individual_task_access or create_team_task_access) and not logged_in_user in task.members.all():
+            #checking to see if mark provided is negative or not if so send error message
+            if float(marks)<0:
+                message = "Please provide 0 but not negative marks!"
+                return JsonResponse({'message':message})
+            
+            if Task_Assignation.update_marks(task,member_id,marks):
+                message = f"Member {member_id}'s mark updated to {marks}"
+            else:
+                message = "Something went wrong while updating!"
+
+            return JsonResponse({'points':marks,'message':message})
+        else:
+            return JsonResponse('Access Denied',safe=False)

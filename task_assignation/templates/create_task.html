@@ -955,7 +955,11 @@
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
+                        {% if not is_member_view %}
                         <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
+                        {% else %}
+                        <div>{{task.description|safe}}</div>
+                        {% endif %}
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
