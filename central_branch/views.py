@@ -4502,37 +4502,32 @@ def task_home(request):
 
     has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
     
-    if has_task_create_access:
-        if user_data['is_admin_user'] == True:
-            all_tasks = Task.objects.all().order_by('-pk')
-        else:   
-            all_tasks = Task.objects.exclude(members__ieee_id=request.user.username).order_by('-pk')
+    all_tasks = Task.objects.all().order_by('-pk')
 
-        #getting all task categories
-        all_task_categories = Task_Category.objects.all()
+    #getting all task categories
+    all_task_categories = Task_Category.objects.all()
 
-        if request.method == "POST":
+    if request.method == "POST":
 
-            if request.POST.get('add_task_type'):
+        if request.POST.get('add_task_type'):
 
-                task_name = request.POST.get('task_type_name')
-                task_point = request.POST.get('task_point')
+            task_name = request.POST.get('task_type_name')
+            task_point = request.POST.get('task_point')
 
-                if Task_Assignation.add_task_category(task_name,task_point):
-                    messages.success(request,"Task Category Created successfully!")
-                else:
-                    messages.warning(request,"Something went wrong while creating the task category!")
+            if Task_Assignation.add_task_category(task_name,task_point):
+                messages.success(request,"Task Category Created successfully!")
+            else:
+                messages.warning(request,"Something went wrong while creating the task category!")
 
-        context = {
-            'all_tasks':all_tasks,
-            'all_sc_ag':sc_ag,
-            'user_data':user_data,
-            'all_task_categories':all_task_categories,
-        }
+    context = {
+        'all_tasks':all_tasks,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+        'all_task_categories':all_task_categories,
+        'has_task_create_access':has_task_create_access
+    }
 
-        return render(request,"task_home.html",context)
-    else:
-        return render(request,'access_denied2.html')
+    return render(request,"task_home.html",context)
 
 @login_required
 @member_login_permission
@@ -4757,84 +4752,80 @@ def task_edit(request, task_id):
     except:
         logged_in_user = adminUsers.objects.get(username=user)
 
-    if type(logged_in_user)==adminUsers or task.task_created_by == user or logged_in_user in task.members.all():
-
-        my_task = False
-        if 'HTTP_REFERER' in request.META:
-            if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
-                my_task = True
-        else:
+    my_task = False
+    if 'HTTP_REFERER' in request.META:
+        if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
             my_task = True
-        
-        if request.method == 'POST':
-            if 'update_task' in request.POST:
-                title = request.POST.get('task_title')
-                description = request.POST.get('task_description_details')
-                task_category = request.POST.get('task_category')
-                deadline = request.POST.get('deadline')
-                task_type = request.POST.get('task_type')
-                is_task_completed = request.POST.get('task_completed_toggle_switch')
-
-                team_select = None
-                member_select = None
-                #Checking task types and get list accordingly
-                if task_type == "Team":
-                    team_select = request.POST.getlist('team_select')
-                elif task_type == "Individuals":
-                    member_select = request.POST.getlist('member_select')
-                    task_types_per_member = {}
-                    for member_id in member_select:
-                        member_name = request.POST.getlist(member_id + '_task_type[]')
-                        task_types_per_member[member_id] = member_name
-
-                if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
-                    messages.success(request,"Task Updated successfully!")
-                else:
-                    messages.warning(request,"Something went wrong while updating the task!")
-
-                return redirect('central_branch:task_edit',task_id)
-            elif 'delete_task' in request.POST:
-                if(Task_Assignation.delete_task(task_id=task_id)):
-                    messages.success(request,"Task deleted successfully!")
-                else:
-                    messages.warning(request,"Something went wrong while deleting the task!")
-                
-                return redirect('central_branch:task_home')
-        
-        task_categories = Task_Category.objects.all()
-        teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
-        #checking to see if points to be deducted
-        late = Task_Assignation.deduct_points_for_members(task)
-        #this is being done to ensure that he can click start button only if it is his task
-
-        #getting all task logs for this task
-        task_logs = Task_Log.objects.get(task_number = task)
-
-        is_member_view = logged_in_user in task.members.all()
-        if is_member_view:
-            create_individual_task_access = False
-            create_team_task_access = False       
-
-        context = {
-            'task':task,
-            'task_categories':task_categories,
-            'teams':teams,
-            'all_members':all_members,
-            'all_sc_ag':sc_ag,
-            'user_data':user_data,
-            'logged_in_user':logged_in_user,
-            'is_late':late,
-            'my_task':my_task,
-            'task_logs':task_logs.task_log_details,
-            'create_individual_task_access':create_individual_task_access,
-            'create_team_task_access':create_team_task_access,
-            'is_member_view':is_member_view
-        }
-
-        return render(request,"create_task.html",context)
     else:
-        return render(request,"access_denied2.html")
+        my_task = True
+    
+    if request.method == 'POST':
+        if 'update_task' in request.POST:
+            title = request.POST.get('task_title')
+            description = request.POST.get('task_description_details')
+            task_category = request.POST.get('task_category')
+            deadline = request.POST.get('deadline')
+            task_type = request.POST.get('task_type')
+            is_task_completed = request.POST.get('task_completed_toggle_switch')
+
+            team_select = None
+            member_select = None
+            #Checking task types and get list accordingly
+            if task_type == "Team":
+                team_select = request.POST.getlist('team_select')
+            elif task_type == "Individuals":
+                member_select = request.POST.getlist('member_select')
+                task_types_per_member = {}
+                for member_id in member_select:
+                    member_name = request.POST.getlist(member_id + '_task_type[]')
+                    task_types_per_member[member_id] = member_name
+
+            if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
+                messages.success(request,"Task Updated successfully!")
+            else:
+                messages.warning(request,"Something went wrong while updating the task!")
+
+            return redirect('central_branch:task_edit',task_id)
+        elif 'delete_task' in request.POST:
+            if(Task_Assignation.delete_task(task_id=task_id)):
+                messages.success(request,"Task deleted successfully!")
+            else:
+                messages.warning(request,"Something went wrong while deleting the task!")
+            
+            return redirect('central_branch:task_home')
+    
+    task_categories = Task_Category.objects.all()
+    teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+    all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
+    #checking to see if points to be deducted
+    late = Task_Assignation.deduct_points_for_members(task)
+    #this is being done to ensure that he can click start button only if it is his task
+
+    #getting all task logs for this task
+    task_logs = Task_Log.objects.get(task_number = task)
+
+    is_member_view = logged_in_user in task.members.all()
+    if is_member_view or task.task_created_by != request.user.username:
+        create_individual_task_access = False
+        create_team_task_access = False       
+
+    context = {
+        'task':task,
+        'task_categories':task_categories,
+        'teams':teams,
+        'all_members':all_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+        'logged_in_user':logged_in_user,
+        'is_late':late,
+        'my_task':my_task,
+        'task_logs':task_logs.task_log_details,
+        'create_individual_task_access':create_individual_task_access,
+        'create_team_task_access':create_team_task_access,
+        'is_member_view':is_member_view
+    }
+
+    return render(request,"create_task.html",context)
 
 class GetTaskCategoryPointsAjax(View):
     def get(self,request):

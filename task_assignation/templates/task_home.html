@@ -288,6 +288,7 @@
           Tasks
         </h2>
 
+        {% if has_task_create_access %}
         <div class="task-btn">
           <a
             href="{% url 'central_branch:create_task' %}"
@@ -305,6 +306,7 @@
             Create Task Category
           </button>
         </div>
+        {% endif %}
 
         <!--Messages-->
         <div style="justify-content: center; text-align: center">

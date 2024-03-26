@@ -760,10 +760,12 @@
                 {% if is_new_task %}
                 <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>
                 {% else %}
-                    {% if create_individual_task_access or create_team_task_access%}
-                    <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
-                    {% else %}
-                    <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                    {% if create_individual_task_access or create_team_task_access or is_member_view %}
+                        {% if create_individual_task_access or create_team_task_access %}
+                        <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
+                        {% else %}
+                        <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
               </div>
@@ -795,26 +797,28 @@
                     </div>
                 </div>
                 {% else %}
-                        {% if not is_member_view %}
-                        <!-- How to distribute a task modal -->
-                        <div id="modal3" class="distribute_modal">
-                            <!-- Modal content -->
-                            <div class="modal-3-content">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
-                                    <h5 style="color: #fff;    position: relative;
-                                    top: 3px">Instructions</h5>
-                                    <span class="close3" style="color: white;">&times;</span>
+                        {% if create_individual_task_access or create_team_task_access or is_member_view %}
+                            {% if create_individual_task_access or create_team_task_access %}
+                            
+                            <!-- How to distribute a task modal -->
+                            <div id="modal3" class="distribute_modal">
+                                <!-- Modal content -->
+                                <div class="modal-3-content">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                        <h5 style="color: #fff;    position: relative;
+                                        top: 3px">Instructions</h5>
+                                        <span class="close3" style="color: white;">&times;</span>
+                                    </div>
+                                        <ol style="font-size: 16px; margin: 15px;">
+                                            <li>You can update the task as much as you want but after changing it you must have to press <span style="font-weight: 600;">Update Task</span> button</li>
+                                            <li>To delete the task simply press the <span style="font-weight: 600;">Delete</span> button</li>
+                                            <li>If the task is completed by the assigned individuals or teams then click <span style="font-weight: 600;">Mark as complete?</span> and then click <span style="font-weight: 600;">Update Task</span></li>
+                                            <li>If you want to distribute the task points for individuals by your own then go to the <span style="font-weight: 600;">Check task progress</span> and then simply update the <span style="font-weight: 600;">Points</span> of that individual and save it</li>
+                                        </ol>
                                 </div>
-                                    <ol style="font-size: 16px; margin: 15px;">
-                                        <li>You can update the task as much as you want but after changing it you must have to press <span style="font-weight: 600;">Update Task</span> button</li>
-                                        <li>To delete the task simply press the <span style="font-weight: 600;">Delete</span> button</li>
-                                        <li>If the task is completed by the assigned individuals or teams then click <span style="font-weight: 600;">Mark as complete?</span> and then click <span style="font-weight: 600;">Update Task</span></li>
-                                        <li>If you want to distribute the task points for individuals by your own then go to the <span style="font-weight: 600;">Check task progress</span> and then simply update the <span style="font-weight: 600;">Points</span> of that individual and save it</li>
-                                    </ol>
                             </div>
-                        </div>
-                        {% else %}
-                        <!-- How to complete a task modal -->
+                            {% else %}
+                            <!-- How to complete a task modal -->
                         <div id="modal2" class="complete_modal">
                             <!-- Modal content -->
                             <div class="modal-2-content">
@@ -830,10 +834,11 @@
                                         <li>Task works can be saved by clicking the <span style="font-weight: 600;">Save for later</span> button and can be finished later</li>
                                         <li>To submit a task click the <span style="font-weight: 600;">Task Completed</span> button and then a email will sent to the person who created the task</li>
                                     </ol>
-                            </div>
+                                </div>
                         </div>
                         {% endif %}
-                {% endif %}
+                        {% endif %}
+                        {% endif %}
 
 
                 <!-- logs modal -->
@@ -880,14 +885,14 @@
               <div class="task-btn">
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
+                  {% if create_individual_task_access or create_team_task_access or is_member_view %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="start-task-btn">{% if create_individual_task_access or create_team_task_access %}Check task progress {% else %}Start the task{% endif %}</a>
+                  {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
                   <button type="submit" class="create-task-btn" name="update_task">Update Task</button>              
-                  {% endif %}
-                  
                   <button type="button" class="create-task-btn" id="trigger">Task Logs</button>
-                  
+                  {% endif %}                  
                   
                 </div>
                 {% endif %}
@@ -985,11 +990,7 @@
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
-                        {% if not is_member_view %}
-                        <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
-                        {% else %}
-                        <div>{{task.description|safe}}</div>
-                        {% endif %}
+                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
 
