@@ -4757,7 +4757,7 @@ def task_edit(request, task_id):
     except:
         logged_in_user = adminUsers.objects.get(username=user)
 
-    if task.task_created_by == user or logged_in_user in task.members.all():
+    if type(logged_in_user)==adminUsers or task.task_created_by == user or logged_in_user in task.members.all():
 
         my_task = False
         if 'HTTP_REFERER' in request.META:
