@@ -287,7 +287,7 @@
         >
           Tasks
         </h2>
-        {% if faculty_access or eb_access or super_user_access or staff_access%}
+
         <div class="task-btn">
           <a
             href="{% url 'central_branch:create_task' %}"
@@ -305,7 +305,7 @@
             Create Task Category
           </button>
         </div>
-        {% endif %}
+
         <!--Messages-->
         <div style="justify-content: center; text-align: center">
           {% if messages %} 

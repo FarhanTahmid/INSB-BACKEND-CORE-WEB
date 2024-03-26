@@ -624,7 +624,7 @@
         <!--PAGE START-->
         <div ui-view class="app-body" id="view">
             <!--contents of page-->
-            {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
+            {% if not create_individual_task_access and not create_team_task_access %}
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
@@ -762,7 +762,7 @@
             
             </div>
             {% endif %}
-            {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access %}
+            {% if create_individual_task_access or create_team_task_access %}
             
             <div class="form-wrapper">
                 <form>
