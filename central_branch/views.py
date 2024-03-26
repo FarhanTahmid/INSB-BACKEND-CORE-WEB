@@ -4805,7 +4805,7 @@ def task_edit(request, task_id):
     task_logs = Task_Log.objects.get(task_number = task)
 
     is_member_view = logged_in_user in task.members.all()
-    if is_member_view or task.task_created_by != request.user.username:
+    if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
         create_individual_task_access = False
         create_team_task_access = False       
 
