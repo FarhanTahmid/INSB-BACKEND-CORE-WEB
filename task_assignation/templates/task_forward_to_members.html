@@ -265,15 +265,12 @@
                     </div> -->
 
 
-                    {% if task.task_type == "Team" %}
                     <!--search bar-->
                     <div class="tb_search" style="margin-bottom: 1rem;">
                       <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search..." class="form-control">
                     </div>
-                    {% endif %}
                   </div>
 
-                  {% if task.task_type == "Team" %}
                   <!--table-->
                   <div class="table-responsive">
                     <table class="table table-class" id="table-id">
@@ -287,23 +284,20 @@
                           <th data-priority= "1">Select</th>
                         </tr>
                       </thead>
-                      {% for member in team_members %}
                       <tbody>                                    
                         <tr>
-                          <td style="color: #00629b"><a href="{% url 'main_website:member_profile' member.ieee_id %}" target="_blank">{{member.ieee_id}}</a></td>
-                          <td>{{member.name}}</td>
-                          <td>{{member.team.team_name}}</td>
-                          <td>{{member.position.role}}</td>
-                          <td>{{member.contact_no}}</td>
+                          <td style="color: #00629b"><a href="#" target="_blank">01</a></td>
+                          <td>name</td>
+                          <td>team</td>
+                          <td>position</td>
+                          <td>contact</td>
                           <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}" {% if member in task.members.all %}checked{% endif %}>
+                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
                           </td>
                         </tr>
                       </tbody>
-                      {% endfor %}
                     </table>
                   </div> 
-                  {% endif %} 
                 </div>
               </div>
       
