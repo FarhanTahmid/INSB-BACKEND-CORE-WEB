@@ -4549,7 +4549,7 @@ def upload_task(request, task_id):
     except:
         pass
 
-    has_access = Branch_View_Access.common_access(user) or this_is_users_task
+    has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task
     if has_access:
         try:
             member_task_type = Member_Task_Upload_Types.objects.get(task = task,task_member = logged_in_user)
