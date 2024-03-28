@@ -872,6 +872,7 @@ class Task_Assignation:
             # Deduct points everyday
             if late_duration >0:
                 deduction_percentage = 0.05
+                deduction_percentage = deduction_percentage * task.task_category.points
                 is_late = True
                 # Deduct points for each member
                 for member in all_members_of_task:
@@ -880,8 +881,7 @@ class Task_Assignation:
                     
                     if search not in dic:
                         current_points = member.completion_points
-                        #if marks is almost 0 then just return 
-                        deduction_amount = current_points * deduction_percentage * late_duration
+                        deduction_amount = deduction_percentage * late_duration
                         new_points = current_points - deduction_amount
                         #if amount after subtraction is less than 0 then just store 0 and move on to next member
                         if new_points < 0:
