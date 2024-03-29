@@ -191,11 +191,92 @@
           height: 20px;
           width: 20px;
       }
-      @media screen and (max-width:500px){
-        .image-button img {
-        width: 32px;
+      .finish_task_modal_btn{
+        color: #7575d4;
+        background-color: #75d48200;
+        display: inline;
+        padding: 10px;
+        margin: 3px;
+        border: 1px;
+        border-style: solid;
+        border-color: #7575d4;
+        border-radius: 4px;
+        transition-duration: 500ms;
+        }
+        .finish_task_modal_btn:hover{
+        color: #ffffff;
+        background-color: #7575d4;
+        transition-duration: 500ms;
+        cursor: pointer;
       }
-      }
+      .modal-1-content::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+        .modal-1-content::-webkit-scrollbar-thumb{
+            background-color: #e7eeef;
+            transition: all .4s ease-in-out;
+            border-radius: 4px;
+        }
+        .modal-1-content::-webkit-scrollbar-thumb:hover{
+            background-color: rgb(169, 170, 170);
+        }
+      .create_modal{
+        opacity: 0;
+        position: fixed;
+        z-index: -1;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 120%;
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
+        transition: all .3s ease-in-out;
+        transform: translateY(-20px);
+        overflow: auto;
+        }
+        .modal-1-content{
+            background-color: #fefefe;
+            margin: auto;
+            border: 1px solid rgb(136, 136, 136);
+            max-width: 850px;
+            max-height: 70vh;
+            overflow-y: scroll;
+            border-radius: 6px;
+            box-shadow: 2px 2px 5px 0px #80808054;
+            position: relative;
+            left: 100px;
+        }
+
+        .close1{
+            color: #000;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .close1:hover,
+        .close1:focus{
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 1024px) {
+            .modal-1-content {
+                left: 0px;
+                margin: 10%;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .modal-1-content{
+                margin: 5%;
+            }
+            .image-button img {
+              width: 32px;
+            }
+        }
+
     </style>
   </head>
     <body>
@@ -254,8 +335,35 @@
               <br>
               {% endif %}
             </div>
-      
-      
+            <div style="display: flex; justify-content: center;">
+              <button type="button" class="finish_task_modal_btn">How to finish a task</button>
+            </div>
+
+            <div id="modal1" class="create_modal">
+              <!-- Modal content -->
+              <div class="modal-1-content">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                      <h5 style="color: #fff;    position: relative;
+                      top: 3px">How to finish a task?</h5>
+                      <span class="close1" style="color: white;">&times;</span>
+                  </div>
+                      <ol style="font-size: 16px; margin: 15px">
+                          <li>To create a task you must have to fill title of the task, set deadline and write the task description</li>
+                          <li>Also you have to select a task category based on the task and if you want to create your own task category then press back arrow icon and create a new task category</li>
+                          <li>You can give the task either for teams or for individuals</li>
+                          <ol style="margin-top: 20px;">
+                              <span style="font-weight: 600;">If you select teams</span>
+                              <li>You can choose multiple teams to complete the task</li>
+                          </ol>
+                          <ol style="margin-top: 20px;">
+                              <span style="font-weight: 600;">If you select individuals</span>
+                              <li>You can choose multiple individuals to complete the task</li>
+                              <li>After choosing the individuals by select button, you have to assign them what type of fields you want them to fill to complete the task</li>
+                          </ol>
+                          <li>Must press <span style="font-weight: 600;">Create Task</span> button to save the task and then it will send a mail to that assigned individuals or teams co-ordinator</li>
+                      </ol>
+              </div>
+          </div>
             <form method="post">
 
               <!--forward task btn-->
@@ -312,153 +420,6 @@
                         <tr>
                           <td>id</td>
                           <td>name</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
                           <td>team</td>
                           <td>position</td>
                           <td>contact</td>
@@ -1040,6 +1001,39 @@
                       }
               }
       </script>  
+      <script>
+        // Get the modal
+        var modal1 = document.getElementById("modal1");
+        
+        // Get the button that opens the modal
+        var btn1 = document.querySelector(".finish_task_modal_btn");
+        
+        // Get the <span> element that closes the modal
+        var span1 = document.getElementsByClassName("close1")[0];
+        
+        // When the user clicks the button, open the modal 
+        btn1.onclick = function() {
+        modal1.style.transform = 'translateY(0px)';
+        modal1.style.zIndex = '103100';
+        modal1.style.opacity = '1';
+        }
+    
+        // When the user clicks on <span> (x), close the modal
+        span1.onclick = function() {
+        modal1.style.transform = 'translateY(-50px)';
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
+        }
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+         if (event.target == modal1) {
+            modal1.style.transform = 'translateY(-50px)';
+            modal1.style.zIndex = '-100';
+            modal1.style.opacity = '0';
+          }
+        }
+        </script>
     <!-- endbuild -->
   </body>
 </html>
