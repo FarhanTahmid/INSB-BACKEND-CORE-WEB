@@ -336,7 +336,7 @@
               {% endif %}
             </div>
             <div style="display: flex; justify-content: center;">
-              <button type="button" class="finish_task_modal_btn">How to finish a task</button>
+              <button type="button" class="finish_task_modal_btn">How to forward a task</button>
             </div>
 
             <div id="modal1" class="create_modal">
@@ -344,23 +344,13 @@
               <div class="modal-1-content">
                   <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
                       <h5 style="color: #fff;    position: relative;
-                      top: 3px">How to finish a task?</h5>
+                      top: 3px">How to forward a task?</h5>
                       <span class="close1" style="color: white;">&times;</span>
                   </div>
                       <ol style="font-size: 16px; margin: 15px">
-                          <li>To create a task you must have to fill title of the task, set deadline and write the task description</li>
-                          <li>Also you have to select a task category based on the task and if you want to create your own task category then press back arrow icon and create a new task category</li>
-                          <li>You can give the task either for teams or for individuals</li>
-                          <ol style="margin-top: 20px;">
-                              <span style="font-weight: 600;">If you select teams</span>
-                              <li>You can choose multiple teams to complete the task</li>
-                          </ol>
-                          <ol style="margin-top: 20px;">
-                              <span style="font-weight: 600;">If you select individuals</span>
-                              <li>You can choose multiple individuals to complete the task</li>
-                              <li>After choosing the individuals by select button, you have to assign them what type of fields you want them to fill to complete the task</li>
-                          </ol>
-                          <li>Must press <span style="font-weight: 600;">Create Task</span> button to save the task and then it will send a mail to that assigned individuals or teams co-ordinator</li>
+                          <li>Select the individuals you want to forward the task</li>
+                          <li>After selecting the individuals by select checkbox, you have to assign them what type of fields you want them to fill to complete the task from <span style="font-weight: 600;">Select task type</span></li>
+                          <li>Must press <span style="font-weight: 600;">Forward Task</span> button to forward the task to the assigned individuals and then it will send a mail to that assigned individuals</li>
                       </ol>
               </div>
           </div>
@@ -368,7 +358,7 @@
 
               <!--forward task btn-->
               <div style="text-align: center;">
-                <button type="submit" class="forward-task-btn">Forward Task</button>
+                <button type="submit" class="forward-task-btn" style="cursor: pointer;">Forward Task</button>
               </div>
 
               {% csrf_token %}
@@ -417,46 +407,63 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>name</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                          <td>id</td>
-                          <td>john</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
+                      <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>team</td>
+                        <td>position</td>
+                        <td>contact</td>
+                        <td>
+                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
+                      <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>team</td>
+                        <td>position</td>
+                        <td>contact</td>
+                        <td>
+                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
+                      <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>team</td>
+                        <td>position</td>
+                        <td>contact</td>
+                        <td>
+                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
                     </tbody>
                 </table>
                 </div>
