@@ -765,7 +765,9 @@
                         {% if create_individual_task_access or create_team_task_access %}
                         <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
                         {% else %}
+                        {% if not task.is_task_completed %}
                         <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                        {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endif %}
@@ -886,8 +888,10 @@
               <div class="task-btn">
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
-                  {% if create_individual_task_access or create_team_task_access or is_member_view %}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if create_individual_task_access or create_team_task_access %}Check task progress {% else %}Start the task{% endif %}</a>
+                  {% if create_individual_task_access or create_team_task_access %}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                  {% elif is_member_view and not task.is_task_completed %}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Start the task</a>
                   {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
