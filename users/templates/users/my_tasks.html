@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>My Tasks | IEEE NSU Student Branch</title>
+    <title>{% if user_data.position.is_eb_member %}My Assigned Tasks{% else %}My Tasks{% endif %} | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -194,7 +194,7 @@
           <!--contents of page-->
           <div class="form-wrapper">
               
-              <h4>My Tasks</h4>
+              <h4>{% if user_data.position.is_eb_member %}My Assigned Tasks{%else%}My Tasks{% endif %}</h4>
               
               <!--Messages-->
               <div class="tooltip-container">

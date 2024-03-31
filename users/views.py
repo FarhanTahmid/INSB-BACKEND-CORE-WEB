@@ -579,20 +579,36 @@ def invalidURL(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+@login_required
+@member_login_permission
 def my_tasks(request):
 
-    #Get current logged in user
-    user = request.user.username
-    all_user_tasks = Task_Assignation.load_user_tasks(user)
-    total_point = 0
     try:
-        user = Members.objects.get(ieee_id = user)
-        total_point = user.completed_task_points
-    except:
-        user = adminUsers.objects.get(username=user)
+        #Get current logged in user
+        user = request.user.username
+        # Get the SC & AGS
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        #scheduler.start()
+        #Loading current user data from renderData.py
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        all_user_tasks = Task_Assignation.load_user_tasks(user)
+        total_point = 0
+        try:
+            user = Members.objects.get(ieee_id = user)
+            total_point = user.completed_task_points
+        except:
+            user = adminUsers.objects.get(username=user)
 
-    context = {
-        'all_tasks':all_user_tasks,
-        'total_points':total_point
-    }
-    return render(request,"users/my_tasks.html",context)
+        context = {
+            'user_data':user_data,
+            'all_sc_ag':sc_ag,
+            'all_tasks':all_user_tasks,
+            'total_points':total_point,
+        }
+        return render(request,"users/my_tasks.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
