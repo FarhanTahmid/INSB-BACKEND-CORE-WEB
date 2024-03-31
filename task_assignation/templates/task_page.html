@@ -503,12 +503,14 @@
     outline: none;
     }
 
-    .name_tab{
+    .name_tab {
         list-style: none;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        display: flex;
         margin-bottom: 50px;
         margin-top: 20px;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
     .name_tab li {
         display: flex;
@@ -797,7 +799,7 @@
 
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}
-                <li class="tab" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
+                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
                 {% endfor %}
             </div>
 
@@ -818,7 +820,7 @@
                     </div>
                 </div>
             </div>
-            <div id="details_{{ member.ieee_id }}" class="details" style="display: none;">
+            <div id="details_{{ member.ieee_id }}" class="details" style="display: {% if forloop.counter == 1 %}block{% else %}none{% endif %};">
                 <form method="POST" enctype="multipart/form-data" id="{{member.ieee_id}}">
                     <div style="    display: flex;
                     flex-wrap: wrap;
