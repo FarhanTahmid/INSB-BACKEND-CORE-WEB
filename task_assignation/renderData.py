@@ -662,11 +662,14 @@ class Task_Assignation:
         try:
             user = Members.objects.get(ieee_id = user)
         except:
-            user = adminUsers.objects.get(username=user)
-            #TODO:set it to all after making team
-            return Task.objects.filter(task_type = "Individuals")
+            return None
+        
         #TODO:set to all instead of individuals after making teams
-        user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
+        if user.position.is_eb_member:
+            user_tasks = Task.objects.filter(task_created_by = user,task_type = "Individuals")
+        else:
+            user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
+
         return user_tasks
     
     def save_task_uploads(task,member,permission_paper,media,content,file_upload,drive_link):
