@@ -648,12 +648,17 @@
                     <!-- task page heading-->
                     <h4>Task: {{task.title}}</h4>
                     <!--Submit btn-->
+                    {% if not task.is_task_completed %}
                     <div class="task-btn">
                         <!-- <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a> -->
                         <input type="submit" class="finish-task-btn" name="save_task" value="Save for later">
                         <input type="submit" class="finish-task-btn" name="finish_task" value="Task Completed">
                     </div>
-
+                    {% else %}
+                    <div class="task-btn">
+                        <p>Task Already Completed! Cannot edit</p>
+                    </div>
+                    {% endif %}
                     
                     <div style="font-size: 20px; font-weight: 500; font-style: italic;">
                         {{members_task_type.task_member.name}} - {{members_task_type.task_member.ieee_id}}
@@ -664,7 +669,8 @@
                     <div class="form-group">
                         <label>Folder Drive Link</label>
                         <input placeholder="Provide Drive Link" class="form-control" type="url" autocomplete="off"
-                        value="{{drive_link_loaded.drive_link}}" name="content_drive" />
+                        value="{{drive_link_loaded.drive_link}}" name="content_drive" 
+                        {% if task.is_task_completed %}disabled {% endif %}/>
                     </div>
                     <br>
                     {% endif %}
@@ -674,7 +680,7 @@
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                     
-                        <select id="paper_permission_dropdown" name="permission_paper" class="form-control">
+                        <select id="paper_permission_dropdown" name="permission_paper" class="form-control" {% if task.is_task_completed %}disabled {% endif %}>
                             <option value="" disabled selected>Select</option>
                             <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Completed </option>
                             <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
@@ -688,7 +694,7 @@
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
                         <div>
-                            <textarea class="form-control" type="text" name="content_details" >{{content_loaded.content}}</textarea>
+                            <textarea class="form-control" type="text" name="content_details" {% if task.is_task_completed %}disabled {% endif %}>{{content_loaded.content}}</textarea>
                         </div>
                     </div>
                     <br>
@@ -700,7 +706,8 @@
                         <!--file upload -->
                         <label for="documents">File Upload</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
-                            <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;">
+                            <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;"
+                            {% if task.is_task_completed %}disabled {% endif %}>
 
                         </div>
                         <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
@@ -728,7 +735,7 @@
                         <!-- Media -->
                     <label for="images" >Media Upload</label>
                     <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
-                        <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple>
+                        <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple {% if task.is_task_completed %}disabled {% endif %}>
                     </div>
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                     <br>
@@ -942,11 +949,11 @@
                             {% endif %}
                         
                         
-                            <label class="description_label" style="color: #d33838;">Comments for {{member.name}}  (if any)</label>
+                            <label class="description_label" style="color: #d33838;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
                             <div class="ckeditor">
                                 <div>
                                     <input type="hidden" name="comments_member" value="{{member}}"></input>
-                                    <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details">{{task_type.7|safe}}</textarea>
+                                    <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details" {% if task.is_task_completed %}disabled{% endif %}>{{task_type.7|safe}}</textarea>
                                 </div>
                             
                             </div> 
@@ -955,9 +962,11 @@
     
     
                         <!--Submit btn-->
+                        {% if not task.is_task_completed %}
                         <div class="task-btn">
                             <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer; margin-top: 40px;">
                         </div>
+                        {% endif %}
                     </form> 
             </div>
                 {% endfor %}
