@@ -891,6 +891,8 @@
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                   {% elif is_member_view and not task.is_task_completed %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Start the task</a>
+                  {% elif is_member_view and task.is_task_completed %}
+                  <p  style="color: #d33838;">Task Completed!</p>
                   {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
