@@ -552,13 +552,13 @@ class Task_Assignation:
             task.members.clear()
 
         #Update task submission types
-        task.has_permission_paper = has_permission_paper
-        task.has_content = has_content
-        task.has_file_upload = has_file_upload
-        task.has_media = has_media
-        task.has_drive_link = has_drive_link
-        task.has_others = has_others
-        task.others_description = others_description
+        # task.has_permission_paper = has_permission_paper
+        # task.has_content = has_content
+        # task.has_file_upload = has_file_upload
+        # task.has_media = has_media
+        # task.has_drive_link = has_drive_link
+        # task.has_others = has_others
+        # task.others_description = others_description
         #Save the changes
         task.save()
         
