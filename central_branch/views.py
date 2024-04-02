@@ -4566,11 +4566,15 @@ def upload_task(request, task_id):
         has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task
         if has_access:
 
+
             #####################################
             ## Start Checking submission types ##
             #####################################
             try:
                 member_task_type = Member_Task_Upload_Types.objects.get(task = task,task_member = logged_in_user)
+                if this_is_users_task and not member_task_type.is_task_started_by_member:
+                    member_task_type.is_task_started_by_member = True
+                    member_task_type.save()
             except:
                 #else admin who can see all
                 member_task_type = None
@@ -4775,8 +4779,11 @@ def task_edit(request, task_id):
         #Check if the user is a member or an admin
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
+            if task.members.contains(logged_in_user) and Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member:
+                return redirect('central_branch:upload_task',task.pk)
         except:
             logged_in_user = adminUsers.objects.get(username=user)
+
 
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
         my_task = False
