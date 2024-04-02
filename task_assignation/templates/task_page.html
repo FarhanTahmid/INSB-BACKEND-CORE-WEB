@@ -980,13 +980,21 @@
                             </div>
                             {% if task_type.4|length > 0 %}
                             <p>Uploaded Files</p>
-                            <ol>
                             {% for file in task_type.4 %}
-                                <li>
-                                <a href={{media_url}}{{file.document}} target="_blank"><div>file_{{forloop.counter}}</div></a>
-                                </li>
+                            <div>
+                                <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                padding: 8px;">
+                                    <ul style="margin: 0%; list-style: none; padding-left: 25px;">
+                                        <li>
+                                            <a href={{media_url}}{{file.document}}><div>{{forloop.counter}}. file_{{forloop.counter}}</div></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             {% endfor %}
-                            </ol>
                             
                             <br>
                             <div id="content-selected-docs-container"></div>
@@ -1001,13 +1009,20 @@
                             </div>
                             {% if task_type.5|length > 0 %}
                             <p>Uploaded Images</p>
-                            <ol>
                                 {% for media in task_type.5 %}
-                                <li>
-                                    <a href={{media_url}}{{media.media}} target="_blank"><div>media_{{forloop.counter}}</div></a>
-                                </li>
+                                <div>
+                                    <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;">
+                                        <ol style="margin: 0%; list-style: none; padding: 0;">
+                                            <li>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. img_{{forloop.counter}}</a>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
                                 {% endfor %}
-                            </ol>
                             <br>
                             {% endif %}
                             {% endif %}
@@ -1038,52 +1053,52 @@
         </div>
 
         <!-- Confirmation modal for delete -->
-<div
-class="modal fade"
-id="ConfirmDeleteModal"
-tabindex="-1"
-role="dialog"
-aria-labelledby="ConfirmDeleteModalLabel"
-aria-hidden="true">
+        <div
+        class="modal fade"
+        id="ConfirmDeleteModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="ConfirmDeleteModalLabel"
+        aria-hidden="true">
 
-<div class="modal-dialog modal-dialog-top" role="document">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="modal"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <form method="POST">
-      <div class="modal-body">
-        {% csrf_token %}
-        <p><input id="remove_doc" name="remove_doc" type="hidden" /></p>
-        Are you sure you want to delete this file?
-      </div>
-      <div class="modal-footer">
-        <input 
-          type="submit"
-          name="remove"
-          class=" btn btn-outline-secondary b-success text-success"
-          value="Confirm"
-        />
-        <button
-          type="button"
-          class="btn btn-outline-danger"
-          data-dismiss="modal"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-</div>
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <form method="POST">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <p><input id="remove_doc" name="remove_doc" type="hidden" /></p>
+                        Are you sure you want to delete this file?
+                    </div>
+                    <div class="modal-footer">
+                        <input 
+                        type="submit"
+                        name="remove"
+                        class=" btn btn-outline-secondary b-success text-success"
+                        value="Confirm"
+                        />
+                        <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        data-dismiss="modal"
+                        >
+                        Cancel
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         
 
                 <!-- for showing image -->
