@@ -937,7 +937,7 @@ class Task_Assignation:
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
             #saving logs
@@ -1012,7 +1012,7 @@ class Task_Assignation:
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1073,7 +1073,7 @@ class Task_Assignation:
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
