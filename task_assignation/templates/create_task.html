@@ -890,7 +890,7 @@
                   {% if create_individual_task_access or create_team_task_access %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                   {% elif is_member_view and not task.is_task_completed %}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Start the task</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                   {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
