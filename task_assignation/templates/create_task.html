@@ -530,6 +530,7 @@
         border-color: #7575d4;
         border-radius: 4px;
         transition-duration: 500ms;
+        margin-bottom: 20px;
       }
       .queue_btn:hover{
         color: #ffffff;
@@ -899,15 +900,7 @@
                   {% endif %}                  
                   
                 </div>
-                {% endif %}
-
-                    <!--create task btn-->
-                    <div style="text-align: center;">
-                        {% if is_new_task %}
-                        <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
-                        {% endif %}
-                    </div>
-                    
+                {% endif %}     
                     
                     <!--delete and complete toggle btn-->
                     {% if not is_new_task %}
@@ -1120,6 +1113,13 @@
                 
                 
                 {% endif %}
+
+                <!--create task btn-->
+                <div style="text-align: center;">
+                    {% if is_new_task %}
+                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
+                    {% endif %}
+                </div>
             </form>
         </div>
     </div>
