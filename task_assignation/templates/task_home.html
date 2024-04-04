@@ -244,6 +244,22 @@
           flex-wrap: wrap;
         }
       }
+
+      .check-task-button{
+        padding: 5px 15px;
+        color: white;
+        background: #003f69;
+        margin: 16px 4px 16px; 
+        border-radius: 4px;
+        border: 2px solid #003f69;
+        transition: all ease-in-out .3s;
+        cursor: pointer;
+    }
+    .check-task-button:hover{
+        color: #003f69;
+        background: white;
+        border-color: #003f69;
+    }
     </style>
   </head>
 
@@ -271,7 +287,8 @@
         >
           Tasks
         </h2>
-        {% if faculty_access or eb_access or super_user_access or staff_access%}
+
+        {% if has_task_create_access %}
         <div class="task-btn">
           <a
             href="{% url 'central_branch:create_task' %}"
@@ -281,7 +298,7 @@
 
           <button
             type="button"
-            class="create-task-btn"
+            class="check-task-button"
             data-toggle="modal"
             data-target="#TaskTypeModal"
             style="margin-bottom: 15px; cursor: pointer"
@@ -290,6 +307,7 @@
           </button>
         </div>
         {% endif %}
+
         <!--Messages-->
         <div style="justify-content: center; text-align: center">
           {% if messages %} 
@@ -417,7 +435,7 @@
               {% csrf_token %}
               <br />
               <div class="add_tasktype">
-                <label for="label">Task Name:</label>
+                <label for="label">Category Name:</label>
                 <input
                   type="text"
                   id="label"
@@ -450,7 +468,7 @@
             </form>
               <div>
                 <button class="all_task_type_btn">
-                  See all task category
+                  See all categories
                 </button>
               </div>
             </div>

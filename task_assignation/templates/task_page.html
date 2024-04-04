@@ -7,6 +7,8 @@
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 
     <!--common CSS-->
     {% block common_css %}
@@ -139,6 +141,21 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+        }
+        .save-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #002855;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #002855;
+            transition: all ease-in-out .3s;
+            cursor: pointer;
+        }
+        .save-task-btn:hover{
+            color: #002855;
+            background: white;
+            border-color: #002855;
         }
         .finish-task-btn , .start-task-btn{
             padding: 5px 15px;
@@ -503,12 +520,14 @@
     outline: none;
     }
 
-    .name_tab{
+    .name_tab {
         list-style: none;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        display: flex;
         margin-bottom: 50px;
         margin-top: 20px;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
     .name_tab li {
         display: flex;
@@ -566,13 +585,18 @@
     max-height: 400px;
 }
 .btn__purple {
-    background:  #002855;
+    background: #01a687;
     color: #fff;
-    border-radius: 4px;
+    border-radius: 0;
     font-size: 18px;
     cursor: pointer;
+    border: 1px solid black;
+    transition: all 0.3s;
 }
-
+.btn__purple:hover{
+    background: #01a68773;
+    color: #000;
+}
 .modal__container button.close-4 {
     position: absolute;
     right: 10px;
@@ -619,14 +643,14 @@
         <!--PAGE START-->
         <div ui-view class="app-body" id="view">
             <!--contents of page-->
-            {% if not faculty_advisor_access and not eb_access and not super_user_Access and not staff_access %}
+            {% if not create_individual_task_access and not create_team_task_access %}
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                          <img src="/static/back-arrow.png" alt="Go back to session">
+                          <img src="/static/back-arrow.png" alt="Go to Task Details">
                         </a>
-                        <span class="tooltip-text">Go back</span>
+                        <span class="tooltip-text">Go to Task Details</span>
                     </div>
                 </form>
                 <!--Messages-->
@@ -643,12 +667,17 @@
                     <!-- task page heading-->
                     <h4>Task: {{task.title}}</h4>
                     <!--Submit btn-->
+                    {% if not task.is_task_completed %}
                     <div class="task-btn">
                         <!-- <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a> -->
-                        <input type="submit" class="finish-task-btn" name="save_task" value="Save for later">
+                        <input type="submit" class="save-task-btn" name="save_task" value="Save for later">
                         <input type="submit" class="finish-task-btn" name="finish_task" value="Task Completed">
                     </div>
-
+                    {% else %}
+                    <div class="task-btn">
+                        <p style="color: #d33838;">Task Already Completed! Cannot edit</p>
+                    </div>
+                    {% endif %}
                     
                     <div style="font-size: 20px; font-weight: 500; font-style: italic;">
                         {{members_task_type.task_member.name}} - {{members_task_type.task_member.ieee_id}}
@@ -659,7 +688,8 @@
                     <div class="form-group">
                         <label>Folder Drive Link</label>
                         <input placeholder="Provide Drive Link" class="form-control" type="url" autocomplete="off"
-                        value="{{drive_link_loaded.drive_link}}" name="content_drive" />
+                        value="{{drive_link_loaded.drive_link}}" name="content_drive" 
+                        {% if task.is_task_completed %}disabled {% endif %}/>
                     </div>
                     <br>
                     {% endif %}
@@ -669,7 +699,7 @@
                     <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                     
-                        <select id="paper_permission_dropdown" name="permission_paper" class="form-control">
+                        <select id="paper_permission_dropdown" name="permission_paper" class="form-control" {% if task.is_task_completed %}disabled {% endif %}>
                             <option value="" disabled selected>Select</option>
                             <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Completed </option>
                             <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
@@ -683,63 +713,128 @@
                     <label class="description_label">Content</label>
                     <div class="ckeditor">
                         <div>
-                            <textarea class="form-control" type="text" name="content_details" >{{content_loaded.content}}</textarea>
+                            <textarea class="form-control" type="text" name="content_details" {% if task.is_task_completed %}disabled {% endif %}>{{content_loaded.content}}</textarea>
                         </div>
                     </div>
                     <br>
-                    {% endif %}    
-                        
-
-                        
+                    
+                    
+                    <!--                         
                         {% if members_task_type.has_file_upload %}
-                        <!--file upload -->
-                        <label for="documents">File Upload</label>
-                        <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
-                            <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;">
-
+                        <!--file upload
+                            <label for="documents">File Upload</label>
+                            <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
+                                <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;"
+                                {% if task.is_task_completed %}disabled {% endif %}>
+                                
                         </div>
                         <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
                         <br>
                         {% if file_uploads|length > 0 %}
                         <p>Uploaded Files</p>
                         <ol>
-                        {% for file in file_uploads %}
+                            {% for file in file_uploads %}
                             <li>
-                            <a href={{media_url}}{{file.document}}><div>file_{{forloop.counter}}</div></a>
+                                <a href={{media_url}}{{file.document}}><div>file_{{forloop.counter}}</div></a>
                             </li>
-                        {% endfor %}
+                            {% endfor %}
                         </ol>
                         {% endif %}
                         <br>
                         <div id="content-selected-docs-container"></div>
                         <input type="hidden" name="selected_documents" id="content-selected-documents">
-
-                        {% endif %}
-                    
-
                         
+                        {% endif %}
+                    -->
+                    <!--upload doc-->
+                    <div class="form-group">
+                            <label for="documents">File Upload</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                                <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
+                            </div>
+                            
+                            <br>
+                            
+                            <div id="content-selected-docs-container"></div>
+                            <input type="hidden" name="selected_documents" id="content-selected-documents">
+                        </div>
+                        
+                        <!--files-->
+                        {% if file_uploads|length > 0 %}
+                        {% for file in file_uploads %}
+                        <div>
+                            <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: flex-start;
+                            padding: 8px;">
+                                <ul style="margin: 0%; list-style: none; padding-left: 25px;">
+                                    <li>
+                                        <a href={{media_url}}{{file.document}} target="_blank"><div>{{forloop.counter}}. {{file.filename}}</div></a>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openDocDeleteModal('{{file.pk}}')">✖</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        
+                        {% endif %}    
                         
                         {% if members_task_type.has_media %}
                         <!-- Media -->
-                    <label for="images" >Media Upload</label>
-                    <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
-                        <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple>
-                    </div>
-                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
-                    <br>
+                        <label for="images" style="margin-top: 25px;" >Media Upload</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="images" name="images" multiple accept="image/*">
+                            <label class="custom-file-label bg-light" for="images">Choose files</label>
+                        </div>
                     {% if media_uploads|length > 0 %}
-                    <p>Uploaded Images</p>
-                    <ol>
                     {% for media in media_uploads %}
-                    <li>
-                        <a href={{media_url}}{{media.media}}><div>media_{{forloop.counter}}</div></a>
-                    </li>
+                    <div>
+                        <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;">
+                            <ol style="margin: 0%; list-style: none; padding: 0;">
+                                <li>
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
+                                </li>
+                            </ol>
+                            <div>
+                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openImageDeleteModal('{{media.pk}}')">✖</button>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
                     </ol>
                     {% endif %}
                     <div id="media-selected-images-container"></div>
                     <input type="hidden" name="selected_images" id="media-selected-images">
                     {% endif %}
+
+                    <!-- <div class="form-group">
+                        <label for="images">Community Image:</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="images" name="images" accept="image/*">
+                            <label class="custom-file-label bg-light" for="images">Choose file</label>
+                        </div>
+                        
+                        <br>
+                        {% if about_ieee.community_image %}
+                        <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                            <div class="col-sm-11">
+                                <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{about_ieee.community_image}}')">Community Image</a>
+                            </div>
+                            <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{about_ieee.community_image}}', 'community_image')">✖</button>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <br>
+                    </div>  -->
 
                     <label class="description_label" style="color: #d33838;">Comment for you regarding the task</label>
                         <div class="ckeditor">
@@ -757,7 +852,7 @@
             
             </div>
             {% endif %}
-            {% if faculty_advisor_access or eb_access or super_user_Access or  staff_access %}
+            {% if create_individual_task_access or create_team_task_access %}
             
             <div class="form-wrapper">
                 <form>
@@ -785,7 +880,7 @@
 
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}
-                <li class="tab" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
+                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
                 {% endfor %}
             </div>
 
@@ -796,7 +891,7 @@
             <div class="modal__wrapper" id="modal__wrapper_{{ member.ieee_id }}">
                 <div class="modal__container">
                     <button class="close-4" id="close-4_{{ member.ieee_id }}">&times;</button>
-                    <h4>Task Logs - {{ member.name }}</h4>
+                    <h4>Points Logs - {{ member.name }}</h4>
                     <div class="modal__wrapper__container">
                         <ul>
                             {% for date, log in task_type.8.items %}
@@ -806,7 +901,7 @@
                     </div>
                 </div>
             </div>
-            <div id="details_{{ member.ieee_id }}" class="details" style="display: none;">
+            <div id="details_{{ member.ieee_id }}" class="details" style="display: {% if forloop.counter == 1 %}block{% else %}none{% endif %};">
                 <form method="POST" enctype="multipart/form-data" id="{{member.ieee_id}}">
                     <div style="    display: flex;
                     flex-wrap: wrap;
@@ -826,7 +921,7 @@
                             </button>
                         </div>
                     </div>
-                    <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Task Points Logs</button>
+                    <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
                     <br>
                     <br>
 
@@ -900,23 +995,27 @@
                             </div>
                             {% if task_type.4|length > 0 %}
                             <p>Uploaded Files</p>
-                            <ol>
                             {% for file in task_type.4 %}
-                                <li>
-                                <a href={{media_url}}{{file.document}} target="_blank"><div>file_{{forloop.counter}}</div></a>
-                                </li>
+                            <div>
+                                <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                padding: 8px;">
+                                    <ul style="margin: 0%; list-style: none; padding-left: 25px;">
+                                        <li>
+                                            <a href={{media_url}}{{file.document}} target="_blank"><div>{{forloop.counter}}. {{file.filename}}</div></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             {% endfor %}
-                            </ol>
                             
                             <br>
                             <div id="content-selected-docs-container"></div>
                             <input type="hidden" name="selected_documents" id="content-selected-documents">
                             {% endif %}
-                            {% endif %}
-                        
-    
-                            
-                        
+                            {% endif %}                                                                
                             {% if task_type.0.has_media %}
                             <!-- Media -->
                             <label for="images" >Media Upload</label>
@@ -925,23 +1024,30 @@
                             </div>
                             {% if task_type.5|length > 0 %}
                             <p>Uploaded Images</p>
-                            <ol>
                                 {% for media in task_type.5 %}
-                                <li>
-                                    <a href={{media_url}}{{media.media}} target="_blank"><div>media_{{forloop.counter}}</div></a>
-                                </li>
+                                <div>
+                                    <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;">
+                                        <ol style="margin: 0%; list-style: none; padding: 0;">
+                                            <li>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
                                 {% endfor %}
-                            </ol>
                             <br>
                             {% endif %}
                             {% endif %}
                         
                         
-                            <label class="description_label" style="color: #d33838;">Comments for {{member.name}}  (if any)</label>
+                            <label class="description_label" style="color: #d33838;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
                             <div class="ckeditor">
                                 <div>
                                     <input type="hidden" name="comments_member" value="{{member}}"></input>
-                                    <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details">{{task_type.7|safe}}</textarea>
+                                    <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details" {% if task.is_task_completed %}disabled{% endif %}>{{task_type.7|safe}}</textarea>
                                 </div>
                             
                             </div> 
@@ -950,16 +1056,113 @@
     
     
                         <!--Submit btn-->
+                        {% if not task.is_task_completed %}
                         <div class="task-btn">
                             <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer; margin-top: 40px;">
                         </div>
+                        {% endif %}
                     </form> 
             </div>
                 {% endfor %}
                 {% endif %}
         </div>
 
+        <!-- Confirmation modal for delete -->
+        <div
+        class="modal fade"
+        id="ConfirmDeleteModal"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="ConfirmDeleteModalLabel"
+        aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <form method="POST">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <p><input id="remove_doc" name="doc_id" type="hidden" /></p>
+                        Are you sure you want to delete this file?
+                    </div>
+                    <div class="modal-footer">
+                        <input 
+                        type="submit"
+                        name="delete_doc"
+                        class=" btn btn-outline-secondary b-success text-success"
+                        value="Confirm"
+                        />
+                        <button
+                        type="button"
+                        class="btn btn-outline-danger"
+                        data-dismiss="modal"
+                        >
+                        Cancel
+                        </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         
+
+                <!-- for showing image -->
+                <div class="modal fade" id="showImageModal" tabindex="-1" role="dialog" aria-labelledby="showImageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="showImageModalLabel">Image</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img id="modal_image" src="" class="img-fluid w-100" alt="Image">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Confirmation modal for deleting images -->
+                <div class="modal fade" id="ConfirmDeleteModalForImages" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalForImagesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-top" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ConfirmDeleteModalForImagesLabel">Confirm Delete</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                            <p><input id="image_id" name= "image_id" type="hidden" ></p>
+                            Are you sure you want to delete the Image?
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" name="delete_image" class="btn btn-outline-danger" value="Confirm" >
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+
     </div>
     
     <!--Theme Switcher-->
@@ -1161,5 +1364,69 @@
         });
     });
     </script>
+    <script>
+        // Function to update the selected documents container
+        function updateSelectedDocuments() {
+            var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');
+            var selectedDocumentsInput = document.getElementById('content-selected-documents');
+            var inputFiles = document.getElementById('content-doc-input').files;
+      
+            // Clear the container
+            selectedDocumentsContainer.innerHTML = '';
+      
+            // Update the container with selected document links
+            for (var i = 0; i < inputFiles.length; i++) {
+                var documentLink = document.createElement('a');
+                documentLink.href = '#'; // Set the link href accordingly
+                documentLink.className = 'btn btn-link btn-block';
+                documentLink.textContent = inputFiles[i].name;
+                selectedDocumentsContainer.appendChild(documentLink);
+      
+                // Add a line break after each link
+                selectedDocumentsContainer.appendChild(document.createElement('br'));
+      
+                // Update the hidden input with selected document names
+                selectedDocumentsInput.value += inputFiles[i].name + ',';
+            }
+        }
+      
+        // Attach the updateSelectedDocuments function to the file input change event
+        document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
+      </script>
+      
+      <script>
+        function openDocDeleteModal(remove_doc) {
+          // Set data in the modal
+          var inputElement = document.getElementById("remove_doc");
+          inputElement.value = remove_doc;
+        }
+      </script>
+      
+      <!--Script to handle file name showing when choosing file-->
+      <script type="text/javascript">
+      
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+      
+      </script>
+              <script>
+                //Delete logic for image
+                function openImageDeleteModal(image_id) {
+                    // Set data in the modal
+                    var inputElement2 = document.getElementById('image_id');
+                    inputElement2.value=image_id;
+                }
+    
+                //View logic for image
+                function openImageModal(image_path){
+                    var inputElement = document.getElementById('modal_image');
+                    inputElement.src = image_path
+                }
+            </script>
   </body>
 </html>
