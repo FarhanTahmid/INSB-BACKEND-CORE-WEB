@@ -530,6 +530,7 @@
         border-color: #7575d4;
         border-radius: 4px;
         transition-duration: 500ms;
+        margin-bottom: 20px;
       }
       .queue_btn:hover{
         color: #ffffff;
@@ -890,7 +891,7 @@
                   {% if create_individual_task_access or create_team_task_access %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                   {% elif is_member_view and not task.is_task_completed %}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Start the task</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                   {% elif is_member_view and task.is_task_completed %}
                   <p  style="color: #d33838;">Task Completed!</p>
                   {% endif %}
@@ -901,15 +902,7 @@
                   {% endif %}                  
                   
                 </div>
-                {% endif %}
-
-                    <!--create task btn-->
-                    <div style="text-align: center;">
-                        {% if is_new_task %}
-                        <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
-                        {% endif %}
-                    </div>
-                    
+                {% endif %}     
                     
                     <!--delete and complete toggle btn-->
                     {% if not is_new_task %}
@@ -1122,6 +1115,13 @@
                 
                 
                 {% endif %}
+
+                <!--create task btn-->
+                <div style="text-align: center;">
+                    {% if is_new_task %}
+                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
+                    {% endif %}
+                </div>
             </form>
         </div>
     </div>

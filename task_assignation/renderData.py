@@ -693,13 +693,13 @@ class Task_Assignation:
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
             if media:
-                medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
-                for m in medias:
-                    #deleting existing ones from datase base and file system
-                    Task_Assignation.delete_task_media(m)
-                    message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
-                    #updating task_log details
-                    Task_Assignation.save_task_logs(task,message)
+                # medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
+                # for m in medias:
+                #     #deleting existing ones from datase base and file system
+                #     Task_Assignation.delete_task_media(m)
+                #     message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
+                #     #updating task_log details
+                #     Task_Assignation.save_task_logs(task,message)
 
                 for m in media:
                     #saving new one
@@ -723,13 +723,13 @@ class Task_Assignation:
                     message = f'Task Name: {task.title}, new content was saved by {member.ieee_id}'
                     Task_Assignation.save_task_logs(task,message)
             if file_upload:
-                file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
-                for file in file_upload_save:
-                    #deleting existing ones from datase base and file system
-                    Task_Assignation.delete_task_document(file)
-                    message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
-                    #updating task_log details
-                    Task_Assignation.save_task_logs(task,message)
+                # file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
+                # for file in file_upload_save:
+                #     #deleting existing ones from datase base and file system
+                #     Task_Assignation.delete_task_document(file)
+                #     message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
+                #     #updating task_log details
+                #     Task_Assignation.save_task_logs(task,message)
 
                 for file in file_upload:
                     file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
@@ -937,7 +937,7 @@ class Task_Assignation:
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
             #saving logs
@@ -1012,7 +1012,7 @@ class Task_Assignation:
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1073,7 +1073,7 @@ class Task_Assignation:
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)

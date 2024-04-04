@@ -1,3 +1,4 @@
+import os
 from django.db import models
 
 from port.models import Chapters_Society_and_Affinity_Groups, Teams
@@ -87,6 +88,10 @@ class Task_Document(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+    @property
+    def filename(self) -> str:
+        return os.path.basename(self.document.path)
 
 class Task_Media(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
@@ -98,6 +103,10 @@ class Task_Media(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+    @property
+    def filename(self) -> str:
+        return os.path.basename(self.media.path)
     
 class Task_Log(models.Model):
 
