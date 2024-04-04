@@ -789,7 +789,7 @@
                                 </li>
                             </ol>
                             <div>
-                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openModal('{{media_url}}{{media.media}}')">✖</button>
+                                <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openImageDeleteModal('{{media.pk}}')">✖</button>
                             </div>
                         </div>
                     </div>
@@ -1136,12 +1136,11 @@
                         <div class="modal-body">
                             <form method="POST">
                                 {% csrf_token %}
-                            <p><input id="image_delete" name= "image_delete" type="hidden">
-                                <input id="image_id" name= "image_id" type="hidden" ></p>
+                            <p><input id="image_id" name= "image_id" type="hidden" ></p>
                             Are you sure you want to delete the Image?
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                            <input type="submit" name="delete_image" class="btn btn-outline-danger" value="Confirm" >
                             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         </div>
                         </form>
@@ -1402,10 +1401,8 @@
       </script>
               <script>
                 //Delete logic for image
-                function openModal(image_delete, image_id) {
+                function openImageDeleteModal(image_id) {
                     // Set data in the modal
-                    var inputElement = document.getElementById('image_delete');    
-                    inputElement.value = image_delete;
                     var inputElement2 = document.getElementById('image_id');
                     inputElement2.value=image_id;
                 }

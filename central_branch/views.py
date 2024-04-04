@@ -4662,6 +4662,14 @@ def upload_task(request, task_id):
                     else:
                         messages.warning(request,"Something went wrong while deleting the document!")
                     return redirect('central_branch:upload_task',task_id)
+                
+                elif request.POST.get('delete_image'):
+                    media = Task_Media.objects.get(id=request.POST.get('image_id'))
+                    if(Task_Assignation.delete_task_media(media)):
+                        messages.success(request,"Media deleted successfully!")
+                    else:
+                        messages.warning(request,"Something went wrong while deleting the media!")
+                    return redirect('central_branch:upload_task',task_id)
 
             context = {
                 'all_sc_ag':sc_ag,

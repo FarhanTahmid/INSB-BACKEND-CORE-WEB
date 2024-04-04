@@ -693,13 +693,13 @@ class Task_Assignation:
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
             if media:
-                medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
-                for m in medias:
-                    #deleting existing ones from datase base and file system
-                    Task_Assignation.delete_task_media(m)
-                    message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
-                    #updating task_log details
-                    Task_Assignation.save_task_logs(task,message)
+                # medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
+                # for m in medias:
+                #     #deleting existing ones from datase base and file system
+                #     Task_Assignation.delete_task_media(m)
+                #     message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
+                #     #updating task_log details
+                #     Task_Assignation.save_task_logs(task,message)
 
                 for m in media:
                     #saving new one
