@@ -665,12 +665,19 @@ class Task_Assignation:
             return None
         
         #TODO:set to all instead of individuals after making teams
+        dic={}
         if user.position.is_eb_member:
             user_tasks = Task.objects.filter(task_created_by = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
+            for task in user_tasks:
+                earned_points = 0
+                dic[task] = earned_points
         else:
             user_tasks = Task.objects.filter(members = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
+            for task in user_tasks:
+                earned_points = Member_Task_Point.objects.get(task = task,member = user)
+                dic[task] = earned_points
 
-        return user_tasks
+        return dic
     
     def save_task_uploads(task,member,permission_paper,media,content,file_upload,drive_link):
 

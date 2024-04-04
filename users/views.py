@@ -605,6 +605,7 @@ def my_tasks(request):
             'all_sc_ag':sc_ag,
             'all_tasks':all_user_tasks,
             'total_points':total_point,
+            'user':user,
         }
         return render(request,"users/my_tasks.html",context)
     except Exception as e:
