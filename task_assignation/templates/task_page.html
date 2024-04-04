@@ -750,7 +750,7 @@
                     <div class="form-group">
                             <label for="documents">File Upload</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple {% if task.is_task_completed %}disabled{% endif %}>
                                 <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
                             </div>
                             
@@ -775,7 +775,9 @@
                                     </li>
                                 </ul>
                                 <div>
+                                    {% if not task.is_task_completed %}
                                     <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openDocDeleteModal('{{file.pk}}')">✖</button>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -788,7 +790,7 @@
                         <!-- Media -->
                         <label for="images" style="margin-top: 25px;" >Media Upload</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="images" name="images" multiple accept="image/*">
+                            <input type="file" class="custom-file-input" id="images" name="images" multiple accept="image/*" {% if task.is_task_completed %}disabled{% endif %}> 
                             <label class="custom-file-label bg-light" for="images">Choose files</label>
                         </div>
                     {% if media_uploads|length > 0 %}
@@ -804,7 +806,9 @@
                                 </li>
                             </ol>
                             <div>
+                                {% if not task.is_task_completed %}
                                 <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModalForImages" onclick="openImageDeleteModal('{{media.pk}}')">✖</button>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
