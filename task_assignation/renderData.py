@@ -723,13 +723,13 @@ class Task_Assignation:
                     message = f'Task Name: {task.title}, new content was saved by {member.ieee_id}'
                     Task_Assignation.save_task_logs(task,message)
             if file_upload:
-                file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
-                for file in file_upload_save:
-                    #deleting existing ones from datase base and file system
-                    Task_Assignation.delete_task_document(file)
-                    message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
-                    #updating task_log details
-                    Task_Assignation.save_task_logs(task,message)
+                # file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
+                # for file in file_upload_save:
+                #     #deleting existing ones from datase base and file system
+                #     Task_Assignation.delete_task_document(file)
+                #     message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
+                #     #updating task_log details
+                #     Task_Assignation.save_task_logs(task,message)
 
                 for file in file_upload:
                     file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)

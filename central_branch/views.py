@@ -4654,6 +4654,14 @@ def upload_task(request, task_id):
                     else:
                         messages.warning(request,"Something went wrong while saving!")
                     return redirect('central_branch:upload_task',task_id)
+                
+                elif request.POST.get('delete_doc'):
+                    doc = Task_Document.objects.get(id=request.POST.get('doc_id'))
+                    if(Task_Assignation.delete_task_document(doc)):
+                        messages.success(request,"Document deleted successfully!")
+                    else:
+                        messages.warning(request,"Something went wrong while deleting the document!")
+                    return redirect('central_branch:upload_task',task_id)
 
             context = {
                 'all_sc_ag':sc_ag,

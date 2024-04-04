@@ -756,11 +756,11 @@
                             padding: 8px;">
                                 <ul style="margin: 0%; list-style: none; padding-left: 25px;">
                                     <li>
-                                        <a href={{media_url}}{{file.document}}><div>{{forloop.counter}}. file_{{forloop.counter}}</div></a>
+                                        <a href={{media_url}}{{file.document}} target="_blank"><div>{{forloop.counter}}. {{file.filename}}</div></a>
                                     </li>
                                 </ul>
                                 <div>
-                                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{document.pk}}')">✖</button>
+                                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openDocDeleteModal('{{file.pk}}')">✖</button>
                                 </div>
                             </div>
                         </div>
@@ -785,7 +785,7 @@
                         align-items: center;">
                             <ol style="margin: 0%; list-style: none; padding: 0;">
                                 <li>
-                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. img_{{forloop.counter}}</a>
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
                                 </li>
                             </ol>
                             <div>
@@ -989,7 +989,7 @@
                                 padding: 8px;">
                                     <ul style="margin: 0%; list-style: none; padding-left: 25px;">
                                         <li>
-                                            <a href={{media_url}}{{file.document}}><div>{{forloop.counter}}. file_{{forloop.counter}}</div></a>
+                                            <a href={{media_url}}{{file.document}} target="_blank"><div>{{forloop.counter}}. {{file.filename}}</div></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -1017,7 +1017,7 @@
                                     align-items: center;">
                                         <ol style="margin: 0%; list-style: none; padding: 0;">
                                             <li>
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. img_{{forloop.counter}}</a>
+                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
                                             </li>
                                         </ol>
                                     </div>
@@ -1077,13 +1077,13 @@
                     <form method="POST">
                     <div class="modal-body">
                         {% csrf_token %}
-                        <p><input id="remove_doc" name="remove_doc" type="hidden" /></p>
+                        <p><input id="remove_doc" name="doc_id" type="hidden" /></p>
                         Are you sure you want to delete this file?
                     </div>
                     <div class="modal-footer">
                         <input 
                         type="submit"
-                        name="remove"
+                        name="delete_doc"
                         class=" btn btn-outline-secondary b-success text-success"
                         value="Confirm"
                         />
@@ -1381,7 +1381,7 @@
       </script>
       
       <script>
-        function openModal(remove_doc) {
+        function openDocDeleteModal(remove_doc) {
           // Set data in the modal
           var inputElement = document.getElementById("remove_doc");
           inputElement.value = remove_doc;
