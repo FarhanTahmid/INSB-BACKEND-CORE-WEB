@@ -666,9 +666,9 @@ class Task_Assignation:
         
         #TODO:set to all instead of individuals after making teams
         if user.position.is_eb_member:
-            user_tasks = Task.objects.filter(task_created_by = user,task_type = "Individuals")
+            user_tasks = Task.objects.filter(task_created_by = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
         else:
-            user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
+            user_tasks = Task.objects.filter(members = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
 
         return user_tasks
     

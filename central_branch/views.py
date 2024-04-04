@@ -4503,7 +4503,7 @@ def task_home(request):
 
         has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
         
-        all_tasks = Task.objects.all().order_by('-pk')
+        all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
 
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
@@ -4809,9 +4809,12 @@ def task_edit(request, task_id):
         #Check if the user is a member or an admin
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
-            is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
-            if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
-                return redirect('central_branch:upload_task',task.pk)
+            try:
+                is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
+                if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
+                    return redirect('central_branch:upload_task',task.pk)
+            except:
+                pass
         except:
             logged_in_user = adminUsers.objects.get(username=user)
 
