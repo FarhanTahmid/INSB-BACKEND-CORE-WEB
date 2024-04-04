@@ -142,6 +142,21 @@
             align-items: center;
             justify-content: center;
         }
+        .save-task-btn{
+            padding: 5px 15px;
+            color: white;
+            background: #002855;
+            margin: 16px 4px 16px; 
+            border-radius: 4px;
+            border: 2px solid #002855;
+            transition: all ease-in-out .3s;
+            cursor: pointer;
+        }
+        .save-task-btn:hover{
+            color: #002855;
+            background: white;
+            border-color: #002855;
+        }
         .finish-task-btn , .start-task-btn{
             padding: 5px 15px;
             color: white;
@@ -655,7 +670,7 @@
                     {% if not task.is_task_completed %}
                     <div class="task-btn">
                         <!-- <a href="{% url 'central_branch:task_edit' task.pk %}" class="cancel-task-btn">Cancel</a> -->
-                        <input type="submit" class="finish-task-btn" name="save_task" value="Save for later">
+                        <input type="submit" class="save-task-btn" name="save_task" value="Save for later">
                         <input type="submit" class="finish-task-btn" name="finish_task" value="Task Completed">
                     </div>
                     {% else %}
