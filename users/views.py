@@ -24,6 +24,7 @@ from datetime import datetime
 import traceback
 from central_branch import views as cv
 from .renderData import member_login_permission
+from task_assignation.renderData import Task_Assignation
 
 logger=logging.getLogger(__name__)
 
@@ -581,3 +582,20 @@ def invalidURL(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 
+def my_tasks(request):
+
+    #Get current logged in user
+    user = request.user.username
+    all_user_tasks = Task_Assignation.load_user_tasks(user)
+    total_point = 0
+    try:
+        user = Members.objects.get(ieee_id = user)
+        total_point = user.completed_task_points
+    except:
+        user = adminUsers.objects.get(username=user)
+
+    context = {
+        'all_tasks':all_user_tasks,
+        'total_points':total_point
+    }
+    return render(request,"users/my_tasks.html",context)

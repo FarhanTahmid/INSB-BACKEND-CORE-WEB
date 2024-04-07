@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Add members and task | IEEE NSU SB</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- style -->
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    <!--common CSS-->
+    {% block common_css %}
+     {% include "common_css.html" %}
+    {% endblock common_css %}
+    <!-- CKEditor CDN -->
+    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <style>
+      body, html {
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+      .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height:100%;
+      }
+      .btn-container {
+        text-align: center;
+      }
+      .tb_search {
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
+      
+      .btn {
+        max-width: 100%;
+        width: auto;
+        display: inline-block;
+        white-space: normal; /* Allow text to wrap within the button */
+        word-wrap: break-word; /* Break long words if necessary */
+        font-size: 16px; /* Adjust the font size as needed */
+      }
+      .update_button{
+        display : flex;
+        justify-content: space-around;
+
+      }
+      .tooltip-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+      }
+
+      .image-button:hover + .tooltip-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(10px); /* Adjust the distance from the link */
+      }
+
+      .tooltip-text {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+        background-color: #333;
+        color: #fff;
+        padding: 5px;
+        border-radius: 5px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      }
+
+      .image-button img {
+        width: 32px; /* Adjust as needed */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 50%; /* Add rounded corners if desired */
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
+      .submission-list {
+        list-style: none;
+        padding: 0;
+      }
+      .submission-item {
+        padding-left: 1rem;
+        display: flex;
+        align-items: center;
+      }
+      /* Styling for the table */
+      .table-class tbody tr:nth-child(odd){
+        background-color: white; /* White color for odd rows */
+      }
+      .table-class tbody tr:nth-child(odd){
+        background-color: white; /* White color for odd rows */
+      }
+      .table-class tbody tr:hover {
+        background-color: #e0e0e0; /* Lighter gray color for hover effect */
+      }
+      .table-responsive {
+        max-height: 250px; /* Set maximum height for the table */
+        overflow-y: auto; /* Enable vertical scrollbar when content overflows */
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
+      .table-responsive thead th {
+        position: sticky;
+        top: -2px;
+      }
+      /* Styling for the checkbox */
+      .submission-checkbox {
+        margin-right: 10px;
+      }
+      .option-label{
+        margin: 0;
+        font-size: 15px;
+      }
+      .submission-label{
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      .discription{
+        display: none;
+      }
+    
+      /* Media query for smaller screens (adjust the breakpoint as needed) */
+      @media (max-width: 768px) {
+        .btn {
+          width: 100%; /* Make the button full width on smaller screens */
+        }
+        .tb_search{
+          width: 100%;
+        }
+      }
+      .nav a.active {
+        color: #FFA300;
+      }
+      .ckeditor {
+        box-shadow: 2px 2px 5px 0px #80808054;
+      }
+      .ck.ck-editor__editable_inline>:last-child {
+        margin-bottom: var(--ck-spacing-large);
+        height: 10rem;
+      }
+      .forward-task-btn {
+        padding: 5px 15px;
+        color: white;
+        background: #75D481;
+        margin: 16px 4px 16px; 
+        border-radius: 4px;
+        border: 2px solid #75D481;
+        transition: all ease-in-out .3s;
+      }
+      
+      .forward-task-btn:hover {
+        color: #75D481;
+        background: white;
+        border-color: #75D481;
+      }
+      .form-control{
+        border-radius: 4px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 0px;
+      }
+      .table-responsive::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .table-responsive::-webkit-scrollbar-thumb{
+          background-color: #e7eeef;
+          transition: all .4s ease-in-out;
+          border-radius: 4px;
+      }
+      .table-responsive::-webkit-scrollbar-thumb:hover{
+          background-color: rgb(169, 170, 170);
+      }
+      .table-responsive{
+        max-height: 270px;
+      }
+    </style>
+  </head>
+    <body>
+      <div class="app" id="app">
+
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+          {% block sidebar %}
+            {% include 'users/sidebar.html' %}
+          {% endblock %}
+        </div>
+
+
+        <!-- navbar -->
+        <div id="content" class="app-content" role="main">
+          {% block navbar %}
+          {% include 'navbar.html' %} 
+          {% endblock navbar %}
+        </div>
+      
+
+        <div id="content" class="app-content" role="main">
+            
+          <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%; padding-top: 3.5rem;" id="view">
+
+            <!-- ############ PAGE START-->
+            <h4 style="justify-content:center;text-align:center;margin-bottom:15px;margin-top:30px;">Add members and task submission type</h4>
+            
+
+            <!--Messages-->
+            <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
+              <div id="messageBox" class="alert alert-success" role="alert">
+                  <span id="messageText"></span>
+                  <button type="button" class="close" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+            </div>
+
+
+            <!--Messages-->
+            <div class="tooltip-container">
+              <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                <img src="/static/back-arrow.png" alt="Go back to session">
+              </a>
+              <span class="tooltip-text">Go back</span>
+            </div>
+
+            <!--Messages-->
+            <div style="justify-content:center; text-align:center;">
+              {% if messages %}
+                  {% for message in messages %}
+                      <h4{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                  {% endfor %}
+              <br>
+              {% endif %}
+            </div>
+      
+      
+            <form method="post">
+              {% csrf_token %}
+              <div style="justify-content:center;text-align:center; margin-top:15px;">  
+                <div style="justify-content:center;">
+                  <div class="header_wrap">
+                    <!-- <div class="num_rows">
+                      <div class="form-group">
+                        <select class="form-control" name="state" id="maxRows">
+                          <option value="10">10</option>
+                          <option value="15">15</option>
+                          <option value="20">20</option>
+                          <option value="50">50</option>
+                          <option value="5000">Show ALL Rows</option>
+                        </select>
+                      </div>
+                    </div> -->
+
+
+                    <!--search bar-->
+                    <div class="tb_search" style="margin-bottom: 1rem;">
+                      <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search..." class="form-control">
+                    </div>
+                  </div>
+
+                  <!--table-->
+                  <div class="table-responsive">
+                    <table class="table table-class" id="table-id">
+                      <thead>
+                        <tr>
+                          <th data-priority="1">IEEE ID</th>
+                          <th data-priority="1">Name</th>
+                          <th data-priority="1">Team</th>
+                          <th data-priority="1">Position</th>
+                          <th data-priority="1">Contact</th>
+                          <th data-priority= "1">Select</th>
+                        </tr>
+                      </thead>
+                      <tbody>                                    
+                        <tr>
+                          <td style="color: #00629b"><a href="#" target="_blank">01</a></td>
+                          <td>name</td>
+                          <td>team</td>
+                          <td>position</td>
+                          <td>contact</td>
+                          <td>
+                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div> 
+                </div>
+              </div>
+      
+
+              <!--task submission type-->
+              <div class="task-selections">
+                <h6 class="submission-label">Task submission type:</h6>
+                <ul class="submission-list">
+                  <li class="submission-item">
+                    <input type="checkbox" id="permission-paper" class="submission-checkbox" name="permission_paper" value="permission-paper" {% if task.has_permission_paper %}checked{% endif %}>
+                    <label for="permission-paper" class="option-label">Permission paper</label>
+                  </li>
+                  <li class="submission-item">
+                    <input type="checkbox" id="content_" class="submission-checkbox" name="content" value="content_" {% if task.has_content %}checked{% endif %}>
+                    <label for="content_" class="option-label">Content</label>
+                  </li>
+                  <li class="submission-item">
+                    <input type="checkbox" id="file-upload" class="submission-checkbox" name="file_upload" value="file-upload" {% if task.has_file_upload %}checked{% endif %}>
+                    <label for="file-upload" class="option-label">File Upload</label>
+                  </li>
+                  <li class="submission-item">
+                    <input type="checkbox" id="media" class="submission-checkbox" name="media" value="media" {% if task.has_media %}checked{% endif %}>
+                    <label for="media" class="option-label">Media</label>
+                  </li>
+                  <li class="submission-item">
+                    <input type="checkbox" id="drive-link" class="submission-checkbox" name="drive_link" value="drive-link" {% if task.has_drive_link %}checked{% endif %}>
+                    <label for="drive-link" class="option-label">Drive Links</label>
+                  </li>
+                  <li class="submission-item">
+                    <input type="checkbox" id="others" class="submission-checkbox submission-checkbox-others" name="others" value="others" {% if task.has_others %}checked{% endif %}>
+                    <label for="others" class="option-label" id="other-description-label">Others</label>
+                  </li>
+                  <div id="other_description" class="discription"  {% if task.has_others %}style="display:block;"{% endif %}>
+                    <label class="description_label" style="padding: 1rem 0rem 0.5rem 0rem ; font-size: 17px;">Describe your task:</label>
+                    <div class="ckeditor" id="other-description">
+                      <div>
+                        <textarea id="task_description_details" name="task_description_details" >{{task.others_description|default:""}}</textarea>
+                      </div>
+                    </div>
+                  </div>
+                </ul>
+              </div>
+              
+              <!--forward task btn-->
+              <div style="text-align: center;">
+                <button type="submit" class="forward-task-btn">Forward Task</button>
+              </div>
+            </form>
+      
+          </div>
+        </div>
+      </div>
+
+      {% block common_js %}
+       {% include "common_js.html" %}
+      {% endblock common_js %}
+
+      <script>
+        getPagination('#table-id');
+        $('#maxRows').trigger('change');
+        function getPagination (table){
+
+          $('#maxRows').on('change',function(){
+            $('.pagination').html('');						// reset pagination div
+            var trnum = 0 ;									// reset tr counter 
+            var maxRows = parseInt($(this).val());			// get Max Rows from select option
+            
+            var totalRows = $(table+' tbody tr').length;		// numbers of rows 
+          $(table+' tr:gt(0)').each(function(){			// each TR in  table and not the header
+            trnum++;									// Start Counter 
+            if (trnum > maxRows ){						// if tr number gt maxRows
+              
+              $(this).hide();							// fade it out 
+            }if (trnum <= maxRows ){$(this).show();}// else fade in Important in case if it ..
+          });											//  was fade out to fade it in 
+          if (totalRows > maxRows){						// if tr total rows gt max rows option
+            var pagenum = Math.ceil(totalRows/maxRows);	// ceil total(rows/maxrows) to get ..  
+                                  //	numbers of pages 
+            for (var i = 1; i <= pagenum ;){			// for each page append pagination li 
+            $('.pagination').append('<li data-page="'+i+'">\
+                          <span>'+ i++ +'<span class="sr-only">(current)</span></span>\
+                        </li>').show();
+            }											// end for i 
+        
+            
+          } 												// end if row count > max rows
+          $('.pagination li:first-child').addClass('active'); // add active class to the first li 
+            
+            
+            //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+          showig_rows_count(maxRows, 1, totalRows);
+            //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+            $('.pagination li').on('click',function(e){		// on click each page
+            e.preventDefault();
+            var pageNum = $(this).attr('data-page');	// get it's number
+            var trIndex = 0 ;							// reset tr counter
+            $('.pagination li').removeClass('active');	// remove active class from all li 
+            $(this).addClass('active');					// add active class to the clicked 
+            
+            
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+          showig_rows_count(maxRows, pageNum, totalRows);
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+            
+            
+            
+            $(table+' tr:gt(0)').each(function(){		// each tr in table not the header
+              trIndex++;								// tr index counter 
+              // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+              if (trIndex > (maxRows*pageNum) || trIndex <= ((maxRows*pageNum)-maxRows)){
+                $(this).hide();		
+              }else {$(this).show();} 				//else fade in 
+            }); 										// end of for each tr in table
+              });										// end of on click pagination list
+          });
+          // end of on select change 
+
+          // END OF PAGINATION 
+          
+        }	
+
+
+            
+
+        // SI SETTING
+        $(function(){
+          // Just to append id number for each row  
+        default_index();
+                  
+        });
+
+        //ROWS SHOWING FUNCTION
+        function showig_rows_count(maxRows, pageNum, totalRows) {
+          //Default rows showing
+                var end_index = maxRows*pageNum;
+                var start_index = ((maxRows*pageNum)- maxRows) + parseFloat(1);
+                var string = 'Showing '+ start_index + ' to ' + end_index +' of ' + totalRows + ' entries';               
+                $('.rows_count').html(string);
+        }
+
+        // CREATING INDEX
+        function default_index() {
+          $('table tr:eq(0)').prepend('<th> SL No. </th>')
+
+                  var id = 0;
+
+                  $('table tr:gt(0)').each(function(){	
+                    id++
+                    $(this).prepend('<td>'+id+'</td>');
+                  });
+        }
+
+        // All Table search script
+    function FilterkeyWord_all_table() {
+      // Count td if you want to search on all table instead of specific column
+
+      var count = $(".table")
+        .children("tbody")
+        .children("tr:first-child")
+        .children("td").length;
+
+      // Declare variables
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("search_input_all");
+      var input_value = document.getElementById("search_input_all").value;
+      filter = input.value.toLowerCase();
+      if (input_value != "") {
+        table = document.getElementById("table-id");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 1; i < tr.length; i++) {
+          var flag = 0;
+
+          for (j = 0; j < count; j++) {
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+              var td_text = td.innerHTML;
+              if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                //var td_text = td.innerHTML;
+                //td.innerHTML = 'shaban';
+                flag = 1;
+              } else {
+                //DO NOTHING
+              }
+            }
+          }
+          if (flag == 1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      } else {
+        //RESET TABLE
+        $("#maxRows").trigger("change");
+      }
+    } 
+      </script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          // Get the current page's URL
+          const currentPageUrl = window.location.href;
+        
+          // Find the links in the navigation bar
+          const navLinks = document.querySelectorAll(".nav a");
+        
+          // Loop through the links and add a "active" class to the matching link
+          navLinks.forEach(function (link) {
+            if (link.href === currentPageUrl) {
+              link.classList.add("active");
+            }
+          });
+        });
+      </script>
+      
+      <script>
+
+          // Get the input elements
+          const ckeckBoxInputs = document.querySelectorAll('.submission-checkbox-others');
+          const otherDescriptionLabel = document.getElementById('other_description');
+
+          // Add event listener to radio inputs
+          ckeckBoxInputs.forEach(input => {
+            input.addEventListener('change', function() {
+              // Check if at least one checkbox is selected
+              var isCheckboxSelected = false;
+
+              ckeckBoxInputs.forEach(function(checkbox) {
+                  if (checkbox.checked) {
+                      isCheckboxSelected = true;
+                  }
+              });
+
+              // If "Others" is selected, show the text field
+              if (isCheckboxSelected) {
+                otherDescriptionLabel.style.display = 'block';
+              } else {
+                otherDescriptionLabel.style.display = 'none';
+              }
+            });
+          });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+          // Replace the textarea with CKEditor instance
+          CKEDITOR.replace("task_description_details", {
+            // Specify CKEditor configuration options here if needed
+          });
+
+          // Attach a function to the change event for CKEditor instance
+          var editor = CKEDITOR.instances["task_description_details"];
+
+          editor.on("change", function () {
+            // Update character count display for CKEditor instance
+            updateCharacterCount();
+          });
+
+          // Update character count initially
+          updateCharacterCount();
+        });
+
+        function updateCharacterCount() {
+          var editorContent = CKEDITOR.instances["task_description_details"].getData();
+
+          // Handle special space representations
+          var cleanedContent = editorContent.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim();
+
+          // Count each character (including spaces)
+          var characterCount = cleanedContent.length;
+
+          var characterCountElement = document.getElementById("task_descriptionCharacterCount");
+
+          // Check conditions and update text color and content
+          if (characterCount === 0) {
+            characterCountElement.style.color = "black";
+            characterCountElement.innerText = "Character Count: 0";
+          } else {
+            characterCountElement.innerText = "Character Count: " + characterCount;
+          }
+        }
+
+
+      </script>
+      <script>
+
+        var forwardBtn = document.querySelectorAll('.forward-task-btn');
+        // forwardBtn.forEach(input => {
+        //   input.addEventListener('change', function() {
+        //     checkSelections();
+        //   });
+        // });
+
+        forwardBtn.onclick = function () {
+          // Check if a radio button is selected
+          var radioButtons = document.querySelectorAll('.table-checkbox');
+          var radioSelected = false;
+
+          radioButtons.forEach(function(radioButton) {
+            if (radioButton.checked) {
+              radioSelected = true;
+            }
+          });
+
+          // Check if at least one checkbox is selected from the table
+          var checkboxes = document.querySelectorAll('.submission-checkbox');
+          var checkboxSelected = false;
+
+          checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+              checkboxSelected = true;
+            }
+          });
+
+          // Display alert messages based on selections
+          if (!radioSelected) {
+            alert('Please select a member to forward task');
+          } else if (!checkboxSelected) {
+            alert('Please select a task submission type');
+          } else {
+            alert('I don\'t know where to go next');
+          }
+        }
+
+      </script>
+    <!-- endbuild -->
+  </body>
+</html>

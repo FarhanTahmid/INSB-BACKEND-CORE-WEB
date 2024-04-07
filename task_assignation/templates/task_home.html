@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task Homepage | IEEE NSU Student Branch</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+    <!--common CSS-->
+    {% block common_css %} 
+     {% include "common_css.html" %} 
+    {% endblock common_css %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      .btn-container {
+        text-align: center;
+      }
+
+      .btn {
+        max-width: 100%;
+        width: auto;
+        display: inline-block;
+        white-space: normal;
+        word-wrap: break-word;
+        font-size: 16px;
+        height: 36px;
+        cursor: pointer;
+      }
+
+      .btn_flex {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .button {
+        background-color: #75d481;
+        border: none;
+        color: white;
+        padding: 6px 13px;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .search_box {
+        padding: 6px 10px;
+        border-radius: 3px;
+        border: 2px solid #d3d3d3;
+        color: black;
+        transition: 0.4s;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 2px solid white;
+      }
+
+      .nav a.active {
+        color: #ffa300;
+      }
+
+      .create-task-btn {
+        padding: 5px 15px;
+        color: white;
+        background: #75d481;
+        margin: 16px 4px 16px;
+        border-radius: 4px;
+        border: 2px solid #75d481;
+        cursor: pointer;
+        transition: all ease-in-out 0.3s;
+      }
+
+      .create-task-btn:hover {
+        color: #75d481;
+        background: white;
+        border-color: #75d481;
+      }
+
+      .task-btn {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .title-box {
+        padding: 6px 10px;
+        border-radius: 3px;
+        border: 2px solid #d3d3d3;
+        color: black;
+        transition: 0.4s;
+        border: 2px solid #80808054;
+        cursor: text;
+      }
+      .title-box option {
+        cursor: pointer;
+      }
+      .title-box:focus {
+        border: 2px solid #80808054;
+      }
+      .task_type {
+        position: relative;
+        left: 57px;
+      }
+      .modal-content {
+        max-width: 390px;
+      }
+      .modal-dialog {
+        position: relative;
+        left: 147px;
+      }
+      .add_tasktype {
+        display: grid;
+        grid-template-columns: 150px 183px;
+        grid-gap: 10px;
+        align-items: end;
+      }
+      .modal-title {
+        font-weight: bold;
+      }
+      .modal-footer {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .all_task_type_btn {
+        padding: 5px 15px;
+        color: white;
+        background: #00629b;
+        margin: 16px 4px 16px;
+        border-radius: 4px;
+        border: 2px solid #00629b;
+        cursor: pointer;
+        transition: all ease-in-out 0.3s;
+      }
+      .all_task_type_btn:hover {
+        background: white;
+        border-color: #00629b;
+        color: #00629b;
+      }
+      .delete_modal {
+        /* Hidden by default */
+        opacity: 0;
+        position: fixed; /* Stay in place */
+        z-index: -1;
+        padding-top: 50px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 150%;
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+        transition: all 0.3s ease-in-out;
+        transform: translateY(-50px);
+        overflow: auto;
+      }
+      /* Modal Content */
+      .modal-content1 {
+        background-color: #fefefe;
+        margin: auto 45%;
+        border: 1px solid rgb(136, 136, 136);
+        width: 20%;
+        border-radius: 6px;
+        max-height: 70vh;
+        overflow-y: scroll;
+      }
+      .modal-content1::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .modal-content1::-webkit-scrollbar-thumb {
+        background-color: #00629b95;
+        transition: all 0.4s ease-in-out;
+        border-radius: 4px;
+      }
+      .modal-content1::-webkit-scrollbar-thumb:hover {
+        background-color: #00629b;
+      }
+      /* The Close Button */
+      .close {
+        color: #000;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .close:hover,
+      .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      @media screen and (max-width: 1000px) {
+        .modal-dialog {
+          left: 56px;
+        }
+      }
+      @media screen and (max-width: 1024px) {
+        .modal-content1 {
+          width: 50%;
+          margin: auto;
+        }
+      }
+      @media screen and (max-width: 650px) {
+        .modal-content1 {
+          width: 90%;
+        }
+      }
+      @media screen and (max-width: 500px) {
+        .modal-dialog {
+          left: 0px;
+        }
+        .add_tasktype {
+          grid-template-columns: 30% 60%;
+        }
+        .task_type {
+          left: 0%;
+        }
+        .modal-footer {
+          display: flex;
+          flex-direction: column-reverse;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+      }
+
+      .check-task-button{
+        padding: 5px 15px;
+        color: white;
+        background: #003f69;
+        margin: 16px 4px 16px; 
+        border-radius: 4px;
+        border: 2px solid #003f69;
+        transition: all ease-in-out .3s;
+        cursor: pointer;
+    }
+    .check-task-button:hover{
+        color: #003f69;
+        background: white;
+        border-color: #003f69;
+    }
+    </style>
+  </head>
+
+  <body>
+    <div class="app" id="app">
+      <!-- ############ LAYOUT START-->
+
+      <!-- aside -->
+      <div id="aside" class="app-aside modal nav-dropdown">
+        {% block sidebar %} {% include 'users/sidebar.html' %} {% endblock %}
+      </div>
+
+      <div id="content" class="app-content box-shadow-z0" role="main">
+        {% block navbar %} {% include 'navbar.html' %} {% endblock navbar %}
+      </div>
+
+      <div ui-view class="app-body" style="justify-content: center; margin-left: 15%; margin-right: 15%" id="view" >
+        <h2
+          style="
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: 30px;
+          "
+        >
+          Tasks
+        </h2>
+
+        {% if has_task_create_access %}
+        <div class="task-btn">
+          <a
+            href="{% url 'central_branch:create_task' %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
+
+          <button
+            type="button"
+            class="check-task-button"
+            data-toggle="modal"
+            data-target="#TaskTypeModal"
+            style="margin-bottom: 15px; cursor: pointer"
+          >
+            Create Task Category
+          </button>
+        </div>
+        {% endif %}
+
+        <!--Messages-->
+        <div style="justify-content: center; text-align: center">
+          {% if messages %} 
+          {% for message in messages %}
+          <h4
+            {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}
+          </h4>
+          {% endfor %}
+          <br/>
+          {% endif %}
+        </div>
+
+        <div
+          style="justify-content: center; text-align: center; margin-top: 30px"
+        >
+          <div class="container" style="justify-content: center">
+            <div class="header_wrap">
+              <div class="num_rows">
+                <div class="form-group">
+                  <!--		Show Numbers Of Rows 		-->
+                  <select
+                    class="form-control search_box"
+                    name="state"
+                    id="maxRows"
+                  >
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="5000">Show all rows</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tb_search">
+                <input
+                  type="text"
+                  id="search_input_all"
+                  onkeyup="FilterkeyWord_all_table()"
+                  placeholder="Search.."
+                  class="form-control search_box"
+                />
+              </div>
+            </div>
+            <div class="table-responsive" style="border-radius: 4px 4px 0 0">
+              <table class="table table-striped table-class" id="table-id">
+                <thead>
+                  <tr>
+                    <th data-priority="1">Name</th>
+                    <th data-priority="1">Deadline</th>
+                    <th data-priority="1">Completed?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for task in all_tasks %}
+                  <tr>
+                    <td style="color: #00629b">
+                      <a href="{% url 'central_branch:task_edit' task.pk %}"
+                        >{{task.title}}</a
+                      >
+                    </td>
+                    <td>{{task.deadline}}</td>
+                    {% if task.is_task_completed %}
+                    <td>
+                      <img src="/static/admin/img/icon-yes.svg" alt="True" />
+                    </td>
+                    {% else %}
+                    <td>
+                      <img src="/static/admin/img/icon-no.svg" alt="False" />
+                    </td>
+                    {% endif %}
+                  </tr>
+
+                  {% endfor %}
+                </tbody>
+
+                <tbody></tbody>
+              </table>
+            </div>
+            <!--		Start Pagination -->
+            <div class="pagination-container">
+              <nav>
+                <ul class="pagination">
+                  <!--	Here the JS Function Will Add the Rows -->
+                </ul>
+              </nav>
+            </div>
+            <div class="rows_count">Showing 11 to 20 of 91 entries</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ############ PAGE END-->
+    </div>
+
+    <!--Theme Switcher-->
+    {% block theme_switcher %} 
+    {% include "theme_switcher.html" %} 
+    {% endblock theme_switcher %}
+
+    <!-- Task Drop down menu -->
+
+    <div
+      class="modal fade"
+      id="TaskTypeModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="TaskTypeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addModalLabel">Add Task Category</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+            <div class="modal-body">
+          <form method="POST">
+              {% csrf_token %}
+              <br />
+              <div class="add_tasktype">
+                <label for="label">Task Name:</label>
+                <input
+                  type="text"
+                  id="label"
+                  class="title-box"
+                  name="task_type_name"
+                  required
+                />
+                <label for="label">Points:</label>
+                <input
+                  type="number"
+                  id="label"
+                  class="title-box"
+                  name="task_point"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div style="display: inline-block">
+                <input
+                  type="submit"
+                  class="btn btn-outline-success txt-success buttons"
+                  name="add_task_type"
+                  value="Add"
+                />
+                <button class="btn btn-outline-danger" data-dismiss="modal">
+                  Cancel
+                </button>
+              </div>
+            </form>
+              <div>
+                <button class="all_task_type_btn">
+                  See all task category
+                </button>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- All task type modal -->
+    <div id="myModal" class="delete_modal">
+      <!-- Modal content -->
+      <div class="modal-content1">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 20px;
+          "
+        >
+          <h5 style="font-weight: bold; position: relative; top: 2px;">All task category</h5>
+          <span class="close">&times;</span>
+        </div>
+        <ol style="padding: 0 38px">
+          {% for task_category in all_task_categories %}
+          <li>
+            <p>{{ task_category.name }} - {{task_category.points }} points</p>
+          </li>
+          {% endfor %}
+        </ol>
+        <div
+          style="
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            background: white;
+            position: sticky;
+            bottom: 0;
+            height: 46px;
+          "
+        >
+          <a href="#" class="btn btn-outline-danger cancel_view_btn">Cancel</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- build:js scripts/app.html.js -->
+    <!-- jQuery -->
+    <script src="{% static 'script/jquery.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'script/tether.min.js'%}"></script>
+    <script src="{% static 'script/bootstrap.js'%}"></script>
+    <!-- core -->
+    <script src="{% static 'script/underscore-min.js'%}"></script>
+    <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+    <script src="{% static 'script/pace.min.js'%}"></script>
+
+    {% comment %}
+    <script src="{% static 'script/config.lazyload.js'%}"></script>
+    {% endcomment %}
+
+    <script src="{% static 'script/palette.js'%}"></script>
+    <script src="{% static 'script/ui-load.js'%}"></script>
+    <script src="{% static 'script/ui-jp.js' %}"></script>
+    <script src="{% static 'script/ui-include.js'%}"></script>
+    <script src="{% static 'script/ui-device.js'%}"></script>
+    <script src="{% static 'script/ui-form.js'%}"></script>
+    <script src="{% static 'script/ui-nav.js'%}"></script>
+    <script src="{% static 'script/ui-screenfull.js'%}"></script>
+    <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+    <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+    {% comment %}
+    <script src="{% static 'script/screenfull.min.js'%}"></script>
+    {% endcomment %}
+    <script src="{% static 'script/app.js'%}"></script>
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <!-- Chart JS -->
+    <script src="{% static 'scripts/chartjs.js' %}"></script>
+    <!-- ajax -->
+    {% comment %}
+    <script src="{% static 'script/jquery.pjax.js'%}"></script>
+    {% endcomment %}
+    <script src="{% static 'script/ajax.js'%}"></script>
+    <script>
+      getPagination("#table-id");
+      $("#maxRows").trigger("change");
+      function getPagination(table) {
+        $("#maxRows").on("change", function () {
+          $(".pagination").html(""); // reset pagination div
+          var trnum = 0; // reset tr counter
+          var maxRows = parseInt($(this).val()); // get Max Rows from select option
+
+          var totalRows = $(table + " tbody tr").length; // numbers of rows
+          $(table + " tr:gt(0)").each(function () {
+            // each TR in  table and not the header
+            trnum++; // Start Counter
+            if (trnum > maxRows) {
+              // if tr number gt maxRows
+
+              $(this).hide(); // fade it out
+            }
+            if (trnum <= maxRows) {
+              $(this).show();
+            } // else fade in Important in case if it ..
+          }); //  was fade out to fade it in
+          if (totalRows > maxRows) {
+            // if tr total rows gt max rows option
+            var pagenum = Math.ceil(totalRows / maxRows); // ceil total(rows/maxrows) to get ..
+            //	numbers of pages
+            for (var i = 1; i <= pagenum; ) {
+              // for each page append pagination li
+              $(".pagination")
+                .append(
+                  '<li data-page="' +
+                    i +
+                    '">\
+								      <span>' +
+                    i++ +
+                    '<span class="sr-only">(current)</span></span>\
+								    </li>'
+                )
+                .show();
+            } // end for i
+          } // end if row count > max rows
+          $(".pagination li:first-child").addClass("active"); // add active class to the first li
+
+          //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+          showig_rows_count(maxRows, 1, totalRows);
+          //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+          $(".pagination li").on("click", function (e) {
+            // on click each page
+            e.preventDefault();
+            var pageNum = $(this).attr("data-page"); // get it's number
+            var trIndex = 0; // reset tr counter
+            $(".pagination li").removeClass("active"); // remove active class from all li
+            $(this).addClass("active"); // add active class to the clicked
+
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+            showig_rows_count(maxRows, pageNum, totalRows);
+            //SHOWING ROWS NUMBER OUT OF TOTAL
+
+            $(table + " tr:gt(0)").each(function () {
+              // each tr in table not the header
+              trIndex++; // tr index counter
+              // if tr index gt maxRows*pageNum or lt maxRows*pageNum-maxRows fade if out
+              if (
+                trIndex > maxRows * pageNum ||
+                trIndex <= maxRows * pageNum - maxRows
+              ) {
+                $(this).hide();
+              } else {
+                $(this).show();
+              } //else fade in
+            }); // end of for each tr in table
+          }); // end of on click pagination list
+        });
+        // end of on select change
+
+        // END OF PAGINATION
+      }
+
+      // SI SETTING
+      $(function () {
+        // Just to append id number for each row
+        default_index();
+      });
+
+      //ROWS SHOWING FUNCTION
+      function showig_rows_count(maxRows, pageNum, totalRows) {
+        //Default rows showing
+        var end_index = maxRows * pageNum;
+        var start_index = maxRows * pageNum - maxRows + parseFloat(1);
+        var string =
+          "Showing " +
+          start_index +
+          " to " +
+          end_index +
+          " of " +
+          totalRows +
+          " entries";
+        $(".rows_count").html(string);
+      }
+
+      // CREATING INDEX
+      function default_index() {
+        $("table tr:eq(0)").prepend("<th> SL No. </th>");
+
+        var id = 0;
+
+        $("table tr:gt(0)").each(function () {
+          id++;
+          $(this).prepend("<td>" + id + "</td>");
+        });
+      }
+
+      // All Table search script
+      function FilterkeyWord_all_table() {
+        // Count td if you want to search on all table instead of specific column
+
+        var count = $(".table")
+          .children("tbody")
+          .children("tr:first-child")
+          .children("td").length;
+
+        // Declare variables
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("search_input_all");
+        var input_value = document.getElementById("search_input_all").value;
+        filter = input.value.toLowerCase();
+        if (input_value != "") {
+          table = document.getElementById("table-id");
+          tr = table.getElementsByTagName("tr");
+
+          // Loop through all table rows, and hide those who don't match the search query
+          for (i = 1; i < tr.length; i++) {
+            var flag = 0;
+
+            for (j = 0; j < count; j++) {
+              td = tr[i].getElementsByTagName("td")[j];
+              if (td) {
+                var td_text = td.innerHTML;
+                if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                  //var td_text = td.innerHTML;
+                  //td.innerHTML = 'shaban';
+                  flag = 1;
+                } else {
+                  //DO NOTHING
+                }
+              }
+            }
+            if (flag == 1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        } else {
+          //RESET TABLE
+          $("#maxRows").trigger("change");
+        }
+      }
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get the current page's URL
+        const currentPageUrl = window.location.href;
+
+        // Find the links in the navigation bar
+        const navLinks = document.querySelectorAll(".nav a");
+
+        // Loop through the links and add a "active" class to the matching link
+        navLinks.forEach(function (link) {
+          if (link.href === currentPageUrl) {
+            link.classList.add("active");
+          }
+        });
+      });
+    </script>
+    <script>
+      // Get the modal
+      var modal = document.getElementById("myModal");
+
+      // Get the button that opens the modal
+      var btn = document.querySelector(".all_task_type_btn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[1];
+
+      var cancel = document.getElementsByClassName("cancel_view_btn")[0];
+
+      // When the user clicks the button, open the modal
+      btn.onclick = function () {
+        //   modal.style.display = "block";
+        modal.style.transform = "translateY(0px)";
+        modal.style.zIndex = "103100";
+        modal.style.opacity = "1";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        //   modal.style.display = "none";
+        modal.style.transform = "translateY(-50px)";
+        modal.style.zIndex = "-100";
+        modal.style.opacity = "0";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      cancel.onclick = function () {
+        //   modal.style.display = "none";
+        modal.style.transform = "translateY(-50px)";
+        modal.style.zIndex = "-100";
+        modal.style.opacity = "0";
+      };
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.transform = "translateY(-50px)";
+          modal.style.zIndex = "-100";
+          modal.style.opacity = "0";
+        }
+      };
+    </script>
+    <!-- endbuild -->
+  </body>
+</html>

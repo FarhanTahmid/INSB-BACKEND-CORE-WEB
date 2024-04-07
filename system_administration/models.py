@@ -97,6 +97,8 @@ class Branch_Data_Access(models.Model):
     ieee_id=models.OneToOneField(Members,null=False,blank=False,on_delete=models.CASCADE)
     create_event_access=models.BooleanField(null=False,blank=False,default=False)
     event_details_page_access=models.BooleanField(null=False,blank=False,default=False)
+    create_individual_task_access=models.BooleanField(null=False,blank=False,default=False)
+    create_team_task_access=models.BooleanField(null=False,blank=False,default=False)
     create_panels_access=models.BooleanField(null=False,blank=False,default=False)
     panel_memeber_add_remove_access=models.BooleanField(null=False,blank=False,default=False)
     team_details_page=models.BooleanField(null=False,blank=False,default=False)

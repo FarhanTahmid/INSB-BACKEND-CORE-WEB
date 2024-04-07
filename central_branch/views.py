@@ -15,7 +15,10 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from system_administration.models import adminUsers
 from system_administration.system_error_handling import ErrorHandling
+from task_assignation.models import Task, Task_Category
+from task_assignation.renderData import Task_Assignation
 from users import renderData
 from port.models import VolunteerAwards,Teams,Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
 from django.db import DatabaseError
@@ -24,7 +27,7 @@ from main_website.models import Research_Papers,Blog
 import users
 from users.models import MemberSkillSets, Members,Panel_Members
 from django.conf import settings
-from users.renderData import LoggedinUser
+from users.renderData import LoggedinUser,member_login_permission
 import os
 import xlwt
 from users import renderData as port_render
@@ -48,7 +51,7 @@ from membership_development_team.models import Renewal_Sessions
 from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
-import random
+from task_assignation.models import *
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -2489,8 +2492,14 @@ def manage_view_access(request):
                     # Setting Data Access Fields to false initially
                     create_event_access=False
                     event_details_page_access=False
+                    create_individual_task_access=False
+                    create_team_task_access=False
                     create_panels_access=False
-                    panel_memeber_add_remove_access=False
+
+                    #############  MEME :) ################
+                    panel_memeber_add_remove_access=False #
+                    #######################################
+
                     team_details_page=False
                     manage_web_access=False
                     manage_award_access=False
@@ -2501,6 +2510,10 @@ def manage_view_access(request):
                         create_event_access=True
                     if(request.POST.get('event_details_page_access')):
                         event_details_page_access=True
+                    if(request.POST.get('create_individual_task_access')):
+                        create_individual_task_access=True
+                    if(request.POST.get('create_team_task_access')):
+                        create_team_task_access=True
                     if(request.POST.get('create_panels_access')):
                         create_panels_access=True
                     if(request.POST.get('panel_memeber_add_remove_access')):
@@ -2515,6 +2528,8 @@ def manage_view_access(request):
                     # ****The passed keys must match the field name in the models. otherwise it wont update access
                     if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
                                                             'event_details_page_access':event_details_page_access,
+                                                            'create_individual_task_access':create_individual_task_access,
+                                                            'create_team_task_access':create_team_task_access,
                                                             'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
                                                             'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access})):
                         return redirect('central_branch:manage_access')
@@ -4141,7 +4156,7 @@ def panel_and_award_specific_page(request,panel_pk,award_pk):
         # get access value
         has_access=Branch_View_Access.get_manage_award_access(request=request)
         
-         # get all sc ag for sidebar
+        # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -4411,3 +4426,481 @@ class AwardRanking(View):
                 "volunteer_award_name": i.volunteer_award_name,
             })
         return data
+
+@login_required
+@member_login_permission
+def create_task(request):
+
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
+        if create_individual_task_access or create_team_task_access:
+            
+            if request.method == 'POST':
+                title = request.POST.get('task_title')
+                description = request.POST.get('task_description_details')
+                task_category = request.POST.get('task_category')
+                deadline = request.POST.get('deadline')
+                task_type = request.POST.get('task_type')
+
+                team_select = None
+                member_select = None
+                #Checking task types and get list accordingly
+                if task_type == "Team":
+                    team_select = request.POST.getlist('team_select')
+                elif task_type == "Individuals":
+                    member_select = request.POST.getlist('member_select')
+                    task_types_per_member = {}
+                    for member_id in member_select:
+                        member_name = request.POST.getlist(member_id + '_task_type[]')
+                        task_types_per_member[member_id] = member_name
+            
+                task_of = 1 #Setting task_of as 1 for Branch primary
+                if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
+                    messages.success(request,"Task Created successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while creating the task!")
+
+                return redirect('central_branch:task_home')
+            
+            task_categories = Task_Category.objects.all()
+            teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+            all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
+
+            context = {
+                'is_new_task':True, #Task is being created. Use it to disable some ui in the template
+                'task_categories':task_categories,
+                'teams':teams,
+                'all_members':all_members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'create_individual_task_access':create_individual_task_access,
+                'create_team_task_access':create_team_task_access
+            }
+
+            return render(request,"create_task.html",context)
+        else:
+            return render(request,'access_denied2.html')
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+@login_required
+@member_login_permission
+def task_home(request):
+
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
+        
+        all_tasks = Task.objects.all().order_by('-pk')
+
+        #getting all task categories
+        all_task_categories = Task_Category.objects.all()
+
+        if request.method == "POST":
+
+            if request.POST.get('add_task_type'):
+
+                task_name = request.POST.get('task_type_name')
+                task_point = request.POST.get('task_point')
+
+                if Task_Assignation.add_task_category(task_name,task_point):
+                    messages.success(request,"Task Category Created successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while creating the task category!")
+
+        context = {
+            'all_tasks':all_tasks,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'all_task_categories':all_task_categories,
+            'has_task_create_access':has_task_create_access
+        }
+
+        return render(request,"task_home.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+
+@login_required
+@member_login_permission
+def upload_task(request, task_id):
+  
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        
+        task = Task.objects.get(id=task_id)
+        user = request.user.username
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        this_is_users_task = False
+        comments = None
+        #to check if this is users task
+        try:
+            logged_in_user = Members.objects.get(ieee_id = user)
+            if logged_in_user in task.members.all():
+                this_is_users_task = True
+                create_individual_task_access = False
+                create_team_task_access = False
+                comments = Member_Task_Point.objects.get(task=task, member=str(logged_in_user.ieee_id)).comments
+        except:
+            pass
+
+        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task
+        if has_access:
+
+            #####################################
+            ## Start Checking submission types ##
+            #####################################
+            try:
+                member_task_type = Member_Task_Upload_Types.objects.get(task = task,task_member = logged_in_user)
+            except:
+                #else admin who can see all
+                member_task_type = None
+            try:
+                permission_paper_loaded = Permission_Paper.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
+            except:
+                permission_paper_loaded = None
+            try:
+                content_loaded = Task_Content.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
+            except:
+                content_loaded = None
+            try:
+                drive_link_loaded = Task_Drive_Link.objects.get(task=task,uploaded_by = logged_in_user.ieee_id)
+            except:
+                drive_link_loaded = None
+            try:
+                file_uploads = Task_Document.objects.filter(task=task,uploaded_by = logged_in_user.ieee_id)
+                media_uploads = Task_Media.objects.filter(task=task,uploaded_by = logged_in_user.ieee_id)
+            except:
+                file_uploads= None
+                media_uploads = None        
+            ###################################
+            ## End Checking submission types ##
+            ###################################
+
+            task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
+
+            if request.method == 'POST':
+
+                if request.POST.get('save_task'):
+
+                    file_upload = None
+                    media = None
+
+                    if member_task_type.has_permission_paper:
+                        permission_paper = request.POST.get('permission_paper')
+                        if permission_paper != None:
+                            permission_paper_loaded = permission_paper
+                    if member_task_type.has_content:
+                        content = request.POST.get('content_details')
+                        if content != None:
+                            content_loaded = content 
+                    if member_task_type.has_drive_link:
+                        drive_link = request.POST.get('content_drive')
+                        if drive_link != None:
+                            drive_link_loaded = drive_link
+                    if member_task_type.has_file_upload:
+                        file_upload = request.FILES.getlist('document')
+                    if member_task_type.has_media:
+                        media = request.FILES.getlist('images')            
+
+                    if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
+                        messages.success(request,"Task Saved! Please finish it as soon as you can")
+                    else:
+                        messages.warning(request,"Something went wrong while saving the task!")
+                    return redirect('central_branch:upload_task',task_id)
+                elif request.POST.get('add_comment'):
+                    member_id = request.POST.get('comments_member')
+                    comments = request.POST.get('comments_details')
+
+                    if Task_Assignation.add_comments(request,task, member_id, comments):
+                        messages.success(request,f"Comments added for {member_id} successfully!")
+                    else:
+                        messages.warning(request,"Something went wrong while adding the comments!")
+                    
+                    return redirect('central_branch:upload_task',task_id)
+                
+                elif request.POST.get('save_marks'):
+
+                    
+                    return redirect('central_branch:upload_task',task_id)
+                
+                elif request.POST.get('finish_task'):
+                    
+                    if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
+                        messages.success(request,"You task has been requested for reviewing!")
+                    else:
+                        messages.warning(request,"Something went wrong while saving!")
+                    return redirect('central_branch:upload_task',task_id)
+
+            context = {
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'task':task,
+                'members_task_type':member_task_type,
+                'permission_paper_loaded':permission_paper_loaded,
+                'content_loaded':content_loaded,
+                'drive_link_loaded':drive_link_loaded,
+                'file_uploads':file_uploads,
+                'media_uploads':media_uploads,
+                'task_type_per_member':task_type_per_member,
+                'media_url':settings.MEDIA_URL,
+                'comments':comments,
+                'create_individual_task_access':create_individual_task_access,
+                'create_team_task_access':create_team_task_access
+            }
+
+            return render(request,"task_page.html",context)
+        else:
+            return render(request,"access_denied2.html")
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+@login_required
+@member_login_permission
+def add_task(request, task_id):
+
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    task = Task.objects.get(id=task_id)
+
+    if request.method == 'POST':
+        ##########################################
+        ## Checking submission types from input ##
+        ##########################################
+        has_permission_paper = False
+        if request.POST.get('permission_paper'):
+            has_permission_paper = True
+        
+        has_content = False
+        if request.POST.get('content'):
+            has_content = True
+        
+        has_file_upload = False
+        if request.POST.get('file_upload'):
+            has_file_upload = True
+        
+        has_media = False
+        if request.POST.get('media'):
+            has_media = True
+
+        has_drive_link = False
+        if request.POST.get('drive_link'):
+            has_drive_link = True
+
+        has_others = False
+        others_description = None
+        if request.POST.get('others'):
+            has_others = True
+            others_description = request.POST.get('task_description_details')
+
+        member_select = []
+        if 'member_select' in request.POST:
+            member_select = request.POST.getlist('member_select')
+        
+        #If task is completed then do not update task params
+        if(task.is_task_completed):
+            messages.info(request,'Task is completed already!')
+            return redirect('central_branch:add_task',task_id)
+
+        if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
+            #If it is a team task and no members were selected then show message but save other params
+            if(task.task_type == "Team" and not member_select):
+                messages.info(request,'Saved changes. Please select a member to forward tasks!')
+            else:
+                #Else members were selected
+                messages.success(request,"Task params updated successfully!")
+        else:
+            messages.warning(request,"We're a failure")
+
+        return redirect('central_branch:add_task',task_id)
+    
+    team_members = []
+    #Get all team members from the selected teams
+    for team in task.team.all():
+        members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+                
+        team_members.extend(members)
+
+    context = {
+        'task':task,
+        'team_members':team_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+    }
+
+    return render(request,"task_forward_to_members.html",context)
+
+@login_required
+@member_login_permission
+def task_edit(request, task_id):
+
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
+        user = request.user.username
+
+        task = Task.objects.get(id=task_id)
+
+        #Check if the user is a member or an admin
+        try:
+            logged_in_user = Members.objects.get(ieee_id = user)
+        except:
+            logged_in_user = adminUsers.objects.get(username=user)
+
+        #Check if the user came from my task page. If yes then the back button will point to my tasks page
+        my_task = False
+        if 'HTTP_REFERER' in request.META:
+            if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
+                my_task = True
+        else:
+            my_task = True
+        
+        if request.method == 'POST':
+            if 'update_task' in request.POST:
+                title = request.POST.get('task_title')
+                description = request.POST.get('task_description_details')
+                task_category = request.POST.get('task_category')
+                deadline = request.POST.get('deadline')
+                task_type = request.POST.get('task_type')
+                is_task_completed = request.POST.get('task_completed_toggle_switch')
+
+                team_select = None
+                member_select = None
+                #Checking task types and get list accordingly
+                if task_type == "Team":
+                    team_select = request.POST.getlist('team_select')
+                elif task_type == "Individuals":
+                    member_select = request.POST.getlist('member_select')
+                    task_types_per_member = {}
+                    for member_id in member_select:
+                        member_name = request.POST.getlist(member_id + '_task_type[]')
+                        task_types_per_member[member_id] = member_name
+
+                if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
+                    messages.success(request,"Task Updated successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while updating the task!")
+
+                return redirect('central_branch:task_edit',task_id)
+            elif 'delete_task' in request.POST:
+                if(Task_Assignation.delete_task(task_id=task_id)):
+                    messages.success(request,"Task deleted successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while deleting the task!")
+                
+                return redirect('central_branch:task_home')
+        
+        task_categories = Task_Category.objects.all()
+        teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
+        #checking to see if points to be deducted
+        late = Task_Assignation.deduct_points_for_members(task)
+        #this is being done to ensure that he can click start button only if it is his task
+
+        #getting all task logs for this task
+        task_logs = Task_Log.objects.get(task_number = task)
+
+        is_member_view = logged_in_user in task.members.all()
+        #If it is a task member view or a regular view then override the access
+        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
+            create_individual_task_access = False
+            create_team_task_access = False       
+
+        context = {
+            'task':task,
+            'task_categories':task_categories,
+            'teams':teams,
+            'all_members':all_members,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'logged_in_user':logged_in_user,
+            'is_late':late,
+            'my_task':my_task,
+            'task_logs':task_logs.task_log_details,
+            'create_individual_task_access':create_individual_task_access,
+            'create_team_task_access':create_team_task_access,
+            'is_member_view':is_member_view
+        }
+
+        return render(request,"create_task.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+class GetTaskCategoryPointsAjax(View):
+    def get(self,request):
+        task_category_name = request.GET.get('selectedTaskCategory')
+        try:
+            points = Task_Category.objects.get(name=task_category_name).points
+            return JsonResponse({'points':points})
+        except:
+            return JsonResponse('Something went wrong!',safe=False)
+
+class SaveMemberTaskPointsAjax(View):
+    def get(self,request):
+        try:
+            create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+            create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
+            try:
+                logged_in_user = Members.objects.get(ieee_id = request.user.username)
+            except:
+                logged_in_user = adminUsers.objects.get(username=request.user.username)
+
+            task_id = request.GET.get('task_id')
+            member_id = request.GET.get('member_id')
+            marks = request.GET.get('completed_points')
+
+            task = Task.objects.get(id=task_id)
+
+            if (create_individual_task_access or create_team_task_access) and not logged_in_user in task.members.all():
+                #checking to see if mark provided is negative or not if so send error message
+                if float(marks)<0:
+                    message = "Please provide 0 but not negative marks!"
+                    return JsonResponse({'message':message})
+                
+                if Task_Assignation.update_marks(task,member_id,marks):
+                    message = f"Member {member_id}'s mark updated to {marks}"
+                else:
+                    message = "Something went wrong while updating!"
+
+                return JsonResponse({'points':marks,'message':message})
+            else:
+                return JsonResponse('Access Denied',safe=False)
+        except:
+            return JsonResponse('Something went wrong!',safe=False)
