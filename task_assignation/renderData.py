@@ -875,7 +875,7 @@ class Task_Assignation:
         is_late = False
         string_current_Date = str(current_date.date())
         # Calculate late duration in days
-        if current_date > deadline_of_task:
+        if current_date > deadline_of_task and not task.is_task_completed:
             late_duration = (current_date - deadline_of_task).days
             late_duration = abs(late_duration)
             
