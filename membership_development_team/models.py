@@ -111,3 +111,10 @@ class Portal_Joining_Requests(models.Model):
         return str(self.ieee_id)
     def get_absolute_url(self):
         return reverse('joining_requests',kwargs={'member_id':self.iee_id})
+    
+class Birthday_Email_Records(models.Model):
+    
+    confirm_message = models.TextField(null=True,blank=True)
+
+    class Meta:
+        verbose_name = "Birthday Email Records"
