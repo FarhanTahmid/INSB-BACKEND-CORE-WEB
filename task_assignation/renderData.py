@@ -930,7 +930,7 @@ class Task_Assignation:
             message = f'''Greetings {member.name},
 The work you have done so far is great! However, your task assignee seems to have
 commented on your completed work for more better outcome. Please view the task
-and make necessary changes accordingly.
+and make necessary changes accordingly
 
 Please follow to link to redirect to your work:
 {site_domain}/portal/central_branch/task/{task.pk}/upload_task
@@ -1004,7 +1004,7 @@ This is an automated message. Do not reply
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
-dedicated members, and save them. To finalize their points please toggle 'on' the task complete button and hit save
+dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
 in the task edit page, if you think the entire task is completed.
 
 Please follow the link to view the completed task: 
@@ -1051,9 +1051,9 @@ This is an automated message. Do not reply
             email_to = []
             try:
                 task_created_by = Members.objects.get(ieee_id = task.task_created_by)
-                role = task_created_by.position.role
+                task_created_by = task_created_by.position.role
             except:
-                role = "Admin"
+                task_created_by = "Admin"
             email_to.append(member.email_ieee)
             email_to.append(member.email_personal)
             email_to.append(member.email_nsu)
@@ -1069,7 +1069,7 @@ You are requested to complete the task with in the due date. If not, you will be
 Please follow the link or go through the portal for more details.
 
 Deadline: {task.deadline}
-Task Assigned by: {task_created_by.name}, {role}
+Task Assigned by: {task.task_created_by}, {task_created_by}
 
 Best Regards
 IEEE NSU SB Portal
