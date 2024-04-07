@@ -3746,6 +3746,9 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
+
+                if date_of_birth == '':
+                    date_of_birth = None
                 
                 #checking if the recruitment and renewal session exists
                 try:
@@ -3862,7 +3865,7 @@ def member_details(request,ieee_id):
             if request.POST.get('delete_member'):
                 #Deleting a member from database
                 member_to_delete=Members.objects.get(ieee_id=ieee_id)
-                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
+                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the IEEE NSU SB Registered Members Database.")
                 member_to_delete.delete()
                 return redirect('central_branch:members_list')
                 

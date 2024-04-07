@@ -328,7 +328,7 @@ def recruitee_details(request,session_id,nsu_id):
                             return redirect('recruitment:recruitee_details',session_id, nsu_id)
                         except IntegrityError:
                             messages.error(
-                                "The member is already registered in INSB Database or you have not entered IEEE ID of the member!")
+                                "The member is already registered in IEEE NSU SB Database or you have not entered IEEE ID of the member!")
                             return redirect('recruitment:recruitee_details',session_id, nsu_id)
                         except:
                             messages.info(

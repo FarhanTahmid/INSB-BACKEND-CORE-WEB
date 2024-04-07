@@ -513,14 +513,20 @@ class Branch:
             event.is_featured = is_featured_event
             event.save()
             event_venue = Event_Venue.objects.filter(event_id = event_id)
+
+            #Clear previous event venues
             for venues in event_venue:
                 venues.delete()
-            for i in venue_list_for_event:
-                register_venue=Event_Venue(
-                            event_id=Events.objects.get(id=event_id),
-                            venue_id=Venue_List.objects.get(id=i)
-                            )
-                register_venue.save()
+
+            #If not null then add the new venues
+            if len(venue_list_for_event) > 0:
+                if venue_list_for_event[0] != 'null':
+                    for i in venue_list_for_event:
+                        register_venue=Event_Venue(
+                                    event_id=Events.objects.get(id=event_id),
+                                    venue_id=Venue_List.objects.get(id=i)
+                                    )
+                        register_venue.save()
 
             if(inter_branch_collaboration_list[0] == 'null'):
                 interbranchcollaborations = InterBranchCollaborations.objects.filter(event_id=event_id)
