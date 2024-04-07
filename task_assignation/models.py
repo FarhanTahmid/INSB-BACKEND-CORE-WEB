@@ -1,3 +1,4 @@
+import os
 from django.db import models
 
 from port.models import Chapters_Society_and_Affinity_Groups, Teams
@@ -26,12 +27,6 @@ class Task(models.Model):
     start_date = models.DateTimeField(null=True,blank=True)
     deadline = models.DateTimeField(null=True,blank=True)
     others_description = models.TextField(null=True,blank=True)
-    has_drive_link = models.BooleanField(null=False,blank=False,default=False)
-    has_file_upload = models.BooleanField(null=False,blank=False,default=False)
-    has_content = models.BooleanField(null=False,blank=False,default=False)
-    has_media = models.BooleanField(null=False,blank=False,default=False)
-    has_permission_paper = models.BooleanField(null=False,blank=False,default=False)
-    has_others = models.BooleanField(null=False,blank=False,default=False)
     is_task_completed = models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
@@ -49,6 +44,7 @@ class Member_Task_Upload_Types(models.Model):
     has_content = models.BooleanField(null=False,blank=False,default=False)
     has_media = models.BooleanField(null=False,blank=False,default=False)
     has_permission_paper = models.BooleanField(null=False,blank=False,default=False)
+    is_task_started_by_member = models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
         verbose_name="Member Task Upload Types"
@@ -76,6 +72,7 @@ class Task_Content(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
 class Permission_Paper(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     permission_paper = models.CharField(max_length=50,default = "")
@@ -91,6 +88,10 @@ class Task_Document(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+    @property
+    def filename(self) -> str:
+        return os.path.basename(self.document.path)
 
 class Task_Media(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
@@ -102,6 +103,10 @@ class Task_Media(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+    @property
+    def filename(self) -> str:
+        return os.path.basename(self.media.path)
     
 class Task_Log(models.Model):
 

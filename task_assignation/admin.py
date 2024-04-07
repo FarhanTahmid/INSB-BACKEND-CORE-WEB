@@ -8,7 +8,7 @@ class Task_Category(admin.ModelAdmin):
 
 @admin.register(Task)
 class Task(admin.ModelAdmin):
-    list_display = ['id','title','task_category','task_type','task_of','task_created_by','deadline','is_task_completed','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper','has_others']
+    list_display = ['id','title','task_category','task_type','task_of','task_created_by','deadline','is_task_completed']
 
 @admin.register(Task_Drive_Link)
 class Task_Drive_Link(admin.ModelAdmin):
@@ -43,7 +43,7 @@ class Team_Task_Point(admin.ModelAdmin):
 @admin.register(Member_Task_Upload_Types)
 class Member_Task_Upload_Types(admin.ModelAdmin):
     list_display = [
-        'task_member','task','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper'
+        'task_member','task','is_task_started_by_member','has_drive_link','has_file_upload','has_content','has_media','has_permission_paper'
     ]
 @admin.register(Permission_Paper)
 class Permission_Paper(admin.ModelAdmin):

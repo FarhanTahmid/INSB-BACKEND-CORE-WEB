@@ -42,7 +42,7 @@
                       <i class="fa-fa-user">
                       </i>
                   </span>
-                  <span class="nav-text">My Tasks</span>
+                  <span class="nav-text">{% if user_data.position.is_eb_member %}My Assigned Task{% else %}My Tasks{% endif %}</span>
                 </a>
 
               </li>

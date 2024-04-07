@@ -36,6 +36,7 @@
       .tb_search {
         border-radius: 4px;
         box-shadow: 2px 2px 5px 0px #80808054;
+        margin-bottom: 20px;
       }
       
       .btn {
@@ -83,7 +84,7 @@
       }
 
       .image-button img {
-        width: 32px; /* Adjust as needed */
+        width: 40px; /* Adjust as needed */
         height: auto; /* Maintain aspect ratio */
         border-radius: 50%; /* Add rounded corners if desired */
         box-shadow: 2px 2px 5px 0px #80808054;
@@ -108,10 +109,11 @@
         background-color: #e0e0e0; /* Lighter gray color for hover effect */
       }
       .table-responsive {
-        max-height: 250px; /* Set maximum height for the table */
-        overflow-y: auto; /* Enable vertical scrollbar when content overflows */
+        max-height: 600px;
+        overflow-y: auto;
         border-radius: 4px;
-        box-shadow: 2px 2px 5px 0px #80808054;
+        min-height: 400px;
+        margin-bottom: 50px;
       }
       .table-responsive thead th {
         position: sticky;
@@ -184,9 +186,96 @@
       .table-responsive::-webkit-scrollbar-thumb:hover{
           background-color: rgb(169, 170, 170);
       }
-      .table-responsive{
-        max-height: 270px;
+      input[type=checkbox] {
+          height: 20px;
+          width: 20px;
       }
+      .finish_task_modal_btn{
+        color: #7575d4;
+        background-color: #75d48200;
+        display: inline;
+        padding: 10px;
+        margin: 3px;
+        border: 1px;
+        border-style: solid;
+        border-color: #7575d4;
+        border-radius: 4px;
+        transition-duration: 500ms;
+        }
+        .finish_task_modal_btn:hover{
+        color: #ffffff;
+        background-color: #7575d4;
+        transition-duration: 500ms;
+        cursor: pointer;
+      }
+      .modal-1-content::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+        .modal-1-content::-webkit-scrollbar-thumb{
+            background-color: #e7eeef;
+            transition: all .4s ease-in-out;
+            border-radius: 4px;
+        }
+        .modal-1-content::-webkit-scrollbar-thumb:hover{
+            background-color: rgb(169, 170, 170);
+        }
+      .create_modal{
+        opacity: 0;
+        position: fixed;
+        z-index: -1;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 120%;
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
+        transition: all .3s ease-in-out;
+        transform: translateY(-20px);
+        overflow: auto;
+        }
+        .modal-1-content{
+            background-color: #fefefe;
+            margin: auto;
+            border: 1px solid rgb(136, 136, 136);
+            max-width: 850px;
+            max-height: 70vh;
+            overflow-y: scroll;
+            border-radius: 6px;
+            box-shadow: 2px 2px 5px 0px #80808054;
+            position: relative;
+            left: 100px;
+        }
+
+        .close1{
+            color: #000;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .close1:hover,
+        .close1:focus{
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 1024px) {
+            .modal-1-content {
+                left: 0px;
+                margin: 10%;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .modal-1-content{
+                margin: 5%;
+            }
+            .image-button img {
+              width: 32px;
+            }
+        }
+
     </style>
   </head>
     <body>
@@ -245,9 +334,32 @@
               <br>
               {% endif %}
             </div>
-      
-      
+            <div style="display: flex; justify-content: center;">
+              <button type="button" class="finish_task_modal_btn">How to forward a task</button>
+            </div>
+
+            <div id="modal1" class="create_modal">
+              <!-- Modal content -->
+              <div class="modal-1-content">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                      <h5 style="color: #fff;    position: relative;
+                      top: 3px">How to forward a task?</h5>
+                      <span class="close1" style="color: white;">&times;</span>
+                  </div>
+                      <ol style="font-size: 16px; margin: 15px">
+                          <li>Select the individuals you want to forward the task</li>
+                          <li>After selecting the individuals by select checkbox, you have to assign them what type of fields you want them to fill to complete the task from <span style="font-weight: 600;">Select task type</span></li>
+                          <li>Must press <span style="font-weight: 600;">Forward Task</span> button to forward the task to the assigned individuals and then it will send a mail to that assigned individuals</li>
+                      </ol>
+              </div>
+          </div>
             <form method="post">
+
+              <!--forward task btn-->
+              <div style="text-align: center;">
+                <button type="submit" class="forward-task-btn" style="cursor: pointer;">Forward Task</button>
+              </div>
+
               {% csrf_token %}
               <div style="justify-content:center;text-align:center; margin-top:15px;">  
                 <div style="justify-content:center;">
@@ -265,86 +377,99 @@
                     </div> -->
 
 
-                    <!--search bar-->
-                    <div class="tb_search" style="margin-bottom: 1rem;">
-                      <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search..." class="form-control">
-                    </div>
-                  </div>
+                    
 
-                  <!--table-->
-                  <div class="table-responsive">
-                    <table class="table table-class" id="table-id">
-                      <thead>
+
+                <!--Search bar for individuals-->
+                <div class="tb_search search_input_individuals ">
+                    <input
+                    type="text"
+                    id="search_input_individuals"
+                    onkeyup="filter_individual_table()"
+                    placeholder="Search..."
+                    class="form-control title-box"/>
+                </div>
+                
+                
+                <!--Table for individuals-->
+                <div class="table-responsive individuals-table" >
+                        <table class="table box" id="individuals-table">
+                    <thead style="position: relative; z-index: 101;">
                         <tr>
-                          <th data-priority="1">IEEE ID</th>
-                          <th data-priority="1">Name</th>
-                          <th data-priority="1">Team</th>
-                          <th data-priority="1">Position</th>
-                          <th data-priority="1">Contact</th>
-                          <th data-priority= "1">Select</th>
+                          <th>IEEE ID</th>
+                          <th>Name</th>
+                          <th>Team</th>
+                          <th>Position</th>
+                          <th>Contact</th>
+                          <th>Select</th>
+                          <th>Task Type</th>
                         </tr>
-                      </thead>
-                      <tbody>                                    
-                        <tr>
-                          <td style="color: #00629b"><a href="#" target="_blank">01</a></td>
-                          <td>name</td>
-                          <td>team</td>
-                          <td>position</td>
-                          <td>contact</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div> 
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>team</td>
+                        <td>position</td>
+                        <td>contact</td>
+                        <td>
+                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
+                      <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>team</td>
+                        <td>position</td>
+                        <td>contact</td>
+                        <td>
+                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
+                      <tr>
+                        <td>id</td>
+                        <td>name</td>
+                        <td>team</td>
+                        <td>position</td>
+                        <td>contact</td>
+                        <td>
+                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
+                    </tbody>
+                </table>
+                </div>
                 </div>
               </div>
       
 
-              <!--task submission type-->
-              <div class="task-selections">
-                <h6 class="submission-label">Task submission type:</h6>
-                <ul class="submission-list">
-                  <li class="submission-item">
-                    <input type="checkbox" id="permission-paper" class="submission-checkbox" name="permission_paper" value="permission-paper" {% if task.has_permission_paper %}checked{% endif %}>
-                    <label for="permission-paper" class="option-label">Permission paper</label>
-                  </li>
-                  <li class="submission-item">
-                    <input type="checkbox" id="content_" class="submission-checkbox" name="content" value="content_" {% if task.has_content %}checked{% endif %}>
-                    <label for="content_" class="option-label">Content</label>
-                  </li>
-                  <li class="submission-item">
-                    <input type="checkbox" id="file-upload" class="submission-checkbox" name="file_upload" value="file-upload" {% if task.has_file_upload %}checked{% endif %}>
-                    <label for="file-upload" class="option-label">File Upload</label>
-                  </li>
-                  <li class="submission-item">
-                    <input type="checkbox" id="media" class="submission-checkbox" name="media" value="media" {% if task.has_media %}checked{% endif %}>
-                    <label for="media" class="option-label">Media</label>
-                  </li>
-                  <li class="submission-item">
-                    <input type="checkbox" id="drive-link" class="submission-checkbox" name="drive_link" value="drive-link" {% if task.has_drive_link %}checked{% endif %}>
-                    <label for="drive-link" class="option-label">Drive Links</label>
-                  </li>
-                  <li class="submission-item">
-                    <input type="checkbox" id="others" class="submission-checkbox submission-checkbox-others" name="others" value="others" {% if task.has_others %}checked{% endif %}>
-                    <label for="others" class="option-label" id="other-description-label">Others</label>
-                  </li>
-                  <div id="other_description" class="discription"  {% if task.has_others %}style="display:block;"{% endif %}>
-                    <label class="description_label" style="padding: 1rem 0rem 0.5rem 0rem ; font-size: 17px;">Describe your task:</label>
-                    <div class="ckeditor" id="other-description">
-                      <div>
-                        <textarea id="task_description_details" name="task_description_details" >{{task.others_description|default:""}}</textarea>
-                      </div>
-                    </div>
-                  </div>
-                </ul>
-              </div>
-              
-              <!--forward task btn-->
-              <div style="text-align: center;">
-                <button type="submit" class="forward-task-btn">Forward Task</button>
-              </div>
             </form>
       
           </div>
@@ -624,6 +749,297 @@
         }
 
       </script>
+          <script>
+            var style = document.createElement('style');
+    style.setAttribute("id","multiselect_dropdown_styles");
+    style.innerHTML = `
+    .multiselect-dropdown{
+      display: inline-block;
+      padding: 2px 5px 0px 5px;
+      border-radius: 4px;
+      border: solid 1px #ced4da;
+      background-color: white;
+      position: relative;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right .75rem center;
+      background-size: 16px 12px;
+    }
+    .multiselect-dropdown span.optext, .multiselect-dropdown span.placeholder{
+      margin-right:0.5em; 
+      margin-bottom:2px;
+      padding:1px 0; 
+      border-radius: 4px; 
+      display:inline-block;
+    }
+    .multiselect-dropdown span.optext{
+      background-color:lightgray;
+      padding:1px 0.75em; 
+    }
+    .multiselect-dropdown span.optext .optdel {
+      float: right;
+      margin: 0 -6px 1px 5px;
+      font-size: 0.7em;
+      margin-top: 2px;
+      cursor: pointer;
+      color: #666;
+    }
+    .multiselect-dropdown span.optext .optdel:hover { color: #c66;}
+    .multiselect-dropdown span.placeholder{
+      color:#ced4da;
+    }
+    .multiselect-dropdown-list-wrapper{
+      box-shadow: gray 0 3px 8px;
+      z-index: 100;
+      padding:2px;
+      border-radius: 4px;
+      border: solid 1px #ced4da;
+      display: none;
+      margin: -1px;
+      position: absolute;
+      top:0;
+      left: 0;
+      right: 0;
+      background: white;
+    }
+    .multiselect-dropdown-list-wrapper .multiselect-dropdown-search{
+      margin-bottom:5px;
+    }
+    .multiselect-dropdown-list{
+      padding:2px;
+      height: 15rem;
+      overflow-y:auto;
+      overflow-x: hidden;
+    }
+    .multiselect-dropdown-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .multiselect-dropdown-list::-webkit-scrollbar-thumb {
+      background-color: #bec4ca;
+      border-radius:3px;
+    }
+    
+    .multiselect-dropdown-list div{
+      padding: 5px;
+    }
+    .multiselect-dropdown-list input{
+      height: 1.15em;
+      width: 1.15em;
+      margin-right: 0.35em;  
+    }
+    .multiselect-dropdown-list div.checked{
+    }
+    .multiselect-dropdown-list div:hover{
+      background-color: #ced4da;
+    }
+    .multiselect-dropdown span.maxselected {width:100%;}
+    .multiselect-dropdown-all-selector {border-bottom:solid 1px #999;}
+    `;
+    document.head.appendChild(style);
+    
+    function MultiselectDropdown(options){
+      var config={
+        search:true,
+        height:'15rem',
+        placeholder:'Select task type',
+        txtSelected:'selected',
+        txtAll:'All',
+        txtRemove: 'Remove',
+        txtSearch:'search',
+        ...options
+      };
+      function newEl(tag,attrs){
+        var e=document.createElement(tag);
+        if(attrs!==undefined) Object.keys(attrs).forEach(k=>{
+          if(k==='class') { Array.isArray(attrs[k]) ? attrs[k].forEach(o=>o!==''?e.classList.add(o):0) : (attrs[k]!==''?e.classList.add(attrs[k]):0)}
+          else if(k==='style'){  
+            Object.keys(attrs[k]).forEach(ks=>{
+              e.style[ks]=attrs[k][ks];
+            });
+           }
+          else if(k==='text'){attrs[k]===''?e.innerHTML='&nbsp;':e.innerText=attrs[k]}
+          else e[k]=attrs[k];
+        });
+        return e;
+      }
+    
+      
+      document.querySelectorAll("select[multiple]").forEach((el,k)=>{
+        
+        var div=newEl('div',{class:'multiselect-dropdown',style:{width:config.style?.width??el.clientWidth+'px',padding:config.style?.padding??''}});
+        el.style.display='none';
+        el.parentNode.insertBefore(div,el.nextSibling);
+        var listWrap=newEl('div',{class:'multiselect-dropdown-list-wrapper'});
+        var list=newEl('div',{class:'multiselect-dropdown-list',style:{height:config.height}});
+        var search=newEl('input',{class:['multiselect-dropdown-search'].concat([config.searchInput?.class??'form-control']),style:{width:'100%',display:el.attributes['multiselect-search']?.value==='true'?'block':'none'},placeholder:config.txtSearch});
+        listWrap.appendChild(search);
+        div.appendChild(listWrap);
+        listWrap.appendChild(list);
+    
+        el.loadOptions=()=>{
+          list.innerHTML='';
+          
+          if(el.attributes['multiselect-select-all']?.value=='true'){
+            var op=newEl('div',{class:'multiselect-dropdown-all-selector'})
+            var ic=newEl('input',{type:'checkbox'});
+            op.appendChild(ic);
+            op.appendChild(newEl('label',{text:config.txtAll}));
+      
+            op.addEventListener('click',()=>{
+              op.classList.toggle('checked');
+              op.querySelector("input").checked=!op.querySelector("input").checked;
+              
+              var ch=op.querySelector("input").checked;
+              list.querySelectorAll(":scope > div:not(.multiselect-dropdown-all-selector)")
+                .forEach(i=>{if(i.style.display!=='none'){i.querySelector("input").checked=ch; i.optEl.selected=ch}});
+      
+              el.dispatchEvent(new Event('change'));
+            });
+            ic.addEventListener('click',(ev)=>{
+              ic.checked=!ic.checked;
+            });
+      
+            list.appendChild(op);
+          }
+    
+          Array.from(el.options).map(o=>{
+            var op=newEl('div',{class:o.selected?'checked':'',optEl:o})
+            var ic=newEl('input',{type:'checkbox',checked:o.selected});
+            op.appendChild(ic);
+            op.appendChild(newEl('label',{text:o.text}));
+    
+            op.addEventListener('click',()=>{
+              op.classList.toggle('checked');
+              op.querySelector("input").checked=!op.querySelector("input").checked;
+              op.optEl.selected=!!!op.optEl.selected;
+              el.dispatchEvent(new Event('change'));
+            });
+            ic.addEventListener('click',(ev)=>{
+              ic.checked=!ic.checked;
+            });
+            o.listitemEl=op;
+            list.appendChild(op);
+          });
+          div.listEl=listWrap;
+    
+          div.refresh=()=>{
+            div.querySelectorAll('span.optext, span.placeholder').forEach(t=>div.removeChild(t));
+            var sels=Array.from(el.selectedOptions);
+            if(sels.length>(el.attributes['multiselect-max-items']?.value??5)){
+              div.appendChild(newEl('span',{class:['optext','maxselected'],text:sels.length+' '+config.txtSelected}));          
+            }
+            else{
+              sels.map(x=>{
+                var c=newEl('span',{class:'optext',text:x.text, srcOption: x});
+                if((el.attributes['multiselect-hide-x']?.value !== 'true'))
+                  c.appendChild(newEl('span',{class:'optdel',text:'🗙',title:config.txtRemove, onclick:(ev)=>{c.srcOption.listitemEl.dispatchEvent(new Event('click'));div.refresh();ev.stopPropagation();}}));
+    
+                div.appendChild(c);
+              });
+            }
+            if(0==el.selectedOptions.length) div.appendChild(newEl('span',{class:'placeholder',text:el.attributes['placeholder']?.value??config.placeholder}));
+          };
+          div.refresh();
+        }
+        el.loadOptions();
+        
+        search.addEventListener('input',()=>{
+          list.querySelectorAll(":scope div:not(.multiselect-dropdown-all-selector)").forEach(d=>{
+            var txt=d.querySelector("label").innerText.toUpperCase();
+            d.style.display=txt.includes(search.value.toUpperCase())?'block':'none';
+          });
+        });
+    
+        div.addEventListener('click',()=>{
+          div.listEl.style.display='block';
+          search.focus();
+          search.select();
+        });
+        
+        document.addEventListener('click', function(event) {
+          if (!div.contains(event.target)) {
+            listWrap.style.display='none';
+            div.refresh();
+          }
+        });    
+      });
+    }
+    
+    window.addEventListener('load',()=>{
+      MultiselectDropdown(window.MultiselectDropdownOptions);
+    });
+        </script>
+        <script>
+            
+              //filtering for individual table
+              function filter_individual_table() {
+                  // Declare variables
+                  var input, filter, table, tr, td, i, txtValue;
+                  input = document.getElementById("search_input_individuals");
+                  filter = input.value.toUpperCase();
+                  table = document.getElementById("individuals-table");
+                  tr = table.getElementsByTagName("tr");
+                  
+                  // Loop through all table rows and hide those that don't match the search query
+                  for (i = 0; i < tr.length; i++) {
+                      // Skip the header row
+                      if (i === 0) continue;
+                      
+                      // Loop through all table cells in the current row
+                      var rowContainsSearchTerm = false;
+                      for (var j = 0; j < tr[i].cells.length; j++) {
+                          td = tr[i].cells[j];
+                          if (td) {
+                              txtValue = td.textContent || td.innerText;
+                          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                              rowContainsSearchTerm = true;
+                              break;
+                          }
+                          }
+                      }
+                      
+                      // Toggle the visibility of the row based on whether it contains the search term
+                      if (rowContainsSearchTerm) {
+                          tr[i].style.display = "";
+                      } else {
+                          tr[i].style.display = "none";
+                      }
+                      }
+              }
+      </script>  
+      <script>
+        // Get the modal
+        var modal1 = document.getElementById("modal1");
+        
+        // Get the button that opens the modal
+        var btn1 = document.querySelector(".finish_task_modal_btn");
+        
+        // Get the <span> element that closes the modal
+        var span1 = document.getElementsByClassName("close1")[0];
+        
+        // When the user clicks the button, open the modal 
+        btn1.onclick = function() {
+        modal1.style.transform = 'translateY(0px)';
+        modal1.style.zIndex = '103100';
+        modal1.style.opacity = '1';
+        }
+    
+        // When the user clicks on <span> (x), close the modal
+        span1.onclick = function() {
+        modal1.style.transform = 'translateY(-50px)';
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
+        }
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+         if (event.target == modal1) {
+            modal1.style.transform = 'translateY(-50px)';
+            modal1.style.zIndex = '-100';
+            modal1.style.opacity = '0';
+          }
+        }
+        </script>
     <!-- endbuild -->
   </body>
 </html>

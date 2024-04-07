@@ -552,13 +552,13 @@ class Task_Assignation:
             task.members.clear()
 
         #Update task submission types
-        task.has_permission_paper = has_permission_paper
-        task.has_content = has_content
-        task.has_file_upload = has_file_upload
-        task.has_media = has_media
-        task.has_drive_link = has_drive_link
-        task.has_others = has_others
-        task.others_description = others_description
+        # task.has_permission_paper = has_permission_paper
+        # task.has_content = has_content
+        # task.has_file_upload = has_file_upload
+        # task.has_media = has_media
+        # task.has_drive_link = has_drive_link
+        # task.has_others = has_others
+        # task.others_description = others_description
         #Save the changes
         task.save()
         
@@ -662,12 +662,22 @@ class Task_Assignation:
         try:
             user = Members.objects.get(ieee_id = user)
         except:
-            user = adminUsers.objects.get(username=user)
-            #TODO:set it to all after making team
-            return Task.objects.filter(task_type = "Individuals")
+            return None
+        
         #TODO:set to all instead of individuals after making teams
-        user_tasks = Task.objects.filter(members = user,task_type = "Individuals")
-        return user_tasks
+        dic={}
+        if user.position.is_eb_member:
+            user_tasks = Task.objects.filter(task_created_by = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
+            for task in user_tasks:
+                earned_points = 0
+                dic[task] = earned_points
+        else:
+            user_tasks = Task.objects.filter(members = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
+            for task in user_tasks:
+                earned_points = Member_Task_Point.objects.get(task = task,member = user)
+                dic[task] = earned_points
+
+        return dic
     
     def save_task_uploads(task,member,permission_paper,media,content,file_upload,drive_link):
 
@@ -690,13 +700,13 @@ class Task_Assignation:
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
             if media:
-                medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
-                for m in medias:
-                    #deleting existing ones from datase base and file system
-                    Task_Assignation.delete_task_media(m)
-                    message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
-                    #updating task_log details
-                    Task_Assignation.save_task_logs(task,message)
+                # medias = Task_Media.objects.filter(task=task,uploaded_by = member.ieee_id)
+                # for m in medias:
+                #     #deleting existing ones from datase base and file system
+                #     Task_Assignation.delete_task_media(m)
+                #     message = f'Task Name: {task.title}, previous uploaded media was deleted by {member.ieee_id}, media name = {m}'
+                #     #updating task_log details
+                #     Task_Assignation.save_task_logs(task,message)
 
                 for m in media:
                     #saving new one
@@ -720,13 +730,13 @@ class Task_Assignation:
                     message = f'Task Name: {task.title}, new content was saved by {member.ieee_id}'
                     Task_Assignation.save_task_logs(task,message)
             if file_upload:
-                file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
-                for file in file_upload_save:
-                    #deleting existing ones from datase base and file system
-                    Task_Assignation.delete_task_document(file)
-                    message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
-                    #updating task_log details
-                    Task_Assignation.save_task_logs(task,message)
+                # file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
+                # for file in file_upload_save:
+                #     #deleting existing ones from datase base and file system
+                #     Task_Assignation.delete_task_document(file)
+                #     message = f'Task Name: {task.title}, previous uploaded document was deleted by = {member.ieee_id}, document name = {file}'
+                #     #updating task_log details
+                #     Task_Assignation.save_task_logs(task,message)
 
                 for file in file_upload:
                     file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
@@ -934,7 +944,7 @@ class Task_Assignation:
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
             #saving logs
@@ -1009,7 +1019,7 @@ class Task_Assignation:
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1070,7 +1080,7 @@ class Task_Assignation:
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)

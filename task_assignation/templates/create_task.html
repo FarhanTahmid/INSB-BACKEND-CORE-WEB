@@ -530,6 +530,7 @@
         border-color: #7575d4;
         border-radius: 4px;
         transition-duration: 500ms;
+        margin-bottom: 20px;
       }
       .queue_btn:hover{
         color: #ffffff;
@@ -764,7 +765,9 @@
                         {% if create_individual_task_access or create_team_task_access %}
                         <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
                         {% else %}
+                        {% if not task.is_task_completed %}
                         <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                        {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endif %}
@@ -885,8 +888,12 @@
               <div class="task-btn">
                   {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
                   {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
-                  {% if create_individual_task_access or create_team_task_access or is_member_view %}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if create_individual_task_access or create_team_task_access %}Check task progress {% else %}Start the task{% endif %}</a>
+                  {% if create_individual_task_access or create_team_task_access %}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                  {% elif is_member_view and not task.is_task_completed %}
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                  {% elif is_member_view and task.is_task_completed %}
+                  <p  style="color: #d33838;">Task Completed!</p>
                   {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
@@ -895,15 +902,7 @@
                   {% endif %}                  
                   
                 </div>
-                {% endif %}
-
-                    <!--create task btn-->
-                    <div style="text-align: center;">
-                        {% if is_new_task %}
-                        <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
-                        {% endif %}
-                    </div>
-                    
+                {% endif %}     
                     
                     <!--delete and complete toggle btn-->
                     {% if not is_new_task %}
@@ -1116,6 +1115,13 @@
                 
                 
                 {% endif %}
+
+                <!--create task btn-->
+                <div style="text-align: center;">
+                    {% if is_new_task %}
+                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
+                    {% endif %}
+                </div>
             </form>
         </div>
     </div>
