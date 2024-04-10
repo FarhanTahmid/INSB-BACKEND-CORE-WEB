@@ -4651,11 +4651,36 @@ def upload_task(request, task_id):
                     return redirect('central_branch:upload_task',task_id)
                 
                 elif request.POST.get('finish_task'):
-                    
-                    if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
-                        messages.success(request,"You task has been requested for reviewing!")
+
+                    file_upload = None
+                    media = None
+
+                    if member_task_type.has_permission_paper:
+                        permission_paper = request.POST.get('permission_paper')
+                        if permission_paper != None:
+                            permission_paper_loaded = permission_paper
+                    if member_task_type.has_content:
+                        content = request.POST.get('content_details')
+                        if content != None:
+                            content_loaded = content 
+                    if member_task_type.has_drive_link:
+                        drive_link = request.POST.get('content_drive')
+                        if drive_link != None:
+                            drive_link_loaded = drive_link
+                    if member_task_type.has_file_upload:
+                        file_upload = request.FILES.getlist('document')
+                    if member_task_type.has_media:
+                        media = request.FILES.getlist('images')            
+
+                    if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
+                        
+                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
+                            messages.success(request,"You task has been requested for reviewing!")
+                        else:
+                            messages.warning(request,"Something went wrong while saving!")
                     else:
-                        messages.warning(request,"Something went wrong while saving!")
+                        messages.warning(request,"Something went wrong while saving the task!")
+            
                     return redirect('central_branch:upload_task',task_id)
                 
                 elif request.POST.get('delete_doc'):
