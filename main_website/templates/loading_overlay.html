@@ -97,7 +97,7 @@
 
 
 
-
+    /* typewriter effect starts here */
     .typewriter h1 {
         color: #fff;
         overflow: hidden;
@@ -113,7 +113,7 @@
         letter-spacing: .15em;
         /* Adjust as needed */
         animation:
-            typing 1.5s steps(15, end),
+            typing 1.25s steps(15, end),
             blink-caret .5s step-end infinite;
     }
 
@@ -141,27 +141,17 @@
         }
     }
 
-    @media only screen and (max-width: 780px) {
-        .typewriter h1 {
-            font-size: 50px;
-        }
-    }
-
-    @media only screen and (max-width: 460px) {
-        .typewriter h1 {
-            font-size: 40px;
-        }
-    }
 
 
 
 
 
+    /* square puzzle loader effect starts here */
     .loader {
         position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, 150%);
+        transform: translate(-50%, 200%);
         width: 96px;
         height: 96px;
         z-index: 9999;
@@ -318,6 +308,32 @@
         100% {
             left: 0;
             top: 0;
+        }
+    }
+
+
+
+
+
+
+    /*Responsiveness*/
+    @media only screen and (max-width: 780px) {
+        .typewriter h1 {
+            font-size: 50px;
+        }
+
+        .loader {
+            transform: translate(-50%, 150%);
+        }
+    }
+
+    @media only screen and (max-width: 460px) {
+        .typewriter h1 {
+            font-size: 40px;
+        }
+
+        .loader {
+            transform: translate(-50%, 150%);
         }
     }
 </style>
