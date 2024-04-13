@@ -29,7 +29,8 @@
         align-items: center;
         justify-content: center;
 
-
+        opacity: 1;
+        transition: opacity 1s ease; /* Add transition for opacity */
 
         background: #2980b9 url('https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png') repeat 0 0;
         -webkit-animation: 10s linear 0s normal none infinite animate;
@@ -37,6 +38,11 @@
         -ms-animation: 10s linear 0s normal none infinite animate;
         -o-animation: 10s linear 0s normal none infinite animate;
         animation: 10s linear 0s normal none infinite animate;
+    }
+
+    #loadingOverlay.hidden {
+        opacity: 0; /* Make the overlay transparent */
+        pointer-events: none; /* Disable pointer events when overlay is hidden */
     }
 
     @-webkit-keyframes animate {
@@ -342,18 +348,22 @@
     // JavaScript to show/hide loading screen
     function showLoadingScreen() {
         document.body.classList.add('loading');
-        document.getElementById('loadingOverlay').style.display = 'flex';
+        document.getElementById('loadingOverlay').classList.remove('hidden'); // Remove 'hidden' class
     }
-
+    
     function hideLoadingScreen() {
-        document.body.classList.remove('loading');
-        document.getElementById('loadingOverlay').style.display = 'none';
+        
+        setTimeout(() => {
+            document.body.classList.remove('loading');
+            document.getElementById('loadingOverlay').classList.add('hidden'); // Add 'hidden' class after a brief delay
+        }, 1000); // Adjust the delay as needed to match the transition duration
     }
+    
 
     // Example: Simulate loading
     window.addEventListener('load', function() {
         showLoadingScreen(); // Show loading screen when the page loads
-        setTimeout(hideLoadingScreen, 3000); // Simulate loading taking 3 seconds
+        setTimeout(hideLoadingScreen, 2500); // Simulate loading taking 3 seconds
     });
 
 
