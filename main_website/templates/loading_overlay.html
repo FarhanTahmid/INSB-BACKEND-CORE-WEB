@@ -337,29 +337,29 @@
 
 </div>
 
-    <!--This script needs to be added here for the typewriting effect to work, idk why-->
-    <script>
-        // JavaScript to show/hide loading screen
-        function showLoadingScreen() {
-            document.body.classList.add('loading');
-            document.getElementById('loadingOverlay').style.display = 'flex';
-        }
 
-        function hideLoadingScreen() {
-            document.body.classList.remove('loading');
-            document.getElementById('loadingOverlay').style.display = 'none';
-        }
+<script>
+    // JavaScript to show/hide loading screen
+    function showLoadingScreen() {
+        document.body.classList.add('loading');
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }
 
-        // Example: Simulate loading
-        window.addEventListener('load', function() {
-            showLoadingScreen(); // Show loading screen when the page loads
-            setTimeout(hideLoadingScreen, 3000); // Simulate loading taking 3 seconds
-        });
+    function hideLoadingScreen() {
+        document.body.classList.remove('loading');
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    // Example: Simulate loading
+    window.addEventListener('load', function() {
+        showLoadingScreen(); // Show loading screen when the page loads
+        setTimeout(hideLoadingScreen, 3000); // Simulate loading taking 3 seconds
+    });
 
 
 
-        
-    </script>
+    
+</script>
 
 
 {% endblock loading_overlay %}
