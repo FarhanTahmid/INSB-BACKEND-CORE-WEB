@@ -80,8 +80,14 @@
 </head>
 
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
+
     <div class="body-wrapper  float-menu">
-    
+        <!--loading screen-->
+        {% block loading_overlay %}
+            {% include "loading_overlay.html" %}
+        {% endblock loading_overlay %}
+        <!--loading screen-->  
+
         <!--Header-->
         {% block header %}
             {% include 'header.html' %}
