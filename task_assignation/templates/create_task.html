@@ -886,10 +886,9 @@
             {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
-                  {% comment %} <a href="#" class="view-task-btn">View Task</a> {% endcomment %}
-                  {% comment %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endcomment %}
                   {% if create_individual_task_access or create_team_task_access %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                  {% if task.task_type == "Team" %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endif %}
                   {% elif is_member_view and not task.is_task_completed %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                   {% elif is_member_view and task.is_task_completed %}
