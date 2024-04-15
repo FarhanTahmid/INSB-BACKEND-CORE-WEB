@@ -77,20 +77,20 @@ class Branch_View_Access:
         
     def get_create_team_task_access(request):
         logger = logging.getLogger(__name__)
-        return False
-        # try:
-        #     # get username
-        #     username=request.user.username
-        #     if(Branch_View_Access.common_access(username=username)):
-        #         return True
-        #     elif(Branch_Data_Access.objects.filter(ieee_id=username,create_team_task_access=True).exists()):
-        #         return True
-        #     else:
-        #         return False
-        # except Exception as ex:
-        #     # messages.error(request,"Error loading Data Access")
-        #     logger.info(ex, exc_info=True)
-        #     return False
+        # return False
+        try:
+            # get username
+            username=request.user.username
+            if(Branch_View_Access.common_access(username=username)):
+                return True
+            elif(Branch_Data_Access.objects.filter(ieee_id=username,create_team_task_access=True).exists()):
+                return True
+            else:
+                return False
+        except Exception as ex:
+            # messages.error(request,"Error loading Data Access")
+            logger.info(ex, exc_info=True)
+            return False
 
     def get_create_panel_access(request):
         logger = logging.getLogger(__name__)

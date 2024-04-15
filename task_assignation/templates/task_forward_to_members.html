@@ -398,7 +398,6 @@
                         <tr>
                           <th>IEEE ID</th>
                           <th>Name</th>
-                          <th>Team</th>
                           <th>Position</th>
                           <th>Contact</th>
                           <th>Select</th>
@@ -407,11 +406,11 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
+                        {% for member in team_members %}
+                        <td>{{member.ieee_id}}</td>
+                        <td>{{member.name}}</td>
+                        <td>{{member.position.role}}</td>
+                        <td>{{member.contact_no}}</td>
                         <td>
                           <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
                         </td>
@@ -425,44 +424,7 @@
                               </select>
                           </td>                
                       </tr>
-                      <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
-                        <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                        </td>
-                        <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
-                      </tr>
-                      <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
-                        <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                        </td>
-                        <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
-                      </tr>
+                        {% endfor %}                      
                     </tbody>
                 </table>
                 </div>

@@ -4452,12 +4452,12 @@ def create_task(request):
 
                 team_select = None
                 member_select = None
+                task_types_per_member = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
-                    task_types_per_member = {}
                     for member_id in member_select:
                         member_name = request.POST.getlist(member_id + '_task_type[]')
                         task_types_per_member[member_id] = member_name
@@ -4728,12 +4728,16 @@ def upload_task(request, task_id):
 @member_login_permission
 def add_task(request, task_id):
 
+    task = Task.objects.get(id=task_id)
+
+    if task.task_type != "Team":
+        return redirect('central_branch:task_edit', task_id)
+    
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
     # get user data for side bar
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
-    task = Task.objects.get(id=task_id)
 
     if request.method == 'POST':
         ##########################################
