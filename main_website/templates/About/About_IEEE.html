@@ -426,21 +426,86 @@
             margin: 18px 0 20px;
             border-radius: 5px;
         }
+        #preloader{
+          background: white;
+          height: 100vh;
+          width: 100vw;
+          position: fixed;
+          z-index: 10;
+          transition: all .1s ease-in-out;
+        }
+        /* Loader style */
+
+.loader {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 15px auto;
+  position: fixed;
+  color: #ccc;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  top: 45%;
+  left: 50%;
+  opacity: 1;
+}
+.loader::after,
+.loader::before {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: 50%;
+  left: 50%;
+  transform: scale(0.5) translate(0, 0);
+  background-color: #002855;
+  border-radius: 50%;
+  animation: animloader 1s infinite ease-in-out;
+}
+.loader::before {
+  background-color: #002855;
+  transform: scale(0.5) translate(-48px, -48px);
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+@keyframes animloader {
+  50% {
+    transform: scale(1) translate(-50%, -50%);
+  }
+}
+
+/* END Loader style */
   </style>
 </head>
+
+<div id="preloader"><p style="position: fixed;
+  top: 57%;
+  left: 47%;
+  font-size: 28px;
+  color: #002855;
+  font-weight: bold;
+  font-family: sans-serif;">LOADING..</p><span class="loader"></span></div>
 
 <body data-rsssl="1" class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
   <div class="body-wrapper float-menu">
     {% if is_live %}
-      {% block header %} 
-        {% include 'header.html' %} 
-      {% endblock header %} 
-
-      {% block wave_design %}
-        {% include 'wave.html' %}
-      {% endblock wave_design %}
+    {% block header %} 
+    {% include 'header.html' %} 
+    {% endblock header %} 
+    
+    {% block wave_design %}
+    {% include 'wave.html' %}
+    {% endblock wave_design %}
     {% endif %}
-
+    
     <section class="centering">
       <section class="about-IEEE max-width">
         <div class="IEEE-bd-section-logo">
@@ -749,6 +814,14 @@
   {% block common_js %} 
     {% include "common_js_includes.html" %} 
   {%endblock%}
+  <script>
+    var loader = document.getElementById("preloader");
+
+    window.addEventListener("load",function(){
+      preloader.style.opacity = "0";
+      preloader.style.zIndex = "-1";
+    })
+  </script>
 </body>
 
 </html>
