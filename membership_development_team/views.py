@@ -182,6 +182,9 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 skill_sets=request.POST.getlist('skill_sets')
+
+                if date_of_birth == '':
+                    date_of_birth = None
                 
                 #checking if the recruitment and renewal session exists
                 try:
@@ -325,7 +328,7 @@ def member_details(request,ieee_id):
             if request.POST.get('delete_member'):
                 #Deleting a member from database
                 member_to_delete=Members.objects.get(ieee_id=ieee_id)
-                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
+                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the IEEE NSU SB Registered Members Database.")
                 member_to_delete.delete()
                 return redirect('membership_development_team:members_list')
                 
@@ -820,10 +823,10 @@ def renewal_request_details(request,pk,request_id):
                         )
                         new_member_from_renewal.save()
                     except:
-                        messages.error(request,f"Can not update this application to INSB Registered Members Database!")
+                        messages.error(request,f"Can not update this application to IEEE NSU SB Registered Members Database!")
 
                     #show message
-                    messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the INSB Registered Member Database!\nHowever, the system kept the Data of renewal!")
+                    messages.success(request,f"Membership has been renewed!\nThis member with the associated IEEE ID: {ieee_id} was not found in the IEEE NSU SB Registered Member Database!\nHowever, the system kept the Data of renewal!")
                     
                     # Send an Email to the Applicants Associated Email
                     email_stat=email_sending.send_email_upon_renewal_confirmed(reciever_email=renewal_request_details[0]['email_associated'],reciever_name=renewal_request_details[0]['name'])
@@ -1220,8 +1223,9 @@ def site_registration_request_details(request,ieee_id):
         #changing view Status
         Portal_Joining_Requests.objects.filter(ieee_id=ieee_id).update(view_status=True)
         
-        dob = datetime.strptime(str(
-            get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
+        dob = None
+        if get_request.date_of_birth is not None:
+            dob = datetime.strptime(str(get_request.date_of_birth), "%Y-%m-%d").strftime("%Y-%m-%d")
         
         current_application=Portal_Joining_Requests.objects.get(ieee_id=ieee_id)
         next_application=Portal_Joining_Requests.objects.filter(pk__gt=current_application.ieee_id).first()
@@ -1255,7 +1259,6 @@ def site_registration_request_details(request,ieee_id):
                             major=get_request.major,
                             contact_no=get_request.contact_no,
                             home_address=get_request.home_address,
-                            date_of_birth=get_request.date_of_birth,
                             gender=get_request.gender,
                             facebook_url=get_request.facebook_url,
                             linkedin_url=get_request.linkedin_url,
@@ -1289,7 +1292,6 @@ def site_registration_request_details(request,ieee_id):
                             major=get_request.major,
                             contact_no=get_request.contact_no,
                             home_address=get_request.home_address,
-                            date_of_birth=get_request.date_of_birth,
                             gender=get_request.gender,
                             facebook_url=get_request.facebook_url,
                             linkedin_url=get_request.linkedin_url,
@@ -1297,6 +1299,8 @@ def site_registration_request_details(request,ieee_id):
                             position=Roles_and_Position.objects.get(id=get_request.position.id),
                             user_profile_picture=get_request.user_profile_picture,
                         )
+                        if get_request.date_of_birth is not None:
+                            new_member.date_of_birth=get_request.date_of_birth
                         new_member.save()
 
                         if(email_sending.send_email_on_site_registration_verification_to_user(request,new_member.name,new_member.email_personal)==False):
@@ -1436,10 +1440,12 @@ def site_registration_faculty(request):
                     new_faculty_registration_request=Portal_Joining_Requests.objects.create(
                         name=request.POST['name'],ieee_id=request.POST['ieee_id'],email_personal=request.POST['email_personal'],
                         email_nsu=request.POST['email_nsu'],email_ieee=request.POST['email_ieee'],home_address=request.POST['home_address'],
-                        major=request.POST['major'],contact_no=request.POST['contact_no'],date_of_birth=request.POST['date_of_birth'],
+                        major=request.POST['major'],contact_no=request.POST['contact_no'],
                         facebook_url=request.POST['facebook_url'],linkedin_url=request.POST['linkedin_url'],gender=request.POST['gender'],
                         user_profile_picture=request.FILES['user_picture']
                     )
+                    if request.POST['date_of_birth'] != '':
+                        new_faculty_registration_request.date_of_birth=request.POST['date_of_birth']
                     new_faculty_registration_request.save()
                     mdt_officials = renderData.MDT_DATA.load_officials_of_MDT()
                     for official in mdt_officials:

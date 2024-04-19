@@ -122,7 +122,7 @@ class Alumni_Members(models.Model):
     picture=ResizedImageField(null=True,blank=True,default='user_profile_pictures/default_profile_picture.png',upload_to='panel_profile_pictures/')
     linkedin_link=models.URLField(null=True,blank=True,max_length=100)
     facebook_link=models.URLField(null=True,blank=True,max_length=100)
-    email=models.URLField(null=True,blank=True,max_length=50)
+    email=models.EmailField(null=True,blank=True)
     contact_no=models.CharField(null=True,blank=True,max_length=50)
     ieee_collaboratec=models.URLField(null=True,blank=True,max_length=100)
     

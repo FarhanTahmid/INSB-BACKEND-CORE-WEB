@@ -875,7 +875,7 @@ class Task_Assignation:
         is_late = False
         string_current_Date = str(current_date.date())
         # Calculate late duration in days
-        if current_date > deadline_of_task:
+        if current_date > deadline_of_task and not task.is_task_completed:
             late_duration = (current_date - deadline_of_task).days
             late_duration = abs(late_duration)
             
@@ -890,9 +890,8 @@ class Task_Assignation:
                     search = f"{late_duration}_{member.member}"
                     
                     if search not in dic:
-                        current_points = member.completion_points
                         deduction_amount = deduction_percentage * late_duration
-                        new_points = current_points - deduction_amount
+                        new_points = task.task_category.points - deduction_amount
                         #if amount after subtraction is less than 0 then just store 0 and move on to next member
                         if new_points < 0:
                             member.completion_points = 0
@@ -928,23 +927,23 @@ class Task_Assignation:
             email_from = settings.EMAIL_HOST_USER
             subject = f"Request to review your work"
             message = f'''Greetings {member.name},
-    The work you have done so far is great! However, your task assignee seems to have
-    commented on your completed work for more better outcome. Please view the task
-    and make necessary changes accordingly
+The work you have done so far is great! However, your task assignee seems to have
+commented on your completed work for more better outcome. Please view the task
+and make necessary changes accordingly
 
-    Please follow to link to redirect to your work:
-    {site_domain}/portal/central_branch/task/{task.pk}/upload_task
+Please follow to link to redirect to your work:
+{site_domain}/portal/central_branch/task/{task.pk}/upload_task
 
-    Best Regards
-    IEEE NSU SB Portal
+Best Regards
+IEEE NSU SB Portal
 
-    This is an automated message. Do not reply
+This is an automated message. Do not reply
     '''
             email=EmailMultiAlternatives(subject,message,
                                 email_from,
                                 email_to
                                 )
-            #email.send()
+            email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
             #saving logs
@@ -1001,25 +1000,25 @@ class Task_Assignation:
             site_domain = request.META['HTTP_HOST']
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
             message = f'''Hello {username},
-    You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
+You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
-    Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
-    dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
-    in the task edit page, if you think the entire task is completed.
+Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
+dedicated members, and save them. To allocate their points please toggle 'on' the task complete button and hit save
+in the task edit page, if you think the entire task is completed.
 
-    Please follow the link to view the completed task: 
-    {site_domain}/portal/central_branch/task/{task.pk}/upload_task
+Please follow the link to view the completed task: 
+{site_domain}/portal/central_branch/task/{task.pk}/upload_task
 
-    Best Regards
-    IEEE NSU SB Portal
+Best Regards
+IEEE NSU SB Portal
 
-    This is an automated message. Do not reply
+This is an automated message. Do not reply
     '''
             email=EmailMultiAlternatives(subject,message,
                                 email_from,
                                 email_to
                                 )
-            #email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1060,27 +1059,27 @@ class Task_Assignation:
             subject = f"You have been Assigned a Task!"
             site_domain = request.META['HTTP_HOST']
             message = f'''Hello {member.name},
-    You have been assigned a task - {task.title}.
-    Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
+You have been assigned a task - {task.title}.
+Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
 
-    You are requested to complete the task with in the due date. If not, you will be penalised daily
-    5% of your task points.
+You are requested to complete the task with in the due date. If not, you will be penalised daily
+5% of your task points.
 
-    Please follow the link or go through the portal for more details.
+Please follow the link or go through the portal for more details.
 
-    Deadline: {task.deadline}
-    Task Assigned by: {task.task_created_by}, {task_created_by}
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task_created_by}
 
-    Best Regards
-    IEEE NSU SB Portal
+Best Regards
+IEEE NSU SB Portal
 
-    This is an automated message. Do not reply
+This is an automated message. Do not reply
     '''
             email=EmailMultiAlternatives(subject,message,
                                     email_from,
                                     email_to
                                     )
-            #email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
