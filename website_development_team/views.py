@@ -9,16 +9,18 @@ from .renderData import WesbiteDevelopmentTeam
 from system_administration.models import WDT_Data_Access
 from users import renderData
 from port.renderData import PortData
-from users.renderData import PanelMembersData
+from users.renderData import PanelMembersData,member_login_permission
 import logging
 from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
+from task_assignation.models import *
 # Create your views here.
 
 logger=logging.getLogger(__name__)
 @login_required
+@member_login_permission
 def team_homepage(request):
 
     try:
@@ -43,6 +45,7 @@ def team_homepage(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
 @login_required
+@member_login_permission
 def manage_team(request):
 
     try:
@@ -137,6 +140,33 @@ def manage_team(request):
         else:
             return render(request,"website_development_team/access_denied.html", {'all_sc_ag':sc_ag,'user_data':user_data,})
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+@member_login_permission
+def task_home(request):
+    try:
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        team = WesbiteDevelopmentTeam.get_team_id()
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
+        web_dev_team_tasks = Task.objects.filter(task_of = society,team = team)
+
+        context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+
+                'all_tasks':web_dev_team_tasks,
+                
+            }
+        
+        return render(request,"website_development_team/task_home.html",context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

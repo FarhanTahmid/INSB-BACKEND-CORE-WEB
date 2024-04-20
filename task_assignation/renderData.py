@@ -7,7 +7,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types,Task_Drive_Link,Task_Content,Permission_Paper,Task_Document,Task_Media
+from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types,Task_Drive_Link,Task_Content,Permission_Paper,Task_Document,Task_Media,Team_Task_Point
 from users.models import Members, Panel_Members
 from datetime import datetime,timedelta
 from django.utils import timezone
@@ -65,7 +65,12 @@ class Task_Assignation:
                     teams.append(Teams.objects.get(primary=team_primary))
                 #Set the array of teams as list for team inside the task and save the task with newly added teams
                 new_task.team.add(*teams)
-                new_task.save()                     
+                new_task.save()  
+
+                #saving team points
+                for team in teams:
+                    team_point = Team_Task_Point.objects.create(task=new_task,team = team) 
+                    team_point.save()                  
 
                 #getting team names as list
                 team_names = []
@@ -96,11 +101,16 @@ class Task_Assignation:
                     if str(member.team.primary) in team_select:
                         #And if the member is a coordinator
                         if member.position.is_co_ordinator:
-                            #Add to coordinators array and send confirmation
+                            #Add to coordinators array
                             coordinators.append(member.member)
-                            ##
-                            ## Send email/notification here
-                            ##
+                #assigning the task to the coordinators
+                new_task.members.add(*coordinators)
+                #creating those members points in Member Task Points
+                for member in coordinators:
+                    member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
+                    member_task_points.save()
+                    #sending the email as well
+                    Task_Assignation.task_creation_email(request,member,new_task)
                 print(coordinators)
                 
                 return True
@@ -936,7 +946,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
             #saving logs
@@ -1011,7 +1021,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            #email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1072,7 +1082,8 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            #email.send()
+            print("Email sent")
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)

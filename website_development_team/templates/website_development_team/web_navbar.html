@@ -44,7 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 </a>
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
-
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{% url 'website_development_team:task_home' %}">
+                <i class="fa fa-tasks" aria-hidden="true"></i>
+                <span>Tasks</span>
+                </a>
+                <div ui-include="'../views/blocks/dropdown.new.html'"></div>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link" href="{% url 'website_development_team:manage_team' %}">
                 <i class="fa fa-lock"></i>
