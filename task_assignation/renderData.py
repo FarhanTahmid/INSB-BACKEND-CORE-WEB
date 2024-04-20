@@ -890,9 +890,8 @@ class Task_Assignation:
                     search = f"{late_duration}_{member.member}"
                     
                     if search not in dic:
-                        current_points = member.completion_points
                         deduction_amount = deduction_percentage * late_duration
-                        new_points = current_points - deduction_amount
+                        new_points = task.task_category.points - deduction_amount
                         #if amount after subtraction is less than 0 then just store 0 and move on to next member
                         if new_points < 0:
                             member.completion_points = 0
