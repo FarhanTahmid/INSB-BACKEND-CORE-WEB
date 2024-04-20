@@ -888,12 +888,12 @@
               <div class="task-btn">
                   {% if create_individual_task_access or create_team_task_access %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
-                  {% if task.task_type == "Team" %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endif %}
                   {% elif is_member_view and not task.is_task_completed %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                   {% elif is_member_view and task.is_task_completed %}
                   <p  style="color: #d33838;">Task Completed!</p>
                   {% endif %}
+                  {% if task.task_type == "Team" and has_team_task_options_view_access %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
                   <button type="button" class="log-task-button" id="trigger">Task Logs</button>

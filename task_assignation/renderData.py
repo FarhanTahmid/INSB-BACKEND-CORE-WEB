@@ -2,6 +2,7 @@
 from django.shortcuts import redirect
 from django.contrib import messages
 from central_branch.renderData import Branch
+from central_branch.view_access import Branch_View_Access
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
@@ -537,30 +538,19 @@ class Task_Assignation:
 
         return True
 
-    def add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description):
+    def add_task_params(task_id, member_select, task_types_per_member):
         ''' This function is used to add members and/or task params '''
         
         #Get the task using the task_id
         task = Task.objects.get(id=task_id)
 
         #If any members are selected then clear it and add new members if there are any
-        if member_select:
-            task.members.clear()
-            task.members.add(*member_select)
-        else:
-            #Otherwise just clear it
-            task.members.clear()
-
-        #Update task submission types
-        # task.has_permission_paper = has_permission_paper
-        # task.has_content = has_content
-        # task.has_file_upload = has_file_upload
-        # task.has_media = has_media
-        # task.has_drive_link = has_drive_link
-        # task.has_others = has_others
-        # task.others_description = others_description
-        #Save the changes
-        task.save()
+        # if member_select:
+        #     task.members.clear()
+        #     task.members.add(*member_select)
+        # else:
+        #     #Otherwise just clear it
+        #     task.members.clear()
         
         return True
     
@@ -1087,3 +1077,25 @@ This is an automated message. Do not reply
             return True
         except:
             return False
+        
+    def get_team_task_options_view_access(logged_in_user, task):
+        
+        if type(logged_in_user) == Members:
+            try:
+                if Branch_View_Access.common_access(username=logged_in_user.ieee_id):
+                    return True
+                team = Teams.objects.get(primary=logged_in_user.team.primary)
+                if team in task.team.all():
+                    get_current_panel=Branch.load_current_panel()
+                    #Get current panel members of branch
+                    get_current_panel_member= Panel_Members.objects.filter(member=logged_in_user, tenure=get_current_panel.pk, team=team).first()
+                
+                    if get_current_panel_member:
+                        if get_current_panel_member.position.is_co_ordinator:
+                            return True
+                
+                return False
+            except:
+                return False
+        elif type(logged_in_user) == adminUsers:
+            return True

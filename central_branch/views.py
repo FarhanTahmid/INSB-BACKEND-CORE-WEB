@@ -4553,6 +4553,7 @@ def upload_task(request, task_id):
         user = request.user.username
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        
         this_is_users_task = False
         comments = None
         #to check if this is users task
@@ -4713,7 +4714,7 @@ def upload_task(request, task_id):
                 'media_url':settings.MEDIA_URL,
                 'comments':comments,
                 'create_individual_task_access':create_individual_task_access,
-                'create_team_task_access':create_team_task_access
+                'create_team_task_access':create_team_task_access,
             }
 
             return render(request,"task_page.html",context)
@@ -4739,72 +4740,57 @@ def add_task(request, task_id):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
 
-    if request.method == 'POST':
-        ##########################################
-        ## Checking submission types from input ##
-        ##########################################
-        has_permission_paper = False
-        if request.POST.get('permission_paper'):
-            has_permission_paper = True
-        
-        has_content = False
-        if request.POST.get('content'):
-            has_content = True
-        
-        has_file_upload = False
-        if request.POST.get('file_upload'):
-            has_file_upload = True
-        
-        has_media = False
-        if request.POST.get('media'):
-            has_media = True
+    try:
+        logged_in_user = Members.objects.get(ieee_id=request.user.username)
+    except:
+        logged_in_user = adminUsers.objects.get(username=request.user.username)
 
-        has_drive_link = False
-        if request.POST.get('drive_link'):
-            has_drive_link = True
+    has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
 
-        has_others = False
-        others_description = None
-        if request.POST.get('others'):
-            has_others = True
-            others_description = request.POST.get('task_description_details')
+    if has_access:
+        if request.method == 'POST':
 
-        member_select = []
-        if 'member_select' in request.POST:
+            task_types_per_member = {}
             member_select = request.POST.getlist('member_select')
-        
-        #If task is completed then do not update task params
-        if(task.is_task_completed):
-            messages.info(request,'Task is completed already!')
-            return redirect('central_branch:add_task',task_id)
+            for member_id in member_select:
+                member_name = request.POST.getlist(member_id + '_task_type[]')
+                task_types_per_member[member_id] = member_name
+            
+            #If task is completed then do not update task params
+            if(task.is_task_completed):
+                messages.info(request,'Task is completed already!')
+                return redirect('central_branch:add_task',task_id)
 
-        if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
-            #If it is a team task and no members were selected then show message but save other params
-            if(task.task_type == "Team" and not member_select):
-                messages.info(request,'Saved changes. Please select a member to forward tasks!')
+            if(Task_Assignation.add_task_params(task_id, member_select, task_types_per_member)):
+                #If it is a team task and no members were selected then show message but save other params
+                if(not member_select):
+                    messages.info(request,'Saved changes. Please select a member to forward tasks!')
+                else:
+                    #Else members were selected
+                    messages.success(request,"Task params updated successfully!")
             else:
-                #Else members were selected
-                messages.success(request,"Task params updated successfully!")
-        else:
-            messages.warning(request,"We're a failure")
+                messages.warning(request,"We're a failure")
 
-        return redirect('central_branch:add_task',task_id)
-    
-    team_members = []
-    #Get all team members from the selected teams
-    for team in task.team.all():
-        members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
-                
-        team_members.extend(members)
+            return redirect('central_branch:add_task',task_id)
+        
+        team_members = []
+        #Get all team members from the selected teams
+        for team in task.team.all():
+            members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+            for member in members:
+                if not member.position.is_co_ordinator:
+                    team_members.append(member)                      
 
-    context = {
-        'task':task,
-        'team_members':team_members,
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-    }
+        context = {
+            'task':task,
+            'team_members':team_members,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+        }
 
-    return render(request,"task_forward_to_members.html",context)
+        return render(request,"task_forward_to_members.html",context)
+    else:
+        return render(request,'access_denied2.html')
 
 @login_required
 @member_login_permission
@@ -4822,7 +4808,7 @@ def task_edit(request, task_id):
 
         user = request.user.username
 
-        task = Task.objects.get(id=task_id)
+        task = Task.objects.get(id=task_id)        
 
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
         my_task = False
@@ -4850,6 +4836,7 @@ def task_edit(request, task_id):
         except:
             logged_in_user = adminUsers.objects.get(username=user)
 
+        has_team_task_options_view_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
         
         if request.method == 'POST':
             if 'update_task' in request.POST:
@@ -4916,14 +4903,15 @@ def task_edit(request, task_id):
             'create_individual_task_access':create_individual_task_access,
             'create_team_task_access':create_team_task_access,
             'is_member_view':is_member_view,
-            'is_task_started_by_member':is_task_started_by_member
+            'is_task_started_by_member':is_task_started_by_member,
+            'has_team_task_options_view_access':has_team_task_options_view_access
         }
 
         return render(request,"create_task.html",context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+        #return custom_500(request)
 
 class GetTaskCategoryPointsAjax(View):
     def get(self,request):
