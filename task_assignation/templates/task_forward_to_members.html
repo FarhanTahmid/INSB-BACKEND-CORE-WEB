@@ -353,7 +353,7 @@
                       </ol>
               </div>
           </div>
-            <form method="post">
+            <form method="POST">
 
               <!--forward task btn-->
               <div style="text-align: center;">
@@ -364,20 +364,6 @@
               <div style="justify-content:center;text-align:center; margin-top:15px;">  
                 <div style="justify-content:center;">
                   <div class="header_wrap">
-                    <!-- <div class="num_rows">
-                      <div class="form-group">
-                        <select class="form-control" name="state" id="maxRows">
-                          <option value="10">10</option>
-                          <option value="15">15</option>
-                          <option value="20">20</option>
-                          <option value="50">50</option>
-                          <option value="5000">Show ALL Rows</option>
-                        </select>
-                      </div>
-                    </div> -->
-
-
-                    
 
 
                 <!--Search bar for individuals-->
@@ -405,8 +391,8 @@
                         </tr>
                     </thead>
                     <tbody>
+                      {% for member in team_members %}
                       <tr>
-                        {% for member in team_members %}
                         <td>{{member.ieee_id}}</td>
                         <td>{{member.name}}</td>
                         <td>{{member.position.role}}</td>
@@ -424,7 +410,7 @@
                               </select>
                           </td>                
                       </tr>
-                        {% endfor %}                      
+                      {% endfor %}                      
                     </tbody>
                 </table>
                 </div>
