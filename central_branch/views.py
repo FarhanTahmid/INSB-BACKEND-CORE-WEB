@@ -4911,7 +4911,7 @@ def task_edit(request, task_id):
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        #return custom_500(request)
+        return custom_500(request)
 
 class GetTaskCategoryPointsAjax(View):
     def get(self,request):
