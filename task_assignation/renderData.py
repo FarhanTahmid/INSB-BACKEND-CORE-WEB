@@ -273,7 +273,10 @@ class Task_Assignation:
                 Task_Assignation.save_task_logs(task,task_log_message)
                 task_category_changed = True
             #deadline saving not correct
-            if prev_deadline != str(deadline):
+            if prev_deadline != str(deadline): 
+                for member in Member_Task_Point.objects.filter(task=task):  
+                    member.completion_points = task.task_category.points
+                    member.save()       
                 task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
                 Task_Assignation.save_task_logs(task,task_log_message)
 
