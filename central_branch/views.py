@@ -4482,7 +4482,20 @@ def create_task(request):
                 'all_sc_ag':sc_ag,
                 'user_data':user_data,
                 'create_individual_task_access':create_individual_task_access,
-                'create_team_task_access':create_team_task_access
+                'create_team_task_access':create_team_task_access,
+
+                
+                'is_branch':True,
+                'web_dev_team':False,
+                'content_and_writing_team':False,
+                'event_management_team':False,
+                'logistic_and_operation_team':False,
+                'promotion_team':False,
+                'public_relation_team':False,
+                'membership_development_team':False,
+                'media_team':False,
+                'graphics_team':False,
+                'finance_and_corporate_team':False,
             }
 
             return render(request,"create_task.html",context)
@@ -4528,7 +4541,19 @@ def task_home(request):
             'all_sc_ag':sc_ag,
             'user_data':user_data,
             'all_task_categories':all_task_categories,
-            'has_task_create_access':has_task_create_access
+            'has_task_create_access':has_task_create_access,
+
+            'is_branch':True,
+            'web_dev_team':False,
+            'content_and_writing_team':False,
+            'event_management_team':False,
+            'logistic_and_operation_team':False,
+            'promotion_team':False,
+            'public_relation_team':False,
+            'membership_development_team':False,
+            'media_team':False,
+            'graphics_team':False,
+            'finance_and_corporate_team':False,
         }
 
         return render(request,"task_home.html",context)
@@ -4786,6 +4811,18 @@ def add_task(request, task_id):
             'team_members':team_members,
             'all_sc_ag':sc_ag,
             'user_data':user_data,
+
+            'is_branch':True,
+            'web_dev_team':False,
+            'content_and_writing_team':False,
+            'event_management_team':False,
+            'logistic_and_operation_team':False,
+            'promotion_team':False,
+            'public_relation_team':False,
+            'membership_development_team':False,
+            'media_team':False,
+            'graphics_team':False,
+            'finance_and_corporate_team':False,
         }
 
         return render(request,"task_forward_to_members.html",context)
@@ -4904,7 +4941,19 @@ def task_edit(request, task_id):
             'create_team_task_access':create_team_task_access,
             'is_member_view':is_member_view,
             'is_task_started_by_member':is_task_started_by_member,
-            'has_team_task_options_view_access':has_team_task_options_view_access
+            'has_team_task_options_view_access':has_team_task_options_view_access,
+
+            'is_branch':True,
+            'web_dev_team':False,
+            'content_and_writing_team':False,
+            'event_management_team':False,
+            'logistic_and_operation_team':False,
+            'promotion_team':False,
+            'public_relation_team':False,
+            'membership_development_team':False,
+            'media_team':False,
+            'graphics_team':False,
+            'finance_and_corporate_team':False,
         }
 
         return render(request,"create_task.html",context)

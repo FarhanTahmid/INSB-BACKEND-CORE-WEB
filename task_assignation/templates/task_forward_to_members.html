@@ -291,11 +291,65 @@
 
 
         <!-- navbar -->
-        <div id="content" class="app-content" role="main">
-          {% block navbar %}
-          {% include 'navbar.html' %} 
-          {% endblock navbar %}
-        </div>
+      <div id="content" class="app-content" role="main">
+        {% if is_branch %}
+        {% block navbar %}
+            {% include 'navbar.html' %} 
+        {% endblock navbar %}
+
+        {% elif content_and_writing_team %}
+        {% block caw_navbar %}
+            {% include 'content_navbar.html' %} 
+        {% endblock caw_navbar %}
+
+        {% elif event_management_team %}
+        {% block emt_navbar %}
+            {% include 'emt_navbar.html' %} 
+        {% endblock emt_navbar %}
+
+        {% elif logistic_and_operation_team %}
+        {% block lot_navbar %}
+            {% include 'logistics_navbar.html' %} 
+        {% endblock lot_navbar %}
+
+        {% elif promotion_team %}
+        {% block promotion_navbar %}
+            {% include 'promotions_navbar.html' %} 
+        {% endblock promotion_navbar %}
+
+        {% elif public_relation_team %}
+        {% block prt_navbar %}
+            {% include 'public_relation_team/public_relation_navbar.html' %} 
+        {% endblock prt_navbar %}
+
+        {% elif membership_development_team %}
+        {% block mdt_navbar %}
+            {% include 'mdt_navbar.html' %} 
+        {% endblock mdt_navbar %}
+
+        {% elif media_team %}
+        {% block media_navbar %}
+            {% include 'media_navbar.html' %} 
+        {% endblock media_navbar %}
+
+        {% elif graphics_team %}
+        {% block graphics_navbar %}
+            {% include 'graphics_navbar.html' %} 
+        {% endblock graphics_navbar %}
+
+        {% elif finance_and_corporate_team %}
+        {% block finance_navbar %}
+            {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+        {% endblock finance_navbar %}
+
+        {% elif web_dev_team %}
+        {% block web_navbar %}
+            {% include 'website_development_team/web_navbar.html' %} 
+        {% endblock web_navbar %}
+
+        {% endif %}
+        
+    </div>
       
 
         <div id="content" class="app-content" role="main">

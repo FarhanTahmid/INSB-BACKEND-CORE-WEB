@@ -722,10 +722,64 @@
 
       <!-- navbar -->
       <div id="content" class="app-content" role="main">
+        {% if is_branch %}
         {% block navbar %}
-         {% include 'navbar.html' %} 
+            {% include 'navbar.html' %} 
         {% endblock navbar %}
-      </div>
+
+        {% elif content_and_writing_team %}
+        {% block caw_navbar %}
+            {% include 'content_navbar.html' %} 
+        {% endblock caw_navbar %}
+
+        {% elif event_management_team %}
+        {% block emt_navbar %}
+            {% include 'emt_navbar.html' %} 
+        {% endblock emt_navbar %}
+
+        {% elif logistic_and_operation_team %}
+        {% block lot_navbar %}
+            {% include 'logistics_navbar.html' %} 
+        {% endblock lot_navbar %}
+
+        {% elif promotion_team %}
+        {% block promotion_navbar %}
+            {% include 'promotions_navbar.html' %} 
+        {% endblock promotion_navbar %}
+
+        {% elif public_relation_team %}
+        {% block prt_navbar %}
+            {% include 'public_relation_team/public_relation_navbar.html' %} 
+        {% endblock prt_navbar %}
+
+        {% elif membership_development_team %}
+        {% block mdt_navbar %}
+            {% include 'mdt_navbar.html' %} 
+        {% endblock mdt_navbar %}
+
+        {% elif media_team %}
+        {% block media_navbar %}
+            {% include 'media_navbar.html' %} 
+        {% endblock media_navbar %}
+
+        {% elif graphics_team %}
+        {% block graphics_navbar %}
+            {% include 'graphics_navbar.html' %} 
+        {% endblock graphics_navbar %}
+
+        {% elif finance_and_corporate_team %}
+        {% block finance_navbar %}
+            {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+        {% endblock finance_navbar %}
+
+        {% elif web_dev_team %}
+        {% block web_navbar %}
+            {% include 'website_development_team/web_navbar.html' %} 
+        {% endblock web_navbar %}
+
+        {% endif %}
+        
+    </div>
 
 
       <!--PAGE START-->
@@ -893,7 +947,44 @@
                   {% elif is_member_view and task.is_task_completed %}
                   <p  style="color: #d33838;">Task Completed!</p>
                   {% endif %}
-                  {% if task.task_type == "Team" and has_team_task_options_view_access %}<a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>{% endif %}
+
+                  {% if task.task_type == "Team" and has_team_task_options_view_access %}
+                    {% if is_branch %}
+                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif web_dev_team %}
+                    <a href="{% url 'website_development_team:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif content_and_writing_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif event_management_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif logistic_and_operation_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif promotion_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif public_relation_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif membership_development_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif media_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif graphics_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% elif finance_and_corporate_team %}
+                    <a href="" class="add-members-task-btn">Add members and task</a>
+
+                    {% endif %}
+
+                  {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
                   <button type="button" class="log-task-button" id="trigger">Task Logs</button>
@@ -991,7 +1082,8 @@
                     <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
-
+                
+                {% if is_branch %}
                 {% if create_team_task_access or create_individual_task_access %}
                 <!--task type-->
                 <div class="task_type ">
@@ -1113,6 +1205,7 @@
                 
                 
                 
+                {% endif %}
                 {% endif %}
 
                 <!--create task btn-->

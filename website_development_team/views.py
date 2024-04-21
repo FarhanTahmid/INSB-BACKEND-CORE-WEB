@@ -6,7 +6,7 @@ from central_branch.renderData import Branch
 from port.models import Roles_and_Position
 from django.contrib import messages
 from .renderData import WesbiteDevelopmentTeam
-from system_administration.models import WDT_Data_Access
+from system_administration.models import WDT_Data_Access,adminUsers
 from users import renderData
 from port.renderData import PortData
 from users.renderData import PanelMembersData,member_login_permission
@@ -15,7 +15,10 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
+from users.renderData import LoggedinUser
 from task_assignation.models import *
+from task_assignation.renderData import Task_Assignation
+from central_branch.view_access import Branch_View_Access
 # Create your views here.
 
 logger=logging.getLogger(__name__)
@@ -163,11 +166,239 @@ def task_home(request):
                 'all_sc_ag':sc_ag,
 
                 'all_tasks':web_dev_team_tasks,
+
+                'is_branch':False,
+                'web_dev_team':True,
+                'content_and_writing_team':False,
+                'event_management_team':False,
+                'logistic_and_operation_team':False,
+                'promotion_team':False,
+                'public_relation_team':False,
+                'membership_development_team':False,
+                'media_team':False,
+                'graphics_team':False,
+                'finance_and_corporate_team':False,
+
                 
             }
         
-        return render(request,"website_development_team/task_home.html",context)
+        return render(request,"task_home.html",context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
+@login_required
+@member_login_permission
+def task_edit(request, task_id):
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
+        user = request.user.username
+
+        task = Task.objects.get(id=task_id)        
+
+        #Check if the user came from my task page. If yes then the back button will point to my tasks page
+        my_task = False
+        is_user_redirected = False
+        is_task_started_by_member = False
+
+        if 'HTTP_REFERER' in request.META:
+            if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
+                my_task = True
+            
+            if request.META['HTTP_REFERER'][-12:] == 'upload_task/':
+                is_user_redirected = True
+        else:
+            my_task = True
+
+        #Check if the user is a member or an admin
+        try:
+            logged_in_user = Members.objects.get(ieee_id = user)
+            try:
+                is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
+                if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
+                    return redirect('website_development_team:upload_task',task.pk)
+            except:
+                pass
+        except:
+            logged_in_user = adminUsers.objects.get(username=user)
+
+        has_team_task_options_view_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
+        
+        if request.method == 'POST':
+            if 'update_task' in request.POST:
+                title = request.POST.get('task_title')
+                description = request.POST.get('task_description_details')
+                task_category = request.POST.get('task_category')
+                deadline = request.POST.get('deadline')
+                task_type = request.POST.get('task_type')
+                is_task_completed = request.POST.get('task_completed_toggle_switch')
+
+                team_select = None
+                member_select = None
+                #Checking task types and get list accordingly
+                if task_type == "Team":
+                    team_select = request.POST.getlist('team_select')
+                elif task_type == "Individuals":
+                    member_select = request.POST.getlist('member_select')
+                    task_types_per_member = {}
+                    for member_id in member_select:
+                        member_name = request.POST.getlist(member_id + '_task_type[]')
+                        task_types_per_member[member_id] = member_name
+
+                if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
+                    messages.success(request,"Task Updated successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while updating the task!")
+
+                return redirect('website_development_team:task_edit',task_id)
+            elif 'delete_task' in request.POST:
+                if(Task_Assignation.delete_task(task_id=task_id)):
+                    messages.success(request,"Task deleted successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while deleting the task!")
+                
+                return redirect('website_development_team:task_home')
+        
+        task_categories = Task_Category.objects.all()
+        teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
+        #checking to see if points to be deducted
+        late = Task_Assignation.deduct_points_for_members(task)
+        #this is being done to ensure that he can click start button only if it is his task
+
+        #getting all task logs for this task
+        task_logs = Task_Log.objects.get(task_number = task)
+
+        is_member_view = logged_in_user in task.members.all()
+        #If it is a task member view or a regular view then override the access
+        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
+            create_individual_task_access = False
+            create_team_task_access = False       
+
+        context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                
+
+                'is_branch':False,
+                'web_dev_team':True,
+                'content_and_writing_team':False,
+                'event_management_team':False,
+                'logistic_and_operation_team':False,
+                'promotion_team':False,
+                'public_relation_team':False,
+                'membership_development_team':False,
+                'media_team':False,
+                'graphics_team':False,
+                'finance_and_corporate_team':False,
+
+                'my_task':my_task,
+                'task':task,
+                'task_categories':task_categories,
+                'teams':teams,
+                'all_members':all_members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'logged_in_user':logged_in_user,
+                'is_late':late,
+                
+                'task_logs':task_logs.task_log_details,
+                'create_individual_task_access':create_individual_task_access,
+                'create_team_task_access':create_team_task_access,
+                'is_member_view':is_member_view,
+                'is_task_started_by_member':is_task_started_by_member,
+                'has_team_task_options_view_access':has_team_task_options_view_access
+        }
+
+        return render(request,"create_task.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+
+@login_required
+@member_login_permission
+def add_task(request, task_id):
+
+    task = Task.objects.get(id=task_id)
+
+    if task.task_type != "Team":
+        return redirect('website_development_team:task_edit', task_id)
+    
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
+    try:
+        logged_in_user = Members.objects.get(ieee_id=request.user.username)
+    except:
+        logged_in_user = adminUsers.objects.get(username=request.user.username)
+
+    has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
+
+    if has_access:
+        if request.method == 'POST':
+
+            task_types_per_member = {}
+            member_select = request.POST.getlist('member_select')
+            for member_id in member_select:
+                member_name = request.POST.getlist(member_id + '_task_type[]')
+                task_types_per_member[member_id] = member_name
+            
+            #If task is completed then do not update task params
+            if(task.is_task_completed):
+                messages.info(request,'Task is completed already!')
+                return redirect('website_development_team:add_task',task_id)
+
+            if(Task_Assignation.add_task_params(task_id, member_select, task_types_per_member)):
+                #If it is a team task and no members were selected then show message but save other params
+                if(not member_select):
+                    messages.info(request,'Saved changes. Please select a member to forward tasks!')
+                else:
+                    #Else members were selected
+                    messages.success(request,"Task params updated successfully!")
+            else:
+                messages.warning(request,"We're a failure")
+
+            return redirect('website_development_team:add_task',task_id)
+        
+        team_members = []
+        #Get all team members from the selected teams
+        for team in task.team.all():
+            members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+            for member in members:
+                if not member.position.is_co_ordinator:
+                    team_members.append(member)                      
+
+        context = {
+            'task':task,
+            'team_members':team_members,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+
+            'is_branch':False,
+            'web_dev_team':True,
+            'content_and_writing_team':False,
+            'event_management_team':False,
+            'logistic_and_operation_team':False,
+            'promotion_team':False,
+            'public_relation_team':False,
+            'membership_development_team':False,
+            'media_team':False,
+            'graphics_team':False,
+            'finance_and_corporate_team':False,
+        }
+
+        return render(request,"task_forward_to_members.html",context)
+    else:
+        return render(request,'access_denied2.html')

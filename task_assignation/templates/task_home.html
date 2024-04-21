@@ -272,9 +272,66 @@
         {% block sidebar %} {% include 'users/sidebar.html' %} {% endblock %}
       </div>
 
-      <div id="content" class="app-content box-shadow-z0" role="main">
-        {% block navbar %} {% include 'navbar.html' %} {% endblock navbar %}
-      </div>
+      <!-- navbar -->
+      <div id="content" class="app-content" role="main">
+        {% if is_branch %}
+        {% block navbar %}
+            {% include 'navbar.html' %} 
+        {% endblock navbar %}
+
+        {% elif content_and_writing_team %}
+        {% block caw_navbar %}
+            {% include 'content_navbar.html' %} 
+        {% endblock caw_navbar %}
+
+        {% elif event_management_team %}
+        {% block emt_navbar %}
+            {% include 'emt_navbar.html' %} 
+        {% endblock emt_navbar %}
+
+        {% elif logistic_and_operation_team %}
+        {% block lot_navbar %}
+            {% include 'logistics_navbar.html' %} 
+        {% endblock lot_navbar %}
+
+        {% elif promotion_team %}
+        {% block promotion_navbar %}
+            {% include 'promotions_navbar.html' %} 
+        {% endblock promotion_navbar %}
+
+        {% elif public_relation_team %}
+        {% block prt_navbar %}
+            {% include 'public_relation_team/public_relation_navbar.html' %} 
+        {% endblock prt_navbar %}
+
+        {% elif membership_development_team %}
+        {% block mdt_navbar %}
+            {% include 'mdt_navbar.html' %} 
+        {% endblock mdt_navbar %}
+
+        {% elif media_team %}
+        {% block media_navbar %}
+            {% include 'media_navbar.html' %} 
+        {% endblock media_navbar %}
+
+        {% elif graphics_team %}
+        {% block graphics_navbar %}
+            {% include 'graphics_navbar.html' %} 
+        {% endblock graphics_navbar %}
+
+        {% elif finance_and_corporate_team %}
+        {% block finance_navbar %}
+            {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+        {% endblock finance_navbar %}
+
+        {% elif web_dev_team %}
+        {% block web_navbar %}
+            {% include 'website_development_team/web_navbar.html' %} 
+        {% endblock web_navbar %}
+
+        {% endif %}
+        
+    </div>
 
       <div ui-view class="app-body" style="justify-content: center; margin-left: 15%; margin-right: 15%" id="view" >
         <h2
@@ -364,9 +421,51 @@
                   {% for task in all_tasks %}
                   <tr>
                     <td style="color: #00629b">
+                      {% if is_branch %}
                       <a href="{% url 'central_branch:task_edit' task.pk %}"
                         >{{task.title}}</a
                       >
+                      {% elif web_dev_team %}
+                      <a href="{% url 'website_development_team:task_edit' task.pk %}"
+                        >{{task.title}}</a
+                      >
+                      {% elif content_and_writing_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif event_management_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif logistic_and_operation_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif promotion_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif public_relation_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif membership_development_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif media_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif graphics_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% elif finance_and_corporate_team %}
+                      <a href=""
+                        >{{task.title}}</a
+                      >
+                      {% endif %}
                     </td>
                     <td>{{task.deadline}}</td>
                     {% if task.is_task_completed %}
