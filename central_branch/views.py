@@ -4563,6 +4563,7 @@ def task_home(request):
             'graphics_team':False,
             'finance_and_corporate_team':False,
             'team_primary':team_primary,
+            'user':user,
         }
 
         return render(request,"task_home.html",context)
