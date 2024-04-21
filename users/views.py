@@ -597,9 +597,11 @@ def my_tasks(request):
         user_data=current_user.getUserData() #getting user data as dictionary file
         all_user_tasks = Task_Assignation.load_user_tasks(user)
         total_point = 0
+        team_primary = None
         try:
             user = Members.objects.get(ieee_id = user)
             total_point = user.completed_task_points
+            team_primary = user.team.primary
         except:
             user = adminUsers.objects.get(username=user)
 
@@ -609,6 +611,8 @@ def my_tasks(request):
             'all_tasks':all_user_tasks,
             'total_points':total_point,
             'user':user,
+            'team_primary':team_primary,
+
         }
         return render(request,"users/my_tasks.html",context)
     except Exception as e:

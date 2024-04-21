@@ -253,11 +253,39 @@
                       {% for task,earned_points in all_tasks.items %}
                       <tr>
                         <td>{{forloop.counter }}</td>
+                          {% if task.task_type == "Individuals" %}
                           <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
+                          {% else %}
+                            {% if team_primary == 1 %}
+                            <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
+                            {% elif team_primary == 2 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 3 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 4 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 5 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 6 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 7 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 8 %}
+                            <td style="color: #00629b"><a href="{% url 'website_development_team:task_edit' task.pk %}" >{{task.title}}</a></td>
+                            {% elif team_primary == 9 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 10 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 11 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 0 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% endif %}
+                          {% endif %}
                           <td>{{task.deadline}}</td>
                           <td>{{task.task_category.points}}</td>
                           {% if not user.position.is_eb_member %}
-                          <td>{{earned_points.completion_points}}</td>
+                          <td>{% if task.is_task_completed %}{{earned_points.completion_points}}{% else %}0{% endif %}</td>
                           {% endif %}
                           {% if task.is_task_completed %}
                           <td>

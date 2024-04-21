@@ -4511,7 +4511,14 @@ def create_task(request):
 def task_home(request):
 
     try:
+        team_primary=None
         # get all sc ag for sidebar
+        try:
+            user = request.user.username
+            user = Members.objects.get(ieee_id = user)
+            team_primary = user.team.primary
+        except:
+            pass
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -4523,6 +4530,7 @@ def task_home(request):
 
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
+        
 
         if request.method == "POST":
 
@@ -4554,6 +4562,7 @@ def task_home(request):
             'media_team':False,
             'graphics_team':False,
             'finance_and_corporate_team':False,
+            'team_primary':team_primary,
         }
 
         return render(request,"task_home.html",context)

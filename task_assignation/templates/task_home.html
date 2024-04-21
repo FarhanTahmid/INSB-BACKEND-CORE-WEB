@@ -420,53 +420,37 @@
                 <tbody>
                   {% for task in all_tasks %}
                   <tr>
-                    <td style="color: #00629b">
-                      {% if is_branch %}
-                      <a href="{% url 'central_branch:task_edit' task.pk %}"
-                        >{{task.title}}</a
-                      >
-                      {% elif web_dev_team %}
-                      <a href="{% url 'website_development_team:task_edit' task.pk %}"
-                        >{{task.title}}</a
-                      >
-                      {% elif content_and_writing_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif event_management_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif logistic_and_operation_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif promotion_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif public_relation_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif membership_development_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif media_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif graphics_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% elif finance_and_corporate_team %}
-                      <a href=""
-                        >{{task.title}}</a
-                      >
-                      {% endif %}
-                    </td>
+                      {% if task.task_type == "Individuals" %}
+                          <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
+                          {% else %}
+                            {% if team_primary == 1 %}
+                            <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
+                            {% elif team_primary == 2 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 3 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 4 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 5 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 6 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 7 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 8 %}
+                            <td style="color: #00629b"><a href="{% url 'website_development_team:task_edit' task.pk %}" >{{task.title}}</a></td>
+                            {% elif team_primary == 9 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 10 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 11 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == 0 %}
+                            <td style="color: #00629b"><a href="" >{{task.title}}</a></td>
+                            {% elif team_primary == None %}
+                            <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
+                            {% endif %}
+                          {% endif %}
                     <td>{{task.deadline}}</td>
                     {% if task.is_task_completed %}
                     <td>
