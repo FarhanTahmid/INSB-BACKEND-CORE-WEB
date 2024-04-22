@@ -950,10 +950,10 @@
 
                   {% if task.task_type == "Team" and has_team_task_options_view_access %}
                     {% if is_branch %}
-                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
+                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Foward Task to Team Members{% endif %}</a>
 
                     {% elif web_dev_team %}
-                    <a href="{% url 'website_development_team:add_task' task.pk %}" class="add-members-task-btn">Add members and task</a>
+                    <a href="{% url 'website_development_team:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Foward Task to Team Members{% endif %}</a>
 
                     {% elif content_and_writing_team %}
                     <a href="" class="add-members-task-btn">Add members and task</a>

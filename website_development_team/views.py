@@ -153,6 +153,7 @@ def manage_team(request):
 def task_home(request):
     try:
 
+        user = request.user.username
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
@@ -160,6 +161,13 @@ def task_home(request):
         team = WesbiteDevelopmentTeam.get_team_id()
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
         web_dev_team_tasks = Task.objects.filter(task_of = society,team = team)
+
+        team_primary = None
+        try:
+            user = Members.objects.get(ieee_id = user)
+            team_primary = user.team.primary
+        except:
+            user = adminUsers.objects.get(username=user)
 
         context={
                 'user_data':user_data,
@@ -178,6 +186,8 @@ def task_home(request):
                 'media_team':False,
                 'graphics_team':False,
                 'finance_and_corporate_team':False,
+                'team_primary':team_primary,
+                
 
                 
             }
@@ -269,7 +279,7 @@ def task_edit(request, task_id):
         
         task_categories = Task_Category.objects.all()
         teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
+        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,teams)
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
         #this is being done to ensure that he can click start button only if it is his task
@@ -282,6 +292,14 @@ def task_edit(request, task_id):
         if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
             create_individual_task_access = False
             create_team_task_access = False       
+
+        curr_team = WesbiteDevelopmentTeam.get_team_id()
+    
+        try:
+            forward_task = Team_Task_Forward.objects.get(task = task,team=curr_team)
+            is_forwarded = forward_task.is_forwarded
+        except:
+            is_forwarded= False
 
         context={
                 'user_data':user_data,
@@ -315,7 +333,8 @@ def task_edit(request, task_id):
                 'create_team_task_access':create_team_task_access,
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
-                'has_team_task_options_view_access':has_team_task_options_view_access
+                'has_team_task_options_view_access':has_team_task_options_view_access,
+                'is_forwarded':is_forwarded,
         }
 
         return render(request,"create_task.html",context)
@@ -344,61 +363,75 @@ def add_task(request, task_id):
     except:
         logged_in_user = adminUsers.objects.get(username=request.user.username)
 
-    has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
+    team = WesbiteDevelopmentTeam.get_team_id()
+    team_members_loaded = Task_Assignation.load_insb_members_for_task_assignation(request,team)
+    print(team_members_loaded)
+    all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,team)
+    print(all_members)
+    try:
+        forward_task = Team_Task_Forward.objects.get(task = task,team=team)
+        is_forwarded = forward_task.is_forwarded
+    except:
+        is_forwarded= False
+    # has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
 
-    if has_access:
-        if request.method == 'POST':
+    # if has_access:
+    if request.method == 'POST':
 
             task_types_per_member = {}
             member_select = request.POST.getlist('member_select')
             for member_id in member_select:
                 member_name = request.POST.getlist(member_id + '_task_type[]')
                 task_types_per_member[member_id] = member_name
-            
+
             #If task is completed then do not update task params
             if(task.is_task_completed):
                 messages.info(request,'Task is completed already!')
                 return redirect('website_development_team:add_task',task_id)
 
-            if(Task_Assignation.add_task_params(task_id, member_select, task_types_per_member)):
+            if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team)):
                 #If it is a team task and no members were selected then show message but save other params
                 if(not member_select):
-                    messages.info(request,'Saved changes. Please select a member to forward tasks!')
+                    messages.info(request,'Please select a member to forward tasks!')
                 else:
                     #Else members were selected
-                    messages.success(request,"Task params updated successfully!")
+                    messages.success(request,"Task Forwarded Successfully!")
             else:
-                messages.warning(request,"We're a failure")
+                messages.warning(request,"Could not forward task! Try again later")
 
             return redirect('website_development_team:add_task',task_id)
         
-        team_members = []
-        #Get all team members from the selected teams
-        for team in task.team.all():
-            members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
-            for member in members:
-                if not member.position.is_co_ordinator:
-                    team_members.append(member)                      
+    # team_members = []
+    # #Get all team members from the selected teams
+    # for team in task.team.all():
+    #     members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+    #     for member in members:
+    #         if not member.position.is_co_ordinator:
+    #             team_members.append(member)                      
 
-        context = {
-            'task':task,
-            'team_members':team_members,
-            'all_sc_ag':sc_ag,
-            'user_data':user_data,
+    context = {
+        'task':task,
+        # 'team_members':team_members,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
 
-            'is_branch':False,
-            'web_dev_team':True,
-            'content_and_writing_team':False,
-            'event_management_team':False,
-            'logistic_and_operation_team':False,
-            'promotion_team':False,
-            'public_relation_team':False,
-            'membership_development_team':False,
-            'media_team':False,
-            'graphics_team':False,
-            'finance_and_corporate_team':False,
-        }
+        'is_branch':False,
+        'web_dev_team':True,
+        'content_and_writing_team':False,
+        'event_management_team':False,
+        'logistic_and_operation_team':False,
+        'promotion_team':False,
+        'public_relation_team':False,
+        'membership_development_team':False,
+        'media_team':False,
+        'graphics_team':False,
+        'finance_and_corporate_team':False,
+        'team_members':team_members_loaded,
+        'is_forwarded':is_forwarded,
+        'load_members_with_task_type':all_members,
+        'team':team,
+    }
 
-        return render(request,"task_forward_to_members.html",context)
-    else:
-        return render(request,'access_denied2.html')
+    return render(request,"task_forward_to_members.html",context)
+    # else:
+    #     return render(request,'access_denied2.html')

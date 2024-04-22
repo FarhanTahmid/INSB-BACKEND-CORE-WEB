@@ -145,3 +145,15 @@ class Team_Task_Point(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+
+class Team_Task_Forward(models.Model):
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    team = models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE)
+    is_forwarded = models.BooleanField(default = False)
+
+    class Meta:
+        verbose_name="Team Task Forwarded"
+
+    def __str__(self) -> str:
+        return str(self.pk)
+

@@ -7,7 +7,7 @@ from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
 
-from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types,Task_Drive_Link,Task_Content,Permission_Paper,Task_Document,Task_Media,Team_Task_Point
+from task_assignation.models import Member_Task_Point, Task, Task_Category,Task_Log,Member_Task_Upload_Types,Task_Drive_Link,Task_Content,Permission_Paper,Task_Document,Task_Media,Team_Task_Point,Team_Task_Forward
 from users.models import Members, Panel_Members
 from datetime import datetime,timedelta
 from django.utils import timezone
@@ -70,7 +70,9 @@ class Task_Assignation:
                 #saving team points
                 for team in teams:
                     team_point = Team_Task_Point.objects.create(task=new_task,team = team) 
-                    team_point.save()                  
+                    team_point.save()    
+                    team_forward = Team_Task_Forward.objects.create(task = new_task,team = team)
+                    team_forward.save()         
 
                 #getting team names as list
                 team_names = []
@@ -551,20 +553,66 @@ class Task_Assignation:
 
         return True
 
-    def add_task_params(task_id, member_select, task_types_per_member):
-        ''' This function is used to add members and/or task params '''
+    def forward_task(request,task_id,task_types_per_member,team):
+        ''' This function is used foward the task to other mebers '''
         
         #Get the task using the task_id
         task = Task.objects.get(id=task_id)
+        members_list = []
+        #saving members task type as per needed
+        for ieee_id,task_type in task_types_per_member.items():
+            new_intance = Member_Task_Point.objects.create(task = task,member = ieee_id)
+            new_intance.save()
 
-        #If any members are selected then clear it and add new members if there are any
-        # if member_select:
-        #     task.members.clear()
-        #     task.members.add(*member_select)
-        # else:
-        #     #Otherwise just clear it
-        #     task.members.clear()
-        
+            memb = Members.objects.get(ieee_id = ieee_id)
+            members_list.append(memb)
+            member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
+            member_task_type.save()
+            message = ""
+            for i in task_type:
+                if i=="permission_paper":
+                    member_task_type.has_permission_paper = True
+                    member_task_type.save()
+                    message += "Permission Paper,"
+                if i=="content":
+                    member_task_type.has_content = True
+                    member_task_type.save()
+                    message += "Content,"
+                if i=="file_upload":
+                    member_task_type.has_file_upload = True
+                    member_task_type.save()
+                    message += "File Upload,"
+                if i=="media":
+                    member_task_type.has_media = True
+                    member_task_type.save()
+                    message += "Media,"
+                if i=="drive_link":
+                    member_task_type.has_drive_link = True
+                    member_task_type.save()
+                    message += "drive link"
+            #saving task log/ updating it
+            if message!="":
+                message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
+                task_log_message = f'Task Name: {task.title}, {message}'
+                Task_Assignation.save_task_logs(task,task_log_message)
+
+        team_forward = Team_Task_Forward.objects.get(task = task,team=team)
+        team_forward.is_forwarded = True
+        team_forward.save()
+
+        #Updating the coordinator points
+        coordinator = task.members.all()
+        for mem in coordinator:
+            if mem.team:
+                if mem.team.primary == team.primary:
+                    points = Member_Task_Point.objects.get(task = task,member = mem.ieee_id)
+                    points.completion_points = (0.3 * task.task_category.points)
+                    points.save()
+            
+        print(task.members.all())
+        task.members.add(*members_list)
+        print(task.members.all())
+
         return True
     
     def load_team_members_for_task_assignation(request, team_primary):
@@ -605,7 +653,7 @@ class Task_Assignation:
 
         return team_members
     
-    def load_insb_members_for_task_assignation(request):
+    def load_insb_members_for_task_assignation(request,team):
         try:
             #If the requesting user is a member
             requesting_member = Members.objects.get(ieee_id=request.user.username)
@@ -618,16 +666,16 @@ class Task_Assignation:
             #If the position is below the position of the requesting user then add it to the list
             #Here rank is used to determine the position. Higher the rank, less the position
             #Here __gt is "Greater Than"
-            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
+            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team)
         else:
             #Admin user so load all members
-            members = Members.objects.all()
+            members = Members.objects.filter(team=team)
         dic = {}
         for member in members:
             dic.update({member:None})
         return dic
     
-    def load_insb_members_with_upload_types_for_task_assignation(request, task):
+    def load_insb_members_with_upload_types_for_task_assignation(request, task,team):
         ''' This function load all insb members whose positions are below the position of the requesting user. Works for both admin and regular user '''
         #Check the type of requesting user
         try:
@@ -650,10 +698,10 @@ class Task_Assignation:
             #If the position is below the position of the requesting user then add it to the list
             #Here rank is used to determine the position. Higher the rank, less the position
             #Here __gt is "Greater Than"
-            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank).exclude(ieee_id__in=task.members.all())
+            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
         else:
             #Admin user so load all members
-            members = Members.objects.filter().exclude(ieee_id__in=task.members.all())
+            members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
         
         for member in members:
             dic.update({member : None})

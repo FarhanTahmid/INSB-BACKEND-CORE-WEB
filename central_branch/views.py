@@ -4472,7 +4472,7 @@ def create_task(request):
             
             task_categories = Task_Category.objects.all()
             teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-            all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
+            all_members = Task_Assignation.load_insb_members_for_task_assignation(request,Teams.objects.get(primary = 1))
 
             context = {
                 'is_new_task':True, #Task is being created. Use it to disable some ui in the template
@@ -4780,6 +4780,8 @@ def add_task(request, task_id):
     except:
         logged_in_user = adminUsers.objects.get(username=request.user.username)
 
+    team_members_loaded = Task_Assignation.load_insb_members_for_task_assignation(request,Teams.objects.get(primary = 1))
+
     has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
 
     if has_access:
@@ -4833,6 +4835,7 @@ def add_task(request, task_id):
             'media_team':False,
             'graphics_team':False,
             'finance_and_corporate_team':False,
+            'team_members':team_members_loaded,
         }
 
         return render(request,"task_forward_to_members.html",context)
@@ -4922,7 +4925,7 @@ def task_edit(request, task_id):
         
         task_categories = Task_Category.objects.all()
         teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
+        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,Teams.objects.get(primary = 1))
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
         #this is being done to ensure that he can click start button only if it is his task
