@@ -423,7 +423,7 @@
                       {% if task.task_type == "Individuals" %}
                           <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
                           {% else %}
-                            {% if team_primary == 1 or  team_primary == None or user.position.is_eb_member or user.position.is_faculty %}
+                            {% if team_primary == 1 or  team_primary == None %}
                             <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
                             {% elif team_primary == 2 %}
                             <td style="color: #00629b"><a href="" >{{task.title}}</a></td>

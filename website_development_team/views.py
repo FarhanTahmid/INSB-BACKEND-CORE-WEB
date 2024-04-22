@@ -279,7 +279,7 @@ def task_edit(request, task_id):
         
         task_categories = Task_Category.objects.all()
         teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,teams)
+        all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
         #this is being done to ensure that he can click start button only if it is his task
@@ -364,10 +364,8 @@ def add_task(request, task_id):
         logged_in_user = adminUsers.objects.get(username=request.user.username)
 
     team = WesbiteDevelopmentTeam.get_team_id()
-    team_members_loaded = Task_Assignation.load_insb_members_for_task_assignation(request,team)
-    print(team_members_loaded)
-    all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,team)
-    print(all_members)
+    
+
     try:
         forward_task = Team_Task_Forward.objects.get(task = task,team=team)
         is_forwarded = forward_task.is_forwarded
@@ -400,18 +398,13 @@ def add_task(request, task_id):
                 messages.warning(request,"Could not forward task! Try again later")
 
             return redirect('website_development_team:add_task',task_id)
-        
-    # team_members = []
-    # #Get all team members from the selected teams
-    # for team in task.team.all():
-    #     members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
-    #     for member in members:
-    #         if not member.position.is_co_ordinator:
-    #             team_members.append(member)                      
+            
+    #Get all team members from the selected teams
+    team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)                   
 
     context = {
         'task':task,
-        # 'team_members':team_members,
+        'team_members':team_members,
         'all_sc_ag':sc_ag,
         'user_data':user_data,
 
@@ -426,9 +419,7 @@ def add_task(request, task_id):
         'media_team':False,
         'graphics_team':False,
         'finance_and_corporate_team':False,
-        'team_members':team_members_loaded,
         'is_forwarded':is_forwarded,
-        'load_members_with_task_type':all_members,
         'team':team,
     }
 

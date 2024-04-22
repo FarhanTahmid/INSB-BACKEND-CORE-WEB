@@ -653,7 +653,7 @@ class Task_Assignation:
 
         return team_members
     
-    def load_insb_members_for_task_assignation(request,team):
+    def load_insb_members_for_task_assignation(request):
         try:
             #If the requesting user is a member
             requesting_member = Members.objects.get(ieee_id=request.user.username)
@@ -666,10 +666,10 @@ class Task_Assignation:
             #If the position is below the position of the requesting user then add it to the list
             #Here rank is used to determine the position. Higher the rank, less the position
             #Here __gt is "Greater Than"
-            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team)
+            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
         else:
             #Admin user so load all members
-            members = Members.objects.filter(team=team)
+            members = Members.objects.all()
         dic = {}
         for member in members:
             dic.update({member:None})
@@ -698,10 +698,16 @@ class Task_Assignation:
             #If the position is below the position of the requesting user then add it to the list
             #Here rank is used to determine the position. Higher the rank, less the position
             #Here __gt is "Greater Than"
-            members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
+            if team:
+                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
+            else:
+                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
         else:
             #Admin user so load all members
-            members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
+            if team:
+                members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
+            else:
+                members = Members.objects.all()
         
         for member in members:
             dic.update({member : None})

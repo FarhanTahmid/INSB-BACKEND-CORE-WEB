@@ -647,7 +647,11 @@
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
+                        {% if my_task %}
+                        <a href="{% url 'users:task_edit' task.pk %}" class="image-button">
+                        {% else %}
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                        {% endif %}
                           <img src="/static/back-arrow.png" alt="Go to Task Details">
                         </a>
                         <span class="tooltip-text">Go to Task Details</span>
@@ -861,7 +865,11 @@
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
+                        {% if my_task %}
+                        <a href="{% url 'users:task_edit' task.pk %}" class="image-button">
+                        {% else %}
                         <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                        {% endif %}
                           <img src="/static/back-arrow.png" alt="Go back to session">
                         </a>
                         <span class="tooltip-text">Go back</span>

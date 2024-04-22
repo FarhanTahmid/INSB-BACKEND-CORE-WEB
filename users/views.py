@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from system_administration.models import adminUsers
+from task_assignation.models import Task,Member_Task_Upload_Types, Task_Category, Task_Log
 from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
@@ -23,8 +24,9 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
-from .renderData import member_login_permission
+from .renderData import LoggedinUser, member_login_permission
 from task_assignation.renderData import Task_Assignation
+from central_branch.views import task_edit as central_task_edit
 
 logger=logging.getLogger(__name__)
 
@@ -619,4 +621,82 @@ def my_tasks(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+
+@login_required
+@member_login_permission
+def task_edit(request,task_id):
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+
+    create_individual_task_access = False
+    create_team_task_access = False
+    has_team_task_options_view_access = False
+
+    user = request.user.username
+
+    task = Task.objects.get(id=task_id)        
+
+    #Check if the user came from my task page. If yes then the back button will point to my tasks page
+    my_task = True
+    is_user_redirected = False
+    is_task_started_by_member = False
+
+    if 'HTTP_REFERER' in request.META:         
+        if request.META['HTTP_REFERER'][-12:] == 'upload_task/':
+            is_user_redirected = True
+
+    #Check if the user is a member or an admin
+    try:
+        logged_in_user = Members.objects.get(ieee_id = user)
+        try:
+            is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
+            if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
+                return redirect('users:upload_task',task.pk)
+        except:
+            pass
+    except:
+        logged_in_user = adminUsers.objects.get(username=user)
     
+    task_categories = Task_Category.objects.all()
+
+    #checking to see if points to be deducted
+    late = Task_Assignation.deduct_points_for_members(task)
+    #this is being done to ensure that he can click start button only if it is his task
+
+    #getting all task logs for this task
+    task_logs = Task_Log.objects.get(task_number = task)
+
+    is_member_view = logged_in_user in task.members.all()  
+
+    context = {
+        'task':task,
+        'task_categories':task_categories,
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+        'logged_in_user':logged_in_user,
+        'is_late':late,
+        'my_task':my_task,
+        'task_logs':task_logs.task_log_details,
+        'create_individual_task_access':create_individual_task_access,
+        'create_team_task_access':create_team_task_access,
+        'is_member_view':is_member_view,
+        'is_task_started_by_member':is_task_started_by_member,
+        'has_team_task_options_view_access':has_team_task_options_view_access,
+
+        'is_branch':True,
+        'web_dev_team':False,
+        'content_and_writing_team':False,
+        'event_management_team':False,
+        'logistic_and_operation_team':False,
+        'promotion_team':False,
+        'public_relation_team':False,
+        'membership_development_team':False,
+        'media_team':False,
+        'graphics_team':False,
+        'finance_and_corporate_team':False,
+    }
+
+    return render(request,"create_task.html",context)

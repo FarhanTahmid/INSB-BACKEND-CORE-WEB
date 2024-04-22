@@ -4472,7 +4472,7 @@ def create_task(request):
             
             task_categories = Task_Category.objects.all()
             teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-            all_members = Task_Assignation.load_insb_members_for_task_assignation(request,Teams.objects.get(primary = 1))
+            all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
             context = {
                 'is_new_task':True, #Task is being created. Use it to disable some ui in the template
@@ -4513,12 +4513,6 @@ def task_home(request):
     try:
         team_primary=None
         # get all sc ag for sidebar
-        try:
-            user = request.user.username
-            user = Members.objects.get(ieee_id = user)
-            team_primary = user.team.primary
-        except:
-            pass
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -4563,7 +4557,6 @@ def task_home(request):
             'graphics_team':False,
             'finance_and_corporate_team':False,
             'team_primary':team_primary,
-            'user':user,
         }
 
         return render(request,"task_home.html",context)
@@ -4590,7 +4583,13 @@ def upload_task(request, task_id):
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
         
         this_is_users_task = False
+        my_task = False
         comments = None
+
+        if 'HTTP_REFERER' in request.META:
+            if 'my_tasks/' in request.META['HTTP_REFERER']:
+                my_task = True
+
         #to check if this is users task
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
@@ -4669,7 +4668,11 @@ def upload_task(request, task_id):
                         messages.success(request,"Task Saved! Please finish it as soon as you can")
                     else:
                         messages.warning(request,"Something went wrong while saving the task!")
-                    return redirect('central_branch:upload_task',task_id)
+
+                    if my_task:
+                        return redirect('users:upload_task',task_id)
+                    else:
+                        return redirect('central_branch:upload_task',task_id)
                 elif request.POST.get('add_comment'):
                     member_id = request.POST.get('comments_member')
                     comments = request.POST.get('comments_details')
@@ -4717,7 +4720,10 @@ def upload_task(request, task_id):
                     else:
                         messages.warning(request,"Something went wrong while saving the task!")
             
-                    return redirect('central_branch:upload_task',task_id)
+                    if my_task:
+                        return redirect('users:upload_task',task_id)
+                    else:
+                        return redirect('central_branch:upload_task',task_id)
                 
                 elif request.POST.get('delete_doc'):
                     doc = Task_Document.objects.get(id=request.POST.get('doc_id'))
@@ -4725,7 +4731,11 @@ def upload_task(request, task_id):
                         messages.success(request,"Document deleted successfully!")
                     else:
                         messages.warning(request,"Something went wrong while deleting the document!")
-                    return redirect('central_branch:upload_task',task_id)
+                    
+                    if my_task:
+                        return redirect('users:upload_task',task_id)
+                    else:
+                        return redirect('central_branch:upload_task',task_id)
                 
                 elif request.POST.get('delete_image'):
                     media = Task_Media.objects.get(id=request.POST.get('image_id'))
@@ -4733,7 +4743,11 @@ def upload_task(request, task_id):
                         messages.success(request,"Media deleted successfully!")
                     else:
                         messages.warning(request,"Something went wrong while deleting the media!")
-                    return redirect('central_branch:upload_task',task_id)
+
+                    if my_task:
+                        return redirect('users:upload_task',task_id)
+                    else:
+                        return redirect('central_branch:upload_task',task_id)
 
             context = {
                 'all_sc_ag':sc_ag,
@@ -4750,6 +4764,7 @@ def upload_task(request, task_id):
                 'comments':comments,
                 'create_individual_task_access':create_individual_task_access,
                 'create_team_task_access':create_team_task_access,
+                'my_task':my_task
             }
 
             return render(request,"task_page.html",context)
@@ -4780,8 +4795,6 @@ def add_task(request, task_id):
     except:
         logged_in_user = adminUsers.objects.get(username=request.user.username)
 
-    team_members_loaded = Task_Assignation.load_insb_members_for_task_assignation(request,Teams.objects.get(primary = 1))
-
     has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
 
     if has_access:
@@ -4811,12 +4824,27 @@ def add_task(request, task_id):
             return redirect('central_branch:add_task',task_id)
         
         team_members = []
-        #Get all team members from the selected teams
-        for team in task.team.all():
-            members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
-            for member in members:
-                if not member.position.is_co_ordinator:
-                    team_members.append(member)                      
+        if type(logged_in_user) == Members:
+            if logged_in_user.position.is_eb_member:
+                #Get all team members from the selected teams
+                for team in task.team.all():
+                    members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+                    for member in members:
+                        if not member.position.is_co_ordinator:
+                            team_members.append(member)
+            else:
+                members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=logged_in_user.team.primary)
+                for member in members:
+                    if not member.position.is_co_ordinator:
+                        team_members.append(member)
+        else:
+            #Get all team members from the selected teams
+            for team in task.team.all():
+                members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+                for member in members:
+                    if not member.position.is_co_ordinator:
+                        team_members.append(member)
+                                  
 
         context = {
             'task':task,
@@ -4835,7 +4863,6 @@ def add_task(request, task_id):
             'media_team':False,
             'graphics_team':False,
             'finance_and_corporate_team':False,
-            'team_members':team_members_loaded,
         }
 
         return render(request,"task_forward_to_members.html",context)
@@ -4899,12 +4926,12 @@ def task_edit(request, task_id):
 
                 team_select = None
                 member_select = None
+                task_types_per_member = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
-                    task_types_per_member = {}
                     for member_id in member_select:
                         member_name = request.POST.getlist(member_id + '_task_type[]')
                         task_types_per_member[member_id] = member_name
@@ -4925,7 +4952,9 @@ def task_edit(request, task_id):
         
         task_categories = Task_Category.objects.all()
         teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,Teams.objects.get(primary = 1))
+        all_members = None
+        if task.task_type == "Individual":
+            all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,None)
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
         #this is being done to ensure that he can click start button only if it is his task

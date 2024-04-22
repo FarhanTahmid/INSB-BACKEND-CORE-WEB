@@ -254,7 +254,7 @@
                       <tr>
                         <td>{{forloop.counter }}</td>
                           {% if task.task_type == "Individuals" %}
-                          <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
+                          <td style="color: #00629b"><a href="{% url 'users:task_edit' task.pk %}" >{{task.title}}</a></td>
                           {% else %}
                             {% if team_primary == 1 %}
                             <td style="color: #00629b"><a href="{% url 'central_branch:task_edit' task.pk %}" >{{task.title}}</a></td>
