@@ -4510,8 +4510,7 @@ def create_task(request):
 @member_login_permission
 def task_home(request):
 
-    try:
-        team_primary=None
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
@@ -4556,14 +4555,14 @@ def task_home(request):
             'media_team':False,
             'graphics_team':False,
             'finance_and_corporate_team':False,
-            'team_primary':team_primary,
+            'app_name':'central_branch'
         }
 
         return render(request,"task_home.html",context)
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 
 @login_required
@@ -4777,7 +4776,7 @@ def upload_task(request, task_id):
 
 @login_required
 @member_login_permission
-def add_task(request, task_id):
+def add_task(request, task_id, team_primary=None):
 
     task = Task.objects.get(id=task_id)
 
@@ -4798,6 +4797,26 @@ def add_task(request, task_id):
     has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
 
     if has_access:
+        app_name='central_branch'
+        if team_primary:
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+        
+        team=None
+        if team_primary:
+            try:
+                team = Teams.objects.get(primary=team_primary)
+                forward_task = Team_Task_Forward.objects.get(task = task,team=team)
+                is_forwarded = forward_task.is_forwarded
+            except:
+                is_forwarded=False
+        else:
+            try:
+                team = logged_in_user.team
+                forward_task = Team_Task_Forward.objects.get(task = task,team=team)
+                is_forwarded = forward_task.is_forwarded
+            except:
+                is_forwarded = False
+
         if request.method == 'POST':
 
             task_types_per_member = {}
@@ -4811,7 +4830,7 @@ def add_task(request, task_id):
                 messages.info(request,'Task is completed already!')
                 return redirect('central_branch:add_task',task_id)
 
-            if(Task_Assignation.add_task_params(task_id, member_select, task_types_per_member)):
+            if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team)):
                 #If it is a team task and no members were selected then show message but save other params
                 if(not member_select):
                     messages.info(request,'Saved changes. Please select a member to forward tasks!')
@@ -4823,34 +4842,36 @@ def add_task(request, task_id):
 
             return redirect('central_branch:add_task',task_id)
         
-        team_members = []
+        team_members = {}
         if type(logged_in_user) == Members:
             if logged_in_user.position.is_eb_member:
                 #Get all team members from the selected teams
                 for team in task.team.all():
-                    members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
-                    for member in members:
-                        if not member.position.is_co_ordinator:
-                            team_members.append(member)
+                    team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                    # for member in members:
+                    #     if not member.position.is_co_ordinator:
+                    #         team_members.append(member)
             else:
-                members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=logged_in_user.team.primary)
-                for member in members:
-                    if not member.position.is_co_ordinator:
-                        team_members.append(member)
+                team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=logged_in_user.team.primary)
+                # for member in members:
+                #     if not member.position.is_co_ordinator:
+                #         team_members.append(member)
         else:
             #Get all team members from the selected teams
             for team in task.team.all():
-                members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
-                for member in members:
-                    if not member.position.is_co_ordinator:
-                        team_members.append(member)
-                                  
+                team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                # for member in members:
+                #     if not member.position.is_co_ordinator:
+                #         team_members.append(member)                                  
 
         context = {
             'task':task,
             'team_members':team_members,
             'all_sc_ag':sc_ag,
             'user_data':user_data,
+            'app_name':app_name,
+            'team_primary':team_primary,
+            'is_forwarded':is_forwarded,
 
             'is_branch':True,
             'web_dev_team':False,
@@ -4871,7 +4892,7 @@ def add_task(request, task_id):
 
 @login_required
 @member_login_permission
-def task_edit(request, task_id):
+def task_edit(request, task_id, team_primary=None):
 
     try:
         # get all sc ag for sidebar
@@ -4892,6 +4913,10 @@ def task_edit(request, task_id):
         is_user_redirected = False
         is_task_started_by_member = False
 
+        app_name = 'central_branch'
+        if team_primary:
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+
         if 'HTTP_REFERER' in request.META:
             if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
                 my_task = True
@@ -4907,7 +4932,7 @@ def task_edit(request, task_id):
             try:
                 is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
                 if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
-                    return redirect('central_branch:upload_task',task.pk)
+                    return redirect(f'central_branch:upload_task',task.pk)
             except:
                 pass
         except:
@@ -4984,6 +5009,8 @@ def task_edit(request, task_id):
             'is_member_view':is_member_view,
             'is_task_started_by_member':is_task_started_by_member,
             'has_team_task_options_view_access':has_team_task_options_view_access,
+            'app_name':app_name,
+            'team_primary':team_primary,
 
             'is_branch':True,
             'web_dev_team':False,

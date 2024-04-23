@@ -1239,3 +1239,31 @@ This is an automated message. Do not reply
                 return False
         elif type(logged_in_user) == adminUsers:
             return True
+        
+    def get_team_app_name(team_primary):
+        if team_primary == 0:
+            return ''
+        elif team_primary == 1:
+            return 'central_branch'
+        elif team_primary == 2:
+            return 'content_writing_and_publications_team'
+        elif team_primary == 3:
+            return 'events_and_management_team'
+        elif team_primary == 4:
+            return 'logistics_and_operations_team'
+        elif team_primary == 5:
+            return ''
+        elif team_primary == 6:
+            return ''
+        elif team_primary == 7:
+            return 'membership_development_team'
+        elif team_primary == 8:
+            return 'website_development_team'
+        elif team_primary == 9:
+            return 'media_team'
+        elif team_primary == 10:
+            return 'graphics_team'
+        elif team_primary == 11:
+            return 'finance_and_corporate_team'
+        else:
+            return 'central_branch'

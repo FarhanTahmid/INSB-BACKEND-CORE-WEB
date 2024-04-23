@@ -789,11 +789,11 @@
           <div class="form-wrapper">
                 <!--back button-->
                 <div class="tooltip-container">
-                {% if my_task %}
-                <a href="{% url 'users:my_tasks' %}" class="image-button">
+                    {% if my_task %}
+                    <a href="{% url 'users:my_tasks' %}" class="image-button">
                     {% else %}
-                    <a href="{% url 'central_branch:task_home' %}" class="image-button">
-                        {% endif %}
+                    <a href="{% url ''|add:app_name|add:':task_home' %}" class="image-button">
+                    {% endif %}
                         <img src="/static/back-arrow.png" alt="Go back to session">
                     </a>
                     <span class="tooltip-text">Go back</span>
@@ -953,39 +953,10 @@
                   {% endif %}
 
                   {% if task.task_type == "Team" and has_team_task_options_view_access %}
-                    {% if is_branch %}
+                    {% if app_name == 'central_branch' %}
                     <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Foward Task to Team Members{% endif %}</a>
-
-                    {% elif web_dev_team %}
-                    <a href="{% url 'website_development_team:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Foward Task to Team Members{% endif %}</a>
-
-                    {% elif content_and_writing_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif event_management_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif logistic_and_operation_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif promotion_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif public_relation_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif membership_development_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif media_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif graphics_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
-                    {% elif finance_and_corporate_team %}
-                    <a href="" class="add-members-task-btn">Add members and task</a>
-
+                    {% else %}
+                    <a href="{% url ''|add:app_name|add:':team_add_task' team_primary task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Foward Task to Team Members{% endif %}</a>
                     {% endif %}
 
                   {% endif %}
