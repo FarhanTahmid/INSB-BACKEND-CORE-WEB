@@ -400,8 +400,8 @@ def add_task(request, task_id):
             return redirect('website_development_team:add_task',task_id)
             
     #Get all team members from the selected teams
-    team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)                   
-
+    team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task, team_primary=team.primary)                   
+    print(team_members)
     context = {
         'task':task,
         'team_members':team_members,

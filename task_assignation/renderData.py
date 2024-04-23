@@ -559,42 +559,104 @@ class Task_Assignation:
         #Get the task using the task_id
         task = Task.objects.get(id=task_id)
         members_list = []
-        #saving members task type as per needed
-        for ieee_id,task_type in task_types_per_member.items():
-            new_intance = Member_Task_Point.objects.create(task = task,member = ieee_id)
-            new_intance.save()
+        for member in Member_Task_Upload_Types.objects.filter(task=task):
+            #If a member is excluded from task then delete the member's task upload types along with the content (if any) that was previously associated to the member
+            if str(member.task_member) not in task_types_per_member:
+                if member.has_content:
+                    Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                if member.has_drive_link:
+                    Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                if member.has_permission_paper:
+                    Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                if member.has_file_upload:
+                    files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                    for file in files:
+                        Task_Assignation.delete_task_document(file)
+                if member.has_media:
+                    media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                    for media_file in media_files:
+                        Task_Assignation.delete_task_media(media_file)
 
+                member.delete()
+
+        #saving members task type as per needed
+        for ieee_id,task_ty in task_types_per_member.items():
             memb = Members.objects.get(ieee_id = ieee_id)
             members_list.append(memb)
-            member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
+            member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
             member_task_type.save()
             message = ""
-            for i in task_type:
-                if i=="permission_paper":
+            
+            # Setting Log messages based on which upload type was selected
+            if "permission_paper" in task_ty:
+                if member_task_type.has_permission_paper:
+                    pass
+                else:
                     member_task_type.has_permission_paper = True
-                    member_task_type.save()
-                    message += "Permission Paper,"
-                if i=="content":
+                    message += "Permission Paper Added,"
+            else:
+                if member_task_type.has_permission_paper:
+                    Permission_Paper.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                    message += "Permission Paper Removed,"
+                member_task_type.has_permission_paper = False
+
+            if "content" in task_ty:
+                if member_task_type.has_content:
+                    pass
+                else:
                     member_task_type.has_content = True
-                    member_task_type.save()
-                    message += "Content,"
-                if i=="file_upload":
-                    member_task_type.has_file_upload = True
-                    member_task_type.save()
-                    message += "File Upload,"
-                if i=="media":
-                    member_task_type.has_media = True
-                    member_task_type.save()
-                    message += "Media,"
-                if i=="drive_link":
+                    message += "Content Added,"
+            else:
+                if member_task_type.has_content:
+                    Task_Content.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                    message += "Content Removed,"
+                member_task_type.has_content = False
+
+            if "drive_link" in task_ty:
+                if member_task_type.has_drive_link:
+                    pass
+                else:
                     member_task_type.has_drive_link = True
-                    member_task_type.save()
-                    message += "drive link"
-            #saving task log/ updating it
+                    message += "Drive Link Added,"
+            else:
+                if member_task_type.has_drive_link:
+                    Task_Drive_Link.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                    message += "Drive Link Removed,"
+                member_task_type.has_drive_link = False
+
+            if "file_upload" in task_ty:
+                if member_task_type.has_file_upload:
+                    pass
+                else:
+                    member_task_type.has_file_upload = True
+                    message += "File Upload Added,"
+            else:
+                if member_task_type.has_file_upload:
+                    files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
+                    for file in files:
+                        message += f"Document, {file}, Removed,"
+                        Task_Assignation.delete_task_document(file)
+                member_task_type.has_file_upload = False
+
+            if "media" in task_ty:
+                if member_task_type.has_media:
+                    pass
+                else:
+                    member_task_type.has_media = True
+                    message += "Media Added,"
+            else:
+                if member_task_type.has_media:
+                    media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
+                    for media_file in media_files:
+                        message += f"Media, {media_file}, Removed,"
+                        Task_Assignation.delete_task_media(media_file)
+                member_task_type.has_media = False                     
+
+            member_task_type.save()
+
             if message!="":
-                message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
-                task_log_message = f'Task Name: {task.title}, {message}'
-                Task_Assignation.save_task_logs(task,task_log_message)
+                message+=f" by {request.user.username} for {memb.ieee_id}"
+                Task_Assignation.save_task_logs(task,message)
 
         team_forward = Team_Task_Forward.objects.get(task = task,team=team)
         team_forward.is_forwarded = True
@@ -609,20 +671,28 @@ class Task_Assignation:
                     points.completion_points = (0.3 * task.task_category.points)
                     points.save()
             
-        print(task.members.all())
         task.members.add(*members_list)
-        print(task.members.all())
 
         return True
     
-    def load_team_members_for_task_assignation(request, team_primary):
+    def load_team_members_for_task_assignation(request, task, team_primary):
 
         '''This function loads all the team members whose positions are below the position of the requesting user, and also checks if the member is included in the current panel. Works for both admin and regular user'''
         
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
-        get_users=Members.objects.order_by('-position').filter(team=team_id)
+        get_users=Members.objects.order_by('-position').filter(team=team_id).exclude(ieee_id__in=task.members.all())
         get_current_panel=Branch.load_current_panel()
+
+        dic = {}
+        for member in task.members.all():
+            try:
+                types = Member_Task_Upload_Types.objects.get(task=task, task_member=member)
+            except:
+                types = None
+            if member.team == team:
+                dic.update({member : types})
+
         team_members=[]
         #Check if the current panel exists
         if(get_current_panel is not None):
@@ -651,7 +721,10 @@ class Task_Assignation:
                         #Add all members to the list
                         team_members.append(i)
 
-        return team_members
+        for member in team_members:
+            dic.update({member:None})
+
+        return dic
     
     def load_insb_members_for_task_assignation(request):
         try:

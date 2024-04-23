@@ -445,47 +445,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% if is_forwarded %}
-                      {% for member,types in load_members_with_task_type.items %}
-                        <tr>
-                          <td>{{member.ieee_id}}</td>
-                          <td>{{member.name}}</td>
-                          <td>{{member.position.role}}</td>
-                          <td>{{member.contact_no}}</td>
-                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Team" and member in task.members.all %}checked{% endif %}></td>
-                            <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        {% for member in team_members %}
-                        <tr>
-                          <td>{{member.ieee_id}}</td>
-                          <td>{{member.name}}</td>
-                          <td>{{member.position.role}}</td>
-                          <td>{{member.contact_no}}</td>
-                          <td>
-                            <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                          </td>
-                          <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                                </select>
-                            </td>                
-                        </tr>
-                        {% endfor %}  
-                        {% endif %}                    
+                      
+                      {% for member,types in team_members.items %}
+                      <tr>
+                        <td>{{member.ieee_id}}</td>
+                        <td>{{member.name}}</td>
+                        <td>{{member.position.role}}</td>
+                        <td>{{member.contact_no}}</td>
+                        <td>
+                          <input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if member in task.members.all %}checked{% endif %}>
+                        </td>
+                        <td>
+                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                              </select>
+                          </td>                
+                      </tr>
+                      {% endfor %}  
                     </tbody>
                 </table>
                 </div>
