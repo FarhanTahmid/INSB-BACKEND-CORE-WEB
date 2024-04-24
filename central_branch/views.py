@@ -4781,7 +4781,10 @@ def add_task(request, task_id, team_primary=None):
     task = Task.objects.get(id=task_id)
 
     if task.task_type != "Team":
-        return redirect('central_branch:task_edit', task_id)
+        if team_primary:
+            return redirect(f'{app_name}:team_task_edit', task_id)
+        else:
+            return redirect('central_branch:task_edit', task_id)
     
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
@@ -4828,7 +4831,10 @@ def add_task(request, task_id, team_primary=None):
             #If task is completed then do not update task params
             if(task.is_task_completed):
                 messages.info(request,'Task is completed already!')
-                return redirect('central_branch:add_task',task_id)
+                if team_primary:
+                    return redirect(f'{app_name}:team_add_task',team_primary,task_id)
+                else:
+                    return redirect('central_branch:add_task',task_id)
 
             if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team)):
                 #If it is a team task and no members were selected then show message but save other params
@@ -4840,7 +4846,10 @@ def add_task(request, task_id, team_primary=None):
             else:
                 messages.warning(request,"We're a failure")
 
-            return redirect('central_branch:add_task',task_id)
+            if team_primary:
+                return redirect(f'{app_name}:team_add_task',team_primary,task_id)
+            else:
+                return redirect('central_branch:add_task',task_id)
         
         team_members = {}
         if type(logged_in_user) == Members:
@@ -4932,7 +4941,10 @@ def task_edit(request, task_id, team_primary=None):
             try:
                 is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
                 if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
-                    return redirect(f'central_branch:upload_task',task.pk)
+                    if my_task:
+                        return redirect('users:upload_task',task.pk)
+                    else:
+                        return redirect('central_branch:upload_task',task.pk)
             except:
                 pass
         except:

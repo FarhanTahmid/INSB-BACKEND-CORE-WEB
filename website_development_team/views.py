@@ -162,12 +162,7 @@ def task_home(request):
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
         web_dev_team_tasks = Task.objects.filter(task_of = society,team = team)
 
-        team_primary = None
-        try:
-            user = Members.objects.get(ieee_id = user)
-            team_primary = user.team.primary
-        except:
-            user = adminUsers.objects.get(username=user)
+        team_primary = team.primary
 
         context={
                 'user_data':user_data,
