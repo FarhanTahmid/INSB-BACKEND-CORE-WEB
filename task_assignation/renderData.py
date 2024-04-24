@@ -577,7 +577,15 @@ class Task_Assignation:
                     for media_file in media_files:
                         Task_Assignation.delete_task_media(media_file)
 
+                task.members.remove(member.task_member)
+                task.save()
+                try:
+                    points = Member_Task_Point.objects.get(task = task,member = member.task_member)
+                    points.delete()
+                except:
+                    pass
                 member.delete()
+                
 
         #saving members task type as per needed
         for ieee_id,task_ty in task_types_per_member.items():
@@ -585,6 +593,8 @@ class Task_Assignation:
             members_list.append(memb)
             member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
             member_task_type.save()
+            points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id))
+            points.save()
             message = ""
             
             # Setting Log messages based on which upload type was selected
@@ -664,14 +674,24 @@ class Task_Assignation:
 
         #Updating the coordinator points
         coordinator = task.members.all()
+        print("before")
+        print(coordinator)  
         for mem in coordinator:
             if mem.team:
                 if mem.team.primary == team.primary:
-                    points = Member_Task_Point.objects.get(task = task,member = mem.ieee_id)
-                    points.completion_points = (0.3 * task.task_category.points)
-                    points.save()
-            
+                    try:
+                        points = Member_Task_Point.objects.get(task = task,member = mem.ieee_id)
+                        points.completion_points = (0.3 * task.task_category.points)
+                        points.save()
+                    except:
+                        pass
+                    if mem.position.is_co_ordinator:
+                        task.members.remove(mem)
+        task.save() 
         task.members.add(*members_list)
+        print("After")
+        print(task.members.all())
+        task.save()
 
         return True
     
@@ -1267,3 +1287,48 @@ This is an automated message. Do not reply
             return 'finance_and_corporate_team'
         else:
             return 'central_branch'
+        
+    def get_nav_bar_name(team_primary):
+        
+        is_branch=web_team=content_team=event_team=logistic_team=promotion_team=public_relation_team=mdt_team=media_team=graphics_team=finance_team = False
+
+        if team_primary == 0:
+            is_branch = True
+        elif team_primary == 1:
+            is_branch = True
+        elif team_primary == 2:
+            event_team = True
+        elif team_primary == 4:
+            logistic_team = True
+        elif team_primary == 5:
+            promotion_team = True
+        elif team_primary == 6:
+            public_relation_team = True
+        elif team_primary == 7:
+            mdt_team = True
+        elif team_primary == 8:
+            web_team = True
+        elif team_primary == 9:
+            media_team = True
+        elif team_primary == 10:
+            graphics_team = True
+        elif team_primary == 11:
+            finance_team = True
+        else:
+            is_branch = True
+        
+        dic={
+            'is_branch':is_branch,
+            'web_dev_team':web_team,
+            'content_and_writing_team':content_team,
+            'event_management_team':event_team,
+            'logistic_and_operation_team':logistic_team,
+            'promotion_team':promotion_team,
+            'public_relation_team':public_relation_team,
+            'membership_development_team':mdt_team,
+            'media_team':media_team,
+            'graphics_team':graphics_team,
+            'finance_and_corporate_team':finance_team,
+        }
+
+        return dic

@@ -4429,7 +4429,7 @@ class AwardRanking(View):
 
 @login_required
 @member_login_permission
-def create_task(request):
+def create_task(request,team_primary = None):
 
     try:
         # get all sc ag for sidebar
@@ -4440,6 +4440,13 @@ def create_task(request):
 
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+
+        #getting nav_bar_name
+        nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
+        app_name = 'central_branch'
+        if team_primary:
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
 
         if create_individual_task_access or create_team_task_access:
             
@@ -4483,19 +4490,22 @@ def create_task(request):
                 'user_data':user_data,
                 'create_individual_task_access':create_individual_task_access,
                 'create_team_task_access':create_team_task_access,
+                'app_name':app_name,
+                'team_primary':team_primary,
+                'is_forwarded':False,
 
                 
-                'is_branch':True,
-                'web_dev_team':False,
-                'content_and_writing_team':False,
-                'event_management_team':False,
-                'logistic_and_operation_team':False,
-                'promotion_team':False,
-                'public_relation_team':False,
-                'membership_development_team':False,
-                'media_team':False,
-                'graphics_team':False,
-                'finance_and_corporate_team':False,
+                'is_branch':nav_bar["is_branch"],
+                'web_dev_team':nav_bar["web_dev_team"],
+                'content_and_writing_team':nav_bar["content_and_writing_team"],
+                'event_management_team':nav_bar["event_management_team"],
+                'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                'promotion_team':nav_bar["promotion_team"],
+                'public_relation_team':nav_bar["public_relation_team"],
+                'membership_development_team':nav_bar["membership_development_team"],
+                'media_team':nav_bar["media_team"],
+                'graphics_team':nav_bar["graphics_team"],
+                'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
             }
 
             return render(request,"create_task.html",context)
@@ -4792,6 +4802,15 @@ def add_task(request, task_id, team_primary=None):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
 
+    #getting nav_bar_name
+    nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
+    try:
+        team_task_forwarded = Team_Task_Forward.objects.get(task = task,team = Teams.objects.get(primary = int(team_primary)))
+        is_forwarded = team_task_forwarded.is_forwarded
+    except:
+        is_forwarded = False
+
     try:
         logged_in_user = Members.objects.get(ieee_id=request.user.username)
     except:
@@ -4842,7 +4861,7 @@ def add_task(request, task_id, team_primary=None):
                     messages.info(request,'Saved changes. Please select a member to forward tasks!')
                 else:
                     #Else members were selected
-                    messages.success(request,"Task params updated successfully!")
+                    messages.success(request,"Task Forwarded Successfully!")
             else:
                 messages.warning(request,"We're a failure")
 
@@ -4882,17 +4901,17 @@ def add_task(request, task_id, team_primary=None):
             'team_primary':team_primary,
             'is_forwarded':is_forwarded,
 
-            'is_branch':True,
-            'web_dev_team':False,
-            'content_and_writing_team':False,
-            'event_management_team':False,
-            'logistic_and_operation_team':False,
-            'promotion_team':False,
-            'public_relation_team':False,
-            'membership_development_team':False,
-            'media_team':False,
-            'graphics_team':False,
-            'finance_and_corporate_team':False,
+            'is_branch':nav_bar["is_branch"],
+            'web_dev_team':nav_bar["web_dev_team"],
+            'content_and_writing_team':nav_bar["content_and_writing_team"],
+            'event_management_team':nav_bar["event_management_team"],
+            'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+            'promotion_team':nav_bar["promotion_team"],
+            'public_relation_team':nav_bar["public_relation_team"],
+            'membership_development_team':nav_bar["membership_development_team"],
+            'media_team':nav_bar["media_team"],
+            'graphics_team':nav_bar["graphics_team"],
+            'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
         }
 
         return render(request,"task_forward_to_members.html",context)
@@ -4922,9 +4941,20 @@ def task_edit(request, task_id, team_primary=None):
         is_user_redirected = False
         is_task_started_by_member = False
 
+        #getting nav_bar_name
+        nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
         app_name = 'central_branch'
         if team_primary:
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+
+        try:
+            team_task_forwarded = Team_Task_Forward.objects.get(task = task,team = Teams.objects.get(primary = int(team_primary)))
+            is_forwarded = team_task_forwarded.is_forwarded
+        except:
+            is_forwarded = False
+        
+        print(is_forwarded)
 
         if 'HTTP_REFERER' in request.META:
             if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
@@ -5023,18 +5053,19 @@ def task_edit(request, task_id, team_primary=None):
             'has_team_task_options_view_access':has_team_task_options_view_access,
             'app_name':app_name,
             'team_primary':team_primary,
+            'is_forwarded':is_forwarded,
 
-            'is_branch':True,
-            'web_dev_team':False,
-            'content_and_writing_team':False,
-            'event_management_team':False,
-            'logistic_and_operation_team':False,
-            'promotion_team':False,
-            'public_relation_team':False,
-            'membership_development_team':False,
-            'media_team':False,
-            'graphics_team':False,
-            'finance_and_corporate_team':False,
+            'is_branch':nav_bar["is_branch"],
+            'web_dev_team':nav_bar["web_dev_team"],
+            'content_and_writing_team':nav_bar["content_and_writing_team"],
+            'event_management_team':nav_bar["event_management_team"],
+            'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+            'promotion_team':nav_bar["promotion_team"],
+            'public_relation_team':nav_bar["public_relation_team"],
+            'membership_development_team':nav_bar["membership_development_team"],
+            'media_team':nav_bar["media_team"],
+            'graphics_team':nav_bar["graphics_team"],
+            'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
         }
 
         return render(request,"create_task.html",context)

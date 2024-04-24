@@ -1,6 +1,6 @@
 from django.urls import path,include
 from . import views
-from central_branch.views import task_edit,add_task
+from central_branch.views import task_edit,add_task,create_task
 
 app_name="website_development_team"
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('manage_team/',views.manage_team,name="manage_team"),
     #Task page
     path('task_home/',views.task_home,name="task_home"),
+    path('<int:team_primary>/task/create_task',create_task,name="create_task"),
     path('task/<int:task_id>',task_edit,name="task_edit"),
     path('<int:team_primary>/task/<int:task_id>',task_edit,name="team_task_edit"),
     path('task/<int:task_id>/add_task/',add_task,name="add_task"),
