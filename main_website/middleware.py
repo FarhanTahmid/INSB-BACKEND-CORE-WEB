@@ -16,6 +16,7 @@ class BlockMainWebMiddleWare:
             return self.get_response(request)
         else:
             
+            
             try:
                 # first get from the system model that if the 'main_website_under_maintenance' is true
                 get_system=system.objects.filter(main_website_under_maintenance=True).first()
