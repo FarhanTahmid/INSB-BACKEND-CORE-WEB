@@ -111,9 +111,11 @@ class Task_Assignation:
                 for member in coordinators:
                     member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
                     member_task_points.save()
+                    task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = new_task)
+                    task_type_member.save()
                     #sending the email as well
                     Task_Assignation.task_creation_email(request,member,new_task)
-                print(coordinators)
+
                 
                 return True
             
@@ -593,7 +595,7 @@ class Task_Assignation:
             members_list.append(memb)
             member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
             member_task_type.save()
-            points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id))
+            points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
             points.save()
             message = ""
             

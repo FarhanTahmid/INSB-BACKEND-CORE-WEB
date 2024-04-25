@@ -953,6 +953,31 @@
                   {% endif %}
 
                   {% if task.task_type == "Team" and has_team_task_options_view_access %}
+                    {% if is_forwarded %}
+                        {% if is_branch %}
+                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        {% elif web_dev_team %}
+                        <a href="{% url 'website_development_team:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        {% elif content_and_writing_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif event_management_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif logistic_and_operation_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif promotion_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif public_relation_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif membership_development_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif media_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif graphics_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% elif finance_and_corporate_team %}
+                        <a href="" class="check-task-button">Check task progress</a>
+                        {% endif %}
+                    {% endif %}
                     {% if app_name == 'central_branch' %}
                     <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Foward Task to Team Members{% endif %}</a>
                     {% else %}

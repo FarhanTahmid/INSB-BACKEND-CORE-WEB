@@ -4592,6 +4592,7 @@ def upload_task(request, task_id):
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
         
         this_is_users_task = False
+        team_coordinator = False
         my_task = False
         comments = None
 
@@ -4607,10 +4608,12 @@ def upload_task(request, task_id):
                 create_individual_task_access = False
                 create_team_task_access = False
                 comments = Member_Task_Point.objects.get(task=task, member=str(logged_in_user.ieee_id)).comments
+            elif logged_in_user.position.is_co_ordinator:
+                team_coordinator = True
         except:
             pass
 
-        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task
+        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or team_coordinator
         if has_access:
 
 
@@ -4773,7 +4776,8 @@ def upload_task(request, task_id):
                 'comments':comments,
                 'create_individual_task_access':create_individual_task_access,
                 'create_team_task_access':create_team_task_access,
-                'my_task':my_task
+                'my_task':my_task,
+                'team_coordinator':team_coordinator,
             }
 
             return render(request,"task_page.html",context)
