@@ -4595,6 +4595,7 @@ def upload_task(request, task_id):
         team_coordinator = False
         my_task = False
         comments = None
+        task_created_by_logged_in_user = False
 
         if 'HTTP_REFERER' in request.META:
             if 'my_tasks/' in request.META['HTTP_REFERER']:
@@ -4610,6 +4611,10 @@ def upload_task(request, task_id):
                 comments = Member_Task_Point.objects.get(task=task, member=str(logged_in_user.ieee_id)).comments
             elif logged_in_user.position.is_co_ordinator:
                 team_coordinator = True
+
+            created_by = task.task_created_by
+            if user == created_by:
+                task_created_by_logged_in_user = True
         except:
             pass
 
@@ -4778,6 +4783,7 @@ def upload_task(request, task_id):
                 'create_team_task_access':create_team_task_access,
                 'my_task':my_task,
                 'team_coordinator':team_coordinator,
+                'task_created_by_logged_in_user':task_created_by_logged_in_user,
             }
 
             return render(request,"task_page.html",context)

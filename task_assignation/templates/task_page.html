@@ -920,7 +920,9 @@
                     justify-content: space-between;
                     align-items: center;
                     margin-bottom: 20px;">
+                   
                     <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
+                        {% if task_created_by_logged_in_user or create_individual_task_access or create_team_task_access %}
                         <div style="font-size: 20px;">
                             Points:
                             <input type="number" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" {% if task.is_task_completed %} disabled {% endif %} placeholder="Task marks" style="width: 60px;">
@@ -932,10 +934,14 @@
                                 <span class="front text">Save</span>
                             </button>
                         </div>
+                        {% endif %}
                     </div>
+                    {% if task_created_by_logged_in_user or create_individual_task_access or create_team_task_access %}
                     <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
+                    {% endif %}
                     <br>
                     <br>
+                    
 
                     {% csrf_token %}
     
