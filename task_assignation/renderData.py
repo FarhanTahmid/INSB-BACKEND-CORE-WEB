@@ -582,7 +582,7 @@ class Task_Assignation:
                 task.members.remove(member.task_member)
                 task.save()
                 try:
-                    points = Member_Task_Point.objects.get(task = task,member = member.task_member)
+                    points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
                     points.delete()
                 except:
                     pass
@@ -590,85 +590,92 @@ class Task_Assignation:
                 
 
         #saving members task type as per needed
+        regsitered_mem = Member_Task_Upload_Types.objects.filter(task=task)
         for ieee_id,task_ty in task_types_per_member.items():
-            memb = Members.objects.get(ieee_id = ieee_id)
-            members_list.append(memb)
-            member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
-            member_task_type.save()
-            points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
-            points.save()
-            message = ""
-            
-            # Setting Log messages based on which upload type was selected
-            if "permission_paper" in task_ty:
-                if member_task_type.has_permission_paper:
-                    pass
+            try:
+                task_type = Member_Task_Upload_Types.objects.get(task=task,task_member = Members.objects.get(ieee_id = ieee_id))
+            except:
+                task_type = None
+            if task_type == None:
+                print("here")
+                memb = Members.objects.get(ieee_id = ieee_id)
+                members_list.append(memb)
+                member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
+                member_task_type.save()
+                points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                points.save()
+                message = ""
+                
+                # Setting Log messages based on which upload type was selected
+                if "permission_paper" in task_ty:
+                    if member_task_type.has_permission_paper:
+                        pass
+                    else:
+                        member_task_type.has_permission_paper = True
+                        message += "Permission Paper Added,"
                 else:
-                    member_task_type.has_permission_paper = True
-                    message += "Permission Paper Added,"
-            else:
-                if member_task_type.has_permission_paper:
-                    Permission_Paper.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
-                    message += "Permission Paper Removed,"
-                member_task_type.has_permission_paper = False
+                    if member_task_type.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Permission Paper Removed,"
+                    member_task_type.has_permission_paper = False
 
-            if "content" in task_ty:
-                if member_task_type.has_content:
-                    pass
+                if "content" in task_ty:
+                    if member_task_type.has_content:
+                        pass
+                    else:
+                        member_task_type.has_content = True
+                        message += "Content Added,"
                 else:
-                    member_task_type.has_content = True
-                    message += "Content Added,"
-            else:
-                if member_task_type.has_content:
-                    Task_Content.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
-                    message += "Content Removed,"
-                member_task_type.has_content = False
+                    if member_task_type.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Content Removed,"
+                    member_task_type.has_content = False
 
-            if "drive_link" in task_ty:
-                if member_task_type.has_drive_link:
-                    pass
+                if "drive_link" in task_ty:
+                    if member_task_type.has_drive_link:
+                        pass
+                    else:
+                        member_task_type.has_drive_link = True
+                        message += "Drive Link Added,"
                 else:
-                    member_task_type.has_drive_link = True
-                    message += "Drive Link Added,"
-            else:
-                if member_task_type.has_drive_link:
-                    Task_Drive_Link.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
-                    message += "Drive Link Removed,"
-                member_task_type.has_drive_link = False
+                    if member_task_type.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=memb.ieee_id).delete()
+                        message += "Drive Link Removed,"
+                    member_task_type.has_drive_link = False
 
-            if "file_upload" in task_ty:
-                if member_task_type.has_file_upload:
-                    pass
+                if "file_upload" in task_ty:
+                    if member_task_type.has_file_upload:
+                        pass
+                    else:
+                        member_task_type.has_file_upload = True
+                        message += "File Upload Added,"
                 else:
-                    member_task_type.has_file_upload = True
-                    message += "File Upload Added,"
-            else:
-                if member_task_type.has_file_upload:
-                    files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
-                    for file in files:
-                        message += f"Document, {file}, Removed,"
-                        Task_Assignation.delete_task_document(file)
-                member_task_type.has_file_upload = False
+                    if member_task_type.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=memb.ieee_id)
+                        for file in files:
+                            message += f"Document, {file}, Removed,"
+                            Task_Assignation.delete_task_document(file)
+                    member_task_type.has_file_upload = False
 
-            if "media" in task_ty:
-                if member_task_type.has_media:
-                    pass
+                if "media" in task_ty:
+                    if member_task_type.has_media:
+                        pass
+                    else:
+                        member_task_type.has_media = True
+                        message += "Media Added,"
                 else:
-                    member_task_type.has_media = True
-                    message += "Media Added,"
-            else:
-                if member_task_type.has_media:
-                    media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
-                    for media_file in media_files:
-                        message += f"Media, {media_file}, Removed,"
-                        Task_Assignation.delete_task_media(media_file)
-                member_task_type.has_media = False                     
+                    if member_task_type.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=memb.ieee_id)
+                        for media_file in media_files:
+                            message += f"Media, {media_file}, Removed,"
+                            Task_Assignation.delete_task_media(media_file)
+                    member_task_type.has_media = False                     
 
-            member_task_type.save()
+                member_task_type.save()
 
-            if message!="":
-                message+=f" by {request.user.username} for {memb.ieee_id}"
-                Task_Assignation.save_task_logs(task,message)
+                if message!="":
+                    message+=f" by {request.user.username} for {memb.ieee_id}"
+                    Task_Assignation.save_task_logs(task,message)
 
         team_forward = Team_Task_Forward.objects.get(task = task,team=team)
         team_forward.is_forwarded = True
