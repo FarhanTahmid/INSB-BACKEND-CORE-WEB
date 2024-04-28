@@ -115,8 +115,8 @@ class Task_Assignation:
                     task_type_member.save()
                     #sending the email as well
                     Task_Assignation.task_creation_email(request,member,new_task)
-
-                
+                print("New task created")
+                print(new_task.members.all())
                 return True
             
             #Else if task_type is Individuals
@@ -561,43 +561,48 @@ class Task_Assignation:
         #Get the task using the task_id
         task = Task.objects.get(id=task_id)
         members_list = []
+        print(team)
+        ("EVEN BEFORE")
+        print(task.members.all())
         for member in Member_Task_Upload_Types.objects.filter(task=task):
             #If a member is excluded from task then delete the member's task upload types along with the content (if any) that was previously associated to the member
-            if str(member.task_member) not in task_types_per_member:
-                if member.has_content:
-                    Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_drive_link:
-                    Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_permission_paper:
-                    Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_file_upload:
-                    files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                    for file in files:
-                        Task_Assignation.delete_task_document(file)
-                if member.has_media:
-                    media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                    for media_file in media_files:
-                        Task_Assignation.delete_task_media(media_file)
+            if not member.task_member.position.is_co_ordinator and member.task_member.team == team:
+                print(member.task_member)
+                if str(member.task_member) not in task_types_per_member:
+                    if member.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for file in files:
+                            Task_Assignation.delete_task_document(file)
+                    if member.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for media_file in media_files:
+                            Task_Assignation.delete_task_media(media_file)
 
-                task.members.remove(member.task_member)
-                task.save()
-                try:
-                    points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
-                    points.delete()
-                except:
-                    pass
-                member.delete()
+                    task.members.remove(member.task_member)
+                    task.save()
+                    try:
+                        points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
+                        points.delete()
+                    except:
+                        pass
+                    member.delete()
                 
 
         #saving members task type as per needed
-        regsitered_mem = Member_Task_Upload_Types.objects.filter(task=task)
+
         for ieee_id,task_ty in task_types_per_member.items():
             try:
                 task_type = Member_Task_Upload_Types.objects.get(task=task,task_member = Members.objects.get(ieee_id = ieee_id))
             except:
                 task_type = None
             if task_type == None:
-                print("here")
+
                 memb = Members.objects.get(ieee_id = ieee_id)
                 members_list.append(memb)
                 member_task_type, created = Member_Task_Upload_Types.objects.get_or_create(task_member = memb,task = task)
@@ -678,24 +683,50 @@ class Task_Assignation:
                     Task_Assignation.save_task_logs(task,message)
 
         team_forward = Team_Task_Forward.objects.get(task = task,team=team)
+        team_forward.forwared_by = request.user.username
         team_forward.is_forwarded = True
         team_forward.save()
 
+        print(members_list)
         #Updating the coordinator points
-        coordinator = task.members.all()
-        print("before")
-        print(coordinator)  
-        for mem in coordinator:
-            if mem.team:
-                if mem.team.primary == team.primary:
-                    try:
-                        points = Member_Task_Point.objects.get(task = task,member = mem.ieee_id)
+        print("BEFOREEE")
+        print(task.members.all())
+        coordinator= None
+        flag = False
+        try:
+            cor = Members.objects.get(ieee_id = team_forward.forwared_by)
+            if cor in task.members.all():
+                coordinator = cor
+                flag = True
+            if flag == True:
+                print(coordinator)
+                points = Member_Task_Point.objects.get(task = task,member = team_forward.forwared_by)
+                points.completion_points = (0.3 * task.task_category.points)
+                points.save()
+                task.members.remove(coordinator)
+                task.save()
+                all_coord = task.members.all()
+                team_of_cor = cor.team
+                for m in all_coord:
+                    if m.team == team_of_cor and m.position.is_co_ordinator:
+                        points = Member_Task_Point.objects.get(task = task,member = m.ieee_id)
                         points.completion_points = (0.3 * task.task_category.points)
                         points.save()
-                    except:
-                        pass
-                    if mem.position.is_co_ordinator:
-                        task.members.remove(mem)
+                        task.members.remove(m)
+            task.save()
+        except:
+            pass
+        # for mem in coordinator:
+        #     if mem.team:
+        #         if mem.team.primary == team.primary:
+        #             try:
+        #                 points = Member_Task_Point.objects.get(task = task,member = mem.ieee_id)
+        #                 points.completion_points = (0.3 * task.task_category.points)
+        #                 points.save()
+        #             except:
+        #                 pass
+        #             if mem.position.is_co_ordinator:
+        #                 task.members.remove(mem)
         task.save() 
         task.members.add(*members_list)
         print("After")

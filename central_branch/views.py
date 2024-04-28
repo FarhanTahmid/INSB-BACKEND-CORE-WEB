@@ -4866,6 +4866,7 @@ def add_task(request, task_id, team_primary=None):
                     return redirect('central_branch:add_task',task_id)
 
             if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team)):
+                print(team)
                 #If it is a team task and no members were selected then show message but save other params
                 if(not member_select):
                     messages.info(request,'Saved changes. Please select a member to forward tasks!')
@@ -4950,7 +4951,7 @@ def task_edit(request, task_id, team_primary=None):
         my_task = False
         is_user_redirected = False
         is_task_started_by_member = False
-
+        forwarded_central_branch = False
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
@@ -4964,7 +4965,17 @@ def task_edit(request, task_id, team_primary=None):
         except:
             is_forwarded = False
         
-        print(is_forwarded)
+        if task.task_type == "Team":
+
+            all_teams = task.team.all()
+
+            for team in all_teams:
+                team_task_forwarded = Team_Task_Forward.objects.get(task = task,team = team)
+                if team_task_forwarded.forwared_by:
+                    if app_name == 'central_branch':
+                        forwarded_central_branch = True
+                        break
+                    
 
         if 'HTTP_REFERER' in request.META:
             if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
@@ -5064,6 +5075,7 @@ def task_edit(request, task_id, team_primary=None):
             'app_name':app_name,
             'team_primary':team_primary,
             'is_forwarded':is_forwarded,
+            'forwarded_central_branch':forwarded_central_branch,
 
             'is_branch':nav_bar["is_branch"],
             'web_dev_team':nav_bar["web_dev_team"],

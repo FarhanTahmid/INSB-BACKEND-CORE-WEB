@@ -23,6 +23,9 @@ from users.renderData import PanelMembersData,member_login_permission
 from system_administration.system_error_handling import ErrorHandling
 from .manage_access import MediaTeam_Render_Access
 from central_branch import views as cv
+from task_assignation.models import *
+from port.models import Chapters_Society_and_Affinity_Groups
+from users import renderData
 
 logger=logging.getLogger(__name__)
 # Create your views here.
@@ -249,6 +252,53 @@ def event_form(request,event_id):
         else:
             return redirect('main_website:event_details', event_id)
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+@login_required
+@member_login_permission
+def task_home(request):
+    try:
+
+        user = request.user.username
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        team =MediaTeam.get_team_id()
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
+        media_team_tasks = Task.objects.filter(task_of = society,team = team)
+
+        team_primary = team.primary
+        print(team_primary)
+
+        context={
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'app_name':'media_team',
+
+                'all_tasks':media_team_tasks,
+
+                'is_branch':False,
+                'web_dev_team':False,
+                'content_and_writing_team':False,
+                'event_management_team':False,
+                'logistic_and_operation_team':False,
+                'promotion_team':False,
+                'public_relation_team':False,
+                'membership_development_team':False,
+                'media_team':True,
+                'graphics_team':False,
+                'finance_and_corporate_team':False,
+                'team_primary':team_primary,
+                
+
+                
+            }
+        
+        return render(request,"task_home.html",context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

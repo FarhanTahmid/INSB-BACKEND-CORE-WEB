@@ -150,6 +150,7 @@ class Team_Task_Forward(models.Model):
     task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
     team = models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE)
     is_forwarded = models.BooleanField(default = False)
+    forwared_by = models.CharField(null=False,blank=False,max_length=15,default="")
 
     class Meta:
         verbose_name="Team Task Forwarded"
