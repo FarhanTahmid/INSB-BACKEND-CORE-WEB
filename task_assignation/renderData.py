@@ -96,19 +96,30 @@ class Task_Assignation:
                     get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
 
                 coordinators = []
+                officers = []
                 #As it is a team task then notify the current coordinators of those teams
                 #For each member in current panel members
                 for member in get_current_panel_members:
                     #If the member's team primary exist in team_select list i.e. is a member of the team
                     if str(member.team.primary) in team_select:
                         #And if the member is a coordinator
-                        if member.position.is_co_ordinator:
+                        if member.position.is_co_ordinator and member.position.is_officer:
                             #Add to coordinators array
                             coordinators.append(member.member)
+                        if not member.position.is_co_ordinator and member.position.is_officer:
+                            officers.append(member.member)
                 #assigning the task to the coordinators
                 new_task.members.add(*coordinators)
+                new_task.members.add(*officers)
                 #creating those members points in Member Task Points
                 for member in coordinators:
+                    member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
+                    member_task_points.save()
+                    task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = new_task)
+                    task_type_member.save()
+                    #sending the email as well
+                    Task_Assignation.task_creation_email(request,member,new_task)
+                for member in officers:
                     member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
                     member_task_points.save()
                     task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = new_task)
@@ -566,7 +577,7 @@ class Task_Assignation:
         print(task.members.all())
         for member in Member_Task_Upload_Types.objects.filter(task=task):
             #If a member is excluded from task then delete the member's task upload types along with the content (if any) that was previously associated to the member
-            if not member.task_member.position.is_co_ordinator and member.task_member.team == team:
+            if not member.task_member.position.is_co_ordinator and not member.task_member.position.is_officer and member.task_member.team == team:
                 print(member.task_member)
                 if str(member.task_member) not in task_types_per_member:
                     if member.has_content:

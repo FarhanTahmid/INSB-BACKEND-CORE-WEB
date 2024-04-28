@@ -451,7 +451,6 @@
                     <tbody>
                       
                       {% for member,types in team_members.items %}
-                      {% if not member.position.is_co_ordinator %}
                       <tr>
                         <td>{{member.ieee_id}}</td>
                         <td>{{member.name}}</td>
@@ -470,7 +469,6 @@
                               </select>
                           </td>                
                       </tr>
-                      {% endif %}
                       {% endfor %}  
                     </tbody>
                 </table>
