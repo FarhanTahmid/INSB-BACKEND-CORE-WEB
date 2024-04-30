@@ -4883,7 +4883,7 @@ def add_task(request, task_id, team_primary=None):
         
         team_members = {}
         if type(logged_in_user) == Members:
-            if logged_in_user.position.is_eb_member:
+            if logged_in_user.position.is_eb_member and not team_primary:
                 #Get all team members from the selected teams
                 for team in task.team.all():
                     members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
@@ -4892,9 +4892,12 @@ def add_task(request, task_id, team_primary=None):
                 team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=logged_in_user.team.primary)
         else:
             #Get all team members from the selected teams
-            for team in task.team.all():
-                members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
-                team_members.update(members)                                  
+            if team_primary:
+                team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+            else:
+                for team in task.team.all():
+                    members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                    team_members.update(members)                                  
 
         context = {
             'task':task,
