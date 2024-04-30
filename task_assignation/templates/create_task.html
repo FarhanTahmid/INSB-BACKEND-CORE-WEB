@@ -979,7 +979,7 @@
                         {% endif %}
                     {% endif %}
                     {% if app_name == 'central_branch' %}
-                    {% comment %} <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded or forwarded_central_branch %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a> {% endcomment %}
+                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded or forwarded_central_branch %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
                     {% else %}
                     <a href="{% url ''|add:app_name|add:':team_add_task' team_primary task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
                     {% endif %}
