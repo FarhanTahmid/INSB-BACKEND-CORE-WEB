@@ -752,11 +752,21 @@ class Task_Assignation:
         
         team=Teams.objects.get(primary=team_primary)
         team_id=team.id
-        get_users=Members.objects.order_by('-position').filter(team=team_id).exclude(ieee_id__in=task.members.all())
+
+        #Check the type of requesting user
+        try:
+            #If the requesting user is a member
+            requesting_member = Members.objects.get(ieee_id=request.user.username)
+            get_users=Members.objects.order_by('-position').filter(team=team_id, position__rank__gt=requesting_member.position.rank)
+        except:
+            #If the requesting user is an admin
+            requesting_member = adminUsers.objects.get(username=request.user.username)
+            get_users=Members.objects.filter(team=team_id)
+        
         get_current_panel=Branch.load_current_panel()
 
         dic = {}
-        for member in task.members.all():
+        for member in get_users:
             try:
                 types = Member_Task_Upload_Types.objects.get(task=task, task_member=member)
             except:
@@ -1302,7 +1312,7 @@ This is an automated message. Do not reply
                     get_current_panel_member= Panel_Members.objects.filter(member=logged_in_user, tenure=get_current_panel.pk, team=team).first()
                 
                     if get_current_panel_member:
-                        if get_current_panel_member.position.is_co_ordinator:
+                        if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
                             return True
                 
                 return False

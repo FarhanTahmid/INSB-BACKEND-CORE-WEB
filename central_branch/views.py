@@ -4886,22 +4886,15 @@ def add_task(request, task_id, team_primary=None):
             if logged_in_user.position.is_eb_member:
                 #Get all team members from the selected teams
                 for team in task.team.all():
-                    team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
-                    # for member in members:
-                    #     if not member.position.is_co_ordinator:
-                    #         team_members.append(member)
+                    members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                    team_members.update(members)
             else:
                 team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=logged_in_user.team.primary)
-                # for member in members:
-                #     if not member.position.is_co_ordinator:
-                #         team_members.append(member)
         else:
             #Get all team members from the selected teams
             for team in task.team.all():
-                team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
-                # for member in members:
-                #     if not member.position.is_co_ordinator:
-                #         team_members.append(member)                                  
+                members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                team_members.update(members)                                  
 
         context = {
             'task':task,
