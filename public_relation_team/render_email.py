@@ -14,6 +14,7 @@ from django.contrib import messages
 from chapters_and_affinity_group.renderData import SC_AG_Info
 from port.renderData import PortData
 from django.contrib import messages
+from recruitment.models import recruited_members,recruitment_session
 class PRT_Email_System:
 
     logger=logging.getLogger(__name__)
@@ -82,6 +83,12 @@ class PRT_Email_System:
                                         to_email_final_list.append(ex.member.email_nsu)
                                 else:
                                     to_email_final_list.append(ex.ex_member.email)
+                elif email[0:8] == "recruits":
+                    session = recruitment_session.objects.get(pk = email[9:])
+                    recruitee=recruited_members.objects.filter(session_id=session.id)
+                    for member in recruitee:
+                        to_email_final_list.append(member.email_nsu)
+                        to_email_final_list.append(member.email_personal)
         # Removing the mails which are common in single email list and to email list
         for email in to_email_final_list:
             if email in single_emails_final_list:
@@ -137,6 +144,12 @@ class PRT_Email_System:
                                         cc_email_final_list.append(ex.member.email_nsu)
                                 else:
                                     cc_email_final_list.append(ex.ex_member.email)
+                elif email[0:8] == "recruits":
+                    session = recruitment_session.objects.get(pk = email[9:])
+                    recruitee=recruited_members.objects.filter(session_id=session.id)
+                    for member in recruitee:
+                        cc_email_final_list.append(member.email_nsu)
+                        cc_email_final_list.append(member.email_personal)
         
         # get all bcc_email_list
         bcc_email_final_list=[]
@@ -186,6 +199,12 @@ class PRT_Email_System:
                                         bcc_email_final_list.append(ex.member.email_nsu)
                                 else:
                                     bcc_email_final_list.append(ex.ex_member.email)
+                elif email[0:8] == "recruits":
+                    session = recruitment_session.objects.get(pk = email[9:])
+                    recruitee=recruited_members.objects.filter(session_id=session.id)
+                    for member in recruitee:
+                        bcc_email_final_list.append(member.email_nsu)
+                        bcc_email_final_list.append(member.email_personal)
     
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
            the 'to' and kept in 'cc' '''
