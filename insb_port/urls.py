@@ -24,6 +24,7 @@ urlpatterns = [
     path('',include('main_website.urls',namespace='main_website')),
     path('portal/',include('port.urls',namespace='port')),
     path('api/',include('api.urls')),
+    path('notification/',include('notification.urls')),
     path('admin/', admin.site.urls),
     path('system/',include('system_administration.urls',namespace="system")),
     path('portal/users/',include('users.urls',namespace="users")),

@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'chapters_and_affinity_group',
     'central_events',
     'task_assignation',
+    'notification',
     'django_celery_beat',
     'django_celery_results',
 ]
