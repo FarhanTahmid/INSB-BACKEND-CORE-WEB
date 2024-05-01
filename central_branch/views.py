@@ -4883,25 +4883,21 @@ def add_task(request, task_id, team_primary=None):
         
         team_members = {}
         if type(logged_in_user) == Members:
-            if logged_in_user.position.is_eb_member:
+            if logged_in_user.position.is_eb_member and not team_primary:
                 #Get all team members from the selected teams
                 for team in task.team.all():
-                    team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
-                    # for member in members:
-                    #     if not member.position.is_co_ordinator:
-                    #         team_members.append(member)
+                    members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                    team_members.update(members)
             else:
                 team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=logged_in_user.team.primary)
-                # for member in members:
-                #     if not member.position.is_co_ordinator:
-                #         team_members.append(member)
         else:
             #Get all team members from the selected teams
-            for team in task.team.all():
+            if team_primary:
                 team_members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
-                # for member in members:
-                #     if not member.position.is_co_ordinator:
-                #         team_members.append(member)                                  
+            else:
+                for team in task.team.all():
+                    members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
+                    team_members.update(members)                                  
 
         context = {
             'task':task,
@@ -4989,15 +4985,17 @@ def task_edit(request, task_id, team_primary=None):
         #Check if the user is a member or an admin
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
-            try:
-                is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
-                if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
-                    if my_task:
-                        return redirect('users:upload_task',task.pk)
-                    else:
-                        return redirect('central_branch:upload_task',task.pk)
-            except:
-                pass
+
+            if not team_primary:
+                try:
+                    is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
+                    if task.members.contains(logged_in_user) and not logged_in_user.position.is_co_ordinator and not logged_in_user.position.is_officer and is_task_started_by_member and not is_user_redirected:
+                        if my_task:
+                            return redirect('users:upload_task',task.pk)
+                        else:
+                            return redirect('central_branch:upload_task',task.pk)
+                except:
+                    pass
         except:
             logged_in_user = adminUsers.objects.get(username=user)
 

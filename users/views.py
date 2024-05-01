@@ -607,14 +607,19 @@ def my_tasks(request):
         except:
             user = adminUsers.objects.get(username=user)
 
+        if team_primary:
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+        else:
+            app_name = 'central_branch'
+
         context = {
             'user_data':user_data,
             'all_sc_ag':sc_ag,
             'all_tasks':all_user_tasks,
             'total_points':total_point,
             'user':user,
-            'team_primary':team_primary,
-
+            'app_name':app_name,
+            'team_primary':team_primary
         }
         return render(request,"users/my_tasks.html",context)
     except Exception as e:
