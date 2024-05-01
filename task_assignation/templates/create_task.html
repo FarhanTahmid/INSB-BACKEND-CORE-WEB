@@ -957,7 +957,7 @@
                         {% if is_branch %}
                         <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                         {% elif web_dev_team %}
-                        <a href="{% url 'website_development_team:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        <a href="{% url 'website_development_team:upload_task' 8 task.pk  %}" class="check-task-button">Check task progress</a>
                         {% elif content_and_writing_team %}
                         <a href="" class="check-task-button">Check task progress</a>
                         {% elif event_management_team %}
@@ -971,7 +971,7 @@
                         {% elif membership_development_team %}
                         <a href="" class="check-task-button">Check task progress</a>
                         {% elif media_team %}
-                        <a href="{% url 'media_team:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        <a href="{% url 'media_team:upload_task' 9 task.pk %}" class="check-task-button">Check task progress</a>
                         {% elif graphics_team %}
                         <a href="" class="check-task-button">Check task progress</a>
                         {% elif finance_and_corporate_team %}

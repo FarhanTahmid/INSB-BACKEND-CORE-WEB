@@ -975,7 +975,7 @@ class Task_Assignation:
         except:
             return False
     
-    def load_all_task_upload_type(task):
+    def load_all_task_upload_type(task,team_p):
 
         '''This function returns memers task list as dictionary where
             key is member object and value of each key is a list
@@ -991,48 +991,92 @@ class Task_Assignation:
 
         current_task = Task.objects.get(pk=task.pk)
         dic={}
+
         for member in current_task.members.all():
             member_task_list = []
             member_obj = Members.objects.get(ieee_id = str(member))
-            task_upload_types = Member_Task_Upload_Types.objects.get(task=current_task, task_member=member)
-            task_points = Member_Task_Point.objects.get(task = current_task, member = str(member))
-            member_task_list.append(task_upload_types)
-            try:
-                permission_paper = Permission_Paper.objects.get(task=task,uploaded_by = str(member))
-            except:
-                permission_paper = None
-            member_task_list.append(permission_paper)
-            try:
-                drive_link = Task_Drive_Link.objects.get(task=task,uploaded_by = str(member))
-            except:
-                drive_link = None
-            member_task_list.append(drive_link)
-            try:
-                content = Task_Content.objects.get(task=task,uploaded_by = str(member))
-            except:
-                content = None
-            member_task_list.append(content)
-            files_uploaded = Task_Document.objects.filter(task=task,uploaded_by = str(member))
-            medias = Task_Media.objects.filter(task=task,uploaded_by = str(member))
-            if len(files_uploaded)==0:
-                files_uploaded = None
-            if len(medias) == 0:
-                medias = None
-            member_task_list.append(files_uploaded)
-            member_task_list.append(medias)
-            member_task_list.append(task_points)
-            comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
-            member_task_list.append(comments)
-            #using a dictionary to store the task points log history
-            task_points_log = {}
-            try:
-                for key,value in task_points.deducted_points_logs.items():
-                    split_string = value.split(':')
-                    task_points_log[split_string[0]]=split_string[1]
-                member_task_list.append(task_points_log)
-            except:
-                member_task_list.append(task_points_log)
-            dic[member_obj] = member_task_list
+            if team_p != None and member_obj.team == team_p:
+                task_upload_types = Member_Task_Upload_Types.objects.get(task=current_task, task_member=member)
+                task_points = Member_Task_Point.objects.get(task = current_task, member = str(member))
+                member_task_list.append(task_upload_types)
+                try:
+                    permission_paper = Permission_Paper.objects.get(task=task,uploaded_by = str(member))
+                except:
+                    permission_paper = None
+                member_task_list.append(permission_paper)
+                try:
+                    drive_link = Task_Drive_Link.objects.get(task=task,uploaded_by = str(member))
+                except:
+                    drive_link = None
+                member_task_list.append(drive_link)
+                try:
+                    content = Task_Content.objects.get(task=task,uploaded_by = str(member))
+                except:
+                    content = None
+                member_task_list.append(content)
+                files_uploaded = Task_Document.objects.filter(task=task,uploaded_by = str(member))
+                medias = Task_Media.objects.filter(task=task,uploaded_by = str(member))
+                if len(files_uploaded)==0:
+                    files_uploaded = None
+                if len(medias) == 0:
+                    medias = None
+                member_task_list.append(files_uploaded)
+                member_task_list.append(medias)
+                member_task_list.append(task_points)
+                comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
+                member_task_list.append(comments)
+                #using a dictionary to store the task points log history
+                task_points_log = {}
+                try:
+                    for key,value in task_points.deducted_points_logs.items():
+                        split_string = value.split(':')
+                        task_points_log[split_string[0]]=split_string[1]
+                    member_task_list.append(task_points_log)
+                except:
+                    member_task_list.append(task_points_log)
+                dic[member_obj] = member_task_list
+
+            if team_p == None:
+                
+                task_upload_types = Member_Task_Upload_Types.objects.get(task=current_task, task_member=member)
+                task_points = Member_Task_Point.objects.get(task = current_task, member = str(member))
+                member_task_list.append(task_upload_types)
+                try:
+                    permission_paper = Permission_Paper.objects.get(task=task,uploaded_by = str(member))
+                except:
+                    permission_paper = None
+                member_task_list.append(permission_paper)
+                try:
+                    drive_link = Task_Drive_Link.objects.get(task=task,uploaded_by = str(member))
+                except:
+                    drive_link = None
+                member_task_list.append(drive_link)
+                try:
+                    content = Task_Content.objects.get(task=task,uploaded_by = str(member))
+                except:
+                    content = None
+                member_task_list.append(content)
+                files_uploaded = Task_Document.objects.filter(task=task,uploaded_by = str(member))
+                medias = Task_Media.objects.filter(task=task,uploaded_by = str(member))
+                if len(files_uploaded)==0:
+                    files_uploaded = None
+                if len(medias) == 0:
+                    medias = None
+                member_task_list.append(files_uploaded)
+                member_task_list.append(medias)
+                member_task_list.append(task_points)
+                comments = Member_Task_Point.objects.get(task=task, member=str(member)).comments
+                member_task_list.append(comments)
+                #using a dictionary to store the task points log history
+                task_points_log = {}
+                try:
+                    for key,value in task_points.deducted_points_logs.items():
+                        split_string = value.split(':')
+                        task_points_log[split_string[0]]=split_string[1]
+                    member_task_list.append(task_points_log)
+                except:
+                    member_task_list.append(task_points_log)
+                dic[member_obj] = member_task_list
         
         return dic
         

@@ -4577,7 +4577,7 @@ def task_home(request):
 
 @login_required
 @member_login_permission
-def upload_task(request, task_id):
+def upload_task(request,task_id,team_primary = None):
   
     try:
         # get all sc ag for sidebar
@@ -4596,10 +4596,17 @@ def upload_task(request, task_id):
         my_task = False
         comments = None
         task_created_by_logged_in_user = False
+        team_p = None
 
         if 'HTTP_REFERER' in request.META:
             if 'my_tasks/' in request.META['HTTP_REFERER']:
                 my_task = True
+        if team_primary != None:
+            team_p = Teams.objects.get(primary = int(team_primary))
+
+        #getting nav_bar_name
+        nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
 
         #to check if this is users task
         try:
@@ -4655,7 +4662,7 @@ def upload_task(request, task_id):
             ## End Checking submission types ##
             ###################################
 
-            task_type_per_member = Task_Assignation.load_all_task_upload_type(task)
+            task_type_per_member = Task_Assignation.load_all_task_upload_type(task,team_p)
 
             if request.method == 'POST':
 
@@ -4784,6 +4791,18 @@ def upload_task(request, task_id):
                 'my_task':my_task,
                 'team_coordinator':team_coordinator,
                 'task_created_by_logged_in_user':task_created_by_logged_in_user,
+
+                'is_branch':nav_bar["is_branch"],
+                'web_dev_team':nav_bar["web_dev_team"],
+                'content_and_writing_team':nav_bar["content_and_writing_team"],
+                'event_management_team':nav_bar["event_management_team"],
+                'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                'promotion_team':nav_bar["promotion_team"],
+                'public_relation_team':nav_bar["public_relation_team"],
+                'membership_development_team':nav_bar["membership_development_team"],
+                'media_team':nav_bar["media_team"],
+                'graphics_team':nav_bar["graphics_team"],
+                'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
             }
 
             return render(request,"task_page.html",context)

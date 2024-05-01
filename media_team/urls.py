@@ -19,7 +19,7 @@ urlpatterns = [
     path('<int:team_primary>/task/<int:task_id>',task_edit,name="team_task_edit"),
     path('task/<int:task_id>/add_task/',add_task,name="add_task"),
     path('<int:team_primary>/task/<int:task_id>/add_task/',add_task,name="team_add_task"),
-    path('task/<int:task_id>/upload_task/',upload_task,name="upload_task"),
+    path('task/<int:team_primary>/<int:task_id>/upload_task/',upload_task,name="upload_task"),
 
 
 ]
