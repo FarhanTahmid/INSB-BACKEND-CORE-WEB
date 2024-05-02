@@ -1071,6 +1071,7 @@ class Task_Assignation:
             member_task_list = []
             member_obj = Members.objects.get(ieee_id = str(member))
             if team_p != None and member_obj.team == team_p:
+                print(member)
                 task_upload_types = Member_Task_Upload_Types.objects.get(task=current_task, task_member=member)
                 task_points = Member_Task_Point.objects.get(task = current_task, member = str(member))
                 member_task_list.append(task_upload_types)
