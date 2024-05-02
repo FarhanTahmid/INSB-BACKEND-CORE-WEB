@@ -53,5 +53,5 @@ class Permission_Paper(admin.ModelAdmin):
 @admin.register(Team_Task_Forward)
 class Team_Task_Forward(admin.ModelAdmin):
     list_display=[
-        'task','team','is_forwarded','forwared_by'
+        'task','team','is_forwarded','is_forwarded_coordinator','is_forwarded_incharge','forwared_by'
     ]

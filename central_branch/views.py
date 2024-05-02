@@ -4593,6 +4593,7 @@ def upload_task(request,task_id,team_primary = None):
         
         this_is_users_task = False
         team_coordinator = False
+        team_incharge = False
         my_task = False
         comments = None
         task_created_by_logged_in_user = False
@@ -4601,34 +4602,40 @@ def upload_task(request,task_id,team_primary = None):
         if 'HTTP_REFERER' in request.META:
             if 'my_tasks/' in request.META['HTTP_REFERER']:
                 my_task = True
+        print("hh213")
         if team_primary != None:
             team_p = Teams.objects.get(primary = int(team_primary))
 
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
-
+        print("hh213")
         #to check if this is users task
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
+            print("hh213")
             if logged_in_user in task.members.all():
+                print("here")
                 this_is_users_task = True
                 create_individual_task_access = False
                 create_team_task_access = False
                 comments = Member_Task_Point.objects.get(task=task, member=str(logged_in_user.ieee_id)).comments
-            elif logged_in_user.position.is_co_ordinator:
+            if logged_in_user.position.is_co_ordinator and logged_in_user.position.is_officer:
+                print(logged_in_user)
                 team_coordinator = True
-
+            if not logged_in_user.position.is_co_ordinator and logged_in_user.position.is_officer:
+                team_incharge = True
+            print("hh213")
             created_by = task.task_created_by
             if user == created_by:
                 task_created_by_logged_in_user = True
         except:
             pass
 
-        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or team_coordinator
+        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or team_coordinator or team_incharge
         if has_access:
 
-
+            print(team_coordinator)
             #####################################
             ## Start Checking submission types ##
             #####################################
@@ -4790,6 +4797,7 @@ def upload_task(request,task_id,team_primary = None):
                 'create_team_task_access':create_team_task_access,
                 'my_task':my_task,
                 'team_coordinator':team_coordinator,
+                'team_incharge':team_incharge,
                 'task_created_by_logged_in_user':task_created_by_logged_in_user,
 
                 'is_branch':nav_bar["is_branch"],
@@ -4818,6 +4826,7 @@ def upload_task(request,task_id,team_primary = None):
 def add_task(request, task_id, team_primary=None):
 
     task = Task.objects.get(id=task_id)
+    is_incharge_logged_in = False
 
     if task.task_type != "Team":
         if team_primary:
@@ -4842,10 +4851,12 @@ def add_task(request, task_id, team_primary=None):
 
     try:
         logged_in_user = Members.objects.get(ieee_id=request.user.username)
+        if logged_in_user.position.is_officer and not logged_in_user.position.is_co_ordinator:
+            is_incharge_logged_in = True
     except:
         logged_in_user = adminUsers.objects.get(username=request.user.username)
 
-    has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
+    has_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task) or is_incharge_logged_in
 
     if has_access:
         app_name='central_branch'
@@ -4916,7 +4927,8 @@ def add_task(request, task_id, team_primary=None):
             else:
                 for team in task.team.all():
                     members = Task_Assignation.load_team_members_for_task_assignation(request=request,task=task,team_primary=team.primary)
-                    team_members.update(members)                                  
+                    team_members.update(members) 
+        print(team_members)                                 
 
         context = {
             'task':task,
@@ -4967,6 +4979,9 @@ def task_edit(request, task_id, team_primary=None):
         is_user_redirected = False
         is_task_started_by_member = False
         forwarded_central_branch = False
+        is_incharge_forwarded = False
+        is_coordinator_forwaded = False
+        is_incharge = False
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
@@ -4977,6 +4992,8 @@ def task_edit(request, task_id, team_primary=None):
         try:
             team_task_forwarded = Team_Task_Forward.objects.get(task = task,team = Teams.objects.get(primary = int(team_primary)))
             is_forwarded = team_task_forwarded.is_forwarded
+            is_incharge_forwarded= team_task_forwarded.is_forwarded_incharge
+            is_coordinator_forwaded = team_task_forwarded.is_forwarded_coordinator
         except:
             is_forwarded = False
         
@@ -5004,6 +5021,8 @@ def task_edit(request, task_id, team_primary=None):
         #Check if the user is a member or an admin
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
+            if logged_in_user.position.is_officer and not logged_in_user.position.is_co_ordinator and is_coordinator_forwaded:
+                is_incharge = True
 
             if not team_primary:
                 try:
@@ -5018,7 +5037,7 @@ def task_edit(request, task_id, team_primary=None):
         except:
             logged_in_user = adminUsers.objects.get(username=user)
 
-        has_team_task_options_view_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task)
+        has_team_task_options_view_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task) or is_incharge
         
         if request.method == 'POST':
             if 'update_task' in request.POST:
@@ -5093,6 +5112,8 @@ def task_edit(request, task_id, team_primary=None):
             'team_primary':team_primary,
             'is_forwarded':is_forwarded,
             'forwarded_central_branch':forwarded_central_branch,
+            'is_incharge_forwarded':is_incharge_forwarded,
+            'is_coordinator_forwarded':is_coordinator_forwaded,
 
             'is_branch':nav_bar["is_branch"],
             'web_dev_team':nav_bar["web_dev_team"],

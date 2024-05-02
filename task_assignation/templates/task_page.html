@@ -697,7 +697,7 @@
         <!--PAGE START-->
         <div ui-view class="app-body" id="view">
             <!--contents of page-->
-            {% if not create_individual_task_access and not create_team_task_access and not team_coordinator %}
+            {% if not create_individual_task_access and not create_team_task_access and not team_coordinator or not team_incharge %}
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
@@ -914,7 +914,7 @@
             
             </div>
             {% endif %}
-            {% if create_individual_task_access or create_team_task_access or team_coordinator %}
+            {% if create_individual_task_access or create_team_task_access or team_coordinator or team_incharge %}
             
             <div class="form-wrapper">
                 <form>
