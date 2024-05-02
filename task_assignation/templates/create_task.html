@@ -942,7 +942,7 @@
               <div class="task-btn">
                   {% if create_individual_task_access or create_team_task_access or forwarded_central_branch %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
-                  {% elif is_member_view and not task.is_task_completed %}
+                  {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                     {% if my_task %}
                     <a href="{% url 'users:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                     {% else %}
@@ -981,7 +981,7 @@
                     {% if app_name == 'central_branch' %}
                     <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded or forwarded_central_branch %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
                     {% else %}
-                    <a href="{% url ''|add:app_name|add:':team_add_task' team_primary task.pk %}" class="add-members-task-btn">{% if is_forwarded %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
+                    <a href="{% url ''|add:app_name|add:':team_add_task' team_primary task.pk %}" class="add-members-task-btn">{% if is_forwarded and is_coordinator_forwarded and is_incharge_forwarded%}Change Task Assignees{% elif is_forwarded and is_coordinator_forwarded and not is_incharge_forwarded%}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
                     {% endif %}
 
                   {% endif %}

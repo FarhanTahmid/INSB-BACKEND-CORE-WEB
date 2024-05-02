@@ -116,6 +116,11 @@ class Task_Assignation:
                     member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
                     member_task_points.save()
                     task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = new_task)
+                    task_type_member.has_content = True
+                    task_type_member.has_drive_link = True
+                    task_type_member.has_file_upload = True
+                    task_type_member.has_media = True
+                    task_type_member.has_permission_paper = True
                     task_type_member.save()
                     #sending the email as well
                     Task_Assignation.task_creation_email(request,member,new_task)
@@ -618,7 +623,10 @@ class Task_Assignation:
                     member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
                 member_task_type.save()
                 print("ININ")
-                points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                try:
+                    points = Member_Task_Point.objects.get(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                except:
+                    points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
                 points.save()
                 message = ""
                 
@@ -729,7 +737,12 @@ class Task_Assignation:
                         Task_Assignation.save_task_logs(task,message)
                         print("hhhhhhhhhhhhh")
                         task_upload = Member_Task_Upload_Types.objects.get(task=task,task_member = coordinator)
-                        task_upload.delete()
+                        task_upload.has_drive_link = False
+                        task_upload.has_file_upload = False
+                        task_upload.has_content = False
+                        task_upload.has_media = False
+                        task_upload.has_permission_paper = False
+                        task_upload.save()
                         task.members.remove(coordinator)
                         team_forward.is_forwarded_coordinator = True
                         team_forward.save()
@@ -743,7 +756,12 @@ class Task_Assignation:
                                 points.save()
                                 message=f"Co_ordinator {m.ieee_id} has been removed from the task (task forwarded) and points deducted by 0.3%"
                                 task_upload = Member_Task_Upload_Types.objects.get(task=task,task_member = m)
-                                task_upload.delete()
+                                task_upload.has_drive_link = False
+                                task_upload.has_file_upload = False
+                                task_upload.has_content = False
+                                task_upload.has_media = False
+                                task_upload.has_permission_paper = False
+                                task_upload.save()
                                 task.members.remove(m)
                                 task.save()
                                 Task_Assignation.save_task_logs(task,message)
@@ -771,7 +789,12 @@ class Task_Assignation:
                         points.completion_points = (0.5 * task.task_category.points)
                         points.save()
                         task_upload = Member_Task_Upload_Types.objects.get(task=task,task_member = incharge)
-                        task_upload.delete()
+                        task_upload.has_drive_link = False
+                        task_upload.has_file_upload = False
+                        task_upload.has_content = False
+                        task_upload.has_media = False
+                        task_upload.has_permission_paper = False
+                        task_upload.save()
                         task.members.remove(incharge)
                         task.save()
                         message=f"Incharge {incharge.ieee_id} has forwarded the task, points deducted by 0.5%"
@@ -788,7 +811,12 @@ class Task_Assignation:
                                 message=f"Incharge {m.ieee_id} has been removed from the task (task forwarded) and points deducted by 0.5%"
                                 points.save()
                                 task_upload = Member_Task_Upload_Types.objects.get(task=task,task_member = m)
-                                task_upload.delete()
+                                task_upload.has_drive_link = False
+                                task_upload.has_file_upload = False
+                                task_upload.has_content = False
+                                task_upload.has_media = False
+                                task_upload.has_permission_paper = False
+                                task_upload.save()
                                 task.members.remove(m)
                                 task.save()
                                 Task_Assignation.save_task_logs(task,message)

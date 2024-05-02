@@ -4982,6 +4982,7 @@ def task_edit(request, task_id, team_primary=None):
         is_incharge_forwarded = False
         is_coordinator_forwaded = False
         is_incharge = False
+        is_coordinator = False
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
@@ -5023,6 +5024,8 @@ def task_edit(request, task_id, team_primary=None):
             logged_in_user = Members.objects.get(ieee_id = user)
             if logged_in_user.position.is_officer and not logged_in_user.position.is_co_ordinator and is_coordinator_forwaded:
                 is_incharge = True
+            if logged_in_user.position.is_officer and logged_in_user.position.is_co_ordinator and is_coordinator_forwaded:
+                is_coordinator = True
 
             if not team_primary:
                 try:
@@ -5114,6 +5117,8 @@ def task_edit(request, task_id, team_primary=None):
             'forwarded_central_branch':forwarded_central_branch,
             'is_incharge_forwarded':is_incharge_forwarded,
             'is_coordinator_forwarded':is_coordinator_forwaded,
+            'is_inchrage':is_incharge,
+            'is_coordinator':is_coordinator,
 
             'is_branch':nav_bar["is_branch"],
             'web_dev_team':nav_bar["web_dev_team"],
