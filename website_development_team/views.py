@@ -162,6 +162,12 @@ def task_home(request):
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
         web_dev_team_tasks = Task.objects.filter(task_of = society,team = team)
 
+        
+        is_coordinator_or_incharge = Branch_View_Access.get_coordinator_or_incharge_logged_in_access(request,team)
+        
+
+        has_task_create_access = Branch_View_Access.get_create_team_task_access(request) or is_coordinator_or_incharge[0] or is_coordinator_or_incharge[1]
+
         team_primary = team.primary
 
         context={
@@ -170,6 +176,7 @@ def task_home(request):
                 'app_name':'website_development_team',
 
                 'all_tasks':web_dev_team_tasks,
+                'has_task_create_access':has_task_create_access,
 
                 'is_branch':False,
                 'web_dev_team':True,

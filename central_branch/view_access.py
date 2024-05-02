@@ -2,7 +2,7 @@ from system_administration.render_access import Access_Render
 from system_administration.models import Branch_Data_Access
 from django.contrib import messages
 import logging
-
+from users.models import Members
 
 class Branch_View_Access:
 
@@ -156,5 +156,20 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
 
+    def get_coordinator_or_incharge_logged_in_access(request,team):
 
+        user = request.user.username
+        is_coordinator = False
+        is_incharge = False
+        try:
+            user = Members.objects.get(ieee_id = user)
+            if user.team == team:
+                if user.position.is_coordinator and user.position.is_officer:
+                    is_coordinator = True
+                if not user.position.is_co_ordinator and user.position.is_officer:
+                    is_incharge = True
+        except:
+            pass
+        
+        return [is_coordinator,is_incharge]
     

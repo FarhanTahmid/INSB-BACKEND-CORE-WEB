@@ -348,11 +348,11 @@
         {% if has_task_create_access %}
         <div class="task-btn">
           <a
-            href="{% url 'central_branch:create_task' %}"
+            href="{% if app_name == "central_branch "%}{% url 'central_branch:create_task' %}{% else %}{% url ''|add:app_name|add:':create_task' team_primary %}{% endif%}"
             class="create-task-btn"
             >Create Task</a
           >
-
+          {% if is_branch %}
           <button
             type="button"
             class="check-task-button"
@@ -362,6 +362,7 @@
           >
             Create Task Category
           </button>
+          {% endif %}
         </div>
         {% endif %}
 

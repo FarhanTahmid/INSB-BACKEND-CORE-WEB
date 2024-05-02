@@ -4437,9 +4437,10 @@ def create_task(request,team_primary = None):
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
+        is_coordinator_or_incharge = [False,False]
 
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        
 
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
@@ -4447,6 +4448,9 @@ def create_task(request,team_primary = None):
         app_name = 'central_branch'
         if team_primary:
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            is_coordinator_or_incharge =Branch_View_Access.get_coordinator_or_incharge_logged_in_access(request,Teams.objects.get(primary = team_primary))
+
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request) or is_coordinator_or_incharge[0] or is_coordinator_or_incharge[1]
 
         if create_individual_task_access or create_team_task_access:
             
