@@ -759,10 +759,16 @@
         });
 
         function toggleDropdown(event) {
+            var dropdownContent = event.currentTarget.querySelector(".dropdown-content");
+            var burger = event.currentTarget.querySelector(".burger");
+
+            // Check if dropdown is currently open
+            var isOpen = dropdownContent.style.display === "block";
+
+            // Close all dropdowns and remove 'open' class from all burgers
             var dropdownContents = document.querySelectorAll(".dropdown-content");
             var burgers = document.querySelectorAll(".burger");
 
-            // Close all dropdowns and remove 'open' class from all burgers
             dropdownContents.forEach(function (content) {
                 content.style.display = "none";
             });
@@ -770,14 +776,12 @@
                 burger.classList.remove("open");
             });
 
-            // Open the selected dropdown
-            var dropdownContent = event.currentTarget.querySelector(".dropdown-content");
-            var burger = event.currentTarget.querySelector(".burger");
-
-            dropdownContent.style.display = "block";
-            burger.classList.add("open");
+            // If the clicked dropdown was not already open, open it
+            if (!isOpen) {
+                dropdownContent.style.display = "block";
+                burger.classList.add("open");
+            }
         }
-
 
 
 
