@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
-    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <!-- <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" /> -->
 
     <!--common CSS-->
     {% block common_css %}
@@ -82,15 +82,12 @@
 
 
 
-        /* Table Manipulation */
         .table-class tbody tr:nth-child(even) {
             background-color: white;
-            /* Color for even rows */
         }
 
         .table-class tbody tr:nth-child(odd) {
             background-color: white;
-            /* Color for odd rows */
         }
 
         /* Define column widths */
@@ -232,6 +229,82 @@
                 }
             }
         }
+
+        table th , table td{
+        text-align: center;
+        }
+
+        th {
+        background: #333;
+        color: #fff;
+        }
+
+        .pagination {
+        margin: 0;
+        }
+
+        .pagination li:hover{
+        cursor: pointer;
+        }
+
+        /* .header_wrap {
+        padding:50px 0;
+        } */
+        .num_rows {
+        width: 100px;
+        float: right;
+        }
+        .tb_search{
+        width: 40%;
+        float:left;
+        }
+        /* Responsive Styles for Pagination */
+        .pagination-container {
+        display: flex;
+        flex-wrap: wrap; /* Allow pagination items to wrap to the next line on small screens */
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        }
+
+        .pagination {
+        margin: 2px;
+        flex-wrap: wrap; /* Allow pagination items to wrap to the next line on small screens */
+        }
+
+        .pagination li {
+        display: inline-block;
+        margin: 0 3px;
+        padding: 5px 10px;
+        border: 1px solid #00629B;
+        background-color: transparent;
+        color: #00629B;
+        cursor: pointer;
+        }
+
+        /* Style for current active page */
+        .pagination li.active {
+        background-color: #00629B;
+        color: #ffffff;
+        }
+
+        /* Style for rows count section */
+        .rows_count {
+        color: #00629B;
+        font-size: 14px;
+        margin-top: 10px;
+        }
+        .table-responsive {
+        overflow-x: auto;
+        max-width: 100%;
+        /* padding: 15px; */
+        }
+        .unread{
+            background-color: #75d481;
+        }
+        .delete{
+            display: block;
+        }
     </style>
 </head>
 {% block preloader %}
@@ -293,7 +366,7 @@
                         </div>
                     </div>
                     <div class="table-responsive" style="border-radius: 4px 4px 0 0">
-                        <table class="table table-striped table-class" id="table-id">
+                        <table class="table" id="table-id">
                             <thead>
                                 <tr>
                                     <th data-priority="1">Time</th>
@@ -302,7 +375,7 @@
                                 </tr>
                             </thead>
                             <tbody id="nostripe">
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#">Dummy Notification 1</a>
@@ -316,13 +389,13 @@
                                             </button>
                                             <div class="dropdown-content">
                                                 <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
+                                                <a href="#" class="delete" onclick="hide()">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2024-05-01 10:00:00</td>
+                                <tr class="unread">
+                                    <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#">Dummy Notification 2</a>
                                     </td>
@@ -335,13 +408,13 @@
                                             </button>
                                             <div class="dropdown-content">
                                                 <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
+                                                <a href="#" class="delete">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2024-05-01 11:00:00</td>
+                                <tr class="unread">
+                                    <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#">Dummy Notification 3</a>
                                     </td>
@@ -354,13 +427,13 @@
                                             </button>
                                             <div class="dropdown-content">
                                                 <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
+                                                <a href="#" class="delete">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>2024-05-01 12:00:00</td>
+                                <tr class="unread">
+                                    <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#">Dummy Notification 4</a>
                                     </td>
@@ -373,140 +446,7 @@
                                             </button>
                                             <div class="dropdown-content">
                                                 <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 13:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 5</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 14:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 6</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 15:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 7</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 16:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 8</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 17:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 9</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 18:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 10</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2024-05-01 19:00:00</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 11</a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="burger dropbtn" type="button" value="menu">
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                            <div class="dropdown-content">
-                                                <a href="#">Mark as read</a>
-                                                <a href="#">Delete</a>
+                                                <a href="#" class="delete">Delete</a>
                                             </div>
                                         </div>
                                     </td>
@@ -751,7 +691,19 @@
         });
     </script>
 
+    <script>
+        let unreadMessage = document.querySelectorAll(".unread");
+        let deleteMessage = document.querySelectorAll(".delete");
 
+        unreadMessage.forEach((message) => {
+            message.addEventListener('click', () => {
+                message.classList.remove("unread");
+            })
+            
+        });
+        
+
+    </script>
 
 
 
