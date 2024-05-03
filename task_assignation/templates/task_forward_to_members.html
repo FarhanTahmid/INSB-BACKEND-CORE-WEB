@@ -112,8 +112,7 @@
         max-height: 600px;
         overflow-y: auto;
         border-radius: 4px;
-        box-shadow: 2px 2px 5px 0px #80808054;
-        min-height: 360px;
+        min-height: 400px;
         margin-bottom: 50px;
       }
       .table-responsive thead th {
@@ -279,6 +278,9 @@
 
     </style>
   </head>
+  {% block preloader %}
+      {% include 'preloader.html' %}
+  {% endblock preloader %}
     <body>
       <div class="app" id="app">
 

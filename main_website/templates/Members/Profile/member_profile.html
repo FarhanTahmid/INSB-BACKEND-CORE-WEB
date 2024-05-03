@@ -4,7 +4,7 @@
 
 <head>
 
-    <title>Profile - IEEE NSU SB</title>
+    <title>{{member.name}} - IEEE NSU SB</title>
     <link rel="icon" href="{% static 'upload/logo.gif' %}" />
 
     <!--Common CSS-->
@@ -202,7 +202,9 @@
     
     </style>
 </head>
-
+{% block preloader %}
+    {% include 'preloader.html' %}
+{% endblock preloader %}
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 

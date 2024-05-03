@@ -6,7 +6,8 @@ from .models import WDT_Data_Access,Media_Data_Access,Graphics_Data_Access,Branc
 from . models import system
 @admin.register(system)
 class System(admin.ModelAdmin):
-    list_display=['id','system_under_maintenance','main_website_under_maintenance','portal_under_maintenance','scheduling_under_maintenance','restrict_sc_ag_updates']
+    list_display=['id','system_under_maintenance','main_website_under_maintenance','portal_under_maintenance','scheduling_under_maintenance','restrict_sc_ag_updates'
+                 ,'count_down']
 
 @admin.register(adminUsers)
 class Admin(admin.ModelAdmin):

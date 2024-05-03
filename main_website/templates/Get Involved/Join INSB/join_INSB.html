@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join INSB - IEEE NSU Student Branch</title>
+    <title>Join IEEE NSU Student Branch</title>
 
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
@@ -116,7 +116,9 @@
         }
     </style>
 </head>
-
+{% block preloader %}
+    {% include 'preloader.html' %}
+{% endblock preloader %}
 <body data-rsssl=1 class="home page-template-default page page-id-5368 _masterslider _msp_version_3.2.7">
     <div class="body-wrapper  float-menu">
 

@@ -428,6 +428,9 @@ def update_information(request):
                 facebook_url = request.POST['facebook_url']
                 linkedin_url = request.POST['linkedin_url']
 
+                if date_of_birth == '':
+                    date_of_birth = None
+
                 #Call the update user data function to update the user profile information
                 if(current_user.update_user_data(name=name,
                                             nsu_id=nsu_id,
@@ -605,6 +608,7 @@ def my_tasks(request):
             'all_sc_ag':sc_ag,
             'all_tasks':all_user_tasks,
             'total_points':total_point,
+            'user':user,
         }
         return render(request,"users/my_tasks.html",context)
     except Exception as e:

@@ -1,0 +1,391 @@
+{% load static %}
+
+{% block loading_overlay %}
+
+<style>
+    @import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+    #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9990;
+        display: flex;
+        min-height: 100%;
+        min-width: 100%;
+        align-items: center;
+        justify-content: center;
+
+        opacity: 1;
+        transition: opacity 1s ease; /* Add transition for opacity */
+
+        background: #2980b9 url('https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png') repeat 0 0;
+        -webkit-animation: 10s linear 0s normal none infinite animate;
+        -moz-animation: 10s linear 0s normal none infinite animate;
+        -ms-animation: 10s linear 0s normal none infinite animate;
+        -o-animation: 10s linear 0s normal none infinite animate;
+        animation: 10s linear 0s normal none infinite animate;
+    }
+
+    #loadingOverlay.hidden {
+        opacity: 0; /* Make the overlay transparent */
+        pointer-events: none; /* Disable pointer events when overlay is hidden */
+    }
+
+    @-webkit-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @-moz-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @-ms-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @-o-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+
+
+    /* typewriter effect starts here */
+    .typewriter h1 {
+        color: #fff;
+        overflow: hidden;
+        font-size: 76px;
+        font-weight: bold;
+        /* Ensures the content is not revealed until the animation */
+        border-right: .15em solid #FFD100;
+        /* The typwriter cursor */
+        white-space: nowrap;
+        /* Keeps the content on a single line */
+        margin: 0 auto;
+        /* Gives that scrolling effect as the typing happens */
+        letter-spacing: .15em;
+        /* Adjust as needed */
+        animation:
+            typing 1.25s steps(15, end),
+            blink-caret .5s step-end infinite;
+    }
+
+    /* The typing effect */
+    @keyframes typing {
+        from {
+            width: 0
+        }
+
+        to {
+            width: 100%
+        }
+    }
+
+    /* The typewriter cursor effect */
+    @keyframes blink-caret {
+
+        from,
+        to {
+            border-color: transparent
+        }
+
+        50% {
+            border-color: #FFD100
+        }
+    }
+
+
+
+
+
+
+    /* square puzzle loader effect starts here */
+    .loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, 200%);
+        width: 96px;
+        height: 96px;
+        z-index: 9999;
+    }
+
+    .loader-square {
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        width: 25px;
+        height: 25px;
+        margin: 1.5px;
+        border-radius: 0px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 15px;
+        font-weight: bold;
+        background: #002855;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        animation: square-animation 10s ease-in-out infinite both;
+
+        pointer-events: none;
+        user-select: none;
+        /* Disable text selection */
+        -webkit-user-select: none;
+        /* For Safari */
+        -moz-user-select: none;
+        /* For Firefox */
+        -ms-user-select: none;
+        /* For IE/Edge */
+        cursor: default;
+        /* Set default cursor */
+    }
+
+    .loader-square:nth-of-type(0) {
+        animation-delay: 0s;
+    }
+
+    .loader-square:nth-of-type(1) {
+        animation-delay: -1.4285714286s;
+    }
+
+    .loader-square:nth-of-type(2) {
+        animation-delay: -2.8571428571s;
+    }
+
+    .loader-square:nth-of-type(3) {
+        animation-delay: -4.2857142857s;
+    }
+
+    .loader-square:nth-of-type(4) {
+        animation-delay: -5.7142857143s;
+    }
+
+    .loader-square:nth-of-type(5) {
+        animation-delay: -7.1428571429s;
+    }
+
+    .loader-square:nth-of-type(6) {
+        animation-delay: -8.5714285714s;
+    }
+
+    .loader-square:nth-of-type(7) {
+        animation-delay: -10s;
+    }
+
+
+    @keyframes square-animation {
+        0% {
+            left: 0;
+            top: 0;
+        }
+
+        10.5% {
+            left: 0;
+            top: 0;
+        }
+
+        12.5% {
+            left: 32px;
+            top: 0;
+        }
+
+        23% {
+            left: 32px;
+            top: 0;
+        }
+
+        25% {
+            left: 64px;
+            top: 0;
+        }
+
+        35.5% {
+            left: 64px;
+            top: 0;
+        }
+
+        37.5% {
+            left: 64px;
+            top: 32px;
+        }
+
+        48% {
+            left: 64px;
+            top: 32px;
+        }
+
+        50% {
+            left: 32px;
+            top: 32px;
+        }
+
+        60.5% {
+            left: 32px;
+            top: 32px;
+        }
+
+        62.5% {
+            left: 32px;
+            top: 64px;
+        }
+
+        73% {
+            left: 32px;
+            top: 64px;
+        }
+
+        75% {
+            left: 0;
+            top: 64px;
+        }
+
+        85.5% {
+            left: 0;
+            top: 64px;
+        }
+
+        87.5% {
+            left: 0;
+            top: 32px;
+        }
+
+        98% {
+            left: 0;
+            top: 32px;
+        }
+
+        100% {
+            left: 0;
+            top: 0;
+        }
+    }
+
+
+
+
+
+
+    /*Responsiveness*/
+    @media only screen and (max-width: 780px) {
+        .typewriter h1 {
+            font-size: 50px;
+        }
+
+        .loader {
+            transform: translate(-50%, 150%);
+        }
+    }
+
+    @media only screen and (max-width: 460px) {
+        .typewriter h1 {
+            font-size: 40px;
+        }
+
+        .loader {
+            transform: translate(-50%, 150%);
+        }
+    }
+</style>
+</head>
+
+<div id="loadingOverlay">
+    <div class="typewriter">
+        <h1>IEEENSUSB</h1>
+    </div>
+
+    <div class="loader">
+        <div class="loader-square">I</div>
+        <div class="loader-square">E</div>
+        <div class="loader-square">E</div>
+        <div class="loader-square">E</div>
+        <div class="loader-square">N</div>
+        <div class="loader-square">S</div>
+        <div class="loader-square">U</div>
+    </div>
+
+
+
+
+</div>
+
+
+<script>
+    // JavaScript to show/hide loading screen
+    function showLoadingScreen() {
+        document.body.classList.add('loading');
+        document.getElementById('loadingOverlay').classList.remove('hidden'); // Remove 'hidden' class
+    }
+    
+    function hideLoadingScreen() {
+        
+        setTimeout(() => {
+            document.body.classList.remove('loading');
+            document.getElementById('loadingOverlay').classList.add('hidden'); // Add 'hidden' class after a brief delay
+        }, 1000); // Adjust the delay as needed to match the transition duration
+    }
+    
+
+    // Example: Simulate loading
+    window.addEventListener('load', function() {
+        showLoadingScreen(); // Show loading screen when the page loads
+        setTimeout(hideLoadingScreen, 2500); // Simulate loading taking 3 seconds
+    });
+
+
+
+    
+</script>
+
+
+{% endblock loading_overlay %}

@@ -161,7 +161,7 @@
                     </div>
                     <div class="box">
                       <div class="box-header">
-                        <small>This Data is Not Editable. Only Register the Member in INSB Database if the data are correct and Verified!</small>
+                        <small>This Data is Not Editable. Only Register the Member in IEEE NSU SB Database if the data are correct and Verified!</small>
                       </div>
                       <div class="box-divider m-0"></div>
                       <div class="box-body">
@@ -248,9 +248,9 @@
                             <div class="btn-container">
                                 <button class="btn btn-outline b-danger text-danger" data-toggle="modal" data-target="#m-s-b" ui-toggle-class="bounce" ui-target="#animate">Delete Application</button>
                                 {% if request.application_status %}
-                                <button class="btn btn-outline b-primary text-primary" disabled data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Register Member to INSB Database</button>  
+                                <button class="btn btn-outline b-primary text-primary" disabled data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Register Member to IEEE NSU SB Database</button>  
                                 {% else %}
-                                <button class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Register Member to INSB Database</button>  
+                                <button class="btn btn-outline b-primary text-primary" data-toggle="modal" data-target="#m-s-a" ui-toggle-class="bounce" ui-target="#animate">Register Member to IEEE NSU SB Database</button>  
                                 {% endif %}  
                             </div>
                         </div>
@@ -268,11 +268,11 @@
                     <div class="modal-dialog">
                       <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Register Member to INSB Database?</h5>
+                            <h5 class="modal-title">Register Member to IEEE NSU SB Database?</h5>
                         </div>
                         <div class="modal-body p-lg">
                           <p>Are you sure to execute this action?</p>
-                          <p>This will register the member in INSB Database with IEEE ID {{request.ieee_id}}.</p>
+                          <p>This will register the member in IEEE NSU SB Database with IEEE ID {{request.ieee_id}}.</p>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>

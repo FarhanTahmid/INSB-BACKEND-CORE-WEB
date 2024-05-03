@@ -3746,6 +3746,9 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
+
+                if date_of_birth == '':
+                    date_of_birth = None
                 
                 #checking if the recruitment and renewal session exists
                 try:
@@ -3862,7 +3865,7 @@ def member_details(request,ieee_id):
             if request.POST.get('delete_member'):
                 #Deleting a member from database
                 member_to_delete=Members.objects.get(ieee_id=ieee_id)
-                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the INSB Registered Members Database.")
+                messages.error(request,f"{member_to_delete.ieee_id} was deleted from the IEEE NSU SB Registered Members Database.")
                 member_to_delete.delete()
                 return redirect('central_branch:members_list')
                 
@@ -4503,7 +4506,7 @@ def task_home(request):
 
         has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
         
-        all_tasks = Task.objects.all().order_by('-pk')
+        all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
 
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
@@ -4648,11 +4651,52 @@ def upload_task(request, task_id):
                     return redirect('central_branch:upload_task',task_id)
                 
                 elif request.POST.get('finish_task'):
-                    
-                    if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
-                        messages.success(request,"You task has been requested for reviewing!")
+
+                    file_upload = None
+                    media = None
+
+                    if member_task_type.has_permission_paper:
+                        permission_paper = request.POST.get('permission_paper')
+                        if permission_paper != None:
+                            permission_paper_loaded = permission_paper
+                    if member_task_type.has_content:
+                        content = request.POST.get('content_details')
+                        if content != None:
+                            content_loaded = content 
+                    if member_task_type.has_drive_link:
+                        drive_link = request.POST.get('content_drive')
+                        if drive_link != None:
+                            drive_link_loaded = drive_link
+                    if member_task_type.has_file_upload:
+                        file_upload = request.FILES.getlist('document')
+                    if member_task_type.has_media:
+                        media = request.FILES.getlist('images')            
+
+                    if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
+                        
+                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
+                            messages.success(request,"You task has been requested for reviewing!")
+                        else:
+                            messages.warning(request,"Something went wrong while saving!")
                     else:
-                        messages.warning(request,"Something went wrong while saving!")
+                        messages.warning(request,"Something went wrong while saving the task!")
+            
+                    return redirect('central_branch:upload_task',task_id)
+                
+                elif request.POST.get('delete_doc'):
+                    doc = Task_Document.objects.get(id=request.POST.get('doc_id'))
+                    if(Task_Assignation.delete_task_document(doc)):
+                        messages.success(request,"Document deleted successfully!")
+                    else:
+                        messages.warning(request,"Something went wrong while deleting the document!")
+                    return redirect('central_branch:upload_task',task_id)
+                
+                elif request.POST.get('delete_image'):
+                    media = Task_Media.objects.get(id=request.POST.get('image_id'))
+                    if(Task_Assignation.delete_task_media(media)):
+                        messages.success(request,"Media deleted successfully!")
+                    else:
+                        messages.warning(request,"Something went wrong while deleting the media!")
                     return redirect('central_branch:upload_task',task_id)
 
             context = {
@@ -4776,22 +4820,32 @@ def task_edit(request, task_id):
 
         task = Task.objects.get(id=task_id)
 
-        #Check if the user is a member or an admin
-        try:
-            logged_in_user = Members.objects.get(ieee_id = user)
-            if task.members.contains(logged_in_user) and Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member:
-                return redirect('central_branch:upload_task',task.pk)
-        except:
-            logged_in_user = adminUsers.objects.get(username=user)
-
-
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
         my_task = False
+        is_user_redirected = False
+        is_task_started_by_member = False
+
         if 'HTTP_REFERER' in request.META:
             if request.META['HTTP_REFERER'][-9:] == 'my_tasks/':
                 my_task = True
+            
+            if request.META['HTTP_REFERER'][-12:] == 'upload_task/':
+                is_user_redirected = True
         else:
             my_task = True
+
+        #Check if the user is a member or an admin
+        try:
+            logged_in_user = Members.objects.get(ieee_id = user)
+            try:
+                is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
+                if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
+                    return redirect('central_branch:upload_task',task.pk)
+            except:
+                pass
+        except:
+            logged_in_user = adminUsers.objects.get(username=user)
+
         
         if request.method == 'POST':
             if 'update_task' in request.POST:
@@ -4857,7 +4911,8 @@ def task_edit(request, task_id):
             'task_logs':task_logs.task_log_details,
             'create_individual_task_access':create_individual_task_access,
             'create_team_task_access':create_team_task_access,
-            'is_member_view':is_member_view
+            'is_member_view':is_member_view,
+            'is_task_started_by_member':is_task_started_by_member
         }
 
         return render(request,"create_task.html",context)

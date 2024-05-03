@@ -530,6 +530,7 @@
         border-color: #7575d4;
         border-radius: 4px;
         transition-duration: 500ms;
+        margin-bottom: 20px;
       }
       .queue_btn:hover{
         color: #ffffff;
@@ -706,6 +707,7 @@
 }
     </style>
   </head>
+
   <body>
 
     <!--LAYOUT START-->
@@ -890,7 +892,9 @@
                   {% if create_individual_task_access or create_team_task_access %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                   {% elif is_member_view and not task.is_task_completed %}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Start the task</a>
+                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                  {% elif is_member_view and task.is_task_completed %}
+                  <p  style="color: #d33838;">Task Completed!</p>
                   {% endif %}
 
                   {% if create_individual_task_access or create_team_task_access %}
@@ -899,15 +903,7 @@
                   {% endif %}                  
                   
                 </div>
-                {% endif %}
-
-                    <!--create task btn-->
-                    <div style="text-align: center;">
-                        {% if is_new_task %}
-                        <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
-                        {% endif %}
-                    </div>
-                    
+                {% endif %}     
                     
                     <!--delete and complete toggle btn-->
                     {% if not is_new_task %}
@@ -1052,20 +1048,18 @@
                         <table class="table box" id="individuals-table">
                     <thead style="position: relative; z-index: 101;">
                         <tr>
+                            <th>Select</th>
                             <th>Name</th>
+                            <th>Task Type</th>
                             <th>Team</th>
                             <th>Position</th>
-                            <th>Select</th>
-                            <th>Task Type</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for member,types in all_members.items %}
                         <tr>
-                            <td>{{member.name}}</td>
-                            <td>{{member.team.team_name}}</td>
-                            <td>{{member.position.role}}</td>
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
+                            <td>{{member.name}}</td>
                             <td>
                                 <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
                                     <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
@@ -1075,6 +1069,8 @@
                                     <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
                                 </select>
                             </td>                
+                            <td>{{member.team.team_name}}</td>
+                            <td>{{member.position.role}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -1120,6 +1116,13 @@
                 
                 
                 {% endif %}
+
+                <!--create task btn-->
+                <div style="text-align: center;">
+                    {% if is_new_task %}
+                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
+                    {% endif %}
+                </div>
             </form>
         </div>
     </div>
