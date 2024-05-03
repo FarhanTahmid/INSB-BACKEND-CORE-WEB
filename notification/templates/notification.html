@@ -203,6 +203,42 @@
         .button.active {
             background-color: #ddd;
         }
+
+        .modal-content{
+            background-color: #fefefe;
+            margin: auto ;
+            border: 1px solid rgb(136, 136, 136);
+            max-width: 850px;
+            max-height: 70vh;
+            overflow-y: scroll;
+            border-radius: 6px;
+            box-shadow: 2px 2px 5px 0px #80808054;
+            position: relative;
+            left: 100px;
+            
+        }
+
+        @media screen and (max-width: 1024px) {
+            .modal-content{
+                left: 0px;
+                margin: 10%;
+            }
+        }
+        @media screen and (max-width: 750px){
+            .modal-content{
+                width: 90%;
+                margin: 5%;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .modal-content{
+                margin: 5%;
+            }
+        }
+
+
+        
     </style>
 </head>
 {% block preloader %}
@@ -282,7 +318,7 @@
                                 <tr>
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 1</a>
+                                        <a href="#" class="modal-trigger">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -298,6 +334,8 @@
                                         </div>
                                     </td>
                                 </tr>
+
+                                
 
                                 <tr>
                                     <td>2024-05-01 09:15:00</td>
@@ -502,6 +540,31 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Modal -->
+                        <div id="myModal" class="modal">
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                    <h5 style="color: #fff;">Mooooodal</h5>
+                                    <span class="close1" style="color: white;">&times;</span>
+                                </div>
+                                <ol style="font-size: 16px; margin: 15px">
+                                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis temporibus earum molestias delectus. Expedita distinctio eligendi qui est dolore aliquam ipsa sapiente perferendis voluptatibus, nostrum odio itaque? Rem accusantium iste minus sed nemo tenetur nisi adipisci, quidem facilis rerum distinctio dolore assumenda, fugit quibusdam repellendus quas obcaecati velit reprehenderit illum.</li>
+                                    <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit, ea.</li>
+                                    <ol style="margin-top: 20px;">
+                                        <span style="font-weight: 600;">Lorem, ipsum dolor.</span>
+                                        <li>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel, dolore.</li>
+                                    </ol>
+                                    <ol style="margin-top: 20px;">
+                                        <span style="font-weight: 600;">Lorem ipsum dolor sit amet consectetur.</span>
+                                        <li>You can choose multiple individuals to complete the task</li>
+                                        <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius cumque voluptatum illum laudantium ea omnis laboriosam blanditiis cupiditate quasi accusantium.</li>
+                                    </ol>
+                                    <li>Lorem, ipsum. <span style="font-weight: 600;">Lorem, ipsum.</span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate odit dicta, laborum earum alias eum?</li>
+                                </ol>
+                            </div>
+                        </div>
                     <!--		Start Pagination -->
                     <div class="pagination-container">
                         <nav>
@@ -738,6 +801,36 @@
             });
         });
     </script>
+
+
+<!-- modal js -->
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the link that opens the modal
+    var link = document.querySelector(".modal-trigger");
+
+    // Get the <span> element that closes the modal
+    var closeBtn = document.getElementsByClassName("close1")[0];
+
+    // When the user clicks on the link, open the modal
+    link.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    closeBtn.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 
 
 
