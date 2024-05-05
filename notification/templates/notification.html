@@ -270,6 +270,78 @@
         max-width: 100%;
         /* padding: 15px; */
         }
+        .notification_modal_content::-webkit-scrollbar{
+            width: 6px;
+            height: 6px;
+        }
+        .notification_modal_content::-webkit-scrollbar-thumb{
+            background-color: #e7eeef;
+            transition: all .4s ease-in-out;
+            border-radius: 4px;
+        }
+        .notification_modal_content::-webkit-scrollbar-thumb:hover{
+            background-color: rgb(169, 170, 170);
+        }
+        .notification_modal{
+            opacity: 0;
+            position: fixed;
+            z-index: -1;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 120%;
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.5);
+            transition: all .3s ease-in-out;
+            transform: translateY(-20px);
+            overflow: auto;
+        }
+        .notification_modal_content{
+            background-color: #fefefe;
+            margin: auto;
+            border: 1px solid rgb(136, 136, 136);
+            max-width: 850px;
+            max-height: 70vh;
+            overflow-y: scroll;
+            border-radius: 6px;
+            box-shadow: 2px 2px 5px 0px #80808054;
+            position: relative;
+            left: 100px;
+            top: 20%;
+        }
+
+        .close1{
+            color: #000;
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .close1:hover,
+        .close1:focus{
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 1024px) {
+            .notification_modal_content {
+                left: 0px;
+                margin: 10%;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .notification_modal_content{
+                margin: 5%;
+            }
+        }
+        .notification_modal_content > p{
+            padding: 10px 20px;
+        }
+        .notification_modal_content > a{
+            color: #00629B;
+            padding-left: 20px;
+        }
     </style>
 </head>
 {% block preloader %}
@@ -460,7 +532,27 @@
                 </div>
             </div>
         </div>
+        <div style="display: flex; justify-content: center;">
+            <button type="button" class="finish_task_modal_btn">Notification</button>
+          </div>
 
+
+        <!--Notification Modal-->
+        <div id="modal1" class="notification_modal">
+            <!-- Modal content -->
+            <div class="notification_modal_content">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                    <!--modal heading-->
+                    <h5 style="color: #fff;    position: relative;
+                    top: 3px">Notification</h5>
+                    <span class="close1" style="color: white;">&times;</span>
+                    <!--notification description-->
+                </div>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga voluptates, quod dicta beatae cumque veritatis laboriosam, suscipit doloribus earum repudiandae expedita rerum reiciendis odio vero hic officia iste dolore quis perspiciatis possimus neque molestias. Placeat eum repudiandae fuga vitae perferendis.</p>
+                    <!--notification link-->
+                    <a href="#">Link</a>
+            </div>
+        </div>
         <!-- ############ PAGE END-->
     </div>
 
@@ -788,6 +880,39 @@
             });
         }
         </script>
+        <script>
+            // Get the modal
+            var modal1 = document.getElementById("modal1");
+            
+            // Get the button that opens the modal
+            var btn1 = document.querySelector(".finish_task_modal_btn");
+            
+            // Get the <span> element that closes the modal
+            var span1 = document.getElementsByClassName("close1")[0];
+            
+            // When the user clicks the button, open the modal 
+            btn1.onclick = function() {
+            modal1.style.transform = 'translateY(0px)';
+            modal1.style.zIndex = '103100';
+            modal1.style.opacity = '1';
+            }
+        
+            // When the user clicks on <span> (x), close the modal
+            span1.onclick = function() {
+            modal1.style.transform = 'translateY(-50px)';
+            modal1.style.zIndex = '-100';
+            modal1.style.opacity = '0';
+            }
+        
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+             if (event.target == modal1) {
+                modal1.style.transform = 'translateY(-50px)';
+                modal1.style.zIndex = '-100';
+                modal1.style.opacity = '0';
+              }
+            }
+            </script>
     <!-- endbuild -->
 </body>
 
