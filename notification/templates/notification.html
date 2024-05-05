@@ -69,13 +69,13 @@
 
 
 
-        .table-class tbody tr:nth-child(even) {
+        /* .table-class tbody tr:nth-child(even) {
             background-color: white;
         }
 
         .table-class tbody tr:nth-child(odd) {
             background-color: white;
-        }
+        } */
 
         /* Define column widths */
         #table-id th:nth-child(1),
@@ -270,12 +270,6 @@
         max-width: 100%;
         /* padding: 15px; */
         }
-        .unread{
-            background-color: #75d481;
-        }
-        .delete{
-            display: block;
-        }
     </style>
 </head>
 {% block preloader %}
@@ -342,6 +336,7 @@
                         <div class="button-container">
                             <button class="button all active" onclick="toggleButton('all')">All</button>
                             <button class="button unread" onclick="toggleButton('unread')">Unread</button>
+
                         </div>
                         <table class="table table-striped table-class" id="table-id">
                             <thead>
@@ -352,7 +347,7 @@
                                 </tr>
                             </thead>
                             <tbody id="nostripe">
-                                <tr class="unread">
+                                <tr class="marked_unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#">Dummy Notification 1</a>
@@ -365,17 +360,16 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#">Mark as Unread</a>
-                                                <a href="#">Delete</a>
+                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-
-                                <tr>
-                                    <td>2024-05-01 09:15:00</td>
+                                <tr class="marked_unread">
+                                    <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 2</a>
+                                        <a href="#">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -385,12 +379,71 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#">Mark as Unread</a>
-                                                <a href="#">Delete</a>
+                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
+                                <tr class="marked_unread">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_unread">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_unread">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                
 
                             </tbody>
                         </table>
@@ -681,19 +734,60 @@
     </script>
 
 
-    <!-- ALl and unread button js here -->
     <script>
-        function toggleButton(button) {
+        function deleteNotification(element) {
+            // Get the parent tr element of the clicked link
+            var trElement = element.closest('tr');
+            
+            // Remove the entire tr element from the DOM
+            trElement.remove();
+        }
+
+        function markAsUnread(element) {
+            // Get the parent tr element of the clicked link
+            var trElement = element.closest('tr');
+            
+            // Change the background color of the tr
+            trElement.style.backgroundColor = '#bde0fe'; 
+            trElement.classList.remove('marked_unread');
+        }
+        </script>
+    
+        <script>
+            function filterUnread() {
+            // Get all elements with the class 'marked_unread'
+            var unreadNotifications = document.querySelectorAll('.marked_unread');
+            
+            // Loop through each unread notification and hide it
+            unreadNotifications.forEach(function(notification) {
+                notification.style.display = 'none';
+            });
+        }
+
+        </script>
+        <script>
+            function toggleButton(buttonType) {
+            var rows = document.querySelectorAll('.marked_unread');
+            if (buttonType === 'all') {
+                rows.forEach(row => {
+                    row.style.display = 'table-row';
+                });
+            } else if (buttonType === 'unread') {
+                rows.forEach(row => {
+                    row.style.display = row.classList.contains('unread') ? 'table-row' : 'none';
+                });
+            }
+
             const buttons = document.querySelectorAll('.button');
             buttons.forEach(btn => {
-                if (btn.classList.contains(button)) {
+                if (btn.classList.contains(buttonType)) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
         }
-    </script>
+        </script>
     <!-- endbuild -->
 </body>
 
