@@ -164,7 +164,7 @@ class Branch_View_Access:
         try:
             user = Members.objects.get(ieee_id = user)
             if user.team == team:
-                if user.position.is_coordinator and user.position.is_officer:
+                if user.position.is_co_ordinator and user.position.is_officer:
                     is_coordinator = True
                 if not user.position.is_co_ordinator and user.position.is_officer:
                     is_incharge = True

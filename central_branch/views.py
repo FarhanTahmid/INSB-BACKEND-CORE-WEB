@@ -4439,9 +4439,9 @@ def create_task(request,team_primary = None):
         user_data=current_user.getUserData() #getting user data as dictionary file
         is_coordinator_or_incharge = [False,False]
 
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
         
-
+        
+        print("here")
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
@@ -4449,8 +4449,9 @@ def create_task(request,team_primary = None):
         if team_primary:
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
             is_coordinator_or_incharge =Branch_View_Access.get_coordinator_or_incharge_logged_in_access(request,Teams.objects.get(primary = team_primary))
-
+        print(is_coordinator_or_incharge)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request) or is_coordinator_or_incharge[0] or is_coordinator_or_incharge[1]
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request) or is_coordinator_or_incharge[0] or is_coordinator_or_incharge[1]
 
         if create_individual_task_access or create_team_task_access:
             
@@ -4469,21 +4470,28 @@ def create_task(request,team_primary = None):
                     team_select = request.POST.getlist('team_select')
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
+                    
                     for member_id in member_select:
                         member_name = request.POST.getlist(member_id + '_task_type[]')
                         task_types_per_member[member_id] = member_name
-            
+
                 task_of = 1 #Setting task_of as 1 for Branch primary
                 if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
                     messages.success(request,"Task Created successfully!")
                 else:
                     messages.warning(request,"Something went wrong while creating the task!")
 
-                return redirect('central_branch:task_home')
-            
+                if team_primary != None:
+                    return redirect('central_branch:task_home')
+                else:
+                    return redirect(f'{app_name}:task_home',team_primary)
+
+
             task_categories = Task_Category.objects.all()
             teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-            all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
+            all_members = Task_Assignation.load_insb_members_for_task_assignation(request,team_primary)
+
+
 
             context = {
                 'is_new_task':True, #Task is being created. Use it to disable some ui in the template
@@ -4522,7 +4530,7 @@ def create_task(request,team_primary = None):
 
 @login_required
 @member_login_permission
-def task_home(request):
+def task_home(request,team_primary=None):
 
     # try:
         # get all sc ag for sidebar
@@ -4537,6 +4545,10 @@ def task_home(request):
 
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
+
+        app_name = 'central_branch'
+        if team_primary:
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
         
 
         if request.method == "POST":
@@ -4569,7 +4581,9 @@ def task_home(request):
             'media_team':False,
             'graphics_team':False,
             'finance_and_corporate_team':False,
-            'app_name':'central_branch'
+            'app_name':app_name,
+            'team_primary': 0,
+            'common_access':Branch_View_Access.common_access(username=request.user.username),
         }
 
         return render(request,"task_home.html",context)
@@ -4971,8 +4985,8 @@ def task_edit(request, task_id, team_primary=None):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        
+        
 
         user = request.user.username
 
@@ -4987,13 +5001,18 @@ def task_edit(request, task_id, team_primary=None):
         is_coordinator_forwaded = False
         is_incharge = False
         is_coordinator = False
+        is_coordinator_or_incharge = [False,False]
         #getting nav_bar_name
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
         app_name = 'central_branch'
         if team_primary:
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            is_coordinator_or_incharge =Branch_View_Access.get_coordinator_or_incharge_logged_in_access(request,Teams.objects.get(primary = team_primary))
 
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
+        print(create_team_task_access)
         try:
             team_task_forwarded = Team_Task_Forward.objects.get(task = task,team = Teams.objects.get(primary = int(team_primary)))
             is_forwarded = team_task_forwarded.is_forwarded
@@ -5045,7 +5064,8 @@ def task_edit(request, task_id, team_primary=None):
             logged_in_user = adminUsers.objects.get(username=user)
 
         has_team_task_options_view_access = Task_Assignation.get_team_task_options_view_access(logged_in_user, task) or is_incharge
-        
+
+
         if request.method == 'POST':
             if 'update_task' in request.POST:
                 title = request.POST.get('task_title')
@@ -5086,6 +5106,11 @@ def task_edit(request, task_id, team_primary=None):
         all_members = None
         if task.task_type == "Individual":
             all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,None)
+        
+        if team_primary:
+            all_members = Task_Assignation.load_team_members_for_task_assignation(request, task, team_primary)
+
+
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
         #this is being done to ensure that he can click start button only if it is his task
@@ -5095,9 +5120,10 @@ def task_edit(request, task_id, team_primary=None):
 
         is_member_view = logged_in_user in task.members.all()
         #If it is a task member view or a regular view then override the access
-        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
+        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username) and not is_coordinator_or_incharge[0] and not is_coordinator_or_incharge[1]:
             create_individual_task_access = False
             create_team_task_access = False       
+
 
         context = {
             'task':task,

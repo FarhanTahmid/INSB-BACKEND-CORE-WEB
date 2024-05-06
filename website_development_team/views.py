@@ -162,19 +162,34 @@ def task_home(request):
         society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
         web_dev_team_tasks = Task.objects.filter(task_of = society,team = team)
 
+        #getting all task categories
+        all_task_categories = Task_Category.objects.all()
+
         
         is_coordinator_or_incharge = Branch_View_Access.get_coordinator_or_incharge_logged_in_access(request,team)
         
 
         has_task_create_access = Branch_View_Access.get_create_team_task_access(request) or is_coordinator_or_incharge[0] or is_coordinator_or_incharge[1]
-
+        print(is_coordinator_or_incharge)
         team_primary = team.primary
+
+        if request.method == "POST":
+
+            if request.POST.get('add_task_type'):
+
+                task_name = request.POST.get('task_type_name')
+                task_point = request.POST.get('task_point')
+
+                if Task_Assignation.add_task_category(task_name,task_point):
+                    messages.success(request,"Task Category Created successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while creating the task category!")
 
         context={
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
                 'app_name':'website_development_team',
-
+                'all_task_categories':all_task_categories,
                 'all_tasks':web_dev_team_tasks,
                 'has_task_create_access':has_task_create_access,
 
@@ -190,6 +205,7 @@ def task_home(request):
                 'graphics_team':False,
                 'finance_and_corporate_team':False,
                 'team_primary':team_primary,
+                'common_access':Branch_View_Access.common_access(username=request.user.username),
                 
 
                 

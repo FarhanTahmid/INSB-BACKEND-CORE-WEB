@@ -1034,7 +1034,6 @@
                         {% if create_individual_task_access or create_team_task_access %}{% else %}disabled {% endif %} />
                     </div>
                 </div>
-                <!-- <input class="title-box" type="text" placeholder="Title (eg: Get permission paper for venue)"> -->
                 
 
                 <!--task category-->
@@ -1083,22 +1082,24 @@
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
                 
-                {% if is_branch %}
+
                 {% if create_team_task_access or create_individual_task_access %}
+                
                 <!--task type-->
                 <div class="task_type ">
                     <label class="task_type_label">Select Task Type and Individuals:</label>
                     <div class="radio-btns">
                         {% if create_team_task_access %}
+                        {% if is_branch %}
                         <div class="radio-btns_content box">
                             {% if is_new_task %}
                             <input type="radio" id='btn05' name="task_type" value="Team" checked>
                             {% else %}
                             <input type="radio" id='btn05' name="task_type" value="Team" {% if task.task_type == "Team" %}checked{% endif %} required>
-                            
                             {% endif %}
                             <label for="btn05">Teams</label>
                         </div>
+                        {% endif %}
                         {% endif %}
                         {% if create_individual_task_access %}
                         <div class="radio-btns_content box">
@@ -1170,6 +1171,7 @@
 
                 {% if create_team_task_access %}
                 <!--Search bar for teams-->
+                {% if is_branch %}
                 <div class="tb_search  search_input_team {% if task.task_type == "Individuals" %}hide_table{% endif %}" >
                     <input
                     type="text"
@@ -1178,9 +1180,11 @@
                     placeholder="Search..."
                     class="form-control title-box"/>
                 </div>
+                {% endif %}
                 
                 
                 <!--Table for teams-->
+                {% if is_branch %}
                 <div class="table-responsive team-table {% if task.task_type == "Individuals" %}hide_table{% endif %}">
                     <table class="table box" id="team-table">
                     <thead>
@@ -1202,11 +1206,12 @@
                 </table>
                 </div>
                 {% endif %}
+                {% endif %}
                 
                 
                 
                 {% endif %}
-                {% endif %}
+
 
                 <!--create task btn-->
                 <div style="text-align: center;">

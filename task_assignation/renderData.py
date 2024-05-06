@@ -870,10 +870,7 @@ class Task_Assignation:
             except:
                 types = None
             if member.team == team:
-                print(member)
-                print(types)
                 dic.update({member : types})
-                print("ttt")
 
         team_members=[]
         #Check if the current panel exists
@@ -902,7 +899,6 @@ class Task_Assignation:
                     if(Panel_Members.objects.filter(member=i.ieee_id,tenure=get_current_panel.pk).exists()):
                         #Add all members to the list
                         team_members.append(i)
-        print(dic)
         for member in team_members:
             if member in dic:
                 continue
@@ -910,7 +906,7 @@ class Task_Assignation:
 
         return dic
     
-    def load_insb_members_for_task_assignation(request):
+    def load_insb_members_for_task_assignation(request,team_primary=None):
         try:
             #If the requesting user is a member
             requesting_member = Members.objects.get(ieee_id=request.user.username)
@@ -924,6 +920,9 @@ class Task_Assignation:
             #Here rank is used to determine the position. Higher the rank, less the position
             #Here __gt is "Greater Than"
             members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
+            if team_primary:
+                team = Teams.objects.get(primary = team_primary)
+                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team)
         else:
             #Admin user so load all members
             members = Members.objects.all()
