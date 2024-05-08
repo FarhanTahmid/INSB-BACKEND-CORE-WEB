@@ -11,6 +11,7 @@
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <!-- <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     <!--common CSS-->
     {% block common_css %}
@@ -329,10 +330,8 @@
                 left: 0px;
                 margin: 10%;
             }
-        }
-        @media screen and (max-width: 500px) {
-            .notification_modal_content{
-                margin: 5%;
+            .icon_position{
+                left: 75%;
             }
         }
         .notification_modal_content > p{
@@ -341,6 +340,46 @@
         .notification_modal_content > a{
             color: #00629B;
             padding-left: 20px;
+        }
+        .notification_modal_content > h5,h6{
+            padding-left: 22px;
+        }
+        .icon_position{
+            position: relative;
+            left: 88%;
+        }
+        @media screen and (max-width: 900px) {
+            .icon_position{
+                left: 84%;
+            }
+        }
+        @media screen and (max-width: 800px) {
+            .icon_position{
+                left: 82%;
+            }
+        }
+        @media screen and (max-width: 700px) {
+            .icon_position{
+                left: 83%;
+            }
+        }
+        @media screen and (max-width: 600px) {
+            .icon_position{
+                left: 79%;
+            }
+        }
+        @media screen and (max-width: 500px) {
+            .notification_modal_content{
+                margin: 5%;
+            }
+            .icon_position{
+                left: 78%;
+            }
+        }
+        @media screen and (max-width: 400px) {
+            .icon_position{
+                left: 67%;
+            }
         }
     </style>
 </head>
@@ -422,7 +461,7 @@
                                 <tr class="marked_unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 1</a>
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -441,7 +480,7 @@
                                 <tr class="marked_unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 1</a>
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -460,7 +499,7 @@
                                 <tr class="marked_unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 1</a>
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -479,7 +518,7 @@
                                 <tr class="marked_unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 1</a>
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -532,9 +571,6 @@
                 </div>
             </div>
         </div>
-        <div style="display: flex; justify-content: center;">
-            <button type="button" class="finish_task_modal_btn">Notification</button>
-          </div>
 
 
         <!--Notification Modal-->
@@ -544,13 +580,17 @@
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
                     <!--modal heading-->
                     <h5 style="color: #fff;    position: relative;
-                    top: 3px">Notification</h5>
+                    top: 8px">Notification</h5>
                     <span class="close1" style="color: white;">&times;</span>
                     <!--notification description-->
                 </div>
+                <h5>Title</h5>
+                <h6>Date Time</h6>
+                <hr>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga voluptates, quod dicta beatae cumque veritatis laboriosam, suscipit doloribus earum repudiandae expedita rerum reiciendis odio vero hic officia iste dolore quis perspiciatis possimus neque molestias. Placeat eum repudiandae fuga vitae perferendis.</p>
                     <!--notification link-->
                     <a href="#">Link</a>
+                    <a href="#" class="icon_position"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div>
         <!-- ############ PAGE END-->
@@ -885,17 +925,19 @@
             var modal1 = document.getElementById("modal1");
             
             // Get the button that opens the modal
-            var btn1 = document.querySelector(".finish_task_modal_btn");
+            var btn1 = document.querySelectorAll(".finish_task_modal_btn");
             
             // Get the <span> element that closes the modal
             var span1 = document.getElementsByClassName("close1")[0];
             
+            btn1.forEach(function (row){
             // When the user clicks the button, open the modal 
-            btn1.onclick = function() {
+            row.onclick = function() {
             modal1.style.transform = 'translateY(0px)';
             modal1.style.zIndex = '103100';
             modal1.style.opacity = '1';
             }
+        })
         
             // When the user clicks on <span> (x), close the modal
             span1.onclick = function() {
