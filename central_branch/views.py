@@ -4495,7 +4495,7 @@ def create_task(request):
 
 @login_required
 @member_login_permission
-def task_home(request):
+def task_home(request,team_primary = None):
 
     try:
         # get all sc ag for sidebar
@@ -4504,9 +4504,6 @@ def task_home(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
-        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
-        
-        all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
 
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
@@ -4523,15 +4520,59 @@ def task_home(request):
                 else:
                     messages.warning(request,"Something went wrong while creating the task category!")
 
-        context = {
+        #modify this so that team incharge and volunteer both can create task in respective team
+        #########################################
+        ###TODO:Arman Task###
+        #########
+        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
+        #########
+        if team_primary == None or team_primary == "1":
+
+            all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
+
+            context = {
             'all_tasks':all_tasks,
             'all_sc_ag':sc_ag,
             'user_data':user_data,
             'all_task_categories':all_task_categories,
             'has_task_create_access':has_task_create_access
-        }
+            }
 
-        return render(request,"task_home.html",context)
+            return render(request,"task_home.html",context)
+        
+        else:
+            
+            all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
+            desired_team = Task_Assignation.get_team_app_name(team_primary)
+            
+            #getting nav_bar_name
+            nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
+            context = {
+            'all_tasks':all_tasks,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'all_task_categories':all_task_categories,
+            'has_task_create_access':has_task_create_access,
+
+            #loading navbars as per page
+            'web_dev_team':nav_bar["web_dev_team"],
+            'content_and_writing_team':nav_bar["content_and_writing_team"],
+            'event_management_team':nav_bar["event_management_team"],
+            'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+            'promotion_team':nav_bar["promotion_team"],
+            'public_relation_team':nav_bar["public_relation_team"],
+            'membership_development_team':nav_bar["membership_development_team"],
+            'media_team':nav_bar["media_team"],
+            'graphics_team':nav_bar["graphics_team"],
+            'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+            }
+
+            return render(request,"task_home_team.html",context)
+
+        
+
+        
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

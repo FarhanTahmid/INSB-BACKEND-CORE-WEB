@@ -1086,3 +1086,67 @@ This is an automated message. Do not reply
             return True
         except:
             return False
+
+    def get_team_app_name(team_primary):
+
+        '''This function will return the team primary for dynamic url '''
+
+        if team_primary == 2:
+            return 'content_writing_and_publications_team'
+        elif team_primary == 3:
+            return 'events_and_management_team'
+        elif team_primary == 4:
+            return 'logistics_and_operations_team'
+        elif team_primary == 5:
+            return ''
+        elif team_primary == 6:
+            return ''
+        elif team_primary == 7:
+            return 'membership_development_team'
+        elif team_primary == 8:
+            return 'website_development_team'
+        elif team_primary == 9:
+            return 'media_team'
+        elif team_primary == 10:
+            return 'graphics_team'
+        elif team_primary == 11:
+            return 'finance_and_corporate_team'
+        
+    def get_nav_bar_name(team_primary):
+        
+        web_team=content_team=event_team=logistic_team=promotion_team=public_relation_team=mdt_team=media_team=graphics_team=finance_team = False
+
+        if team_primary == 2:
+            event_team = True
+        elif team_primary == 4:
+            logistic_team = True
+        elif team_primary == 5:
+            promotion_team = True
+        elif team_primary == 6:
+            public_relation_team = True
+        elif team_primary == 7:
+            mdt_team = True
+        elif team_primary == 8:
+            web_team = True
+        elif team_primary == 9:
+            media_team = True
+        elif team_primary == 10:
+            graphics_team = True
+        elif team_primary == 11:
+            finance_team = True
+
+        
+        dic={
+            'web_dev_team':web_team,
+            'content_and_writing_team':content_team,
+            'event_management_team':event_team,
+            'logistic_and_operation_team':logistic_team,
+            'promotion_team':promotion_team,
+            'public_relation_team':public_relation_team,
+            'membership_development_team':mdt_team,
+            'media_team':media_team,
+            'graphics_team':graphics_team,
+            'finance_and_corporate_team':finance_team,
+        }
+
+        return dic

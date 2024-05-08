@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Task_Category,Task,Task_Drive_Link,Task_Content,Task_Document,Task_Media,Task_Log,Member_Task_Point,Team_Task_Point,Member_Task_Upload_Types,Permission_Paper
+from .models import *
 
 # Register your models here.
 @admin.register(Task_Category)
@@ -49,4 +49,9 @@ class Member_Task_Upload_Types(admin.ModelAdmin):
 class Permission_Paper(admin.ModelAdmin):
     list_display = [
         'task','permission_paper'
+    ]
+@admin.register(Team_Task_Forward)
+class Team_Task_Forward(admin.ModelAdmin):
+    list_display=[
+        'task','team','forward_to_incharge','forwared_by'
     ]
