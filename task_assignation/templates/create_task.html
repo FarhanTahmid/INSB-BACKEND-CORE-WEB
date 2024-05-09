@@ -722,9 +722,26 @@
 
       <!-- navbar -->
       <div id="content" class="app-content" role="main">
+        {% if app_name == "central_branch" %}
         {% block navbar %}
          {% include 'navbar.html' %} 
         {% endblock navbar %}
+        {% else %}
+            {% if web_dev_team %}
+                {% block web_navbar %}
+                    {% include 'website_development_team/web_navbar.html' %} 
+                {% endblock web_navbar %}
+            {% elif content_and_writing_team %}
+            {% elif event_management_team %}
+            {% elif logistic_and_operation_team %}
+            {% elif promotion_team %}
+            {% elif public_relation_team %}
+            {% elif membership_development_team %}
+            {% elif media_team %}
+            {% elif graphics_team %}
+            {% elif finance_and_corporate_team %}
+            {% endif %}
+        {% endif %}
       </div>
 
 

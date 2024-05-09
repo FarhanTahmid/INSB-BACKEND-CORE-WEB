@@ -343,11 +343,23 @@
 
         {% if has_task_create_access %}
         <div class="task-btn">
+          {% if web_dev_team %}
           <a
-            href="{% url 'central_branch:create_task' %}"
+            href="{% url 'website_development_team:create_task_team' team_primary %}"
             class="create-task-btn"
             >Create Task</a
           >
+          {% elif content_and_writing_team %}
+          {% elif event_management_team %}
+          {% elif logistic_and_operation_team %}
+          {% elif promotion_team %}
+          {% elif public_relation_team %}
+          {% elif membership_development_team %}
+          {% elif media_team %}
+          {% elif graphics_team %}
+          {% elif finance_and_corporate_team %}
+          {% endif %}
+  
 
           <button
             type="button"

@@ -4429,7 +4429,7 @@ class AwardRanking(View):
 
 @login_required
 @member_login_permission
-def create_task(request):
+def create_task(request,team_primary = None):
 
     try:
         # get all sc ag for sidebar
@@ -4438,6 +4438,15 @@ def create_task(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
+        #app name for proper redirecting
+        app_name = "central_branch"
+        if team_primary and team_primary!="1":
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            
+
+        #modifty this functions so that incharge and coordinator gets access by passing a team_primary
+        #parameter
+        #TODO:
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
 
@@ -4468,24 +4477,68 @@ def create_task(request):
                 else:
                     messages.warning(request,"Something went wrong while creating the task!")
 
-                return redirect('central_branch:task_home')
+                #redirecting 
+                if team_primary == None or team_primary == "1":
+                    return redirect('central_branch:task_home')
+                else:
+                    return redirect(f'{app_name}:task_home_team',team_primary)
             
             task_categories = Task_Category.objects.all()
-            teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-            all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
+            
+            #loads central bracnh if none or if is 1
+            if team_primary == None or team_primary == "1":
 
-            context = {
-                'is_new_task':True, #Task is being created. Use it to disable some ui in the template
-                'task_categories':task_categories,
-                'teams':teams,
-                'all_members':all_members,
-                'all_sc_ag':sc_ag,
-                'user_data':user_data,
-                'create_individual_task_access':create_individual_task_access,
-                'create_team_task_access':create_team_task_access
-            }
+                #This is for central bracnh where Team or individual task can be created
+                teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+                all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
-            return render(request,"create_task.html",context)
+                context = {
+                    'is_new_task':True, #Task is being created. Use it to disable some ui in the template
+                    'task_categories':task_categories,
+                    'teams':teams,
+                    'all_members':all_members,
+                    'all_sc_ag':sc_ag,
+                    'user_data':user_data,
+                    'create_individual_task_access':create_individual_task_access,
+                    'create_team_task_access':create_team_task_access,
+
+                    'app_name':app_name,
+                }
+
+                return render(request,"create_task.html",context)
+            else:
+
+                #This is where team can create task for their individual members
+                teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+                all_members = Task_Assignation.load_insb_members_for_task_assignation(request,team_primary)
+                nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
+
+                context = {
+                    'is_new_task':True, #Task is being created. Use it to disable some ui in the template
+                    'task_categories':task_categories,
+                    'teams':teams,
+                    'all_members':all_members,
+                    'all_sc_ag':sc_ag,
+                    'user_data':user_data,
+                    'create_individual_task_access':create_individual_task_access,
+                    'create_team_task_access':False,
+
+                    #loading navbars as per page
+                    'web_dev_team':nav_bar["web_dev_team"],
+                    'content_and_writing_team':nav_bar["content_and_writing_team"],
+                    'event_management_team':nav_bar["event_management_team"],
+                    'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                    'promotion_team':nav_bar["promotion_team"],
+                    'public_relation_team':nav_bar["public_relation_team"],
+                    'membership_development_team':nav_bar["membership_development_team"],
+                    'media_team':nav_bar["media_team"],
+                    'graphics_team':nav_bar["graphics_team"],
+                    'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+                    'team_primary':team_primary,
+                    'app_name':app_name,
+                }
+                return render(request,"create_task.html",context)
         else:
             return render(request,'access_denied2.html')
     except Exception as e:
@@ -4521,6 +4574,7 @@ def task_home(request,team_primary = None):
                     messages.warning(request,"Something went wrong while creating the task category!")
 
         #modify this so that team incharge and volunteer both can create task in respective team
+        #so modify the funtions with a team_primary parameter
         #########################################
         ###TODO:Arman Task###
         #########
@@ -4566,6 +4620,7 @@ def task_home(request,team_primary = None):
             'media_team':nav_bar["media_team"],
             'graphics_team':nav_bar["graphics_team"],
             'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+            'team_primary':team_primary,
             }
 
             return render(request,"task_home_team.html",context)
