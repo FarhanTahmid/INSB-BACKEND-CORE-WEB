@@ -4473,7 +4473,7 @@ def create_task(request,team_primary = None):
                         task_types_per_member[member_id] = member_name
             
                 task_of = 1 #Setting task_of as 1 for Branch primary
-                if(Task_Assignation.create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
+                if(Task_Assignation.create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
                     messages.success(request,"Task Created successfully!")
                 else:
                     messages.warning(request,"Something went wrong while creating the task!")
@@ -4580,7 +4580,7 @@ def task_home(request,team_primary = None):
         #modify this so that team incharge and volunteer both can create task in respective team
         #so modify the funtions with a team_primary parameter
         #########################################
-        ###TODO:Arman Task###
+        ###Done:Arman Task###
         #########
         has_task_create_access = Branch_View_Access.get_create_individual_task_access(request, team_primary) or Branch_View_Access.get_create_team_task_access(request, team_primary)
         print(Branch_View_Access.get_create_individual_task_access(request, team_primary))
@@ -4602,8 +4602,8 @@ def task_home(request,team_primary = None):
             return render(request,"task_home.html",context)
         
         else:
-            
-            all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
+            team = Teams.objects.get(primary=team_primary)
+            all_tasks = Task.objects.filter(team=team).order_by('is_task_completed','-deadline')
             desired_team = Task_Assignation.get_team_app_name(team_primary)
             
             #getting nav_bar_name
@@ -4753,11 +4753,6 @@ def upload_task(request, task_id,team_primary = None):
                         messages.success(request,f"Comments added for {member_id} successfully!")
                     else:
                         messages.warning(request,"Something went wrong while adding the comments!")
-                    
-                    return redirect('central_branch:upload_task',task_id)
-                
-                elif request.POST.get('save_marks'):
-
                     
                     return redirect('central_branch:upload_task',task_id)
                 

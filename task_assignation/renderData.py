@@ -19,185 +19,190 @@ from django.conf import settings
 
 class Task_Assignation:
     
-    def create_new_task(request, current_user, task_of, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
+    def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
 
+        # try:
+        #Checking to see if the list is empty depending on which task_type is selected
+        #If empty then stop the creation
+        if task_type == "Team" and not team_select:
+            messages.warning(request,"Please select Team(s)")
+            return False
+        elif task_type == "Individuals" and not member_select:
+            messages.warning(request,"Please select Individual(s)")
+            return False
+        
+        #Setting the task_created by using username.
+        #If it is a regular member then get the ieee_id. If it fails then it must be an admin user, hence get the admin username
+        #task_created_by is a charfield so if ieee_id is stored we convert it to string
         try:
-            #Checking to see if the list is empty depending on which task_type is selected
-            #If empty then stop the creation
-            if task_type == "Team" and not team_select:
-                messages.warning(request,"Please select Team(s)")
-                return False
-            elif task_type == "Individuals" and not member_select:
-                messages.warning(request,"Please select Individual(s)")
-                return False
+            task_created_by=str(Members.objects.get(ieee_id=current_user.user.username).ieee_id)
+        except:
+            task_created_by=adminUsers.objects.get(username=current_user.user.username).username
+        
+        #Create a new task and save it
+        new_task = Task(title=title,
+                        description=description,
+                        task_category=Task_Category.objects.get(name=task_category),
+                        task_type=task_type,
+                        task_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=task_of),
+                        task_created_by=task_created_by,
+                        deadline=deadline
+                        )
+        
+        new_task.save()
+        #creating task log
+        task_log = Task_Log.objects.create(task_number = new_task,task_log_details = {str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, created by {task_created_by}'})
+        task_log.update_task_number+=1
+        task_log.save()
+
+        #If task_type is Team
+        if task_type == "Team":
+            teams = []
+            #For all team primaries in team_select, get their respective team reference and store in teams array
+            for team_primary in team_select:
+                teams.append(Teams.objects.get(primary=team_primary))
+            #Set the array of teams as list for team inside the task and save the task with newly added teams
+            new_task.team.add(*teams)
+            new_task.save()   
+
+            #saving team points
+            for team in teams:
+                #creating team task points and team forward entities
+                team_point = Team_Task_Point.objects.create(task=new_task,team = team) 
+                team_point.save()   
+
+                team_forward = Team_Task_Forwarded.objects.create(task = new_task,team = team)
+                team_forward.save()                   
+
+            #getting team names as list
+            team_names = []
+            for name in teams:
+                team_names.append(name.team_name)
+            team_names = ", ".join(team_names)
+            #updating task_log details
+            task_log_message = f'Task Name: {title}, assigned to Teams: {team_names}'
+            Task_Assignation.save_task_logs(new_task,task_log_message)
+
+            get_current_panel_members = None
+            #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
+            if task_of == 1:
+                get_current_panel=Branch.load_current_panel()
+                #Get current panel members of branch
+                get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+            else:
+                #Else we are creating task for sc_ag. Hence load current panel of sc_ag
+                get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task_of).first()
+                #Get current panel_members for sc_ag
+                get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
+
+            coordinators = []
+            #As it is a team task then notify the current coordinators of those teams
+            #For each member in current panel members
+            for member in get_current_panel_members:
+                #If the member's team primary exist in team_select list i.e. is a member of the team
+                if str(member.team.primary) in team_select:
+                    #And if the member is a coordinator
+                    if member.position.is_co_ordinator and member.position.is_officer:
+                        #Add to coordinators array and send confirmation
+                        coordinators.append(member.member)
+                        ##
+                        ## Send email/notification here
+                        ##
+            #appending the task to team cooridnator
+            new_task.members.add(*coordinators)
+            #creating those members points in Member Task Points
+            for member in coordinators:
+                #making all task type true for those coordinators and creating their task points and task upload type
+                member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
+                member_task_points.save()
+
+                task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = new_task)
+                task_type_member.has_content = True
+                task_type_member.has_drive_link = True
+                task_type_member.has_file_upload = True
+                task_type_member.has_media = True
+                task_type_member.has_permission_paper = True
+                task_type_member.save()
+                #sending the email to the coordinator
+                Task_Assignation.task_creation_email(request,member,new_task)
             
-            #Setting the task_created by using username.
-            #If it is a regular member then get the ieee_id. If it fails then it must be an admin user, hence get the admin username
-            #task_created_by is a charfield so if ieee_id is stored we convert it to string
-            try:
-                task_created_by=str(Members.objects.get(ieee_id=current_user.user.username).ieee_id)
-            except:
-                task_created_by=adminUsers.objects.get(username=current_user.user.username).username
+            return True
+        
+        #Else if task_type is Individuals
+        elif task_type == "Individuals":
+            members = []
+            #For each member in member_select array
+            for member in member_select:
+                #Get member reference and store it in volunteer
+                volunteer = Members.objects.get(ieee_id=member)
+                #Add the volunteer to the array and send confirmation
+                members.append(volunteer)
+                #sending email
+                Task_Assignation.task_creation_email(request,volunteer,new_task)
+
+            #saving members task type as per needed
+            for ieee_id,task_type in task_types_per_member.items():
+                memb = Members.objects.get(ieee_id = ieee_id)
+                member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = new_task)
+                member_task_type.save()
+                message = ""
+                for i in task_type:
+                    if i=="permission_paper":
+                        member_task_type.has_permission_paper = True
+                        member_task_type.save()
+                        message += "Permission Paper,"
+                    if i=="content":
+                        member_task_type.has_content = True
+                        member_task_type.save()
+                        message += "Content,"
+                    if i=="file_upload":
+                        member_task_type.has_file_upload = True
+                        member_task_type.save()
+                        message += "File Upload,"
+                    if i=="media":
+                        member_task_type.has_media = True
+                        member_task_type.save()
+                        message += "Media,"
+                    if i=="drive_link":
+                        member_task_type.has_drive_link = True
+                        member_task_type.save()
+                        message += "drive link"
+                #saving task log/ updating it
+                if message!="":
+                    message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
+                    task_log_message = f'Task Name: {title}, {message}'
+                    Task_Assignation.save_task_logs(new_task,task_log_message)
             
-            #Create a new task and save it
-            new_task = Task(title=title,
-                            description=description,
-                            task_category=Task_Category.objects.get(name=task_category),
-                            task_type=task_type,
-                            task_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=task_of),
-                            task_created_by=task_created_by,
-                            deadline=deadline
-                            )
+            #getting members IEEE_ID
+            members_ieee_id = []
+            for member in members:
+                members_ieee_id.append(member.ieee_id)
             
+            members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
+
+            #Add those members to task
+            new_task.members.add(*members)
             new_task.save()
-            #creating task log
-            task_log = Task_Log.objects.create(task_number = new_task,task_log_details = {str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, created by {task_created_by}'})
-            task_log.update_task_number+=1
-            task_log.save()
 
-            #If task_type is Team
-            if task_type == "Team":
-                teams = []
-                #For all team primaries in team_select, get their respective team reference and store in teams array
-                for team_primary in team_select:
-                    teams.append(Teams.objects.get(primary=team_primary))
-                #Set the array of teams as list for team inside the task and save the task with newly added teams
-                new_task.team.add(*teams)
-                new_task.save()   
-
-                #saving team points
-                for team in teams:
-                    #creating team task points and team forward entities
-                    team_point = Team_Task_Point.objects.create(task=new_task,team = team) 
-                    team_point.save()   
-
-                    team_forward = Team_Task_Forwarded.objects.create(task = new_task,team = team)
-                    team_forward.save()                   
-
-                #getting team names as list
-                team_names = []
-                for name in teams:
-                    team_names.append(name.team_name)
-                team_names = ", ".join(team_names)
-                #updating task_log details
-                task_log_message = f'Task Name: {title}, assigned to Teams: {team_names}'
-                Task_Assignation.save_task_logs(new_task,task_log_message)
-
-                get_current_panel_members = None
-                #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
-                if task_of == 1:
-                    get_current_panel=Branch.load_current_panel()
-                    #Get current panel members of branch
-                    get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
-                else:
-                    #Else we are creating task for sc_ag. Hence load current panel of sc_ag
-                    get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task_of).first()
-                    #Get current panel_members for sc_ag
-                    get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
-
-                coordinators = []
-                #As it is a team task then notify the current coordinators of those teams
-                #For each member in current panel members
-                for member in get_current_panel_members:
-                    #If the member's team primary exist in team_select list i.e. is a member of the team
-                    if str(member.team.primary) in team_select:
-                        #And if the member is a coordinator
-                        if member.position.is_co_ordinator and member.position.is_officer:
-                            #Add to coordinators array and send confirmation
-                            coordinators.append(member.member)
-                            ##
-                            ## Send email/notification here
-                            ##
-                #appending the task to team cooridnator
-                new_task.members.add(*coordinators)
-                #creating those members points in Member Task Points
-                for member in coordinators:
-                    #making all task type true for those coordinators and creating their task points and task upload type
-                    member_task_points = Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=new_task.task_category.points)
-                    member_task_points.save()
-
-                    task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = new_task)
-                    task_type_member.has_content = True
-                    task_type_member.has_drive_link = True
-                    task_type_member.has_file_upload = True
-                    task_type_member.has_media = True
-                    task_type_member.has_permission_paper = True
-                    task_type_member.save()
-                    #sending the email to the coordinator
-                    Task_Assignation.task_creation_email(request,member,new_task)
-                
-                return True
-            
-            #Else if task_type is Individuals
-            elif task_type == "Individuals":
-                members = []
-                #For each member in member_select array
-                for member in member_select:
-                    #Get member reference and store it in volunteer
-                    volunteer = Members.objects.get(ieee_id=member)
-                    #Add the volunteer to the array and send confirmation
-                    members.append(volunteer)
-                    #sending email
-                    Task_Assignation.task_creation_email(request,volunteer,new_task)
-
-                #saving members task type as per needed
-                for ieee_id,task_type in task_types_per_member.items():
-                    memb = Members.objects.get(ieee_id = ieee_id)
-                    member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = new_task)
-                    member_task_type.save()
-                    message = ""
-                    for i in task_type:
-                        if i=="permission_paper":
-                            member_task_type.has_permission_paper = True
-                            member_task_type.save()
-                            message += "Permission Paper,"
-                        if i=="content":
-                            member_task_type.has_content = True
-                            member_task_type.save()
-                            message += "Content,"
-                        if i=="file_upload":
-                            member_task_type.has_file_upload = True
-                            member_task_type.save()
-                            message += "File Upload,"
-                        if i=="media":
-                            member_task_type.has_media = True
-                            member_task_type.save()
-                            message += "Media,"
-                        if i=="drive_link":
-                            member_task_type.has_drive_link = True
-                            member_task_type.save()
-                            message += "drive link"
-                    #saving task log/ updating it
-                    if message!="":
-                        message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
-                        task_log_message = f'Task Name: {title}, {message}'
-                        Task_Assignation.save_task_logs(new_task,task_log_message)
-                
-                #getting members IEEE_ID
-                members_ieee_id = []
-                for member in members:
-                    members_ieee_id.append(member.ieee_id)
-                
-                members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
-
-                #Add those members to task
-                new_task.members.add(*members)
+            if team_primary and team_primary != 1:
+                team = Teams.objects.get(primary=team_primary)
+                new_task.team.add(team)
                 new_task.save()
 
-                #Divide the category points into equal points for each member
-                points_for_members = new_task.task_category.points / len(members)
-                #For each member, add them to the task points table
-                for member in members:
-                    Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=points_for_members)
+            #Divide the category points into equal points for each member
+            points_for_members = new_task.task_category.points / len(members)
+            #For each member, add them to the task points table
+            for member in members:
+                Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=points_for_members)
 
-                #updating task log details
-                task_log_message = f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
-                Task_Assignation.save_task_logs(new_task,task_log_message)
+            #updating task log details
+            task_log_message = f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
+            Task_Assignation.save_task_logs(new_task,task_log_message)
 
-                return True
-        except:
-            return False
+            return True
+        # except:
+        #     return False
 
         
     def update_task(request, task_id,task_of, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member):

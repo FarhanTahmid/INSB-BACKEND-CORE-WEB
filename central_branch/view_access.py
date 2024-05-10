@@ -81,7 +81,9 @@ class Branch_View_Access:
                     get_current_panel_member= Panel_Members.objects.filter(member=member, tenure=get_current_panel.pk, team=team).first()
                 
                     if get_current_panel_member:
-                        if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
+                        if get_current_panel_member.position.is_co_ordinator and get_current_panel_member.position.is_officer:
+                            return True
+                        elif not get_current_panel_member.position.is_co_ordinator and get_current_panel_member.position.is_officer:
                             return True
             else:
                 if(Branch_Data_Access.objects.filter(ieee_id=username,create_individual_task_access=True).exists()):
@@ -110,7 +112,9 @@ class Branch_View_Access:
                     get_current_panel_member= Panel_Members.objects.filter(member=member, tenure=get_current_panel.pk, team=team).first()
                 
                     if get_current_panel_member:
-                        if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
+                        if get_current_panel_member.position.is_co_ordinator and get_current_panel_member.position.is_officer:
+                            return True
+                        elif not get_current_panel_member.position.is_co_ordinator and get_current_panel_member.position.is_officer:
                             return True
             else:
                 if(Branch_Data_Access.objects.filter(ieee_id=username,create_team_task_access=True).exists()):
