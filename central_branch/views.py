@@ -4450,8 +4450,6 @@ def create_task(request,team_primary = None):
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
 
-        print(create_individual_task_access)
-        print(create_team_task_access)
 
         if create_individual_task_access or create_team_task_access:
             
@@ -4464,12 +4462,12 @@ def create_task(request,team_primary = None):
 
                 team_select = None
                 member_select = None
+                task_types_per_member = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
-                    task_types_per_member = {}
                     for member_id in member_select:
                         member_name = request.POST.getlist(member_id + '_task_type[]')
                         task_types_per_member[member_id] = member_name
@@ -4904,21 +4902,26 @@ def add_task(request, task_id):
 
 @login_required
 @member_login_permission
-def task_edit(request, task_id):
+def task_edit(request, task_id,team_primary = None):
 
-    try:
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
-
         user = request.user.username
-
         task = Task.objects.get(id=task_id)
+
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
+
+        #app name for proper redirecting
+        app_name = "central_branch"
+        if team_primary and team_primary!="1":
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+
 
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
         my_task = False
@@ -4958,17 +4961,18 @@ def task_edit(request, task_id):
 
                 team_select = None
                 member_select = None
+                task_types_per_member = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
-                    task_types_per_member = {}
                     for member_id in member_select:
                         member_name = request.POST.getlist(member_id + '_task_type[]')
                         task_types_per_member[member_id] = member_name
 
-                if(Task_Assignation.update_task(request, task_id, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
+                task_of = 1
+                if(Task_Assignation.update_task(request, task_id,task_of, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
                     messages.success(request,"Task Updated successfully!")
                 else:
                     messages.warning(request,"Something went wrong while updating the task!")
@@ -4982,44 +4986,53 @@ def task_edit(request, task_id):
                 
                 return redirect('central_branch:task_home')
         
+        
         task_categories = Task_Category.objects.all()
-        teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
-        all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
-        #checking to see if points to be deducted
-        late = Task_Assignation.deduct_points_for_members(task)
-        #this is being done to ensure that he can click start button only if it is his task
-
         #getting all task logs for this task
         task_logs = Task_Log.objects.get(task_number = task)
+            
+        if team_primary == None or team_primary == "1":
 
-        is_member_view = logged_in_user in task.members.all()
-        #If it is a task member view or a regular view then override the access
-        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
-            create_individual_task_access = False
-            create_team_task_access = False       
+            
+            teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
+            all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
+            #checking to see if points to be deducted
+            late = Task_Assignation.deduct_points_for_members(task)
+            #this is being done to ensure that he can click start button only if it is his task
 
-        context = {
-            'task':task,
-            'task_categories':task_categories,
-            'teams':teams,
-            'all_members':all_members,
-            'all_sc_ag':sc_ag,
-            'user_data':user_data,
-            'logged_in_user':logged_in_user,
-            'is_late':late,
-            'my_task':my_task,
-            'task_logs':task_logs.task_log_details,
-            'create_individual_task_access':create_individual_task_access,
-            'create_team_task_access':create_team_task_access,
-            'is_member_view':is_member_view,
-            'is_task_started_by_member':is_task_started_by_member
-        }
+            is_member_view = logged_in_user in task.members.all()
+            #If it is a task member view or a regular view then override the access
+            if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
+                create_individual_task_access = False
+                create_team_task_access = False       
+
+            context = {
+                'task':task,
+                'task_categories':task_categories,
+                'teams':teams,
+                'all_members':all_members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'logged_in_user':logged_in_user,
+                'is_late':late,
+                'my_task':my_task,
+                'task_logs':task_logs.task_log_details,
+                'create_individual_task_access':create_individual_task_access,
+                'create_team_task_access':create_team_task_access,
+                'is_member_view':is_member_view,
+                'is_task_started_by_member':is_task_started_by_member,
+
+                'app_name':app_name,
+            }
+        else:
+            pass
+
 
         return render(request,"edit_task.html",context)
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 class GetTaskCategoryPointsAjax(View):
     def get(self,request):

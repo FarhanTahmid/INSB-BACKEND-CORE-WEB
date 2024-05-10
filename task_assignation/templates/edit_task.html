@@ -871,7 +871,7 @@
             {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
-                  {% if create_individual_task_access or create_team_task_access or forwarded_central_branch %}
+                  {% if create_individual_task_access or create_team_task_access %}
                   <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                   {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                     {% if my_task %}
@@ -884,13 +884,11 @@
                   {% endif %}
 
                   {% if task.task_type == "Team" and has_team_task_options_view_access %}
-                    {% if is_forwarded %}
                         {% if is_branch %}
                         <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                         {% else %}
                         <a href="{% url ''|add:app_name|add:':upload_task' 8 task.pk  %}" class="check-task-button">Check task progress</a>
                         {% endif %}
-                    {% endif %}
 
                     {% if app_name == 'central_branch' %}
                     <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded or forwarded_central_branch %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
@@ -995,10 +993,12 @@
                 
                 <!--task type-->
                 <div class="task_type ">
+                    {% if is_new_task %}
                     <label class="task_type_label">Select Task Type and Individuals:</label>
+                    {% endif %}
                     <div class="radio-btns">
                         {% if create_team_task_access %}
-                        {% if is_branch %}
+                        {% if new_task or task.task_type == "Team" %}
                         <div class="radio-btns_content box">
                             <input type="radio" id='btn05' name="task_type" value="Team" {% if task.task_type == "Team" %}checked{% endif %} required>
                             <label for="btn05">Teams</label>
@@ -1006,10 +1006,12 @@
                         {% endif %}
                         {% endif %}
                         {% if create_individual_task_access %}
+                        {% if new_task or task.task_type == "Individuals" %}
                         <div class="radio-btns_content box">
                             <input type="radio" id='btn06'name="task_type" value="Individuals" {% if task.task_type == "Individuals" %}checked{% endif %}>
                             <label for="btn06">Individuals</label>
                         </div>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -1063,7 +1065,6 @@
 
                 {% if create_team_task_access %}
                 <!--Search bar for teams-->
-                {% if is_branch %}
                 <div class="tb_search  search_input_team {% if task.task_type == "Individuals" %}hide_table{% endif %}" >
                     <input
                     type="text"
@@ -1072,11 +1073,9 @@
                     placeholder="Search..."
                     class="form-control title-box"/>
                 </div>
-                {% endif %}
                 
                 
                 <!--Table for teams-->
-                {% if is_branch %}
                 <div class="table-responsive team-table {% if task.task_type == "Individuals" %}hide_table{% endif %}">
                     <table class="table box" id="team-table">
                     <thead>
@@ -1097,7 +1096,6 @@
                     </tbody>
                 </table>
                 </div>
-                {% endif %}
                 {% endif %}
                 
                 

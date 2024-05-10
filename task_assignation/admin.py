@@ -50,8 +50,8 @@ class Permission_Paper(admin.ModelAdmin):
     list_display = [
         'task','permission_paper'
     ]
-@admin.register(Team_Task_Forward)
+@admin.register(Team_Task_Forwarded)
 class Team_Task_Forward(admin.ModelAdmin):
     list_display=[
-        'task','team','forward_to_incharge','forwared_by'
+        'task','team','task_forwarded_to_incharge','forwared_by'
     ]
