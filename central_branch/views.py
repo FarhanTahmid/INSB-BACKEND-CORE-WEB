@@ -4968,6 +4968,7 @@ def task_edit(request, task_id,team_primary = None):
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
         is_coordinator = Task_Assignation.is_coordinator(request,team_primary)
+        is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
         
 
         #app name for proper redirecting
@@ -4997,7 +4998,9 @@ def task_edit(request, task_id,team_primary = None):
             logged_in_user = Members.objects.get(ieee_id = user)
             try:
                 is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
-                if task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
+                if logged_in_user.position.is_coordinator and logged_in_user.position.is_officer:
+                    pass
+                elif task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
                     return redirect('central_branch:upload_task',task.pk)
             except:
                 pass
@@ -5084,6 +5087,7 @@ def task_edit(request, task_id,team_primary = None):
 
                 'app_name':app_name,
                 'is_coordinator':is_coordinator,
+                'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
             }
         else:
 
@@ -5119,9 +5123,10 @@ def task_edit(request, task_id,team_primary = None):
                 'app_name':app_name,
                 'team_primary':team_primary,
                 'is_coordinator':is_coordinator,
+                'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
             }
 
-        print(app_name)
+
         return render(request,"edit_task.html",context)
     # except Exception as e:
     #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

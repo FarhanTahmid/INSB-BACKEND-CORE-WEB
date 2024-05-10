@@ -1289,7 +1289,7 @@ This is an automated message. Do not reply
 
         #for admin and central branch EB only to forward task to all team's incharges
         if team_primary == "1" or team_primary == None:
-            return False
+            return "Admin/EB"
         team = Teams.objects.get(primary = int(team_primary))
         user = request.user.username
         try:
@@ -1303,11 +1303,19 @@ This is an automated message. Do not reply
                     return True
         else:
             #for admin and central branch EB only to forward task to all team's incharges
-            return False
+            return "Admin/EB"
 
     def is_task_forwarded_to_incharge(task,team_primary):
 
         '''This function will return whether task was forwarded to all incharges by coordinaor
             or from admin/EB to all team's incharges'''
 
-        pass
+        if team_primary == None or team_primary == "1":
+            return "Admin/EB"
+        team = Teams.objects.get(primary = int(team_primary))
+        forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
+
+        if forwarded.task_forwarded_to_incharge:
+            return True
+        else:
+            return False
