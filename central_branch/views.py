@@ -4447,8 +4447,8 @@ def create_task(request,team_primary = None):
         #modifty this functions so that incharge and coordinator gets access by passing a team_primary
         #parameter
         #TODO:
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
 
         if create_individual_task_access or create_team_task_access:
             
@@ -4578,7 +4578,7 @@ def task_home(request,team_primary = None):
         #########################################
         ###TODO:Arman Task###
         #########
-        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request) or Branch_View_Access.get_create_team_task_access(request)
+        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request, team_primary) or Branch_View_Access.get_create_team_task_access(request, team_primary)
         #########
         if team_primary == None or team_primary == "1":
 
@@ -5011,7 +5011,7 @@ def task_edit(request, task_id):
             'is_task_started_by_member':is_task_started_by_member
         }
 
-        return render(request,"create_task.html",context)
+        return render(request,"edit_task.html",context)
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())

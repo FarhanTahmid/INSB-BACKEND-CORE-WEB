@@ -1,7 +1,11 @@
+from central_branch.renderData import Branch
+from port.models import Teams
 from system_administration.render_access import Access_Render
-from system_administration.models import Branch_Data_Access
+from system_administration.models import Branch_Data_Access, adminUsers
 from django.contrib import messages
 import logging
+
+from users.models import Members, Panel_Members
 
 
 class Branch_View_Access:
@@ -59,7 +63,7 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
         
-    def get_create_individual_task_access(request):
+    def get_create_individual_task_access(request, team_primary):
         logger = logging.getLogger(__name__)
         try:
             # get username
@@ -68,6 +72,19 @@ class Branch_View_Access:
                 return True
             elif(Branch_Data_Access.objects.filter(ieee_id=username,create_individual_task_access=True).exists()):
                 return True
+            elif(team_primary):
+                if (team_primary == "1"):
+                    return True
+                else:
+                    member = Members.objects.get(ieee_id = username)
+                    team = Teams.objects.get(primary=member.team.primary)
+                    get_current_panel=Branch.load_current_panel()
+                    #Get current panel members of branch
+                    get_current_panel_member= Panel_Members.objects.filter(member=member, tenure=get_current_panel.pk, team=team).first()
+                
+                    if get_current_panel_member:
+                        if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
+                            return True
             else:
                 return False
         except Exception as ex:
@@ -75,7 +92,7 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
         
-    def get_create_team_task_access(request):
+    def get_create_team_task_access(request, team_primary):
         logger = logging.getLogger(__name__)
         try:
             # get username
@@ -84,8 +101,44 @@ class Branch_View_Access:
                 return True
             elif(Branch_Data_Access.objects.filter(ieee_id=username,create_team_task_access=True).exists()):
                 return True
+            elif(team_primary):
+                if (team_primary == "1"):
+                    return True
+                else:
+                    member = Members.objects.get(ieee_id = username)
+                    team = Teams.objects.get(primary=member.team.primary)
+                    get_current_panel=Branch.load_current_panel()
+                    #Get current panel members of branch
+                    get_current_panel_member= Panel_Members.objects.filter(member=member, tenure=get_current_panel.pk, team=team).first()
+                
+                    if get_current_panel_member:
+                        if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
+                            return True
             else:
                 return False
+        except Exception as ex:
+            # messages.error(request,"Error loading Data Access")
+            logger.info(ex, exc_info=True)
+            return False
+    
+    def get_team_task_options_view_access(request, task):
+        logger = logging.getLogger(__name__)
+        try:
+            username = request.user.username
+            member = Members.objects.get(ieee_id=username)
+            if Branch_View_Access.common_access(username=member.ieee_id):
+                return True
+            team = Teams.objects.get(primary=member.team.primary)
+            if team in task.team.all():
+                get_current_panel=Branch.load_current_panel()
+                #Get current panel members of branch
+                get_current_panel_member= Panel_Members.objects.filter(member=member, tenure=get_current_panel.pk, team=team).first()
+            
+                if get_current_panel_member:
+                    if get_current_panel_member.position.is_co_ordinator:
+                        return True
+            
+            return False
         except Exception as ex:
             # messages.error(request,"Error loading Data Access")
             logger.info(ex, exc_info=True)
