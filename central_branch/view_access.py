@@ -63,7 +63,7 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
         
-    def get_create_individual_task_access(request, team_primary):
+    def get_create_individual_task_access(request, team_primary=None):
         logger = logging.getLogger(__name__)
         try:
             # get username
@@ -92,7 +92,7 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
         
-    def get_create_team_task_access(request, team_primary):
+    def get_create_team_task_access(request, team_primary=None):
         logger = logging.getLogger(__name__)
         try:
             # get username
@@ -126,8 +126,8 @@ class Branch_View_Access:
         try:
             username = request.user.username
             member = Members.objects.get(ieee_id=username)
-            if Branch_View_Access.common_access(username=member.ieee_id):
-                return True
+            # if Branch_View_Access.common_access(username=member.ieee_id):
+            #     return True
             team = Teams.objects.get(primary=member.team.primary)
             if team in task.team.all():
                 get_current_panel=Branch.load_current_panel()
@@ -135,7 +135,7 @@ class Branch_View_Access:
                 get_current_panel_member= Panel_Members.objects.filter(member=member, tenure=get_current_panel.pk, team=team).first()
             
                 if get_current_panel_member:
-                    if get_current_panel_member.position.is_co_ordinator:
+                    if get_current_panel_member.position.is_officer:
                         return True
             
             return False
