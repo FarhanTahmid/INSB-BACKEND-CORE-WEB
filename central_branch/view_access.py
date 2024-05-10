@@ -69,9 +69,7 @@ class Branch_View_Access:
             # get username
             username=request.user.username
             if(Branch_View_Access.common_access(username=username)):
-                return True
-            elif(Branch_Data_Access.objects.filter(ieee_id=username,create_individual_task_access=True).exists()):
-                return True
+                return True           
             elif(team_primary):
                 if (team_primary == "1"):
                     return True
@@ -86,6 +84,8 @@ class Branch_View_Access:
                         if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
                             return True
             else:
+                if(Branch_Data_Access.objects.filter(ieee_id=username,create_individual_task_access=True).exists()):
+                    return True
                 return False
         except Exception as ex:
             # messages.error(request,"Error loading Data Access")
@@ -99,9 +99,7 @@ class Branch_View_Access:
             username=request.user.username
             if(Branch_View_Access.common_access(username=username)):
                 return True
-            elif(Branch_Data_Access.objects.filter(ieee_id=username,create_team_task_access=True).exists()):
-                return True
-            elif(team_primary):
+            elif(team_primary):               
                 if (team_primary == "1"):
                     return True
                 else:
@@ -115,6 +113,8 @@ class Branch_View_Access:
                         if get_current_panel_member.position.is_co_ordinator or get_current_panel_member.position.is_officer:
                             return True
             else:
+                if(Branch_Data_Access.objects.filter(ieee_id=username,create_team_task_access=True).exists()):
+                    return True
                 return False
         except Exception as ex:
             # messages.error(request,"Error loading Data Access")

@@ -4446,9 +4446,12 @@ def create_task(request,team_primary = None):
 
         #modifty this functions so that incharge and coordinator gets access by passing a team_primary
         #parameter
-        #TODO:
+        #Done:
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
+
+        print(create_individual_task_access)
+        print(create_team_task_access)
 
         if create_individual_task_access or create_team_task_access:
             
@@ -4579,6 +4582,7 @@ def task_home(request,team_primary = None):
         ###TODO:Arman Task###
         #########
         has_task_create_access = Branch_View_Access.get_create_individual_task_access(request, team_primary) or Branch_View_Access.get_create_team_task_access(request, team_primary)
+        print(Branch_View_Access.get_create_individual_task_access(request, team_primary))
         #########
         if team_primary == None or team_primary == "1":
 
