@@ -758,8 +758,6 @@ class Task_Assignation:
         ''' This function load all insb members whose positions are below the position of the requesting user. Works for both admin and regular user '''
         #Check the type of requesting user
 
-        if team_primary == None or team_primary == "1":
-            return Task_Assignation.load_insb_members_for_task_assignation(request,team_primary)
         
         try:
             #If the requesting user is a member
@@ -801,12 +799,12 @@ class Task_Assignation:
         #TODO:set to all instead of individuals after making teams
         dic={}
         if user.position.is_eb_member:
-            user_tasks = Task.objects.filter(task_created_by = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
+            user_tasks = Task.objects.filter(task_created_by = user).order_by('is_task_completed','-deadline')
             for task in user_tasks:
                 earned_points = 0
                 dic[task] = earned_points
         else:
-            user_tasks = Task.objects.filter(members = user,task_type = "Individuals").order_by('is_task_completed','-deadline')
+            user_tasks = Task.objects.filter(members = user).order_by('is_task_completed','-deadline')
             for task in user_tasks:
                 earned_points = Member_Task_Point.objects.get(task = task,member = user)
                 dic[task] = earned_points
@@ -1284,3 +1282,32 @@ This is an automated message. Do not reply
         }
 
         return dic
+    
+    def is_coordinator(request,team_primary):
+
+        '''This function will return whether current user is coordinator or not'''
+
+        #for admin and central branch EB only to forward task to all team's incharges
+        if team_primary == "1" or team_primary == None:
+            return False
+        team = Teams.objects.get(primary = int(team_primary))
+        user = request.user.username
+        try:
+            member = Members.objects.get(ieee_id = user)
+        except:
+            member = adminUsers.objects.get(username = user)
+  
+        if type(member) is Members:
+            if member.team == team:
+                if member.position.is_co_ordinator and member.position.is_officer:
+                    return True
+        else:
+            #for admin and central branch EB only to forward task to all team's incharges
+            return False
+
+    def is_task_forwarded_to_incharge(task,team_primary):
+
+        '''This function will return whether task was forwarded to all incharges by coordinaor
+            or from admin/EB to all team's incharges'''
+
+        pass

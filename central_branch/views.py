@@ -4558,6 +4558,9 @@ def task_home(request,team_primary = None):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
 
+        app_name = "central_branch"
+        if team_primary and team_primary!="1":
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
 
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
@@ -4591,7 +4594,9 @@ def task_home(request,team_primary = None):
             'all_sc_ag':sc_ag,
             'user_data':user_data,
             'all_task_categories':all_task_categories,
-            'has_task_create_access':has_task_create_access
+            'has_task_create_access':has_task_create_access,
+
+            'app_name':app_name,
             }
 
             return render(request,"task_home.html",context)
@@ -4623,6 +4628,7 @@ def task_home(request,team_primary = None):
             'graphics_team':nav_bar["graphics_team"],
             'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
             'team_primary':team_primary,
+            'app_name':app_name,
             }
 
             return render(request,"task_home_team.html",context)
@@ -4638,7 +4644,7 @@ def task_home(request,team_primary = None):
 
 @login_required
 @member_login_permission
-def upload_task(request, task_id):
+def upload_task(request, task_id,team_primary = None):
   
     try:
         # get all sc ag for sidebar
@@ -4646,6 +4652,13 @@ def upload_task(request, task_id):
         # get user data for side bar
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
+
+        #for proper navbar and redirection
+        app_name = "central_branch"
+        if team_primary and team_primary!="1":
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            #getting nav_bar_name
+            nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
         
         task = Task.objects.get(id=task_id)
         user = request.user.username
@@ -4797,22 +4810,60 @@ def upload_task(request, task_id):
                         messages.warning(request,"Something went wrong while deleting the media!")
                     return redirect('central_branch:upload_task',task_id)
 
-            context = {
-                'all_sc_ag':sc_ag,
-                'user_data':user_data,
-                'task':task,
-                'members_task_type':member_task_type,
-                'permission_paper_loaded':permission_paper_loaded,
-                'content_loaded':content_loaded,
-                'drive_link_loaded':drive_link_loaded,
-                'file_uploads':file_uploads,
-                'media_uploads':media_uploads,
-                'task_type_per_member':task_type_per_member,
-                'media_url':settings.MEDIA_URL,
-                'comments':comments,
-                'create_individual_task_access':create_individual_task_access,
-                'create_team_task_access':create_team_task_access
-            }
+            if team_primary == None or team_primary == "1":
+                context = {
+                    'all_sc_ag':sc_ag,
+                    'user_data':user_data,
+                    'task':task,
+                    'members_task_type':member_task_type,
+                    'permission_paper_loaded':permission_paper_loaded,
+                    'content_loaded':content_loaded,
+                    'drive_link_loaded':drive_link_loaded,
+                    'file_uploads':file_uploads,
+                    'media_uploads':media_uploads,
+                    'task_type_per_member':task_type_per_member,
+                    'media_url':settings.MEDIA_URL,
+                    'comments':comments,
+                    'create_individual_task_access':create_individual_task_access,
+                    'create_team_task_access':create_team_task_access,
+
+                    'app_name':app_name,
+
+
+                }
+            else:
+                context = {
+                    'all_sc_ag':sc_ag,
+                    'user_data':user_data,
+                    'task':task,
+                    'members_task_type':member_task_type,
+                    'permission_paper_loaded':permission_paper_loaded,
+                    'content_loaded':content_loaded,
+                    'drive_link_loaded':drive_link_loaded,
+                    'file_uploads':file_uploads,
+                    'media_uploads':media_uploads,
+                    'task_type_per_member':task_type_per_member,
+                    'media_url':settings.MEDIA_URL,
+                    'comments':comments,
+                    'create_individual_task_access':create_individual_task_access,
+                    'create_team_task_access':create_team_task_access,
+
+                    'app_name':app_name,
+                    #loading navbars as per page
+                    'web_dev_team':nav_bar["web_dev_team"],
+                    'content_and_writing_team':nav_bar["content_and_writing_team"],
+                    'event_management_team':nav_bar["event_management_team"],
+                    'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                    'promotion_team':nav_bar["promotion_team"],
+                    'public_relation_team':nav_bar["public_relation_team"],
+                    'membership_development_team':nav_bar["membership_development_team"],
+                    'media_team':nav_bar["media_team"],
+                    'graphics_team':nav_bar["graphics_team"],
+                    'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+                    'team_primary':team_primary,
+
+
+                }
 
             return render(request,"task_page.html",context)
         else:
@@ -4916,11 +4967,15 @@ def task_edit(request, task_id,team_primary = None):
 
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
+        is_coordinator = Task_Assignation.is_coordinator(request,team_primary)
+        
 
         #app name for proper redirecting
         app_name = "central_branch"
         if team_primary and team_primary!="1":
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            #this function will check whether current user is coordinator or not
+            
 
 
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
@@ -4990,21 +5045,26 @@ def task_edit(request, task_id,team_primary = None):
         task_categories = Task_Category.objects.all()
         #getting all task logs for this task
         task_logs = Task_Log.objects.get(task_number = task)
+
+        #checking to see if points to be deducted
+        late = Task_Assignation.deduct_points_for_members(task)
+
+        is_member_view = logged_in_user in task.members.all()
+        #If it is a task member view or a regular view then override the access
+        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
+            create_individual_task_access = False
+            create_team_task_access = False
+
+        
             
         if team_primary == None or team_primary == "1":
 
             
             teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
             all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
-            #checking to see if points to be deducted
-            late = Task_Assignation.deduct_points_for_members(task)
+           
             #this is being done to ensure that he can click start button only if it is his task
-
-            is_member_view = logged_in_user in task.members.all()
-            #If it is a task member view or a regular view then override the access
-            if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
-                create_individual_task_access = False
-                create_team_task_access = False       
+       
 
             context = {
                 'task':task,
@@ -5023,11 +5083,45 @@ def task_edit(request, task_id,team_primary = None):
                 'is_task_started_by_member':is_task_started_by_member,
 
                 'app_name':app_name,
+                'is_coordinator':is_coordinator,
             }
         else:
-            pass
 
+            nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
+            
+
+            context = {
+                'task':task,
+                'task_categories':task_categories,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'logged_in_user':logged_in_user,
+                'is_late':late,
+                'my_task':my_task,
+                'task_logs':task_logs.task_log_details,
+                'create_individual_task_access':create_individual_task_access,
+                'create_team_task_access':create_team_task_access,
+                'is_member_view':is_member_view,
+                'is_task_started_by_member':is_task_started_by_member,
+
+                #loading navbars as per page
+                'web_dev_team':nav_bar["web_dev_team"],
+                'content_and_writing_team':nav_bar["content_and_writing_team"],
+                'event_management_team':nav_bar["event_management_team"],
+                'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                'promotion_team':nav_bar["promotion_team"],
+                'public_relation_team':nav_bar["public_relation_team"],
+                'membership_development_team':nav_bar["membership_development_team"],
+                'media_team':nav_bar["media_team"],
+                'graphics_team':nav_bar["graphics_team"],
+                'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+                'app_name':app_name,
+                'team_primary':team_primary,
+                'is_coordinator':is_coordinator,
+            }
+
+        print(app_name)
         return render(request,"edit_task.html",context)
     # except Exception as e:
     #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

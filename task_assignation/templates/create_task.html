@@ -752,7 +752,11 @@
           <div class="form-wrapper">
                 <!--back button-->
                 <div class="tooltip-container">
-                    <a href="{% url ''|add:app_name|add:':task_home' %}" class="image-button">
+                    {% if app_name == "central_branch" %}
+                    <a href="{% url 'central_branch:task_home' %}" class="image-button">
+                    {% else %}
+                    <a href="{% url ''|add:app_name|add:':task_home_team' team_primary %}" class="image-button">
+                    {% endif %}
                         <img src="/static/back-arrow.png" alt="Go back to session">
                     </a>
                     <span class="tooltip-text">Go back to Task Homepage</span>

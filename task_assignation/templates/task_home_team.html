@@ -429,7 +429,7 @@
                   {% for task in all_tasks %}
                   <tr>
                     <td style="color: #00629b">
-                      <a href="{% url 'central_branch:task_edit' task.pk %}"
+                      <a href="{% url ''|add:app_name|add:':task_edit_team' task.pk team_primary %}"
                         >{{task.title}}</a
                       >
                     </td>

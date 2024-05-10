@@ -754,8 +754,10 @@
                 <div class="tooltip-container">
                     {% if my_task %}
                     <a href="{% url 'users:my_tasks' %}" class="image-button">
+                    {% elif team_primary == None or team_primary == "1" %}
+                    <a href="{% url 'central_branch:task_home' %}" class="image-button">
                     {% else %}
-                    <a href="{% url ''|add:app_name|add:':task_home' %}" class="image-button">
+                    <a href="{% url ''|add:app_name|add:':task_home_team' team_primary %}" class="image-button">
                     {% endif %}
                         <img src="/static/back-arrow.png" alt="Go back to session">
                     </a>
@@ -871,36 +873,56 @@
             {% if not is_new_task %}
               <!--buttons showed when viewing task-->
               <div class="task-btn">
-                  {% if create_individual_task_access or create_team_task_access %}
-                  <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
-                  {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
-                    {% if my_task %}
-                    <a href="{% url 'users:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
-                    {% else %}
-                    <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                    {% if create_individual_task_access or create_team_task_access %}
+                        {% if team_primary == None or team_primary == "1" %}
+                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        {% else %}
+                        <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                        {% endif %}
+                        {% comment %} elif condition for team task creation url from team {% endcomment %}
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
+                        {% if my_task %}
+                        <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                        {% else %}
+                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                        {% endif %}
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if my_task %}
+                            <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% else %}
+                            <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% endif %}
+                        {% else %}
+                            {% if my_task %}
+                            <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% else %}
+                            <a href="{% url ''|add:app_name|add:':upload_task' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% endif %}
+                        {% endif %}
+                        
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% comment %} Task link for team {% endcomment %}
+                    {% elif is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
                     {% endif %}
-                  {% elif is_member_view and task.is_task_completed %}
-                  <p  style="color: #d33838;">Task Completed!</p>
-                  {% endif %}
 
-                  {% if task.task_type == "Team" and has_team_task_options_view_access %}
+                  {% comment %} {% if task.task_type == "Team" and has_team_task_options_view_access %}
                         {% if is_branch %}
                         <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
                         {% else %}
                         <a href="{% url ''|add:app_name|add:':upload_task' 8 task.pk  %}" class="check-task-button">Check task progress</a>
                         {% endif %}
 
-                    {% if app_name == 'central_branch' %}
-                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">{% if is_forwarded or forwarded_central_branch %}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
-                    {% else %}
-                    <a href="{% url ''|add:app_name|add:':team_add_task' team_primary task.pk %}" class="add-members-task-btn">{% if is_forwarded and is_coordinator_forwarded and is_incharge_forwarded%}Change Task Assignees{% elif is_forwarded and is_coordinator_forwarded and not is_incharge_forwarded%}Change Task Assignees{% else %}Forward Task to Team Members{% endif %}</a>
-                    {% endif %}
+                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Forward Task to Team Members</a>
 
-                  {% endif %}
+                  {% endif %} {% endcomment %}
 
                   {% if create_individual_task_access or create_team_task_access %}
-                  <button type="button" class="log-task-button" id="trigger">Task Logs</button>
-                  <button type="submit" class="create-task-btn" name="update_task">Update Task</button>              
+                    <button type="button" class="log-task-button" id="trigger">Task Logs</button>
+                    {% if team_primary == None or team_primary == "1" %}
+                    <button type="submit" class="create-task-btn" name="update_task">Update Task</button>     
+                    {% endif %}         
                   {% endif %}                  
                   
                 </div>
@@ -908,6 +930,7 @@
                     
                     <!--delete and complete toggle btn-->
                     {% if create_individual_task_access or create_team_task_access %}
+                    {% if team_primary == None or team_primary == "1" %}
                     <div class="delete_complete_toggle">
                         <button type="button" class="delete_task_btn">Delete</button>
                         <div style="display: flex; margin: 0 10px;">
@@ -920,6 +943,7 @@
                         </div>
                     </div>
                     {% else %}
+                    {% endif %}
 
                     {% endif %}
 
@@ -931,7 +955,16 @@
                 <div class="title-deadline">
                     <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if create_individual_task_access or create_team_task_access %}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
-                        <label style="margin: 0;text-align: center; font-size: 14px;">{% if create_individual_task_access or create_team_task_access %}Set deadline:{% else %}Deadline{% endif %}</label>
+                        <label style="margin: 0;text-align: center; font-size: 14px;">
+                            {% if create_individual_task_access or create_team_task_access %}
+                                {% if team_primary == None or team_primary == "1" %} 
+                                    Set deadline:
+                                    {% else %}
+                                    Deadline
+                                    {% endif %}
+                            {% else %}
+                            Deadline
+                            {% endif %}</label>
                     <input
                         id="deadline"
                         type="datetime-local"
@@ -940,7 +973,14 @@
                         style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
                         value="{{task.deadline|date:'Y-m-d H:i'}}"
                         required
-                        {% if create_individual_task_access or create_team_task_access %}{% else %}disabled {% endif %} />
+                        {% if create_individual_task_access or create_team_task_access %}
+                            {% if team_primary == None or team_primary == "1" %}
+                            {% else%} 
+                            disabled
+                            {% endif %}
+                        {% else %}
+                        disabled 
+                        {% endif %} />
                     </div>
                 </div>
                 
@@ -950,7 +990,11 @@
                 <div class="category">
                     <label class="category_label">Task Category:</label>                    
 
-                    <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required>
+                    <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required 
+                    {% if team_primary == None or team_primary == "1" %}
+                    {% else %}
+                    disabled
+                    {% endif%}>
                         {% for task_category in task_categories %}
                         <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
                         {% endfor %}
@@ -984,12 +1028,22 @@
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
-                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}{% else %}disabled{% endif %}>{{task.description}}</textarea>
+                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" 
+                    {% if create_individual_task_access or create_team_task_access%}    
+                        {% if team_primary == None or team_primary == "1" %}
+                        {% else %}
+                        disabled
+                        {% endif %}
+                    {% else %}
+                    disabled
+                    {% endif %}>{{task.description}}</textarea>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
                 
-
+                
+                
                 {% if create_team_task_access or create_individual_task_access %}
+                {% if team_primary == None or team_primary == "1" %}
                 
                 <!--task type-->
                 <div class="task_type ">
@@ -1100,6 +1154,8 @@
                 
                 
                 
+                {% endif %}
+
                 {% endif %}
 
             </form>
