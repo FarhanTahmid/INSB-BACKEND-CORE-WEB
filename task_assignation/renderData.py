@@ -189,6 +189,7 @@ class Task_Assignation:
                 team = Teams.objects.get(primary=team_primary)
                 new_task.team.add(team)
                 new_task.save()
+                Team_Task_Forwarded.objects.create(task=new_task, team=team)
 
             #Divide the category points into equal points for each member
             points_for_members = new_task.task_category.points / len(members)

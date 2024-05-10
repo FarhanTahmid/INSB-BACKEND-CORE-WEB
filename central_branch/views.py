@@ -4662,8 +4662,8 @@ def upload_task(request, task_id,team_primary = None):
         
         task = Task.objects.get(id=task_id)
         user = request.user.username
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
         this_is_users_task = False
         comments = None
         #to check if this is users task
