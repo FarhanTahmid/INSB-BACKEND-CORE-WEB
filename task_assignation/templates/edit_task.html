@@ -882,8 +882,8 @@
                         {% endif %}
                         {% comment %} elif condition for team task creation url from team {% endcomment %}
 
-                        {% if is_coordinator == "Admin/EB" and  is_task_forwared_to_incharge == "Admin/EB" %}
-                            <input type="submit" class="check-task-button" name="forward_to_team+incharges" value="Forward To Team Incharges">
+                        {% if is_coordinator == "Admin/EB" and  is_task_forwared_to_incharge == False %}
+                            <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To All Team Incharges">
                         {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                         {% if my_task %}
@@ -898,18 +898,23 @@
                             {% else %}
                             <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                             {% endif %}
-                            {% if is_coordinator == True and  is_task_forwared_to_incharge == False %}
-                            <input type="submit" class="check-task-button" name="forward_to_team+incharges" value="Forward To Team Incharges">
+                            {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_started_by_member == False %}
+                                <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
                             {% endif %}
                         {% else %}
                             {% if my_task %}
                             <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                             {% else %}
-                            <a href="{% url ''|add:app_name|add:':upload_task' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            <a href="{% url ''|add:app_name|add:':upload_task' task.pk  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                             {% endif %}
 
                         {% endif %}
-                        
+                    {% elif is_coordinator and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if is_task_forwared_to_incharge == True %}
+                                <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                            {% endif %}
+                        {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% comment %} Task link for team {% endcomment %}
                     {% elif is_member_view and task.is_task_completed %}

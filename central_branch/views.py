@@ -4666,6 +4666,7 @@ def upload_task(request, task_id,team_primary = None):
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
         this_is_users_task = False
         comments = None
+        has_coordinator_access_or_incharge_access_for_team_task = False
         #to check if this is users task
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
@@ -4677,7 +4678,12 @@ def upload_task(request, task_id,team_primary = None):
         except:
             pass
 
-        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task
+        if team_primary == None or team_primary == "1":
+            pass
+        else:
+            has_coordinator_access_or_incharge_access_for_team_task = Task_Assignation.upload_task_page_access_for_team_task(request,task,team_primary)
+
+        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or has_coordinator_access_or_incharge_access_for_team_task
         if has_access:
 
 
@@ -4948,7 +4954,7 @@ def add_task(request, task_id):
 
 @login_required
 @member_login_permission
-def task_edit(request, task_id,team_primary = None):
+def task_edit(request,task_id,team_primary = None):
 
     # try:
         # get all sc ag for sidebar
@@ -5038,15 +5044,25 @@ def task_edit(request, task_id,team_primary = None):
                     messages.warning(request,"Something went wrong while deleting the task!")
                 
                 return redirect('central_branch:task_home')
+            elif 'forward_to_team_incharges' in request.POST:
+                if Task_Assignation.forward_task_to_incharges(request,task,team_primary):
+                    messages.success(request,"Task Forwarded to Incharges Successfully!")
+                else:
+                    messages.warning(request,"Something went wrong while forwarding task. Try again!")
         
-        
+                if team_primary == None or team_primary == "1":
+                    return redirect('central_branch:task_edit',task_id)
+                else:
+                    return redirect(f'{app_name}:task_edit_team',task_id,team_primary)
+                
         task_categories = Task_Category.objects.all()
         #getting all task logs for this task
         task_logs = Task_Log.objects.get(task_number = task)
 
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
-
+        print(is_task_forwared_to_incharge)
+        print(is_coordinator)
         is_member_view = logged_in_user in task.members.all()
         #If it is a task member view or a regular view then override the access
         if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
