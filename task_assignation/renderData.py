@@ -350,6 +350,10 @@ class Task_Assignation:
                         print(team)
                         if member.team == team:
                             task.members.remove(member)
+                    
+                    #deleting this
+                    task_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
+                    task_forward.delete()
 
                     for member in Member_Task_Point.objects.filter(task=task):
                         if Members.objects.get(ieee_id=member.member).team == team:
@@ -1310,6 +1314,30 @@ This is an automated message. Do not reply
         else:
             #for admin and central branch EB only to forward task to all team's incharges
             return "Admin/EB"
+    
+    def is_officer(request,team_primary):
+
+        '''This function will return  whether current user is incharge or not'''
+
+        #for admin and central branch EB only to forward task to all team's incharges
+        if team_primary == "1" or team_primary == None:
+            return "Admin/EB"
+        team = Teams.objects.get(primary = int(team_primary))
+        user = request.user.username
+        try:
+            member = Members.objects.get(ieee_id = user)
+        except:
+            member = adminUsers.objects.get(username = user)
+  
+        if type(member) is Members:
+            if member.team == team:
+                if not member.position.is_co_ordinator and member.position.is_officer:
+                    return True
+        else:
+            #for admin and central branch EB only to forward task to all team's incharges
+            return "Admin/EB"
+
+
 
     def is_task_forwarded_to_incharge(task,team_primary):
 
@@ -1317,11 +1345,221 @@ This is an automated message. Do not reply
             or from admin/EB to all team's incharges'''
 
         if team_primary == None or team_primary == "1":
-            return "Admin/EB"
-        team = Teams.objects.get(primary = int(team_primary))
-        forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
 
-        if forwarded.task_forwarded_to_incharge:
-            return True
+            all_teams = task.team.all()
+            forwarded_team_task_for_eb_admin_list = []
+            forwarded_team_task_for_eb_admin = False
+            #checking if task has been forwared to all team's incharge by EB or Admin
+            for i in all_teams:
+                x = Team_Task_Forwarded.objects.get(task = task,team=i)
+                if x.task_forwarded_to_incharge:
+                    forwarded_team_task_for_eb_admin_list.append(True)
+                else:
+                    forwarded_team_task_for_eb_admin_list.append(False)
+
+            if False in forwarded_team_task_for_eb_admin_list:
+                forwarded_team_task_for_eb_admin = False
+            else:
+                forwarded_team_task_for_eb_admin = True
+
+            return forwarded_team_task_for_eb_admin
         else:
-            return False
+            team = Teams.objects.get(primary = int(team_primary))
+            forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
+
+            if forwarded.task_forwarded_to_incharge:
+                return True
+            else:
+                return False
+            
+    def is_task_forwarded_to_core_or_team_volunteer(task,team_primary):
+
+        '''This function will return whether task was forwarded to core/team volunteer by incharge
+            or from admin/EB'''
+
+        if team_primary == None or team_primary == "1":
+
+            all_teams = task.team.all()
+            forwarded_team_task_for_eb_admin_list = []
+            forwarded_team_task_for_eb_admin = False
+            #checking if task has been forwared to volunteer by incharges
+            for i in all_teams:
+                x = Team_Task_Forwarded.objects.get(task = task,team=i)
+                if x.task_forwarded_to_core_or_team_volunteers:
+                    forwarded_team_task_for_eb_admin_list.append(True)
+                else:
+                    forwarded_team_task_for_eb_admin_list.append(False)
+
+            if False in forwarded_team_task_for_eb_admin_list:
+                forwarded_team_task_for_eb_admin = False
+            else:
+                forwarded_team_task_for_eb_admin = True
+
+            return forwarded_team_task_for_eb_admin
+        else:
+            team = Teams.objects.get(primary = int(team_primary))
+            forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
+
+            if forwarded.task_forwarded_to_core_or_team_volunteers:
+                return True
+            else:
+                return False
+        
+    def forward_task_to_incharges(request,task,team_primary):
+
+        '''This function will forward the tasks to the team incharges if team_primary exists
+            else to the individuals team's incharges by the coordinator'''
+        user = request.user.username
+        all_task_members = task.members.all()
+
+
+        if team_primary == None or team_primary == "1":
+            #getting all teams
+            all_teams = task.team.all()
+            #removing current coordinators and assigning to incharges
+            for team in all_teams:
+                team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
+                for people in all_task_members:
+
+                    if people.team == team:
+                        if people.position.is_co_ordinator and people.position.is_officer:
+                            task.members.remove(people)
+                            task.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                            #points deduction
+                            points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
+                            points.completion_points = task.task_category.points * (25/100)
+                            points.save()
+
+                            # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                            # upload_types.delete()
+
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+                            task.save()
+
+                team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                for people in team_incharges:
+                    task.members.add(people)
+                    task.save()
+
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                    #setting message
+                    Task_Assignation.save_task_logs(task,task_log_message)
+                    Task_Assignation.task_creation_email(request,people,task)
+
+                    task.save()
+
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types.has_content=True
+                    upload_types.has_drive_link=True
+                    upload_types.has_file_upload=True
+                    upload_types.has_media=True
+                    upload_types.has_permission_paper=True
+                    upload_types.save()
+
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points.save()
+                    
+
+                team_forward.task_forwarded_to_incharge = True
+                team_forward.forwared_by = user
+                team_forward.save()
+        else:
+            team = Teams.objects.get(primary = int(team_primary))
+            #removing current coordinator and add incharges of particular team
+            team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
+            for people in all_task_members:
+
+                if people.team == team:
+                    if people.position.is_co_ordinator and people.position.is_officer:
+                        task.members.remove(people)
+                        print("people removed")
+                        print(people)
+                        task.save()
+                        task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                        #points deduction
+                        points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
+                        points.completion_points = task.task_category.points * (25/100)
+                        points.save()
+
+                        # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                        # upload_types.delete()
+
+                        #setting message
+                        Task_Assignation.save_task_logs(task,task_log_message)
+                        task.save()
+
+            team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+            for people in team_incharges:
+                task.members.add(people)
+                task.save()
+                task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                #setting message
+                Task_Assignation.save_task_logs(task,task_log_message)
+                Task_Assignation.task_creation_email(request,people,task)
+                task.save()
+
+                upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                upload_types.has_content=True
+                upload_types.has_drive_link=True
+                upload_types.has_file_upload=True
+                upload_types.has_media=True
+                upload_types.has_permission_paper=True
+                upload_types.save()
+
+                incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                incharge_task_points.save()
+
+            team_forward.task_forwarded_to_incharge = True
+            team_forward.forwared_by = user
+            team_forward.save()
+
+        return True
+    
+    def upload_task_page_access_for_team_task(request,task,team_primary):
+
+        '''This function will check whether coordinator and incharge has access to view the upload task page'''
+
+        team = Teams.objects.get(primary = int(team_primary))
+        forwared = Team_Task_Forwarded.objects.get(task=task,team=team)
+
+        user = request.user.username
+        try:
+            member = Members.objects.get(ieee_id = user)
+        except:
+            member = adminUsers.objects.get(username = user)
+
+        if task.task_type == "Team":
+            if type(member) is Members:
+                if forwared.task_forwarded_to_incharge:
+                    if member.position.is_co_ordinator and member.position.is_officer:
+                        return True
+                    else:
+                        return False
+                if forwared.task_forwarded_to_core_or_team_volunteers:
+                    if member.position.is_officer and not member.position.is_co_ordinator:
+                        return True
+                    else:
+                        return False
+            else:
+                return True
+
+    def load_volunteers_for_task_assignation(task,team_primary = None):
+
+        members = []
+        if team_primary!=None and team_primary!="1":
+            team_of = Teams.objects.get(primary = int(team_primary))
+            members = Members.objects.filter(position__is_volunteer =True,team = team_of)
+        else:
+            all_team = task.team.all()
+            for team in all_team:
+                member = list(Members.objects.filter(position__is_volunteer =True,team = team))
+                members += member
+        dic = {}
+        for member in members:
+            dic.update({member:None})
+        return dic
+                    
+            
+                        
