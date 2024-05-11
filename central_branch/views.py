@@ -4876,7 +4876,7 @@ def upload_task(request, task_id,team_primary = None):
 
 @login_required
 @member_login_permission
-def add_task(request, task_id):
+def add_task(request, task_id,team_primary = None):
 
     # get all sc ag for sidebar
     sc_ag=PortData.get_all_sc_ag(request=request)
@@ -4884,6 +4884,13 @@ def add_task(request, task_id):
     current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
     user_data=current_user.getUserData() #getting user data as dictionary file
     task = Task.objects.get(id=task_id)
+
+    #for proper navbar and redirection
+    app_name = "central_branch"
+    if team_primary and team_primary!="1":
+        app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+        #getting nav_bar_name
+        nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
     if request.method == 'POST':
         ##########################################
@@ -4909,11 +4916,6 @@ def add_task(request, task_id):
         if request.POST.get('drive_link'):
             has_drive_link = True
 
-        has_others = False
-        others_description = None
-        if request.POST.get('others'):
-            has_others = True
-            others_description = request.POST.get('task_description_details')
 
         member_select = []
         if 'member_select' in request.POST:
@@ -4921,8 +4923,12 @@ def add_task(request, task_id):
         
         #If task is completed then do not update task params
         if(task.is_task_completed):
+
             messages.info(request,'Task is completed already!')
-            return redirect('central_branch:add_task',task_id)
+            if team_primary == None or team_primary == "1":
+                return redirect('central_branch:add_task',task_id)
+            else:
+                return redirect(f'{app_name}:add_task_team',task_id,team_primary)
 
         if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
             #If it is a team task and no members were selected then show message but save other params
@@ -4936,19 +4942,40 @@ def add_task(request, task_id):
 
         return redirect('central_branch:add_task',task_id)
     
-    team_members = []
-    #Get all team members from the selected teams
-    for team in task.team.all():
-        members = Task_Assignation.load_team_members_for_task_assignation(request=request,team_primary=team.primary)
+    
+    members = Task_Assignation.load_volunteers_for_task_assignation(task,team_primary)
                 
-        team_members.extend(members)
+    if team_primary == None or team_primary == "1":
+        context = {
+            'task':task,
+            'volunteer_members':members,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
 
-    context = {
-        'task':task,
-        'team_members':team_members,
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-    }
+            'app_name':app_name,
+        }
+    else:
+        context = {
+            'task':task,
+            'volunteer_members':members,
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+
+            'app_name':app_name,
+            #loading navbars as per page
+            'web_dev_team':nav_bar["web_dev_team"],
+            'content_and_writing_team':nav_bar["content_and_writing_team"],
+            'event_management_team':nav_bar["event_management_team"],
+            'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+            'promotion_team':nav_bar["promotion_team"],
+            'public_relation_team':nav_bar["public_relation_team"],
+            'membership_development_team':nav_bar["membership_development_team"],
+            'media_team':nav_bar["media_team"],
+            'graphics_team':nav_bar["graphics_team"],
+            'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+            'team_primary':team_primary,
+        }
+        
 
     return render(request,"task_forward_to_members.html",context)
 

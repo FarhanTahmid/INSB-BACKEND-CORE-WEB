@@ -291,11 +291,28 @@
 
 
         <!-- navbar -->
-        <div id="content" class="app-content" role="main">
-          {% block navbar %}
-          {% include 'navbar.html' %} 
-          {% endblock navbar %}
-        </div>
+      <div id="content" class="app-content" role="main">
+        {% if app_name == "central_branch" %}
+        {% block navbar %}
+         {% include 'navbar.html' %} 
+        {% endblock navbar %}
+        {% else %}
+            {% if web_dev_team %}
+                {% block web_navbar %}
+                    {% include 'website_development_team/web_navbar.html' %} 
+                {% endblock web_navbar %}
+            {% elif content_and_writing_team %}
+            {% elif event_management_team %}
+            {% elif logistic_and_operation_team %}
+            {% elif promotion_team %}
+            {% elif public_relation_team %}
+            {% elif membership_development_team %}
+            {% elif media_team %}
+            {% elif graphics_team %}
+            {% elif finance_and_corporate_team %}
+            {% endif %}
+        {% endif %}
+      </div>
       
 
         <div id="content" class="app-content" role="main">
@@ -319,7 +336,11 @@
 
             <!--Messages-->
             <div class="tooltip-container">
+              {% if team_primary == None or team_primary == "1" %}
               <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+              {% else %}
+              <a href="{% url ''|add:app_name|add:':task_edit_team' task.pk team_primary %}" class="image-button">
+              {% endif %}
                 <img src="/static/back-arrow.png" alt="Go back to session">
               </a>
               <span class="tooltip-text">Go back</span>
@@ -406,12 +427,13 @@
                         </tr>
                     </thead>
                     <tbody>
+                      {% for volunteers in volunteer_members%}
                       <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
+                        <td>{{volunteers.ieee_id}}</td>
+                        <td>{{volunteers.name}}</td>
+                        <td>{{volunteers.team.team_name}}</td>
+                        <td>{{volunteers.position}}</td>
+                        <td>{{volunteers.contact_no}}</td>
                         <td>
                           <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
                         </td>
@@ -425,44 +447,7 @@
                               </select>
                           </td>                
                       </tr>
-                      <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
-                        <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                        </td>
-                        <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
-                      </tr>
-                      <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
-                        <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                        </td>
-                        <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
-                      </tr>
+                      {% endfor %} 
                     </tbody>
                 </table>
                 </div>

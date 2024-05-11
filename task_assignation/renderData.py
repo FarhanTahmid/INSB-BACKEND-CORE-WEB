@@ -1545,7 +1545,21 @@ This is an automated message. Do not reply
             else:
                 return True
 
-            
+    def load_volunteers_for_task_assignation(task,team_primary = None):
+
+        members = []
+        if team_primary!=None and team_primary!="1":
+            team_of = Teams.objects.get(primary = int(team_primary))
+            members = Members.objects.filter(position__is_volunteer =True,team = team_of)
+        else:
+            all_team = task.team.all()
+            for team in all_team:
+                member = list(Members.objects.filter(position__is_volunteer =True,team = team))
+                members += member
+        dic = {}
+        for member in members:
+            dic.update({member:None})
+        return dic
                     
             
                         
