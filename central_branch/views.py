@@ -5049,7 +5049,7 @@ def task_edit(request, task_id,team_primary = None):
 
         is_member_view = logged_in_user in task.members.all()
         #If it is a task member view or a regular view then override the access
-        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username):
+        if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username) and not Branch_View_Access.get_create_team_task_access(request,team_primary):
             create_individual_task_access = False
             create_team_task_access = False
 
