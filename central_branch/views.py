@@ -4970,7 +4970,9 @@ def task_edit(request,task_id,team_primary = None):
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
         is_coordinator = Task_Assignation.is_coordinator(request,team_primary)
         is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
-        
+        is_officer = Task_Assignation.is_officer(request,team_primary)
+        is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
+
 
         #app name for proper redirecting
         app_name = "central_branch"
@@ -5099,6 +5101,8 @@ def task_edit(request,task_id,team_primary = None):
                 'app_name':app_name,
                 'is_coordinator':is_coordinator,
                 'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
+                'is_officer':is_officer,
+                'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
             }
         else:
 
@@ -5135,6 +5139,8 @@ def task_edit(request,task_id,team_primary = None):
                 'team_primary':team_primary,
                 'is_coordinator':is_coordinator,
                 'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
+                'is_officer':is_officer,
+                'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
             }
 
 

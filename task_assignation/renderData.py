@@ -1314,6 +1314,30 @@ This is an automated message. Do not reply
         else:
             #for admin and central branch EB only to forward task to all team's incharges
             return "Admin/EB"
+    
+    def is_officer(request,team_primary):
+
+        '''This function will return  whether current user is incharge or not'''
+
+        #for admin and central branch EB only to forward task to all team's incharges
+        if team_primary == "1" or team_primary == None:
+            return "Admin/EB"
+        team = Teams.objects.get(primary = int(team_primary))
+        user = request.user.username
+        try:
+            member = Members.objects.get(ieee_id = user)
+        except:
+            member = adminUsers.objects.get(username = user)
+  
+        if type(member) is Members:
+            if member.team == team:
+                if not member.position.is_co_ordinator and member.position.is_officer:
+                    return True
+        else:
+            #for admin and central branch EB only to forward task to all team's incharges
+            return "Admin/EB"
+
+
 
     def is_task_forwarded_to_incharge(task,team_primary):
 
@@ -1344,6 +1368,39 @@ This is an automated message. Do not reply
             forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
 
             if forwarded.task_forwarded_to_incharge:
+                return True
+            else:
+                return False
+            
+    def is_task_forwarded_to_core_or_team_volunteer(task,team_primary):
+
+        '''This function will return whether task was forwarded to core/team volunteer by incharge
+            or from admin/EB'''
+
+        if team_primary == None or team_primary == "1":
+
+            all_teams = task.team.all()
+            forwarded_team_task_for_eb_admin_list = []
+            forwarded_team_task_for_eb_admin = False
+            #checking if task has been forwared to volunteer by incharges
+            for i in all_teams:
+                x = Team_Task_Forwarded.objects.get(task = task,team=i)
+                if x.task_forwarded_to_core_or_team_volunteers:
+                    forwarded_team_task_for_eb_admin_list.append(True)
+                else:
+                    forwarded_team_task_for_eb_admin_list.append(False)
+
+            if False in forwarded_team_task_for_eb_admin_list:
+                forwarded_team_task_for_eb_admin = False
+            else:
+                forwarded_team_task_for_eb_admin = True
+
+            return forwarded_team_task_for_eb_admin
+        else:
+            team = Teams.objects.get(primary = int(team_primary))
+            forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
+
+            if forwarded.task_forwarded_to_core_or_team_volunteers:
                 return True
             else:
                 return False

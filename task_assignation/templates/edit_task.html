@@ -885,6 +885,9 @@
                         {% if is_coordinator == "Admin/EB" and  is_task_forwared_to_incharge == False %}
                             <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To All Team Incharges">
                         {% endif %}
+                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers == False and is_task_forwared_to_incharge == True %}
+                            <a href="" class="check-task-button">Forward Task to Team's Volunteers</a>
+                        {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                         {% if my_task %}
                         <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
@@ -900,6 +903,9 @@
                             {% endif %}
                             {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_started_by_member == False %}
                                 <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
+                            {% endif %}
+                            {% if is_officer == True and is_task_forwarded_to_volunteers == False and is_task_started_by_member == False %}
+                                <a href="" class="check-task-button">Forward Task to Volunteer</a>
                             {% endif %}
                         {% else %}
                             {% if my_task %}
