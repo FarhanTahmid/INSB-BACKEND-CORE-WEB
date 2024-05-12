@@ -233,6 +233,20 @@ class Task_Assignation:
                         member.completed_task_points += member_points.completion_points
                         member.save()
 
+                        try:
+                            if task.task_type == "Team":
+                                member_points_not_in_task = Member_Task_Point.objects.filter(task=task)
+
+                                for mem in member_points_not_in_task:
+
+                                    if mem == member_points:
+                                        pass
+                                    else:
+                                        mem.completed_task_points += mem.completion_points
+                                        mem.save()
+                        except:
+                            pass
+
                 else:
                     #Not sure what this else is for
                     task.is_task_completed = True
@@ -259,7 +273,33 @@ class Task_Assignation:
                         member_points.save()
                         member.completed_task_points -= member_points.completion_points
                         member.save()
+
+                        try:
+                            if task.task_type == "Team":
+                                member_points_not_in_task = Member_Task_Point.objects.filter(task=task)
+
+                                for mem in member_points_not_in_task:
+
+                                    if mem == member_points:
+                                        pass
+                                    else:
+                                        mem.completed_task_points -= mem.completion_points
+                                        mem.save()
+                        except:
+                            pass
+                
                 task.is_task_completed = False
+
+            team_check = []
+            for team_primary in team_select:
+                team_check.append(Teams.objects.get(primary=team_primary))
+
+            current_teams = task.team.all()
+            is_team_changed = False
+
+            for team in current_teams:
+                if team not in team_check:
+                    is_team_changed = True
 
             #Checking to see if the list is empty depending on which task_type is selected
             #If empty then stop the creation
@@ -332,53 +372,53 @@ class Task_Assignation:
                 existing_task_member.append(mem)
             #Check the task's task_type and clear their respective fields
             if task.task_type == "Team":
-                #prev_team 
-                old_teams = task.team.all()
+                #prev_team
+                if is_team_changed: 
+                    old_teams = task.team.all()
 
-                for team in old_teams:
-            
-                    #deleting team points
-                    team_point = Team_Task_Point.objects.get(task = task,team=team)
-                    team_point.delete()
+                    for team in old_teams:
+                
+                        #deleting team points
+                        team_point = Team_Task_Point.objects.get(task = task,team=team)
+                        team_point.delete()
 
-                    #removing the task members points and task type along with deleting any files uploaded
-                    task_members = task.members.all()
-                    #removing the member from the task
-                    print(task_members)
-                    for member in task_members:
-                        print(member.team)
-                        print(team)
-                        if member.team == team:
-                            task.members.remove(member)
-                    
-                    #deleting this
-                    task_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
-                    task_forward.delete()
+                        #removing the task members points and task type along with deleting any files uploaded
+                        task_members = task.members.all()
+                        #removing the member from the task
+                        print(task_members)
+                        for member in task_members:
 
-                    for member in Member_Task_Point.objects.filter(task=task):
-                        if Members.objects.get(ieee_id=member.member).team == team:
-                            member.delete()
+                            if member.team == team:
+                                task.members.remove(member)
+                        
+                        #deleting this
+                        task_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
+                        task_forward.delete()
 
-                    for member in Member_Task_Upload_Types.objects.filter(task=task):
-                        #If a member is excluded from task then delete the member's task upload types along with the content (if any) that was previously associated to the member
-                        if member.task_member.team == team:
-                            if member.has_content:
-                                Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                            if member.has_drive_link:
-                                Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                            if member.has_permission_paper:
-                                Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                            if member.has_file_upload:
-                                files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                                for file in files:
-                                    Task_Assignation.delete_task_document(file)
-                            if member.has_media:
-                                media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                                for media_file in media_files:
-                                    Task_Assignation.delete_task_media(media_file)
+                        for member in Member_Task_Point.objects.filter(task=task):
+                            if Members.objects.get(ieee_id=member.member).team == team:
+                                member.delete()
 
-                            member.delete()
-                task.team.clear()
+                        for member in Member_Task_Upload_Types.objects.filter(task=task):
+                            #If a member is excluded from task then delete the member's task upload types along with the content (if any) that was previously associated to the member
+                            if member.task_member.team == team:
+                                if member.has_content:
+                                    Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                                if member.has_drive_link:
+                                    Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                                if member.has_permission_paper:
+                                    Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                                if member.has_file_upload:
+                                    files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                                    for file in files:
+                                        Task_Assignation.delete_task_document(file)
+                                if member.has_media:
+                                    media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                                    for media_file in media_files:
+                                        Task_Assignation.delete_task_media(media_file)
+
+                                member.delete()
+                    task.team.clear()
             elif task.task_type == "Individuals":
                 task.members.clear()
             #Set the new task_type
@@ -390,75 +430,77 @@ class Task_Assignation:
 
             #If new task_type is Team
             if task_type == "Team":
+
+                if is_team_changed:
   
-                teams = []
-                #For all team primaries in team_select, get their respective team reference and store in teams array
-                for team_primary in team_select:
-                    teams.append(Teams.objects.get(primary=team_primary))
-                #Set the array of teams as list for team inside the task and save the task with newly added teams
-                task.team.add(*teams)
+                    teams = []
+                    #For all team primaries in team_select, get their respective team reference and store in teams array
+                    for team_primary in team_select:
+                        teams.append(Teams.objects.get(primary=team_primary))
+                    #Set the array of teams as list for team inside the task and save the task with newly added teams
+                    task.team.add(*teams)
 
-                #saving team points
-                for team in teams:
-                    #creating team task points and team forward entities
-                    team_point = Team_Task_Point.objects.create(task=task,team = team) 
-                    team_point.save()   
+                    #saving team points
+                    for team in teams:
+                        #creating team task points and team forward entities
+                        team_point = Team_Task_Point.objects.create(task=task,team = team) 
+                        team_point.save()   
 
-                    team_forward = Team_Task_Forwarded.objects.create(task = task,team = team)
-                    team_forward.save()
+                        team_forward = Team_Task_Forwarded.objects.create(task = task,team = team)
+                        team_forward.save()
 
-                #getting team names as list
-                team_names = []
-                for name in teams:
-                    team_names.append(name.team_name)
-                team_names = ", ".join(team_names)
-                if changed:
-                    #updating task_log details only if changed
-                    task_log_message = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {team_names}'
-                    Task_Assignation.save_task_logs(task,task_log_message)
+                    #getting team names as list
+                    team_names = []
+                    for name in teams:
+                        team_names.append(name.team_name)
+                    team_names = ", ".join(team_names)
+                    if changed:
+                        #updating task_log details only if changed
+                        task_log_message = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {team_names}'
+                        Task_Assignation.save_task_logs(task,task_log_message)
 
-                get_current_panel_members = None
-                #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
-                if task_of == 1:
-                    get_current_panel=Branch.load_current_panel()
-                    #Get current panel members of branch
-                    get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
-                else:
-                    #Else we are creating task for sc_ag. Hence load current panel of sc_ag
-                    get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task_of).first()
-                    #Get current panel_members for sc_ag
-                    get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
-            
-                coordinators = []
-                #As it is a team task then notify the current coordinators of those teams
-                #For each member in current panel members
-                for member in get_current_panel_members:
-                    #If the member's team primary exist in team_select list i.e. is a member of the team
-                    if str(member.team.primary) in team_select:
-                        #And if the member is a coordinator
-                        if member.position.is_co_ordinator and member.position.is_officer:
-                            #Add to coordinators array and send confirmation
-                            coordinators.append(member.member)
-                            ##
-                            ## Send email/notification here
-                            ##
-                #appending the task to team cooridnator
-                task.members.add(*coordinators)
-                #creating those members points in Member Task Points
-                for member in coordinators:
-                    #making all task type true for those coordinators and creating their task points and task upload type
-                    member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
-                    member_task_points.save()
+                    get_current_panel_members = None
+                    #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
+                    if task_of == 1:
+                        get_current_panel=Branch.load_current_panel()
+                        #Get current panel members of branch
+                        get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+                    else:
+                        #Else we are creating task for sc_ag. Hence load current panel of sc_ag
+                        get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task_of).first()
+                        #Get current panel_members for sc_ag
+                        get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
+                
+                    coordinators = []
+                    #As it is a team task then notify the current coordinators of those teams
+                    #For each member in current panel members
+                    for member in get_current_panel_members:
+                        #If the member's team primary exist in team_select list i.e. is a member of the team
+                        if str(member.team.primary) in team_select:
+                            #And if the member is a coordinator
+                            if member.position.is_co_ordinator and member.position.is_officer:
+                                #Add to coordinators array and send confirmation
+                                coordinators.append(member.member)
+                                ##
+                                ## Send email/notification here
+                                ##
+                    #appending the task to team cooridnator
+                    task.members.add(*coordinators)
+                    #creating those members points in Member Task Points
+                    for member in coordinators:
+                        #making all task type true for those coordinators and creating their task points and task upload type
+                        member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
+                        member_task_points.save()
 
-                    task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = task)
-                    task_type_member.has_content = True
-                    task_type_member.has_drive_link = True
-                    task_type_member.has_file_upload = True
-                    task_type_member.has_media = True
-                    task_type_member.has_permission_paper = True
-                    task_type_member.save()
-                    #sending the email to the coordinator
-                    Task_Assignation.task_creation_email(request,member,task)
+                        task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = task)
+                        task_type_member.has_content = True
+                        task_type_member.has_drive_link = True
+                        task_type_member.has_file_upload = True
+                        task_type_member.has_media = True
+                        task_type_member.has_permission_paper = True
+                        task_type_member.save()
+                        #sending the email to the coordinator
+                        Task_Assignation.task_creation_email(request,member,task)
             
             #Else if task_type is Individuals
             elif task_type == "Individuals":
@@ -1347,22 +1389,21 @@ This is an automated message. Do not reply
         if team_primary == None or team_primary == "1":
 
             all_teams = task.team.all()
-            forwarded_team_task_for_eb_admin_list = []
-            forwarded_team_task_for_eb_admin = False
+            forwarded_team_task_for_eb_admin_list = {}
+            all_true = True
             #checking if task has been forwared to all team's incharge by EB or Admin
             for i in all_teams:
                 x = Team_Task_Forwarded.objects.get(task = task,team=i)
                 if x.task_forwarded_to_incharge:
-                    forwarded_team_task_for_eb_admin_list.append(True)
+                    forwarded_team_task_for_eb_admin_list[i] = True
                 else:
-                    forwarded_team_task_for_eb_admin_list.append(False)
+                    forwarded_team_task_for_eb_admin_list[i] = False
+            for key,value in forwarded_team_task_for_eb_admin_list.items():
+                if forwarded_team_task_for_eb_admin_list[key] == False:
+                    all_true = False
+                    break
 
-            if False in forwarded_team_task_for_eb_admin_list:
-                forwarded_team_task_for_eb_admin = False
-            else:
-                forwarded_team_task_for_eb_admin = True
-
-            return forwarded_team_task_for_eb_admin
+            return (forwarded_team_task_for_eb_admin_list,all_true)
         else:
             team = Teams.objects.get(primary = int(team_primary))
             forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
@@ -1380,22 +1421,22 @@ This is an automated message. Do not reply
         if team_primary == None or team_primary == "1":
 
             all_teams = task.team.all()
-            forwarded_team_task_for_eb_admin_list = []
-            forwarded_team_task_for_eb_admin = False
+            forwarded_team_task_for_eb_admin_list = {}
+            all_true = True
             #checking if task has been forwared to volunteer by incharges
             for i in all_teams:
                 x = Team_Task_Forwarded.objects.get(task = task,team=i)
                 if x.task_forwarded_to_core_or_team_volunteers:
-                    forwarded_team_task_for_eb_admin_list.append(True)
+                    forwarded_team_task_for_eb_admin_list[i] = True
                 else:
-                    forwarded_team_task_for_eb_admin_list.append(False)
+                    forwarded_team_task_for_eb_admin_list[i] = False
 
-            if False in forwarded_team_task_for_eb_admin_list:
-                forwarded_team_task_for_eb_admin = False
-            else:
-                forwarded_team_task_for_eb_admin = True
+            for key,value in forwarded_team_task_for_eb_admin_list.items():
+                if forwarded_team_task_for_eb_admin_list[key] == False:
+                    all_true = False
+                    break
 
-            return forwarded_team_task_for_eb_admin
+            return (forwarded_team_task_for_eb_admin_list,all_true)
         else:
             team = Teams.objects.get(primary = int(team_primary))
             forwarded = Team_Task_Forwarded.objects.get(task = task,team=team)
@@ -1405,7 +1446,7 @@ This is an automated message. Do not reply
             else:
                 return False
         
-    def forward_task_to_incharges(request,task,team_primary):
+    def forward_task_to_incharges(request,task,team_clicked,team_primary):
 
         '''This function will forward the tasks to the team incharges if team_primary exists
             else to the individuals team's incharges by the coordinator'''
@@ -1415,56 +1456,56 @@ This is an automated message. Do not reply
 
         if team_primary == None or team_primary == "1":
             #getting all teams
-            all_teams = task.team.all()
+            team = Teams.objects.get(primary = int(team_clicked))
             #removing current coordinators and assigning to incharges
-            for team in all_teams:
-                team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
-                for people in all_task_members:
+            
+            team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
+            for people in all_task_members:
 
-                    if people.team == team:
-                        if people.position.is_co_ordinator and people.position.is_officer:
-                            task.members.remove(people)
-                            task.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
-                            #points deduction
-                            points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
-                            points.completion_points = task.task_category.points * (25/100)
-                            points.save()
+                if people.team == team:
+                    if people.position.is_co_ordinator and people.position.is_officer:
+                        task.members.remove(people)
+                        task.save()
+                        task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                        #points deduction
+                        points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
+                        points.completion_points = task.task_category.points * (25/100)
+                        points.save()
 
-                            # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
-                            # upload_types.delete()
+                        # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                        # upload_types.delete()
 
-                            #setting message
-                            Task_Assignation.save_task_logs(task,task_log_message)
-                            task.save()
+                        #setting message
+                        Task_Assignation.save_task_logs(task,task_log_message)
+                        task.save()
 
-                team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
-                for people in team_incharges:
-                    task.members.add(people)
-                    task.save()
+            team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+            for people in team_incharges:
+                task.members.add(people)
+                task.save()
 
-                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
-                    #setting message
-                    Task_Assignation.save_task_logs(task,task_log_message)
-                    Task_Assignation.task_creation_email(request,people,task)
+                task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                #setting message
+                Task_Assignation.save_task_logs(task,task_log_message)
+                Task_Assignation.task_creation_email(request,people,task)
 
-                    task.save()
+                task.save()
 
-                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
-                    upload_types.has_content=True
-                    upload_types.has_drive_link=True
-                    upload_types.has_file_upload=True
-                    upload_types.has_media=True
-                    upload_types.has_permission_paper=True
-                    upload_types.save()
+                upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                upload_types.has_content=True
+                upload_types.has_drive_link=True
+                upload_types.has_file_upload=True
+                upload_types.has_media=True
+                upload_types.has_permission_paper=True
+                upload_types.save()
 
-                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
-                    incharge_task_points.save()
-                    
+                incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                incharge_task_points.save()
+                
 
-                team_forward.task_forwarded_to_incharge = True
-                team_forward.forwared_by = user
-                team_forward.save()
+            team_forward.task_forwarded_to_incharge = True
+            team_forward.forwared_by = user
+            team_forward.save()
         else:
             team = Teams.objects.get(primary = int(team_primary))
             #removing current coordinator and add incharges of particular team
@@ -1532,13 +1573,13 @@ This is an automated message. Do not reply
 
         if task.task_type == "Team":
             if type(member) is Members:
-                if forwared.task_forwarded_to_incharge:
-                    if member.position.is_co_ordinator and member.position.is_officer:
+                if member.position.is_co_ordinator and member.position.is_officer:
+                    if forwared.task_forwarded_to_incharge:
                         return True
                     else:
                         return False
-                if forwared.task_forwarded_to_core_or_team_volunteers:
-                    if member.position.is_officer and not member.position.is_co_ordinator:
+                if member.position.is_officer and not member.position.is_co_ordinator:
+                    if forwared.task_forwarded_to_core_or_team_volunteers:
                         return True
                     else:
                         return False
@@ -1554,12 +1595,316 @@ This is an automated message. Do not reply
         else:
             all_team = task.team.all()
             for team in all_team:
-                member = list(Members.objects.filter(position__is_volunteer =True,team = team))
-                members += member
+                team_forward = Team_Task_Forwarded.objects.get(team = team,task=task)
+                if team_forward.task_forwarded_to_incharge:
+                    member = list(Members.objects.filter(position__is_volunteer =True,team = team))
+                    members += member
         dic = {}
         for member in members:
-            dic.update({member:None})
+            try:
+                member_task_type = Member_Task_Upload_Types.objects.get(task_member = member, task= task)
+            except:
+                member_task_type = None
+            dic.update({member:member_task_type})
         return dic
+    
+    def forward_task(request,task_id,task_types_per_member,team_primary):
+
+        '''This function will forward the task to the core/team volunteers'''
+
+        task = Task.objects.get(id=task_id)
+
+        
+
+        for member in Member_Task_Upload_Types.objects.filter(task=task):
+
+            if str(member.task_member) not in task_types_per_member:
+                if member.has_content:
+                    Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                if member.has_drive_link:
+                    Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                if member.has_permission_paper:
+                    Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                if member.has_file_upload:
+                    files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                    for file in files:
+                        Task_Assignation.delete_task_document(file)
+                if member.has_media:
+                    media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                    for media_file in media_files:
+                        Task_Assignation.delete_task_media(media_file)
+
+                task.members.remove(member.task_member)
+                task.save()
+                try:
+                    points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
+                    points.delete()
+                except:
+                    pass
+                member.delete()
+
+        if team_primary == None or team_primary == "1":
+
+            members_list = []
+            teams_listed = []
+            for ieee_id,task_ty in task_types_per_member.items():
+
+                memb = Members.objects.get(ieee_id = ieee_id)
+                if memb.team not in teams_listed:
+                    teams_listed.append(memb.team)
+                
+                try:
+                    member_task_type = Member_Task_Upload_Types.objects.get(task_member = memb,task = task)
+                except:
+                    member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
+                member_task_type.save()
+        
+                try:
+                    points = Member_Task_Point.objects.get(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                except:
+                    points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                points.save()
+                message = ""
+                
+                # Setting Log messages based on which upload type was selected
+                if "permission_paper" in task_ty:
+                    if member_task_type.has_permission_paper:
+                        pass
+                    else:
+                        member_task_type.has_permission_paper = True
+                        message += "Permission Paper Added,"
+                else:
+                    if member_task_type.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=str(memb.ieee_id)).delete()
+                        message += "Permission Paper Removed,"
+                    member_task_type.has_permission_paper = False
+
+                if "content" in task_ty:
+                    if member_task_type.has_content:
+                        pass
+                    else:
+                        member_task_type.has_content = True
+                        message += "Content Added,"
+                else:
+                    if member_task_type.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=str(memb.ieee_id)).delete()
+                        message += "Content Removed,"
+                    member_task_type.has_content = False
+
+                if "drive_link" in task_ty:
+                    if member_task_type.has_drive_link:
+                        pass
+                    else:
+                        member_task_type.has_drive_link = True
+                        message += "Drive Link Added,"
+                else:
+                    if member_task_type.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=str(memb.ieee_id)).delete()
+                        message += "Drive Link Removed,"
+                    member_task_type.has_drive_link = False
+
+                if "file_upload" in task_ty:
+                    if member_task_type.has_file_upload:
+                        pass
+                    else:
+                        member_task_type.has_file_upload = True
+                        message += "File Upload Added,"
+                else:
+                    if member_task_type.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=str(memb.ieee_id))
+                        for file in files:
+                            message += f"Document, {file}, Removed,"
+                            Task_Assignation.delete_task_document(file)
+                    member_task_type.has_file_upload = False
+
+                if "media" in task_ty:
+                    if member_task_type.has_media:
+                        pass
+                    else:
+                        member_task_type.has_media = True
+                        message += "Media Added,"
+                else:
+                    if member_task_type.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=str(memb.ieee_id))
+                        for media_file in media_files:
+                            message += f"Media, {media_file}, Removed,"
+                            Task_Assignation.delete_task_media(media_file)
+                    member_task_type.has_media = False                     
+
+                member_task_type.save()
+
+                if message!="":
+                    message+=f" by {request.user.username} for {ieee_id}"
+                    Task_Assignation.save_task_logs(task,message)
                     
+                if memb in task.members.all():
+                    pass
+                else:
+                    members_list.append(memb)
+                    Task_Assignation.task_creation_email(request,memb,task)
+
+            task.members.add(*members_list)
+            task.save()
+
+            for team in teams_listed:
+                team_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
+
+                if team_forward.task_forwarded_to_core_or_team_volunteers == False:
+
+                    team_forward.task_forwarded_to_core_or_team_volunteers = True
+                    team_forward.forwarded_by_for_volunteers = request.user.username
+                    team_forward.save()
+
+                    incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                    for member in task.members.all():
+
+                        if member in incharges:
+                            #removing the incharge from the task and reducing their points
+                            task.members.remove(member)
+                            task.save()
+                            points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
+                            points_for_incharge.completion_points = task.task_category.points * (15/100)
+                            points_for_incharge.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+
+
+        else:
+
+            members_list = []
+
+            for ieee_id,task_ty in task_types_per_member.items():
+
+                memb = Members.objects.get(ieee_id = ieee_id)
+                
+                try:
+                    member_task_type = Member_Task_Upload_Types.objects.get(task_member = memb,task = task)
+                except:
+                    member_task_type = Member_Task_Upload_Types.objects.create(task_member = memb,task = task)
+                member_task_type.save()
+        
+                try:
+                    points = Member_Task_Point.objects.get(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                except:
+                    points = Member_Task_Point.objects.create(task = task,member = str(memb.ieee_id),completion_points = task.task_category.points)
+                points.save()
+                message = ""
+                
+                # Setting Log messages based on which upload type was selected
+                if "permission_paper" in task_ty:
+                    if member_task_type.has_permission_paper:
+                        pass
+                    else:
+                        member_task_type.has_permission_paper = True
+                        message += "Permission Paper Added,"
+                else:
+                    if member_task_type.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=str(memb.ieee_id)).delete()
+                        message += "Permission Paper Removed,"
+                    member_task_type.has_permission_paper = False
+
+                if "content" in task_ty:
+                    if member_task_type.has_content:
+                        pass
+                    else:
+                        member_task_type.has_content = True
+                        message += "Content Added,"
+                else:
+                    if member_task_type.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=str(memb.ieee_id)).delete()
+                        message += "Content Removed,"
+                    member_task_type.has_content = False
+
+                if "drive_link" in task_ty:
+                    if member_task_type.has_drive_link:
+                        pass
+                    else:
+                        member_task_type.has_drive_link = True
+                        message += "Drive Link Added,"
+                else:
+                    if member_task_type.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=str(memb.ieee_id)).delete()
+                        message += "Drive Link Removed,"
+                    member_task_type.has_drive_link = False
+
+                if "file_upload" in task_ty:
+                    if member_task_type.has_file_upload:
+                        pass
+                    else:
+                        member_task_type.has_file_upload = True
+                        message += "File Upload Added,"
+                else:
+                    if member_task_type.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=str(memb.ieee_id))
+                        for file in files:
+                            message += f"Document, {file}, Removed,"
+                            Task_Assignation.delete_task_document(file)
+                    member_task_type.has_file_upload = False
+
+                if "media" in task_ty:
+                    if member_task_type.has_media:
+                        pass
+                    else:
+                        member_task_type.has_media = True
+                        message += "Media Added,"
+                else:
+                    if member_task_type.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=str(memb.ieee_id))
+                        for media_file in media_files:
+                            message += f"Media, {media_file}, Removed,"
+                            Task_Assignation.delete_task_media(media_file)
+                    member_task_type.has_media = False                     
+
+                member_task_type.save()
+
+                if message!="":
+                    message+=f" by {request.user.username} for {ieee_id}"
+                    Task_Assignation.save_task_logs(task,message)
+                    
+                if memb in task.members.all():
+                    pass
+                else:
+                    members_list.append(memb)
+                    Task_Assignation.task_creation_email(request,memb,task)
+
+            task.members.add(*members_list)
+            task.save()
+
+            team = Teams.objects.get(primary = int(team_primary))
+            team_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
+
+            if team_forward.task_forwarded_to_core_or_team_volunteers == False:
+
+                team_forward.task_forwarded_to_core_or_team_volunteers = True
+                team_forward.forwarded_by_for_volunteers = request.user.username
+                team_forward.save()
+
+                incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                for member in task.members.all():
+
+                    if member in incharges:
+                        #removing the incharge from the task and reducing their points
+                        task.members.remove(member)
+                        task.save()
+                        points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
+                        points_for_incharge.completion_points = task.task_category.points * (15/100)
+                        points_for_incharge.save()
+                        task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
+                        #setting message
+                        Task_Assignation.save_task_logs(task,task_log_message)
+
+        return True
+
+                
+        
+          
+        
+
+        
+            
+        
+        #exisiting_members = task.members.all()
+        
             
                         

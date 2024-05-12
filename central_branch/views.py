@@ -4431,7 +4431,7 @@ class AwardRanking(View):
 @member_login_permission
 def create_task(request,team_primary = None):
 
-    try:
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
@@ -4542,16 +4542,16 @@ def create_task(request,team_primary = None):
                 return render(request,"create_task.html",context)
         else:
             return render(request,'access_denied2.html')
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 @login_required
 @member_login_permission
 def task_home(request,team_primary = None):
 
-    try:
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
@@ -4636,10 +4636,10 @@ def task_home(request,team_primary = None):
         
 
         
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 
 @login_required
@@ -4684,6 +4684,7 @@ def upload_task(request, task_id,team_primary = None):
             has_coordinator_access_or_incharge_access_for_team_task = Task_Assignation.upload_task_page_access_for_team_task(request,task,team_primary)
 
         has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or has_coordinator_access_or_incharge_access_for_team_task
+
         if has_access:
 
 
@@ -4893,54 +4894,42 @@ def add_task(request, task_id,team_primary = None):
         nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
 
     if request.method == 'POST':
-        ##########################################
-        ## Checking submission types from input ##
-        ##########################################
-        has_permission_paper = False
-        if request.POST.get('permission_paper'):
-            has_permission_paper = True
-        
-        has_content = False
-        if request.POST.get('content'):
-            has_content = True
-        
-        has_file_upload = False
-        if request.POST.get('file_upload'):
-            has_file_upload = True
-        
-        has_media = False
-        if request.POST.get('media'):
-            has_media = True
 
-        has_drive_link = False
-        if request.POST.get('drive_link'):
-            has_drive_link = True
-
-
-        member_select = []
-        if 'member_select' in request.POST:
-            member_select = request.POST.getlist('member_select')
+        task_types_per_member = {}
+        member_select = request.POST.getlist('member_select')
+        for member_id in member_select:
+            member_name = request.POST.getlist(member_id + '_task_type[]')
+            task_types_per_member[member_id] = member_name
         
         #If task is completed then do not update task params
         if(task.is_task_completed):
-
             messages.info(request,'Task is completed already!')
+            if team_primary:
+                return redirect(f'{app_name}:team_add_task',team_primary,task_id)
+            else:
+                return redirect('central_branch:add_task',task_id)
+        print(task_types_per_member)
+
+        if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team_primary)):
+
+            #If it is a team task and no members were selected then show message but save other params
+            if(not member_select):
+                messages.info(request,'Saved changes. Please select a member to forward tasks!')
+            else:
+                #Else members were selected
+                messages.success(request,"Task Forwarded Successfully!")
+            if team_primary == None or team_primary == "1":
+                return redirect('central_branch:add_task',task_id)
+            else:
+                return redirect(f'{app_name}:add_task_team',task_id,team_primary)
+        else:
+            messages.warning(request,"Error occured while forwarding task")
+
             if team_primary == None or team_primary == "1":
                 return redirect('central_branch:add_task',task_id)
             else:
                 return redirect(f'{app_name}:add_task_team',task_id,team_primary)
 
-        if(Task_Assignation.add_task_params(task_id, member_select, has_permission_paper, has_content, has_file_upload, has_media, has_drive_link, has_others, others_description)):
-            #If it is a team task and no members were selected then show message but save other params
-            if(task.task_type == "Team" and not member_select):
-                messages.info(request,'Saved changes. Please select a member to forward tasks!')
-            else:
-                #Else members were selected
-                messages.success(request,"Task params updated successfully!")
-        else:
-            messages.warning(request,"We're a failure")
-
-        return redirect('central_branch:add_task',task_id)
     
     
     members = Task_Assignation.load_volunteers_for_task_assignation(task,team_primary)
@@ -5000,7 +4989,7 @@ def task_edit(request,task_id,team_primary = None):
         is_officer = Task_Assignation.is_officer(request,team_primary)
         is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
 
-
+        print(is_task_forwared_to_incharge)
         #app name for proper redirecting
         app_name = "central_branch"
         if team_primary and team_primary!="1":
@@ -5073,8 +5062,11 @@ def task_edit(request,task_id,team_primary = None):
                     messages.warning(request,"Something went wrong while deleting the task!")
                 
                 return redirect('central_branch:task_home')
-            elif 'forward_to_team_incharges' in request.POST:
-                if Task_Assignation.forward_task_to_incharges(request,task,team_primary):
+            elif '2' in request.POST or '3' in request.POST or '4' in request.POST or '5' in request.POST or '6' in request.POST or '7' in request.POST or '8' in request.POST or '9' in request.POST or '10' in request.POST or '11' in request.POST or 'forward_to_team_incharges' in request.POST:
+
+                team_clicked = request.POST.get('teamclicked')
+
+                if Task_Assignation.forward_task_to_incharges(request,task,team_clicked,team_primary):
                     messages.success(request,"Task Forwarded to Incharges Successfully!")
                 else:
                     messages.warning(request,"Something went wrong while forwarding task. Try again!")

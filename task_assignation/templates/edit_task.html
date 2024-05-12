@@ -705,6 +705,19 @@
 .modal__wrapper.active .modal__container{
     transform: translateY(0px);
 }
+/* Custom CSS for dropdown menu items */
+            .dropdown-menu input[type="submit"] {
+                background-color: transparent;
+                border: none;
+                padding: 10px 10px;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .dropdown-menu input[type="submit"]:hover {
+                background-color: #f0f0f0; /* Change background color on hover */
+            }
     </style>
   </head>
   <body>
@@ -720,7 +733,6 @@
       </div>
 
 
-      <!-- navbar -->
       <div id="content" class="app-content" role="main">
         {% if app_name == "central_branch" %}
         {% block navbar %}
@@ -732,17 +744,44 @@
                     {% include 'website_development_team/web_navbar.html' %} 
                 {% endblock web_navbar %}
             {% elif content_and_writing_team %}
+                {% block content_navbar %}
+                    {% include 'content_navbar.html' %} 
+                {% endblock content_navbar %}
             {% elif event_management_team %}
+                {% block event_navbar %}
+                    {% include 'emt_navbar.html' %} 
+                {% endblock event_navbar %}
             {% elif logistic_and_operation_team %}
+                {% block logistic_navbar %}
+                    {% include 'logistics_navbar.html' %} 
+                {% endblock logistic_navbar %}
             {% elif promotion_team %}
+                {% block promotion_navbar %}
+                    {% include 'promotions_team/promotions_navbar.html' %} 
+                {% endblock promotion_navbar %}
             {% elif public_relation_team %}
+                {% block public_relation_team_navbar %}
+                    {% include 'public_relation_team/public_relation_navbar.html' %} 
+                {% endblock public_relation_team_navbar %}
             {% elif membership_development_team %}
+                {% block membership_navbar %}
+                    {% include 'mdt_navbar.html' %} 
+                {% endblock membership_navbar %}
             {% elif media_team %}
+                {% block medias_navbar %}
+                    {% include 'media_navbar.html' %} 
+                {% endblock medias_navbar %}
             {% elif graphics_team %}
+                {% block graphicss_navbar %}
+                    {% include 'graphics_navbar.html' %} 
+                {% endblock graphicss_navbar %}
             {% elif finance_and_corporate_team %}
+                {% block finanace_navbar %}
+                    {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+                {% endblock finanace_navbar %}
             {% endif %}
         {% endif %}
-      </div>
+    </div>
 
 
       <!--PAGE START-->
@@ -882,11 +921,22 @@
                         {% endif %}
                         {% comment %} elif condition for team task creation url from team {% endcomment %}
 
-                        {% if is_coordinator == "Admin/EB" and  is_task_forwared_to_incharge == False %}
-                            <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To All Team Incharges">
+                        {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False and not task.is_task_completed %}
+                            
+                            <div class="dropdown">
+                                <button class="check-task-button dropdown-toggle" data-toggle="dropdown">Forward Task To Team Incharges</button>
+                                <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
+                                    {% for team,bool in is_task_forwared_to_incharge.0.items %}
+                                    {% if bool == False %}
+                                        <input type="submit" value="{{team.team_name}}" name="{{team.primary}}">
+                                        <input type="hidden" value="{{team.primary}}" name="teamclicked">
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
                         {% endif %}
-                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers == False and is_task_forwared_to_incharge == True %}
-                            <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Team's Volunteers</a>
+                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed %}
+                            <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
                         {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                         {% if my_task %}
@@ -921,8 +971,19 @@
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
                             {% endif %}
                         {% endif %}
+                    {% elif is_officer and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if is_task_forwarded_to_volunteers == True %}
+                                <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary  %}" class="check-task-button">Change Task Assination</a>
+                            {% endif %}
+                        {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% comment %} Task link for team {% endcomment %}
+                    {% elif is_coordinator and not is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
+                    {% elif is_officer and not is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
                     {% elif is_member_view and task.is_task_completed %}
                         <p  style="color: #d33838;">Task Completed!</p>
                     {% endif %}
