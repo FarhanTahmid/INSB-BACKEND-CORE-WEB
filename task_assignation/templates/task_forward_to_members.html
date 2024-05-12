@@ -290,28 +290,54 @@
         </div>
 
 
-        <!-- navbar -->
-      <div id="content" class="app-content" role="main">
-        {% if app_name == "central_branch" %}
-        {% block navbar %}
-         {% include 'navbar.html' %} 
-        {% endblock navbar %}
-        {% else %}
-            {% if web_dev_team %}
-                {% block web_navbar %}
-                    {% include 'website_development_team/web_navbar.html' %} 
-                {% endblock web_navbar %}
-            {% elif content_and_writing_team %}
-            {% elif event_management_team %}
-            {% elif logistic_and_operation_team %}
-            {% elif promotion_team %}
-            {% elif public_relation_team %}
-            {% elif membership_development_team %}
-            {% elif media_team %}
-            {% elif graphics_team %}
-            {% elif finance_and_corporate_team %}
-            {% endif %}
-        {% endif %}
+        <div id="content" class="app-content" role="main">
+          {% if app_name == "central_branch" %}
+          {% block navbar %}
+           {% include 'navbar.html' %} 
+          {% endblock navbar %}
+          {% else %}
+              {% if web_dev_team %}
+                  {% block web_navbar %}
+                      {% include 'website_development_team/web_navbar.html' %} 
+                  {% endblock web_navbar %}
+              {% elif content_and_writing_team %}
+                  {% block content_navbar %}
+                      {% include 'content_navbar.html' %} 
+                  {% endblock content_navbar %}
+              {% elif event_management_team %}
+                  {% block event_navbar %}
+                      {% include 'emt_navbar.html' %} 
+                  {% endblock event_navbar %}
+              {% elif logistic_and_operation_team %}
+                  {% block logistic_navbar %}
+                      {% include 'logistics_navbar.html' %} 
+                  {% endblock logistic_navbar %}
+              {% elif promotion_team %}
+                  {% block promotion_navbar %}
+                      {% include 'promotions_team/promotions_navbar.html' %} 
+                  {% endblock promotion_navbar %}
+              {% elif public_relation_team %}
+                  {% block public_relation_team_navbar %}
+                      {% include 'public_relation_team/public_relation_navbar.html' %} 
+                  {% endblock public_relation_team_navbar %}
+              {% elif membership_development_team %}
+                  {% block membership_navbar %}
+                      {% include 'mdt_navbar.html' %} 
+                  {% endblock membership_navbar %}
+              {% elif media_team %}
+                  {% block medias_navbar %}
+                      {% include 'media_navbar.html' %} 
+                  {% endblock medias_navbar %}
+              {% elif graphics_team %}
+                  {% block graphicss_navbar %}
+                      {% include 'graphics_navbar.html' %} 
+                  {% endblock graphicss_navbar %}
+              {% elif finance_and_corporate_team %}
+                  {% block finanace_navbar %}
+                      {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+                  {% endblock finanace_navbar %}
+              {% endif %}
+          {% endif %}
       </div>
       
 
