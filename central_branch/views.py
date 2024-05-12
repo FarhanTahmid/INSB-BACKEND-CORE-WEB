@@ -4684,6 +4684,7 @@ def upload_task(request, task_id,team_primary = None):
             has_coordinator_access_or_incharge_access_for_team_task = Task_Assignation.upload_task_page_access_for_team_task(request,task,team_primary)
 
         has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or has_coordinator_access_or_incharge_access_for_team_task
+
         if has_access:
 
 

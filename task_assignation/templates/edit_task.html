@@ -895,7 +895,7 @@
                         {% endif %}
                         {% comment %} elif condition for team task creation url from team {% endcomment %}
 
-                        {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False %}
+                        {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False and not task.is_task_completed %}
                             
                             <div class="dropdown">
                                 <button class="check-task-button dropdown-toggle" data-toggle="dropdown">Forward Task To Team Incharges</button>
@@ -909,7 +909,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False  %}
+                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed %}
                             <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
                         {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
@@ -954,6 +954,10 @@
                         {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% comment %} Task link for team {% endcomment %}
+                    {% elif is_coordinator and not is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
+                    {% elif is_officer and not is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
                     {% elif is_member_view and task.is_task_completed %}
                         <p  style="color: #d33838;">Task Completed!</p>
                     {% endif %}
