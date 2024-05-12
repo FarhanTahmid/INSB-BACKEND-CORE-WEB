@@ -4692,7 +4692,7 @@ def upload_task(request, task_id,team_primary = None):
             #####################################
             try:
                 member_task_type = Member_Task_Upload_Types.objects.get(task = task,task_member = logged_in_user)
-                if this_is_users_task and not member_task_type.is_task_started_by_member:
+                if this_is_users_task and not member_task_type.is_task_started_by_member and not has_coordinator_access_or_incharge_access_for_team_task:
                     member_task_type.is_task_started_by_member = True
                     member_task_type.save()
             except:
