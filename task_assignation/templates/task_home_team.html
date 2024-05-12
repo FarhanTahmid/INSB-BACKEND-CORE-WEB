@@ -350,14 +350,59 @@
             >Create Task</a
           >
           {% elif content_and_writing_team %}
+          <a
+            href="{% url 'content_writing_and_publications_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif event_management_team %}
+          <a
+            href="{% url 'events_and_management_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif logistic_and_operation_team %}
+          <a
+            href="{% url 'logistics_and_operations_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif promotion_team %}
+          <a
+            href="{% url 'promotions_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif public_relation_team %}
+          <a
+            href="{% url 'public_relation_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif membership_development_team %}
+          <a
+            href="{% url 'membership_development_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif media_team %}
+          <a
+            href="{% url 'media_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif graphics_team %}
+          <a
+            href="{% url 'graphics_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% elif finance_and_corporate_team %}
+          <a
+            href="{% url 'finance_and_corporate_team:create_task_team' team_primary %}"
+            class="create-task-btn"
+            >Create Task</a
+          >
           {% endif %}
   
 

@@ -4431,7 +4431,7 @@ class AwardRanking(View):
 @member_login_permission
 def create_task(request,team_primary = None):
 
-    try:
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
@@ -4542,16 +4542,16 @@ def create_task(request,team_primary = None):
                 return render(request,"create_task.html",context)
         else:
             return render(request,'access_denied2.html')
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 @login_required
 @member_login_permission
 def task_home(request,team_primary = None):
 
-    try:
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
@@ -4636,10 +4636,10 @@ def task_home(request,team_primary = None):
         
 
         
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 
 @login_required
