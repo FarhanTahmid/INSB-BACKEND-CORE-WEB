@@ -427,7 +427,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% for volunteers in volunteer_members%}
+                      {% if volunteer_members|length == 0 %}
+                      <p style="color:red;">Task not forwared to incharges yet</p>
+                      {% else %}
+                      {% for volunteers,types in volunteer_members.items %}
                       <tr>
                         <td>{{volunteers.ieee_id}}</td>
                         <td>{{volunteers.name}}</td>
@@ -435,19 +438,20 @@
                         <td>{{volunteers.position}}</td>
                         <td>{{volunteers.contact_no}}</td>
                         <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                          <input type="checkbox" name="member_select" value="{{volunteers.ieee_id}}" {% if volunteers in task.members.all %}checked{% endif %}>
                         </td>
                         <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
+                          <select name="{{volunteers.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                              <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                              <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                              <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                              <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                              <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                          </select>
+                        </td>                  
                       </tr>
                       {% endfor %} 
+                      {% endif %}
                     </tbody>
                 </table>
                 </div>
