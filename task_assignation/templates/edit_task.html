@@ -954,10 +954,14 @@
                             <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                             {% endif %}
                             {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_started_by_member == False %}
-                                <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
+                                {% if not is_task_started_by_any_coordinator %}
+                                    <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
+                                {% endif %}
                             {% endif %}
                             {% if is_officer == True and is_task_forwarded_to_volunteers == False and is_task_started_by_member == False %}
+                                {% if not is_task_started_by_any_incharge %}
                                 <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary  %}" class="check-task-button">Forward Task to Volunteers</a>
+                                {% endif %}
                             {% endif %}
                         {% else %}
                             {% if my_task %}

@@ -4964,6 +4964,7 @@ def add_task(request, task_id,team_primary = None):
             'user_data':user_data,
 
             'app_name':app_name,
+            'team_primary':team_primary,
         }
     else:
         context = {
@@ -5003,6 +5004,7 @@ def task_edit(request,task_id,team_primary = None):
 
         user = request.user.username
         task = Task.objects.get(id=task_id)
+    
 
         create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary,task.task_type)
         create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary,task.task_type)
@@ -5011,15 +5013,18 @@ def task_edit(request,task_id,team_primary = None):
         is_officer = Task_Assignation.is_officer(request,team_primary)
         is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
         is_task_of_teams_individuals = Task_Assignation.is_task_of_teams_individuals(request,task,team_primary)
-
+        is_task_started_by_any_coordinator = False
+        is_task_started_by_any_incharge = False
+        
         print(is_task_forwared_to_incharge)
         #app name for proper redirecting
         app_name = "central_branch"
         if team_primary and team_primary!="1":
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
             #this function will check whether current user is coordinator or not
-            
-
+            team_p = Teams.objects.get(primary = int(team_primary))
+            is_task_started_by_any_coordinator = Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team_p)
+            is_task_started_by_any_incharge = Task_Assignation.is_co_ordinator_or_is_officer_of_team(task,team_p)
 
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
         my_task = False
@@ -5159,12 +5164,14 @@ def task_edit(request,task_id,team_primary = None):
                 'is_officer':is_officer,
                 'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
                 'is_task_of_teams_individuals':is_task_of_teams_individuals,
+                'is_task_started_by_any_coordinator':is_task_started_by_any_coordinator,
+                'is_task_started_by_any_incharge':is_task_started_by_any_incharge,
             }
         else:
 
             nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
             all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,team_primary)
-
+  
             
 
             context = {
@@ -5200,6 +5207,8 @@ def task_edit(request,task_id,team_primary = None):
                 'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
                 'is_task_of_teams_individuals':is_task_of_teams_individuals,
                 'all_members':all_members,
+                'is_task_started_by_any_coordinator':is_task_started_by_any_coordinator,
+                'is_task_started_by_any_incharge':is_task_started_by_any_incharge,
             }
 
 

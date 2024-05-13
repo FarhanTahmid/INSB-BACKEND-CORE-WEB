@@ -453,9 +453,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                      {% if volunteer_members|length == 0 %}
-                      <p style="color:red;">Task not forwarded to incharges by co-ordinator or if it is forwarded, incharge did not forward it to the volunteer or is doing it solo.</p>
-                      {% else %}
+                      {% if team_primary == None or team_primary == "1" %}
+                      <p style="color:red;">Here All the Assigned Teams Core/Team Volunteers would appear. Core/Team Volunteers won't be shown for the following reasons :-
+                        <ul>
+                          <li>If Co-ordinator of a team starts the task, it can no longer be forwarded to the Incharges or the Volunteers</li>
+                          <li>If Co-ordinator did forward it, but an Incharge of a Team started the task, it can't be forwarded to the Volunteers</li>
+                        </ul>
+                      </p>
+                      {% endif %}
                       {% for volunteers,types in volunteer_members.items %}
                       <tr>
                         <td>{{volunteers.ieee_id}}</td>
@@ -477,7 +482,6 @@
                         </td>                  
                       </tr>
                       {% endfor %} 
-                      {% endif %}
                     </tbody>
                 </table>
                 </div>
