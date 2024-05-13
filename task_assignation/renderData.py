@@ -962,15 +962,21 @@ class Task_Assignation:
             #checking whether it is requested from team or from central branch
             if team_primary!=None and team_primary!="1":
                 team_of = Teams.objects.get(primary = int(team_primary))
-                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
+    
+                if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = False, position__is_officer=True)
+                elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
+                elif requesting_member.position.is_eb_member:
+                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = True, position__is_officer=True)
             else:
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
         else:
             #Admin user so load all members
             members = Members.objects.all()
-            if team_primary:
+            if team_primary and team_primary != "1":
                 team_of = Teams.objects.get(primary = int(team_primary))
-                members = Members.objects.filter(team = team_of)
+                members = Members.objects.filter(team = team_of).exclude(position__is_officer=True)
         
         dic = {}
         for member in members:
@@ -1007,6 +1013,16 @@ class Task_Assignation:
             else:
                 team = Teams.objects.get(primary = int(team_primary))
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
+
+                if task.task_type == "Individuals" and len(task.team.all()) == 1:
+
+                    if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                        members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = False, position__is_officer=True)
+                    elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                        members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team)
+                    elif requesting_member.position.is_eb_member:
+                        members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = True, position__is_officer=True)
+
         else:
             #Admin user so load all members
             if team_primary==None or team_primary == "1":
@@ -1015,9 +1031,15 @@ class Task_Assignation:
                 team = Teams.objects.get(primary = int(team_primary))
                 members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
 
+                if task.task_type == "Individuals" and len(task.team.all()) == 1:
+                    members = Members.objects.filter(team = team).exclude(position__is_officer=True)
+
         
         for member in members:
-            dic.update({member : None})
+            if member in dic:
+                pass
+            else:
+                dic.update({member : None})
         return dic
     
     def load_user_tasks(user):
@@ -1253,21 +1275,22 @@ class Task_Assignation:
                     dic = member.deducted_points_logs
                     search = f"{late_duration}_{member.member}"
                     
-                    if search not in dic:
-                        deduction_amount = deduction_percentage * late_duration
-                        new_points = task.task_category.points - deduction_amount
-                        #if amount after subtraction is less than 0 then just store 0 and move on to next member
-                        if new_points < 0:
-                            member.completion_points = 0
-                            member.save()
+                    if member.completion_points>0:
+                        if search not in dic:
+                            deduction_amount = deduction_percentage * late_duration
+                            new_points = task.task_category.points - deduction_amount
+                            #if amount after subtraction is less than 0 then just store 0 and move on to next member
+                            if new_points < 0:
+                                member.completion_points = 0
+                                member.save()
+                                member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{round(deduction_amount, 2)}, delayed by {late_duration} days"
+                                member.save()
+                                continue
+                            member.completion_points = new_points
+                            #stores the decducted amount as values along with the date when it was deducted
+                            #key value is late_duration number the and the member's id
                             member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{round(deduction_amount, 2)}, delayed by {late_duration} days"
                             member.save()
-                            continue
-                        member.completion_points = new_points
-                        #stores the decducted amount as values along with the date when it was deducted
-                        #key value is late_duration number the and the member's id
-                        member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{round(deduction_amount, 2)}, delayed by {late_duration} days"
-                        member.save()
         
         return is_late
 
@@ -1481,6 +1504,8 @@ This is an automated message. Do not reply
         web_team=content_team=event_team=logistic_team=promotion_team=public_relation_team=mdt_team=media_team=graphics_team=finance_team = False
 
         if team_primary == 2:
+            content_team = True
+        elif team_primary == 3:
             event_team = True
         elif team_primary == 4:
             logistic_team = True
@@ -1536,6 +1561,23 @@ This is an automated message. Do not reply
         else:
             #for admin and central branch EB only to forward task to all team's incharges
             return "Admin/EB"
+        
+    def is_co_ordinator_or_is_officer_of_team(request):
+
+        user = request.user.username
+        try:
+            member = Members.objects.get(ieee_id = user)
+        except:
+            member = adminUsers.objects.get(username = user)
+
+        if type(member) is Members:
+            if member.position.is_co_ordinator and member.position.is_officer:
+                return True
+            elif member.position.is_officer and not member.position.is_co_ordinator:
+                return True
+        elif type(member) is adminUsers:
+            return True
+
     
     def is_officer(request,team_primary):
 
@@ -2110,8 +2152,21 @@ This is an automated message. Do not reply
                 else:
                     return False
 
-                    
+    def load_task_for_home_page(team_primary):
 
+        '''This function will load all the task for central branch and respective
+        task for teams home page'''
+
+        if team_primary == None or team_primary == "1":
+            
+            return Task.objects.all().order_by('is_task_completed','-deadline')
+        else:
+
+            team = Teams.objects.get(primary = int(team_primary))
+            tasks = list(Task.objects.filter(task_type = "Team",team = team).order_by('is_task_completed','-deadline'))
+            tasks += (Task.objects.filter(task_type = "Individuals",team=team).order_by('is_task_completed','-deadline'))
+
+        return tasks
                 
         
           

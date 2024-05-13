@@ -941,6 +941,8 @@
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                         {% if my_task %}
                         <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                        {% elif team_primary != None and team_primary != "1" %}
+                        <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                         {% else %}
                         <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                         {% endif %}

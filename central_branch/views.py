@@ -4583,11 +4583,11 @@ def task_home(request,team_primary = None):
         ###Done:Arman Task###
         #########
         has_task_create_access = Branch_View_Access.get_create_individual_task_access(request, team_primary) or Branch_View_Access.get_create_team_task_access(request, team_primary)
-        print(Branch_View_Access.get_create_individual_task_access(request, team_primary))
         #########
+        all_tasks = Task_Assignation.load_task_for_home_page(team_primary)
         if team_primary == None or team_primary == "1":
 
-            all_tasks = Task.objects.all().order_by('is_task_completed','-deadline')
+            
 
             context = {
             'all_tasks':all_tasks,
@@ -4646,7 +4646,7 @@ def task_home(request,team_primary = None):
 @member_login_permission
 def upload_task(request, task_id,team_primary = None):
   
-    try:
+    # try:
         # get all sc ag for sidebar
         sc_ag=PortData.get_all_sc_ag(request=request)
         # get user data for side bar
@@ -4683,7 +4683,7 @@ def upload_task(request, task_id,team_primary = None):
         else:
             has_coordinator_access_or_incharge_access_for_team_task = Task_Assignation.upload_task_page_access_for_team_task(request,task,team_primary)
 
-        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or has_coordinator_access_or_incharge_access_for_team_task
+        has_access = Branch_View_Access.common_access(user) or task.task_created_by == request.user.username or this_is_users_task or has_coordinator_access_or_incharge_access_for_team_task or Task_Assignation.is_co_ordinator_or_is_officer_of_team(request)
 
         if has_access:
 
@@ -4751,7 +4751,13 @@ def upload_task(request, task_id,team_primary = None):
                         messages.success(request,"Task Saved! Please finish it as soon as you can")
                     else:
                         messages.warning(request,"Something went wrong while saving the task!")
-                    return redirect('central_branch:upload_task',task_id)
+
+                    if team_primary == None or team_primary == "1":
+
+                        return redirect('central_branch:upload_task',task_id)
+                    else:
+                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+
                 elif request.POST.get('add_comment'):
                     member_id = request.POST.get('comments_member')
                     comments = request.POST.get('comments_details')
@@ -4761,7 +4767,11 @@ def upload_task(request, task_id,team_primary = None):
                     else:
                         messages.warning(request,"Something went wrong while adding the comments!")
                     
-                    return redirect('central_branch:upload_task',task_id)
+                    if team_primary == None or team_primary == "1":
+
+                        return redirect('central_branch:upload_task',task_id)
+                    else:
+                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
                 
                 elif request.POST.get('finish_task'):
 
@@ -4794,7 +4804,11 @@ def upload_task(request, task_id,team_primary = None):
                     else:
                         messages.warning(request,"Something went wrong while saving the task!")
             
-                    return redirect('central_branch:upload_task',task_id)
+                    if team_primary == None or team_primary == "1":
+
+                        return redirect('central_branch:upload_task',task_id)
+                    else:
+                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
                 
                 elif request.POST.get('delete_doc'):
                     doc = Task_Document.objects.get(id=request.POST.get('doc_id'))
@@ -4802,7 +4816,11 @@ def upload_task(request, task_id,team_primary = None):
                         messages.success(request,"Document deleted successfully!")
                     else:
                         messages.warning(request,"Something went wrong while deleting the document!")
-                    return redirect('central_branch:upload_task',task_id)
+                    if team_primary == None or team_primary == "1":
+
+                        return redirect('central_branch:upload_task',task_id)
+                    else:
+                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
                 
                 elif request.POST.get('delete_image'):
                     media = Task_Media.objects.get(id=request.POST.get('image_id'))
@@ -4810,7 +4828,11 @@ def upload_task(request, task_id,team_primary = None):
                         messages.success(request,"Media deleted successfully!")
                     else:
                         messages.warning(request,"Something went wrong while deleting the media!")
-                    return redirect('central_branch:upload_task',task_id)
+                    if team_primary == None or team_primary == "1":
+
+                        return redirect('central_branch:upload_task',task_id)
+                    else:
+                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
 
             if team_primary == None or team_primary == "1":
                 context = {
@@ -4870,10 +4892,10 @@ def upload_task(request, task_id,team_primary = None):
             return render(request,"task_page.html",context)
         else:
             return render(request,"access_denied2.html")
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return custom_500(request)
 
 @login_required
 @member_login_permission
@@ -5197,10 +5219,10 @@ class GetTaskCategoryPointsAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
 
 class SaveMemberTaskPointsAjax(View):
-    def get(self,request):
+    def get(self,request,team_primary = None):
         try:
-            create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request)
-            create_team_task_access = Branch_View_Access.get_create_team_task_access(request)
+            create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary)
+            create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
 
             try:
                 logged_in_user = Members.objects.get(ieee_id = request.user.username)
