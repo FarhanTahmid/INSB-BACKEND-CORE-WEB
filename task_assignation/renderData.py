@@ -233,32 +233,29 @@ class Task_Assignation:
                         member.completed_task_points += member_points.completion_points
                         member.save()
 
-                        try:
-                            if task.task_type == "Team":
+                    
+                    if task.task_type == "Team":
 
-                                team_points = Team_Task_Point.objects.filter(task = task)
-                                for team in team_points:
-                                    team.is_task_completed = True
-                                    team.save()
+                        member_points_not_in_task = Member_Task_Point.objects.filter(task=task)
 
-                                member_points_not_in_task = Member_Task_Point.objects.filter(task=task)
+                        for mem in member_points_not_in_task:
 
-                                for mem in member_points_not_in_task:
+                            member = Members.objects.get(ieee_id = mem.member)
+                            if member not in task.members.all():
 
-                                    if mem == member_points:
-                                        pass
-                                    else:
-                                        mem.completed_task_points += mem.completion_points
-                                        mem.is_task_completed = True
-                                        mem.save()
+                                member.completed_task_points += mem.completion_points
+                                member.save()
+                                mem.is_task_completed = True
+                                mem.save()
 
-                                for team in task.team.all():
-                                    points = Team_Task_Point.objects.get(task = task,team=team)
-                                    team.completed_task_points += points.completion_points
-                                    team.save()
-                        except:
-                            pass
-
+                        team_points = Team_Task_Point.objects.filter(task = task)
+                        for team in team_points:
+                            team.is_task_completed = True
+                            team.save()
+                        for team in task.team.all():
+                            points = Team_Task_Point.objects.get(task = task,team=team)
+                            team.completed_task_points += points.completion_points
+                            team.save()
 
                 else:
                     #Not sure what this else is for
@@ -287,34 +284,30 @@ class Task_Assignation:
                         member.completed_task_points -= member_points.completion_points
                         member.save()
 
-                        try:
-                            if task.task_type == "Team":
+                    if task.task_type == "Team":
 
-                                team_points = Team_Task_Point.objects.filter(task = task)
-                                team.completed_task_points -= points.completion_points
-                                team.save()
-                                for team in team_points:
+                        member_points_not_in_task = Member_Task_Point.objects.filter(task=task)
 
-                                    team.is_task_completed = False
-                                    team.save()
-                                    
-                                member_points_not_in_task = Member_Task_Point.objects.filter(task=task)
+                        for mem in member_points_not_in_task:
 
-                                for mem in member_points_not_in_task:
+                            member = Members.objects.get(ieee_id = mem.member)
+                            if member not in task.members.all():
 
-                                    if mem == member_points:
-                                        pass
-                                    else:
-                                        mem.completed_task_points -= mem.completion_points
-                                        mem.is_task_completed = False
-                                        mem.save()
+                                member.completed_task_points -= mem.completion_points
+                                member.save()
+                                mem.is_task_completed = False
+                                mem.save()
 
-                                for team in task.team.all():
-                                    points = Team_Task_Point.objects.get(task = task,team=team)
-                                    team.completed_task_points -= points.completion_points
-                                    team.save()
-                        except:
-                            pass
+                        team_points = Team_Task_Point.objects.filter(task = task)
+                        for team in team_points:
+                            team.is_task_completed = False
+                            team.save()
+                        for team in task.team.all():
+                            points = Team_Task_Point.objects.get(task = task,team=team)
+                            team.completed_task_points -= points.completion_points
+                            team.save()
+
+
                 
                 task.is_task_completed = False
 
