@@ -866,6 +866,7 @@
 
         </script>
         <script>
+            //filter unread toggle
             function toggleButton(buttonType) {
             var rows = document.querySelectorAll('.marked_unread');
             if (buttonType === 'all') {
@@ -877,7 +878,7 @@
                     row.style.display = row.classList.contains('unread') ? 'table-row' : 'none';
                 });
             }
-
+            // toggle button color
             const buttons = document.querySelectorAll('.button');
             buttons.forEach(btn => {
                 if (btn.classList.contains(buttonType)) {
