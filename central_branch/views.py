@@ -4988,6 +4988,7 @@ def task_edit(request,task_id,team_primary = None):
         is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
         is_officer = Task_Assignation.is_officer(request,team_primary)
         is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
+        is_task_of_teams_individuals = Task_Assignation.is_task_of_teams_individuals(request,task,team_primary)
 
         print(is_task_forwared_to_incharge)
         #app name for proper redirecting
@@ -5049,19 +5050,32 @@ def task_edit(request,task_id,team_primary = None):
                         task_types_per_member[member_id] = member_name
 
                 task_of = 1
+                #checking for team's individual tas
+                if len(task.team.all()) == 1 and task.task_type == "Individuals":
+                    team = task.team.all()
+                    team_select = [team[0].primary]
+                    
                 if(Task_Assignation.update_task(request, task_id,task_of, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
                     messages.success(request,"Task Updated successfully!")
                 else:
                     messages.warning(request,"Something went wrong while updating the task!")
+                
+                if team_primary == None or team_primary == "1":
+                    return redirect('central_branch:task_edit',task_id)
+                else:
+                    return redirect(f'{app_name}:task_edit_team',task_id,team_primary)
 
-                return redirect('central_branch:task_edit',task_id)
             elif 'delete_task' in request.POST:
                 if(Task_Assignation.delete_task(task_id=task_id)):
                     messages.success(request,"Task deleted successfully!")
                 else:
                     messages.warning(request,"Something went wrong while deleting the task!")
-                
-                return redirect('central_branch:task_home')
+
+                if team_primary == None or team_primary == "1":
+                    return redirect('central_branch:task_home')
+                else:
+                    return redirect(f'{app_name}:task_home_team',team_primary)
+
             elif '2' in request.POST or '3' in request.POST or '4' in request.POST or '5' in request.POST or '6' in request.POST or '7' in request.POST or '8' in request.POST or '9' in request.POST or '10' in request.POST or '11' in request.POST or 'forward_to_team_incharges' in request.POST:
 
                 team_clicked = request.POST.get('teamclicked')
@@ -5122,10 +5136,12 @@ def task_edit(request,task_id,team_primary = None):
                 'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
                 'is_officer':is_officer,
                 'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
+                'is_task_of_teams_individuals':is_task_of_teams_individuals,
             }
         else:
 
             nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+            all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task,team_primary)
 
             
 
@@ -5160,6 +5176,8 @@ def task_edit(request,task_id,team_primary = None):
                 'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
                 'is_officer':is_officer,
                 'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
+                'is_task_of_teams_individuals':is_task_of_teams_individuals,
+                'all_members':all_members,
             }
 
 

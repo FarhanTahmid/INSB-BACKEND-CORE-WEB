@@ -734,54 +734,54 @@
 
 
       <div id="content" class="app-content" role="main">
-        {% if app_name == "central_branch" %}
-        {% block navbar %}
-         {% include 'navbar.html' %} 
-        {% endblock navbar %}
-        {% else %}
-            {% if web_dev_team %}
-                {% block web_navbar %}
-                    {% include 'website_development_team/web_navbar.html' %} 
-                {% endblock web_navbar %}
-            {% elif content_and_writing_team %}
-                {% block content_navbar %}
-                    {% include 'content_navbar.html' %} 
-                {% endblock content_navbar %}
-            {% elif event_management_team %}
-                {% block event_navbar %}
-                    {% include 'emt_navbar.html' %} 
-                {% endblock event_navbar %}
-            {% elif logistic_and_operation_team %}
-                {% block logistic_navbar %}
-                    {% include 'logistics_navbar.html' %} 
-                {% endblock logistic_navbar %}
-            {% elif promotion_team %}
-                {% block promotion_navbar %}
-                    {% include 'promotions_team/promotions_navbar.html' %} 
-                {% endblock promotion_navbar %}
-            {% elif public_relation_team %}
-                {% block public_relation_team_navbar %}
-                    {% include 'public_relation_team/public_relation_navbar.html' %} 
-                {% endblock public_relation_team_navbar %}
-            {% elif membership_development_team %}
-                {% block membership_navbar %}
-                    {% include 'mdt_navbar.html' %} 
-                {% endblock membership_navbar %}
-            {% elif media_team %}
-                {% block medias_navbar %}
-                    {% include 'media_navbar.html' %} 
-                {% endblock medias_navbar %}
-            {% elif graphics_team %}
-                {% block graphicss_navbar %}
-                    {% include 'graphics_navbar.html' %} 
-                {% endblock graphicss_navbar %}
-            {% elif finance_and_corporate_team %}
-                {% block finanace_navbar %}
-                    {% include 'finance_and_corporate_team/finance_navbar.html' %} 
-                {% endblock finanace_navbar %}
-            {% endif %}
-        {% endif %}
-    </div>
+                {% if app_name == "central_branch" %}
+                {% block navbar %}
+                 {% include 'navbar.html' %} 
+                {% endblock navbar %}
+                {% else %}
+                    {% if web_dev_team %}
+                        {% block web_navbar %}
+                            {% include 'website_development_team/web_navbar.html' %} 
+                        {% endblock web_navbar %}
+                    {% elif content_and_writing_team %}
+                        {% block content_navbar %}
+                            {% include 'content_navbar.html' %} 
+                        {% endblock content_navbar %}
+                    {% elif event_management_team %}
+                        {% block event_navbar %}
+                            {% include 'emt_navbar.html' %} 
+                        {% endblock event_navbar %}
+                    {% elif logistic_and_operation_team %}
+                        {% block logistic_navbar %}
+                            {% include 'logistics_navbar.html' %} 
+                        {% endblock logistic_navbar %}
+                    {% elif promotion_team %}
+                        {% block promotion_navbar %}
+                            {% include 'promotions_team/promotions_navbar.html' %} 
+                        {% endblock promotion_navbar %}
+                    {% elif public_relation_team %}
+                        {% block public_relation_team_navbar %}
+                            {% include 'public_relation_team/public_relation_navbar.html' %} 
+                        {% endblock public_relation_team_navbar %}
+                    {% elif membership_development_team %}
+                        {% block membership_navbar %}
+                            {% include 'mdt_navbar.html' %} 
+                        {% endblock membership_navbar %}
+                    {% elif media_team %}
+                        {% block medias_navbar %}
+                            {% include 'media_navbar.html' %} 
+                        {% endblock medias_navbar %}
+                    {% elif graphics_team %}
+                        {% block graphicss_navbar %}
+                            {% include 'graphics_navbar.html' %} 
+                        {% endblock graphicss_navbar %}
+                    {% elif finance_and_corporate_team %}
+                        {% block finanace_navbar %}
+                            {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+                        {% endblock finanace_navbar %}
+                    {% endif %}
+                {% endif %}
+            </div>
 
 
       <!--PAGE START-->
@@ -921,7 +921,7 @@
                         {% endif %}
                         {% comment %} elif condition for team task creation url from team {% endcomment %}
 
-                        {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False and not task.is_task_completed %}
+                        {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False and not task.is_task_completed and task.task_type == "Team" %}
                             
                             <div class="dropdown">
                                 <button class="check-task-button dropdown-toggle" data-toggle="dropdown">Forward Task To Team Incharges</button>
@@ -935,7 +935,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed %}
+                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed and task.task_type == "Team" %}
                             <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
                         {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
@@ -1001,7 +1001,7 @@
 
                   {% if create_individual_task_access or create_team_task_access %}
                     <button type="button" class="log-task-button" id="trigger">Task Logs</button>
-                    {% if team_primary == None or team_primary == "1" %}
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                     <button type="submit" class="create-task-btn" name="update_task">Update Task</button>     
                     {% endif %}         
                   {% endif %}                  
@@ -1011,7 +1011,7 @@
                     
                     <!--delete and complete toggle btn-->
                     {% if create_individual_task_access or create_team_task_access %}
-                    {% if team_primary == None or team_primary == "1" %}
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                     <div class="delete_complete_toggle">
                         <button type="button" class="delete_task_btn">Delete</button>
                         <div style="display: flex; margin: 0 10px;">
@@ -1038,7 +1038,7 @@
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
                         <label style="margin: 0;text-align: center; font-size: 14px;">
                             {% if create_individual_task_access or create_team_task_access %}
-                                {% if team_primary == None or team_primary == "1" %} 
+                                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %} 
                                     Set deadline:
                                     {% else %}
                                     Deadline
@@ -1055,7 +1055,7 @@
                         value="{{task.deadline|date:'Y-m-d H:i'}}"
                         required
                         {% if create_individual_task_access or create_team_task_access %}
-                            {% if team_primary == None or team_primary == "1" %}
+                            {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                             {% else%} 
                             disabled
                             {% endif %}
@@ -1072,7 +1072,7 @@
                     <label class="category_label">Task Category:</label>                    
 
                     <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required 
-                    {% if team_primary == None or team_primary == "1" %}
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                     {% else %}
                     disabled
                     {% endif%}>
@@ -1111,7 +1111,7 @@
                 <div class="ckeditor">
                     <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" 
                     {% if create_individual_task_access or create_team_task_access%}    
-                        {% if team_primary == None or team_primary == "1" %}
+                        {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                         {% else %}
                         disabled
                         {% endif %}
@@ -1124,7 +1124,7 @@
                 
                 
                 {% if create_team_task_access or create_individual_task_access %}
-                {% if team_primary == None or team_primary == "1" %}
+                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                 
                 <!--task type-->
                 <div class="task_type ">
