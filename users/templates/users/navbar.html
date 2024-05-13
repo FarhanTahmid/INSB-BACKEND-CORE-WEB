@@ -11,19 +11,20 @@
         width: 300px;
         position: absolute;
         display: none;
-        background-color: rgba(255, 255, 255, 0.304);
+        background-color: rgba(255, 255, 255);
         border-radius: 10px;
-        border: 2px solid rgb(227, 227, 227);
+        /* border: 2px solid rgb(227, 227, 227); */
         backdrop-filter: blur(10px);
         top: 45px;
         right: 4%;
-        box-shadow: -2px 2px 8px 0 black;
+        box-shadow: -2px 2px 20px 2px #0000000f;
     }
     .msg-box{
         height: 420px;
         width: 296px;
         padding: 10px 10px 0px 10px;
         overflow-y: auto;
+        overflow-x: clip;
     }
     .msg{
         height: auto;
@@ -37,6 +38,15 @@
         padding: 10px;
         margin-bottom: 10px;
     }
+    .see-all{
+        display: flex;
+        justify-content: center;
+        color: rgb(0 0 0 / 64%);
+        padding-top: 3px;
+    }
+    .see-all:hover{
+        color: #00629B;
+    }
     .msg:hover, .see-all:hover{
         cursor: pointer;
     }
@@ -47,118 +57,91 @@
         scale: 1.2;
     }
 
-    .notification_modal_content::-webkit-scrollbar{
-            width: 6px;
-            height: 6px;
-        }
-        .notification_modal_content::-webkit-scrollbar-thumb{
-            background-color: #e7eeef;
-            transition: all .4s ease-in-out;
-            border-radius: 4px;
-        }
-        .notification_modal_content::-webkit-scrollbar-thumb:hover{
-            background-color: rgb(169, 170, 170);
-        }
-        .notification_modal{
-            opacity: 0;
-            position: fixed;
-            z-index: -1;
-            padding-top: 50px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 120%;
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.5);
-            transition: all .3s ease-in-out;
-            transform: translateY(-20px);
-            overflow: auto;
-        }
-        .notification_modal_content{
-            background-color: #fefefe;
-            margin: auto;
-            border: 1px solid rgb(136, 136, 136);
-            max-width: 850px;
-            max-height: 70vh;
-            overflow-y: scroll;
-            border-radius: 6px;
-            box-shadow: 2px 2px 5px 0px #80808054;
-            position: relative;
-            left: 100px;
-            top: 20%;
-        }
+    .notification_modal_content::-webkit-scrollbar , .msg-box::-webkit-scrollbar{
+        width: 6px;
+        height: 6px;
+    }
+    .notification_modal_content::-webkit-scrollbar-thumb , .msg-box::-webkit-scrollbar-thumb{
+        background-color: #e7eeef;
+        transition: all .4s ease-in-out;
+        border-radius: 4px;
+    }
+    .notification_modal_content::-webkit-scrollbar-thumb:hover , .msg-box::-webkit-scrollbar-thumb:hover{
+        background-color: rgb(169, 170, 170);
+    }
+    .notification_modal{
+        opacity: 0;
+        position: fixed;
+        z-index: -1;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 120%;
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
+        transition: all .3s ease-in-out;
+        transform: translateY(-20px);
+        overflow: auto;
+    }
+    .notification_modal_content{
+        background-color: #fefefe;
+        margin: auto;
+        border: 1px solid rgb(136, 136, 136);
+        max-width: 850px;
+        max-height: 70vh;
+        overflow-y: scroll;
+        border-radius: 6px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        position: relative;
+        left: 100px;
+        top: 20%;
+    }
 
-        .close1{
-            color: #000;
-            font-size: 28px;
-            font-weight: bold;
-            display: flex;
-            justify-content: flex-end;
+    .close1{
+        color: #000;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .close1:hover,
+    .close1:focus{
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    @media screen and (max-width: 1024px) {
+        .notification_modal_content {
+            left: 0px;
+            margin: 10%;
         }
-        .close1:hover,
-        .close1:focus{
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
+    }
+    @media screen and (max-width: 500px) {
+        .notification_modal_content{
+            margin: 5%;
         }
-        @media screen and (max-width: 1024px) {
-            .notification_modal_content {
-                left: 0px;
-                margin: 10%;
-            }
+    }
+    .notification_modal_content > p{
+        padding: 10px 20px;
+    }
+    .notification_modal_content > a{
+        color: #00629B;
+        padding-left: 20px;
+    }
+    .notification_modal_content > h5,h6{
+        padding-left: 22px;
+    }
+    .icon_position{
+        float: right;
+        padding: 15px;
+    }
+    @media screen and (max-width: 500px) {
+        .notification_modal_content{
+            margin: 5%;
         }
-        @media screen and (max-width: 500px) {
-            .notification_modal_content{
-                margin: 5%;
-            }
-        }
-        .notification_modal_content > p{
-            padding: 10px 20px;
-        }
-        .notification_modal_content > a{
-            color: #00629B;
-            padding-left: 20px;
-        }
-        .notification_modal_content > h5,h6{
-            padding-left: 22px;
-        }
-        .icon_position{
-            position: relative;
-            left: 88%;
-        }
-        @media screen and (max-width: 900px) {
-            .icon_position{
-                left: 84%;
-            }
-        }
-        @media screen and (max-width: 800px) {
-            .icon_position{
-                left: 82%;
-            }
-        }
-        @media screen and (max-width: 700px) {
-            .icon_position{
-                left: 83%;
-            }
-        }
-        @media screen and (max-width: 600px) {
-            .icon_position{
-                left: 79%;
-            }
-        }
-        @media screen and (max-width: 500px) {
-            .notification_modal_content{
-                margin: 5%;
-            }
-            .icon_position{
-                left: 78%;
-            }
-        }
-        @media screen and (max-width: 400px) {
-            .icon_position{
-                left: 67%;
-            }
-        }
+    }
+
 </style>
 <!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
 <script>
@@ -345,7 +328,7 @@ window.onload = function(){
                     <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
                 </div>
             </div>
-            <div class="see-all" style="height: 30px; width: 296; display: flex; justify-content: center; align-items: center; border-top: 1px solid rgb(227, 227, 227);">See all</div>
+                <a href="#" class="see-all">See All</a>
         </div>
         <li class="nav-item dropdown">
             <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
@@ -380,7 +363,6 @@ window.onload = function(){
                     <hr>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga voluptates, quod dicta beatae cumque veritatis laboriosam, suscipit doloribus earum repudiandae expedita rerum reiciendis odio vero hic officia iste dolore quis perspiciatis possimus neque molestias. Placeat eum repudiandae fuga vitae perferendis.</p>
                     <!--notification link-->
-                    <a href="#">Link</a>
                     <a href="#" class="icon_position"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div>
