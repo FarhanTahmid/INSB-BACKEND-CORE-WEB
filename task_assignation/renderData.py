@@ -1616,10 +1616,14 @@ This is an automated message. Do not reply
             #checking if task has been forwared to all team's incharge by EB or Admin
             for i in all_teams:
                 x = Team_Task_Forwarded.objects.get(task = task,team=i)
+
                 if x.task_forwarded_to_incharge:
+                    forwarded_team_task_for_eb_admin_list[i] = True
+                elif Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,i):
                     forwarded_team_task_for_eb_admin_list[i] = True
                 else:
                     forwarded_team_task_for_eb_admin_list[i] = False
+
             for key,value in forwarded_team_task_for_eb_admin_list.items():
                 if forwarded_team_task_for_eb_admin_list[key] == False:
                     all_true = False
@@ -1819,8 +1823,12 @@ This is an automated message. Do not reply
             for team in all_team:
                 team_forward = Team_Task_Forwarded.objects.get(team = team,task=task)
                 if team_forward.task_forwarded_to_incharge:
-                    member = list(Members.objects.filter(position__is_volunteer =True,team = team))
-                    members += member
+                    if Task_Assignation.is_task_started_by_a_incharge_for_a_team(task,team):
+                        print("here")
+                    else:
+                        print("here222")
+                        member = list(Members.objects.filter(position__is_volunteer =True,team = team))
+                        members += member
         dic = {}
         for member in members:
             try:
@@ -2168,6 +2176,29 @@ This is an automated message. Do not reply
 
         return tasks
                 
+    def is_task_started_by_a_coodinator_for_a_team(task,team):
+
+        members = Member_Task_Upload_Types.objects.filter(task=task,is_task_started_by_member = True)
+        task_started_by_member_in_team = False
+        for mem in members:
+            if team == mem.task_member.team and mem.task_member.position.is_co_ordinator and mem.task_member.position.is_officer:
+                task_started_by_member_in_team = True
+                break
+        
+        return task_started_by_member_in_team
+
+    def is_task_started_by_a_incharge_for_a_team(task,team):
+
+        members = Member_Task_Upload_Types.objects.filter(task=task,is_task_started_by_member = True)
+        task_started_by_member_in_team = False
+        for mem in members:
+            if team == mem.task_member.team and not mem.task_member.position.is_co_ordinator and mem.task_member.position.is_officer:
+                task_started_by_member_in_team = True
+                print(mem)
+                print("herererer")
+                break
+        
+        return task_started_by_member_in_team
         
           
         

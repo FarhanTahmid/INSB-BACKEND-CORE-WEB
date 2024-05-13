@@ -454,7 +454,7 @@
                     </thead>
                     <tbody>
                       {% if volunteer_members|length == 0 %}
-                      <p style="color:red;">Task not forwared to incharges yet</p>
+                      <p style="color:red;">Task not forwarded to incharges by co-ordinator or if it is forwarded, incharge did not forward it to the volunteer or is doing it solo.</p>
                       {% else %}
                       {% for volunteers,types in volunteer_members.items %}
                       <tr>

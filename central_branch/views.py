@@ -4662,8 +4662,8 @@ def upload_task(request, task_id,team_primary = None):
         
         task = Task.objects.get(id=task_id)
         user = request.user.username
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary,task.task_type)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary,task.task_type)
         this_is_users_task = False
         comments = None
         has_coordinator_access_or_incharge_access_for_team_task = False
@@ -5004,8 +5004,8 @@ def task_edit(request,task_id,team_primary = None):
         user = request.user.username
         task = Task.objects.get(id=task_id)
 
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary,task.task_type)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary,task.task_type)
         is_coordinator = Task_Assignation.is_coordinator(request,team_primary)
         is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
         is_officer = Task_Assignation.is_officer(request,team_primary)
@@ -5126,7 +5126,7 @@ def task_edit(request,task_id,team_primary = None):
             create_individual_task_access = False
             create_team_task_access = False
 
-        
+   
             
         if team_primary == None or team_primary == "1":
 

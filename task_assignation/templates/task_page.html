@@ -1376,7 +1376,7 @@
                 // Make an AJAX request to retrieve data for the selected category
                 $.ajax({
                     {% if team_primary == None or team_primary == "1" %}
-                    url: "{% url 'central_branch:save_mem_task_points' team_primary %}",
+                    url: "{% url 'central_branch:save_mem_task_points' None %}",
                     {% else %}
                     url: "{% url 'central_branch:save_mem_task_points' team_primary %}",
                     {% endif %}

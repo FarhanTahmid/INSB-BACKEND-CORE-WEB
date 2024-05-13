@@ -63,14 +63,14 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
         
-    def get_create_individual_task_access(request, team_primary=None):
+    def get_create_individual_task_access(request, team_primary=None,task_type=None):
         logger = logging.getLogger(__name__)
         try:
             # get username
             username=request.user.username
             if(Branch_View_Access.common_access(username=username)):
                 return True           
-            elif(team_primary):
+            elif(team_primary and task_type == "Team"):
                 if (team_primary == "1"):
                     return True
                 else:
@@ -94,14 +94,14 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
         
-    def get_create_team_task_access(request, team_primary=None):
+    def get_create_team_task_access(request, team_primary=None,task_type = None):
         logger = logging.getLogger(__name__)
         try:
             # get username
             username=request.user.username
             if(Branch_View_Access.common_access(username=username)):
                 return True
-            elif(team_primary):               
+            elif(team_primary and task_type == "Team"):               
                 if (team_primary == "1"):
                     return True
                 else:
