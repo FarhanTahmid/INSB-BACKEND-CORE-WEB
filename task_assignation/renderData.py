@@ -1718,7 +1718,7 @@ This is an automated message. Do not reply
 
                     task.save()
 
-                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types = Member_Task_Upload_Types.objects.get_or_create(task_member = people,task = task)
                     upload_types.has_content=True
                     upload_types.has_drive_link=True
                     upload_types.has_file_upload=True
@@ -1726,7 +1726,7 @@ This is an automated message. Do not reply
                     upload_types.has_permission_paper=True
                     upload_types.save()
 
-                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points = Member_Task_Point.objects.get_or_create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
                     incharge_task_points.save()
                     
 
@@ -1769,7 +1769,7 @@ This is an automated message. Do not reply
                     Task_Assignation.task_creation_email(request,people,task)
                     task.save()
 
-                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types = Member_Task_Upload_Types.objects.get_or_create(task_member = people,task = task)
                     upload_types.has_content=True
                     upload_types.has_drive_link=True
                     upload_types.has_file_upload=True
@@ -1777,7 +1777,7 @@ This is an automated message. Do not reply
                     upload_types.has_permission_paper=True
                     upload_types.save()
 
-                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points = Member_Task_Point.objects.get_or_create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
                     incharge_task_points.save()
 
                 team_forward.task_forwarded_to_incharge = True
