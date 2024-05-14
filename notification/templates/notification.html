@@ -70,13 +70,13 @@
 
 
 
-        /* .table-class tbody tr:nth-child(even) {
-            background-color: white;
+        .table-class tbody tr:nth-child(even) {
+            background-color: #bde0fe;
         }
 
         .table-class tbody tr:nth-child(odd) {
-            background-color: white;
-        } */
+            background-color: #bde0fe;
+        }
 
         /* Define column widths */
         #table-id th:nth-child(1),
@@ -427,7 +427,7 @@
                                 </tr>
                             </thead>
                             <tbody id="nostripe">
-                                <tr class="marked_unread">
+                                <tr class="marked_read">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
@@ -440,13 +440,13 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="marked_unread">
+                                <tr class="marked_read">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
@@ -459,13 +459,13 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="marked_unread">
+                                <tr class="marked_read">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
@@ -478,13 +478,13 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="marked_unread">
+                                <tr class="marked_read">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
@@ -497,16 +497,16 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-                                <tr class="marked_unread">
+                                <tr class="marked_read">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
-                                        <a href="#">Dummy Notification 1</a>
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
                                     </td>
                                     <td>
                                         <div class="dropdown" onclick="toggleDropdown(event)">
@@ -516,7 +516,121 @@
                                                 <span></span>
                                             </div>
                                             <div class="dropdown-content" id="dropdownContent">
-                                                <a href="#" onclick="markAsUnread(this); return false;">Mark as Unread</a>
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_read">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_read">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_read">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_read">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_read">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="marked_read">
+                                    <td>2024-05-01 09:00:00</td>
+                                    <td style="color: #00629b">
+                                        <a href="#" class="finish_task_modal_btn">Dummy Notification 1</a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown" onclick="toggleDropdown(event)">
+                                            <div class="burger" id="burger">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <div class="dropdown-content" id="dropdownContent">
+                                                <a href="#" onclick="markAsRead(this); return false;">Mark as read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
@@ -834,29 +948,48 @@
     </script>
 
 
-    <script>
-        function deleteNotification(element) {
-            // Get the parent tr element of the clicked link
-            var trElement = element.closest('tr');
-            
-            // Remove the entire tr element from the DOM
-            trElement.remove();
-        }
+<script>
+    function deleteNotification(element) {
+        // Get the parent tr element of the clicked link
+        var trElement = element.closest('tr');
+        
+        // Remove the entire tr element from the DOM
+        trElement.remove();
+    }
 
-        function markAsUnread(element) {
-            // Get the parent tr element of the clicked link
-            var trElement = element.closest('tr');
-            
-            // Change the background color of the tr
-            trElement.style.backgroundColor = '#bde0fe'; 
-            trElement.classList.remove('marked_unread');
-        }
-        </script>
+    function markAsRead(element) {
+        // Get the parent tr element of the clicked link
+        var trElement = element.closest('tr');
+        
+        // Change the background color of the tr
+        trElement.style.backgroundColor = 'white'; 
+        trElement.classList.add('marked_read');
+
+        // Change the text of the link to "Mark as unread"
+        var dropdownContent = trElement.querySelector('.dropdown-content');
+        dropdownContent.innerHTML = '<a href="#" onclick="markAsUnread(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+    }
+
+    function markAsUnread(element) {
+        // Get the parent tr element of the clicked link
+        var trElement = element.closest('tr');
+        
+        // Change the background color of the tr to its default color
+        trElement.style.backgroundColor = ''; 
+
+        // Add the 'marked_read' class back to the tr
+        trElement.classList.remove('marked_read');
+
+        // Change the text of the link to "Mark as read"
+        var dropdownContent = trElement.querySelector('.dropdown-content');
+        dropdownContent.innerHTML = '<a href="#" onclick="markAsRead(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+    }
+</script>
     
         <script>
             function filterUnread() {
-            // Get all elements with the class 'marked_unread'
-            var unreadNotifications = document.querySelectorAll('.marked_unread');
+            // Get all elements with the class 'marked_read'
+            var unreadNotifications = document.querySelectorAll('.marked_read');
             
             // Loop through each unread notification and hide it
             unreadNotifications.forEach(function(notification) {
@@ -868,7 +1001,7 @@
         <script>
             //filter unread toggle
             function toggleButton(buttonType) {
-            var rows = document.querySelectorAll('.marked_unread');
+            var rows = document.querySelectorAll('.marked_read');
             if (buttonType === 'all') {
                 rows.forEach(row => {
                     row.style.display = 'table-row';
@@ -906,6 +1039,8 @@
     modal1.style.zIndex = '103100';
     modal1.style.opacity = '1';
     modal1.style.height = '120%';
+
+    markAsRead(row);
     }
 })
 
