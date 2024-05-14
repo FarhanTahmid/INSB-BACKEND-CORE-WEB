@@ -1686,101 +1686,103 @@ This is an automated message. Do not reply
             #removing current coordinators and assigning to incharges
             
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
-            for people in all_task_members:
+            if not team_forward.task_forwarded_to_incharge and not Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team):
+                for people in all_task_members:
 
-                if people.team == team:
-                    if people.position.is_co_ordinator and people.position.is_officer:
-                        task.members.remove(people)
-                        task.save()
-                        task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
-                        #points deduction
-                        points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
-                        points.completion_points = task.task_category.points * (25/100)
-                        points.save()
+                    if people.team == team:
+                        if people.position.is_co_ordinator and people.position.is_officer:
+                            task.members.remove(people)
+                            task.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                            #points deduction
+                            points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
+                            points.completion_points = task.task_category.points * (25/100)
+                            points.save()
 
-                        # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
-                        # upload_types.delete()
+                            # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                            # upload_types.delete()
 
-                        #setting message
-                        Task_Assignation.save_task_logs(task,task_log_message)
-                        task.save()
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+                            task.save()
 
-            team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
-            for people in team_incharges:
-                task.members.add(people)
-                task.save()
+                team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                for people in team_incharges:
+                    task.members.add(people)
+                    task.save()
 
-                task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
-                #setting message
-                Task_Assignation.save_task_logs(task,task_log_message)
-                Task_Assignation.task_creation_email(request,people,task)
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                    #setting message
+                    Task_Assignation.save_task_logs(task,task_log_message)
+                    Task_Assignation.task_creation_email(request,people,task)
 
-                task.save()
+                    task.save()
 
-                upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
-                upload_types.has_content=True
-                upload_types.has_drive_link=True
-                upload_types.has_file_upload=True
-                upload_types.has_media=True
-                upload_types.has_permission_paper=True
-                upload_types.save()
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types.has_content=True
+                    upload_types.has_drive_link=True
+                    upload_types.has_file_upload=True
+                    upload_types.has_media=True
+                    upload_types.has_permission_paper=True
+                    upload_types.save()
 
-                incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
-                incharge_task_points.save()
-                
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points.save()
+                    
 
-            team_forward.task_forwarded_to_incharge = True
-            team_forward.forwared_by = user
-            team_forward.save()
+                team_forward.task_forwarded_to_incharge = True
+                team_forward.forwared_by = user
+                team_forward.save()
         else:
             team = Teams.objects.get(primary = int(team_primary))
             #removing current coordinator and add incharges of particular team
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
-            for people in all_task_members:
+            if not team_forward.task_forwarded_to_incharge and not Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team):
+                for people in all_task_members:
 
-                if people.team == team:
-                    if people.position.is_co_ordinator and people.position.is_officer:
-                        task.members.remove(people)
-                        print("people removed")
-                        print(people)
-                        task.save()
-                        task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
-                        #points deduction
-                        points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
-                        points.completion_points = task.task_category.points * (25/100)
-                        points.save()
+                    if people.team == team:
+                        if people.position.is_co_ordinator and people.position.is_officer:
+                            task.members.remove(people)
+                            print("people removed")
+                            print(people)
+                            task.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                            #points deduction
+                            points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
+                            points.completion_points = task.task_category.points * (25/100)
+                            points.save()
 
-                        # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
-                        # upload_types.delete()
+                            # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                            # upload_types.delete()
 
-                        #setting message
-                        Task_Assignation.save_task_logs(task,task_log_message)
-                        task.save()
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+                            task.save()
 
-            team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
-            for people in team_incharges:
-                task.members.add(people)
-                task.save()
-                task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
-                #setting message
-                Task_Assignation.save_task_logs(task,task_log_message)
-                Task_Assignation.task_creation_email(request,people,task)
-                task.save()
+                team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                for people in team_incharges:
+                    task.members.add(people)
+                    task.save()
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                    #setting message
+                    Task_Assignation.save_task_logs(task,task_log_message)
+                    Task_Assignation.task_creation_email(request,people,task)
+                    task.save()
 
-                upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
-                upload_types.has_content=True
-                upload_types.has_drive_link=True
-                upload_types.has_file_upload=True
-                upload_types.has_media=True
-                upload_types.has_permission_paper=True
-                upload_types.save()
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types.has_content=True
+                    upload_types.has_drive_link=True
+                    upload_types.has_file_upload=True
+                    upload_types.has_media=True
+                    upload_types.has_permission_paper=True
+                    upload_types.save()
 
-                incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
-                incharge_task_points.save()
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points.save()
 
-            team_forward.task_forwarded_to_incharge = True
-            team_forward.forwared_by = user
-            team_forward.save()
+                team_forward.task_forwarded_to_incharge = True
+                team_forward.forwared_by = user
+                team_forward.save()
 
         return True
     
