@@ -813,6 +813,7 @@
                 </div>
 
                 <h4>Task: {{task.title}}</h4>
+                <h5 style="align:center;">Task Type: {{task.task_type}}</h5>
 
               <!--create task heading-->
               <div class="queue">
@@ -1128,7 +1129,7 @@
                 </div>
                 
                 
-                
+                {% if not task.is_task_completed %}
                 {% if create_team_task_access or create_individual_task_access %}
                 {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
                 
@@ -1243,6 +1244,7 @@
                 
                 {% endif %}
 
+                {% endif %}
                 {% endif %}
 
             </form>
