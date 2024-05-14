@@ -36,6 +36,7 @@
         /* border: 1px solid black; */
         padding: 10px;
         margin-bottom: 10px;
+        background-color: #669bbc;
     }
     .see-all{
         display: flex;
@@ -172,7 +173,8 @@ function show_ntfn(){
     }
 }
 function msg_read(msg_div){
-    msg_div.style.backgroundColor = "rgba(200, 200, 200, 0.304)";
+    msg_div.style.backgroundColor = "#5bc0de";
+    msg_div.style.color = "white";
     msg_div.firstElementChild.value = "2";
     var hiddenInputs = document.querySelectorAll('.msg input');
     var val = 0;
@@ -191,7 +193,7 @@ window.onload = function(){
 
     divs.forEach(function(msg_val){
         if(msg_val.firstElementChild.value == "2"){
-            msg_val.style.backgroundColor = "rgba(200, 200, 200, 0.304)";
+            msg_val.style.backgroundColor = "white";
         }
     });
 
@@ -269,7 +271,7 @@ window.onload = function(){
         <div id="notification">
             <div class="msg-box">
                 <div class="msg" onclick="msg_read(this)">
-                    <input type="hidden" id="hid-inp" value="2" data-namr="1">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
                     <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
                     <h6>10:53</h6>
                     <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
