@@ -1,0 +1,409 @@
+{% block preloader %}
+{% load static %}
+<!-- <style>
+    #preloader {
+        background: white;
+        height: 100vh;
+        width: 100vw;
+        position: fixed;
+        z-index: 100000;
+        transition: all .4s ease-in-out;
+    }
+
+    body.loading {
+        overflow: hidden;
+    }
+
+    #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9990;
+        display: flex;
+        min-height: 100%;
+        min-width: 100%;
+        align-items: center;
+        justify-content: center;
+
+        opacity: 1;
+        transition: opacity 1s ease;
+        /* Add transition for opacity */
+
+        background: #2980b9 url('https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png') repeat 0 0;
+        -webkit-animation: 10s linear 0s normal none infinite animate;
+        -moz-animation: 10s linear 0s normal none infinite animate;
+        -ms-animation: 10s linear 0s normal none infinite animate;
+        -o-animation: 10s linear 0s normal none infinite animate;
+        animation: 10s linear 0s normal none infinite animate;
+    }
+
+    #loadingOverlay.hidden {
+        opacity: 0;
+        /* Make the overlay transparent */
+        pointer-events: none;
+        /* Disable pointer events when overlay is hidden */
+    }
+
+    @-webkit-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @-moz-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @-ms-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @-o-keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    @keyframes animate {
+        from {
+            background-position: 0 0;
+        }
+
+        to {
+            background-position: 500px 0;
+        }
+    }
+
+    /* typewriter effect starts here */
+    .typewriter {
+        margin-left: 20px;
+    }
+
+
+    .typewriter h1 {
+        color: #fff;
+        overflow: hidden;
+        font-size: 0;
+        font-weight: bold;
+        font-family: "Poppins", sans-serif;
+        border-right: 5px solid #FFD100;
+        white-space: nowrap;
+        margin: 0 auto;
+        animation: typing 1.25s steps(15, end) forwards,
+            blink-caret 0.5s step-end infinite,
+            remove-blink 0.5s 1.5s forwards,
+            remove-typewriter 0s 2.5s forwards;
+    }
+
+    /* The typing effect */
+    @keyframes typing {
+        from {
+            width: 0
+        }
+
+        to {
+            width: 100%
+        }
+    }
+
+    /* The typewriter cursor effect */
+    @keyframes blink-caret {
+
+        from,
+        to {
+            border-color: transparent;
+        }
+
+        50% {
+            border-color: #FFD100;
+        }
+    }
+
+    /* Remove the typewriter cursor effect after a delay */
+    @keyframes remove-blink {
+        to {
+            border-color: transparent;
+            overflow: visible;
+        }
+    }
+
+
+    .typewriter h1 div {
+        display: inline-block;
+        animation: font-to-dot 0.5s ease-in forwards;
+        overflow: visible;
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+
+        border-radius: 50%;
+    }
+
+    .typewriter h1 div:nth-of-type(1) {
+        animation-delay: 1.8s;
+        --translation: translateX(120px);
+    }
+
+    .typewriter h1 div:nth-of-type(2) {
+        animation-delay: 1.85s;
+        --translation: translateX(90px);
+    }
+
+    .typewriter h1 div:nth-of-type(3) {
+        animation-delay: 1.9s;
+        --translation: translateX(60px);
+    }
+
+    .typewriter h1 div:nth-of-type(4) {
+        animation-delay: 1.95s;
+        --translation: translateX(30px);
+    }
+
+    .typewriter h1 div:nth-of-type(5) {
+        animation-delay: 2.0s;
+        --translation: translateX(0px);
+    }
+
+    .typewriter h1 div:nth-of-type(6) {
+        animation-delay: 1.95s;
+        --translation: translateX(-30px);
+    }
+
+    .typewriter h1 div:nth-of-type(7) {
+        animation-delay: 1.9s;
+        --translation: translateX(-60px);
+    }
+
+    .typewriter h1 div:nth-of-type(8) {
+        animation-delay: 1.85s;
+        --translation: translateX(-90px);
+    }
+
+    .typewriter h1 div:nth-of-type(9) {
+        animation-delay: 1.8s;
+        --translation: translateX(-120px);
+    }
+
+    @keyframes font-to-dot {
+        0% {}
+
+        15% {
+            color: transparent;
+        }
+
+        25% {}
+
+        50% {
+            color: transparent;
+            background-color: white;
+            transform: var(--translation);
+            transform: scale(0.5);
+        }
+
+        75% {
+            color: transparent;
+            background-color: white;
+            transform: var(--translation);
+            transform: scale(0);
+        }
+
+        100% {
+            color: transparent;
+            background-color: white;
+            transform: var(--translation);
+            transform: scale(0);
+        }
+    }
+
+
+
+
+
+    .spinner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: none;
+        justify-content: center;
+        top: -27px;
+        opacity: 0;
+        /* Initially set opacity to 0 */
+        transition: opacity 0.4s ease-in-out;
+        /* Add transition for opacity */
+    }
+
+    .wrapper {
+        position: absolute;
+        top: -20px;
+        transform: scale(1.5);
+    }
+
+    .loader {
+        height: 25px;
+        width: 1px;
+        position: absolute;
+        animation: rotate 3.5s linear infinite;
+    }
+
+    .loader .dot {
+        top: 30px;
+        height: 10px;
+        width: 10px;
+        background: #fff;
+        border-radius: 50%;
+        position: relative;
+    }
+
+    /* .text {
+        position: absolute;
+        bottom: -85px;
+        font-size: 25px;
+        font-weight: 400;
+        font-family: sans-serif;
+        color: #fff;
+    } */
+
+    @keyframes rotate {
+        30% {
+            transform: rotate(220deg);
+        }
+
+        40% {
+            transform: rotate(450deg);
+            opacity: 1;
+        }
+
+        75% {
+            transform: rotate(720deg);
+            opacity: 1;
+        }
+
+        76% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 0;
+            transform: rotate(0deg);
+        }
+    }
+
+    .loader:nth-child(1) {
+        animation-delay: 0.15s;
+    }
+
+    .loader:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+
+    .loader:nth-child(3) {
+        animation-delay: 0.45s;
+    }
+
+    .loader:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+
+    .loader:nth-child(5) {
+        animation-delay: 0.75s;
+    }
+
+    .loader:nth-child(6) {
+        animation-delay: 0.9s;
+    }
+
+
+
+
+
+
+
+
+
+
+    @media only screen and (max-width: 780px) {
+        /* Add responsive styles if needed */
+    }
+
+    @media only screen and (max-width: 460px) {
+        /* Add responsive styles if needed */
+    }
+</style>
+
+
+<div id="preloader">
+    <div id="loadingOverlay">
+        <div class="typewriter">
+            <h1>
+                <div>I</div>
+                <div>E</div>
+                <div>E</div>
+                <div>E</div>
+                <div>N</div>
+                <div>S</div>
+                <div>U</div>
+                <div>S</div>
+                <div>B</div>
+            </h1>
+        </div>
+
+        <div class="spinner">
+            <div class="wrapper">
+                <div class="loader">
+                    <div class="dot"></div>
+                </div>
+                <div class="loader">
+                    <div class="dot"></div>
+                </div>
+                <div class="loader">
+                    <div class="dot"></div>
+                </div>
+                <div class="loader">
+                    <div class="dot"></div>
+                </div>
+                <div class="loader">
+                    <div class="dot"></div>
+                </div>
+                <div class="loader">
+                    <div class="dot"></div>
+                </div>
+            </div>
+</div>
+</div>
+</div>
+
+<script>
+    window.onload = function () {
+        setTimeout(function () {
+            document.querySelector('.typewriter').style.display = 'none';
+            var spinner = document.querySelector('.spinner');
+            spinner.style.display = 'flex';
+            setTimeout(function () {
+                spinner.style.opacity = '1';
+            }, 50); // Adjust the delay as needed
+        }, 2500); // 2500 milliseconds = 2.5 seconds
+    };
+
+</script> -->
+{% endblock preloader %}

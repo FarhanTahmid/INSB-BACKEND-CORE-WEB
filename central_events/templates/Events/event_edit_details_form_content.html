@@ -1,6 +1,7 @@
 {% load static %}
 {% block event_details_form %}
 <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
     .publish-switch {
@@ -37,6 +38,11 @@
         transition: all 0.5s 
         ease-in-out;
     }
+    .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -246,7 +252,7 @@
                         value="{% if event_details.more_info_link %}{{event_details.more_info_link}}{% endif %}"
                         name="more_info_link"
                         />
-                        
+                        <a href="{% if event_details.more_info_link %}{{event_details.more_info_link}}{% endif %}" class="icon_position"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                     </span>
                 </div>
                 <div class="form-group">
@@ -261,7 +267,7 @@
                         value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
                         name="drive_link_of_event"
                         />
-                        
+                        <a href="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}" class="icon_position"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                     </span>
                 </div>
                 
