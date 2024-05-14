@@ -293,12 +293,55 @@
         </div>
 
 
-        <!-- navbar -->
         <div id="content" class="app-content" role="main">
+          {% if app_name == "central_branch" %}
           {% block navbar %}
-          {% include 'navbar.html' %} 
+           {% include 'navbar.html' %} 
           {% endblock navbar %}
-        </div>
+          {% else %}
+              {% if web_dev_team %}
+                  {% block web_navbar %}
+                      {% include 'website_development_team/web_navbar.html' %} 
+                  {% endblock web_navbar %}
+              {% elif content_and_writing_team %}
+                  {% block content_navbar %}
+                      {% include 'content_navbar.html' %} 
+                  {% endblock content_navbar %}
+              {% elif event_management_team %}
+                  {% block event_navbar %}
+                      {% include 'emt_navbar.html' %} 
+                  {% endblock event_navbar %}
+              {% elif logistic_and_operation_team %}
+                  {% block logistic_navbar %}
+                      {% include 'logistics_navbar.html' %} 
+                  {% endblock logistic_navbar %}
+              {% elif promotion_team %}
+                  {% block promotion_navbar %}
+                      {% include 'promotions_team/promotions_navbar.html' %} 
+                  {% endblock promotion_navbar %}
+              {% elif public_relation_team %}
+                  {% block public_relation_team_navbar %}
+                      {% include 'public_relation_team/public_relation_navbar.html' %} 
+                  {% endblock public_relation_team_navbar %}
+              {% elif membership_development_team %}
+                  {% block membership_navbar %}
+                      {% include 'mdt_navbar.html' %} 
+                  {% endblock membership_navbar %}
+              {% elif media_team %}
+                  {% block medias_navbar %}
+                      {% include 'media_navbar.html' %} 
+                  {% endblock medias_navbar %}
+              {% elif graphics_team %}
+                  {% block graphicss_navbar %}
+                      {% include 'graphics_navbar.html' %} 
+                  {% endblock graphicss_navbar %}
+              {% elif finance_and_corporate_team %}
+                  {% block finanace_navbar %}
+                      {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+                  {% endblock finanace_navbar %}
+              {% endif %}
+          {% endif %}
+      </div>
       
 
         <div id="content" class="app-content" role="main">
@@ -322,7 +365,11 @@
 
             <!--Messages-->
             <div class="tooltip-container">
+              {% if team_primary == None or team_primary == "1" %}
               <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+              {% else %}
+              <a href="{% url ''|add:app_name|add:':task_edit_team' task.pk team_primary %}" class="image-button">
+              {% endif %}
                 <img src="/static/back-arrow.png" alt="Go back to session">
               </a>
               <span class="tooltip-text">Go back</span>
@@ -409,63 +456,35 @@
                         </tr>
                     </thead>
                     <tbody>
+                      {% if team_primary == None or team_primary == "1" %}
+                      <p style="color:red;">Here All the Assigned Teams Core/Team Volunteers would appear. Core/Team Volunteers won't be shown for the following reasons :-
+                        <ul>
+                          <li>If Co-ordinator of a team starts the task, it can no longer be forwarded to the Incharges or the Volunteers</li>
+                          <li>If Co-ordinator did forward it, but an Incharge of a Team started the task, it can't be forwarded to the Volunteers</li>
+                        </ul>
+                      </p>
+                      {% endif %}
+                      {% for volunteers,types in volunteer_members.items %}
                       <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
+                        <td>{{volunteers.ieee_id}}</td>
+                        <td>{{volunteers.name}}</td>
+                        <td>{{volunteers.team.team_name}}</td>
+                        <td>{{volunteers.position}}</td>
+                        <td>{{volunteers.contact_no}}</td>
                         <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
+                          <input type="checkbox" name="member_select" value="{{volunteers.ieee_id}}" {% if volunteers in task.members.all %}checked{% endif %}>
                         </td>
                         <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
+                          <select name="{{volunteers.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                              <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                              <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                              <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                              <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                              <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                          </select>
+                        </td>                  
                       </tr>
-                      <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
-                        <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                        </td>
-                        <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
-                      </tr>
-                      <tr>
-                        <td>id</td>
-                        <td>name</td>
-                        <td>team</td>
-                        <td>position</td>
-                        <td>contact</td>
-                        <td>
-                          <input class="table-checkbox" id="update_member" name="member_select" type="checkbox" value="{{member.ieee_id}}">
-                        </td>
-                        <td>
-                              <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                  <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                  <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                  <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                  <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                  <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
-                              </select>
-                          </td>                
-                      </tr>
+                      {% endfor %} 
                     </tbody>
                 </table>
                 </div>

@@ -2,6 +2,7 @@ from django.urls import path,include
 from django.contrib.auth.views import LogoutView
 from . import views
 from django.conf import settings
+from central_branch.views import upload_task
 
 
 app_name='users'
@@ -34,6 +35,7 @@ urlpatterns = [
     #Invalid URL Handling
     path('invalid_url',views.invalidURL,name="invalid_url"), #this page will prompt if an user has used an "used" or invalid url
     #my task url
-    path('my_tasks/',views.my_tasks,name="my_tasks")
+    path('my_tasks/',views.my_tasks,name="my_tasks"),
+    path('upload_tasks/<int:task_id>/',upload_task,name="upload_task_user"),
  
 ]

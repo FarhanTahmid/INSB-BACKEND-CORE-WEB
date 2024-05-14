@@ -5,7 +5,7 @@ from . models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Grou
 # Register your models here.
 @admin.register(Teams)
 class Teams(admin.ModelAdmin):
-    list_display=['id','team_name','team_of','primary']
+    list_display=['id','team_name','team_of','primary','completed_task_points']
 @admin.register(Roles_and_Position)
 class Roles(admin.ModelAdmin):
     list_display= ['id','role','role_of','rank','is_eb_member','is_mentor','is_sc_ag_eb_member','is_officer','is_co_ordinator','is_faculty','is_volunteer','is_core_volunteer']
