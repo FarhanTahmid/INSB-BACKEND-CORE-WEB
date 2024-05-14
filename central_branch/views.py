@@ -5131,16 +5131,18 @@ def task_edit(request,task_id,team_primary = None):
 
         #checking to see if points to be deducted
         late = Task_Assignation.deduct_points_for_members(task)
-        print(is_task_forwared_to_incharge)
-        print(is_coordinator)
+
         is_member_view = logged_in_user in task.members.all()
         #If it is a task member view or a regular view then override the access
         if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username) and not Branch_View_Access.get_create_team_task_access(request,team_primary):
             create_individual_task_access = False
             create_team_task_access = False
-        elif is_task_of_teams_individuals:
+        if is_task_of_teams_individuals:
             create_individual_task_access = True
             create_team_task_access = True
+        print("sakib")
+        print(create_individual_task_access)
+        print(create_team_task_access)
 
    
             

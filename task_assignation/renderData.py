@@ -963,12 +963,12 @@ class Task_Assignation:
             if team_primary!=None and team_primary!="1":
                 team_of = Teams.objects.get(primary = int(team_primary))
     
-                if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = False, position__is_officer=True)
-                elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
-                elif requesting_member.position.is_eb_member:
-                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = True, position__is_officer=True)
+                # if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)#.exclude(position__is_co_ordinator = False, position__is_officer=True)
+                # elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
+                # elif requesting_member.position.is_eb_member:
+                #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = True, position__is_officer=True)
             else:
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
         else:
@@ -976,7 +976,7 @@ class Task_Assignation:
             members = Members.objects.all()
             if team_primary and team_primary != "1":
                 team_of = Teams.objects.get(primary = int(team_primary))
-                members = Members.objects.filter(team = team_of).exclude(position__is_officer=True)
+                members = Members.objects.filter(team = team_of)#.exclude(position__is_officer=True)
         
         dic = {}
         for member in members:
@@ -1014,14 +1014,14 @@ class Task_Assignation:
                 team = Teams.objects.get(primary = int(team_primary))
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
 
-                if task.task_type == "Individuals" and len(task.team.all()) == 1:
+                # if task.task_type == "Individuals" and len(task.team.all()) == 1:
 
-                    if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                        members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = False, position__is_officer=True)
-                    elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                        members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team)
-                    elif requesting_member.position.is_eb_member:
-                        members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = True, position__is_officer=True)
+                #     if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = False, position__is_officer=True)
+                #     elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team)
+                #     elif requesting_member.position.is_eb_member:
+                #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = True, position__is_officer=True)
 
         else:
             #Admin user so load all members
@@ -1031,8 +1031,8 @@ class Task_Assignation:
                 team = Teams.objects.get(primary = int(team_primary))
                 members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
 
-                if task.task_type == "Individuals" and len(task.team.all()) == 1:
-                    members = Members.objects.filter(team = team).exclude(position__is_officer=True)
+                # if task.task_type == "Individuals" and len(task.team.all()) == 1:
+                #     members = Members.objects.filter(team = team).exclude(position__is_officer=True)
 
         
         for member in members:
@@ -1718,7 +1718,7 @@ This is an automated message. Do not reply
 
                     task.save()
 
-                    upload_types = Member_Task_Upload_Types.objects.get_or_create(task_member = people,task = task)
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
                     upload_types.has_content=True
                     upload_types.has_drive_link=True
                     upload_types.has_file_upload=True
@@ -1726,7 +1726,7 @@ This is an automated message. Do not reply
                     upload_types.has_permission_paper=True
                     upload_types.save()
 
-                    incharge_task_points = Member_Task_Point.objects.get_or_create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
                     incharge_task_points.save()
                     
 
@@ -1769,7 +1769,7 @@ This is an automated message. Do not reply
                     Task_Assignation.task_creation_email(request,people,task)
                     task.save()
 
-                    upload_types = Member_Task_Upload_Types.objects.get_or_create(task_member = people,task = task)
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
                     upload_types.has_content=True
                     upload_types.has_drive_link=True
                     upload_types.has_file_upload=True
@@ -1777,7 +1777,7 @@ This is an automated message. Do not reply
                     upload_types.has_permission_paper=True
                     upload_types.save()
 
-                    incharge_task_points = Member_Task_Point.objects.get_or_create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
                     incharge_task_points.save()
 
                 team_forward.task_forwarded_to_incharge = True
@@ -2153,7 +2153,7 @@ This is an automated message. Do not reply
 
                 if len(task_team) == 1 and task.task_type == "Individuals":
                     if task_team[0] == team:
-                        if member.position.is_officer:
+                        if member.position.is_officer and member not in task.members.all():
                             return True
                         else:
                             return False
