@@ -36,7 +36,7 @@
         /* border: 1px solid black; */
         padding: 10px;
         margin-bottom: 10px;
-        background-color: #669bbc;
+        background-color: #778da9;
     }
     .see-all{
         display: flex;
@@ -173,8 +173,8 @@ function show_ntfn(){
     }
 }
 function msg_read(msg_div){
-    msg_div.style.backgroundColor = "#5bc0de";
-    msg_div.style.color = "white";
+    msg_div.style.backgroundColor = "white";
+    msg_div.style.color = "black";
     msg_div.firstElementChild.value = "2";
     var hiddenInputs = document.querySelectorAll('.msg input');
     var val = 0;
@@ -187,6 +187,9 @@ function msg_read(msg_div){
     
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
+
+
+    openModal(msg_div);
 }
 window.onload = function(){
     var divs = document.querySelectorAll(".msg");
@@ -370,8 +373,10 @@ window.onload = function(){
             </div>
         </div>
 <script>
-    // Get the modal
-    var modal1 = document.getElementById("modal1");
+    function openModal(msg){
+
+        // Get the modal
+        var modal1 = document.getElementById("modal1");
     
     // Get the button that opens the modal
     var btn1 = document.querySelectorAll(".msg");
@@ -380,31 +385,32 @@ window.onload = function(){
     var span1 = document.getElementsByClassName("close1")[0];
     
     btn1.forEach(function (row){
-    // When the user clicks the button, open the modal 
-    row.onclick = function() {
-    modal1.style.transform = 'translateY(0px)';
-    modal1.style.zIndex = '103100';
-    modal1.style.opacity = '1';
-    modal1.style.height = '120%';
-    }
-})
+        // When the user clicks the button, open the modal 
+        row.onclick = function() {
+            modal1.style.transform = 'translateY(0px)';
+            modal1.style.zIndex = '103100';
+            modal1.style.opacity = '1';
+            modal1.style.height = '120%';
+        }
+    })
 
     // When the user clicks on <span> (x), close the modal
-    span1.onclick = function() {
-    modal1.style.transform = 'translateY(-50px)';
-    modal1.style.zIndex = '-100';
-    modal1.style.opacity = '0';
-    modal1.style.height = '0%';
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-     if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
-        modal1.style.zIndex = '-100';
-        modal1.style.opacity = '0';
-        modal1.style.height = '0%';
-      }
+        span1.onclick = function() {
+            modal1.style.transform = 'translateY(-50px)';
+            modal1.style.zIndex = '-100';
+            modal1.style.opacity = '0';
+            modal1.style.height = '0%';
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal1) {
+                modal1.style.transform = 'translateY(-50px)';
+                modal1.style.zIndex = '-100';
+                modal1.style.opacity = '0';
+                modal1.style.height = '0%';
+            }
+        }
     }
     </script>
 {% endblock navbar %}
