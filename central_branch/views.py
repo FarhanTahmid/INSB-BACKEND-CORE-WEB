@@ -4440,15 +4440,17 @@ def create_task(request,team_primary = None):
 
         #app name for proper redirecting
         app_name = "central_branch"
+        permission_for_co_ordinator_and_incharges_to_create_task = None
         if team_primary and team_primary!="1":
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            permission_for_co_ordinator_and_incharges_to_create_task = "Team"
             
 
         #modifty this functions so that incharge and coordinator gets access by passing a team_primary
         #parameter
         #Done:
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary,permission_for_co_ordinator_and_incharges_to_create_task)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary,permission_for_co_ordinator_and_incharges_to_create_task)
 
 
         if create_individual_task_access or create_team_task_access:
@@ -4559,9 +4561,10 @@ def task_home(request,team_primary = None):
         user_data=current_user.getUserData() #getting user data as dictionary file
 
         app_name = "central_branch"
+        permission_for_co_ordinator_and_incharges_to_create_task = None
         if team_primary and team_primary!="1":
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
-
+            permission_for_co_ordinator_and_incharges_to_create_task = "Team"
         #getting all task categories
         all_task_categories = Task_Category.objects.all()
 
@@ -4582,7 +4585,7 @@ def task_home(request,team_primary = None):
         #########################################
         ###Done:Arman Task###
         #########
-        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request, team_primary) or Branch_View_Access.get_create_team_task_access(request, team_primary)
+        has_task_create_access = Branch_View_Access.get_create_individual_task_access(request, team_primary,permission_for_co_ordinator_and_incharges_to_create_task) or Branch_View_Access.get_create_team_task_access(request, team_primary,permission_for_co_ordinator_and_incharges_to_create_task)
         #########
         all_tasks = Task_Assignation.load_task_for_home_page(team_primary)
         if team_primary == None or team_primary == "1":
@@ -4662,11 +4665,15 @@ def upload_task(request, task_id,team_primary = None):
         
         task = Task.objects.get(id=task_id)
         user = request.user.username
-        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary,task.task_type)
-        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary,task.task_type)
+        create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request, team_primary,task.task_type,task)
+        create_team_task_access = Branch_View_Access.get_create_team_task_access(request, team_primary,task.task_type,task)
         this_is_users_task = False
         comments = None
         has_coordinator_access_or_incharge_access_for_team_task = False
+
+        print("sakib")
+        print(create_individual_task_access)
+        print(create_team_task_access)
         #to check if this is users task
         try:
             logged_in_user = Members.objects.get(ieee_id = user)
@@ -5016,7 +5023,8 @@ def task_edit(request,task_id,team_primary = None):
         is_task_started_by_any_coordinator = False
         is_task_started_by_any_incharge = False
         
-        print(is_task_forwared_to_incharge)
+        print(is_task_of_teams_individuals)
+        print("checking")
         #app name for proper redirecting
         app_name = "central_branch"
         if team_primary and team_primary!="1":
@@ -5024,7 +5032,7 @@ def task_edit(request,task_id,team_primary = None):
             #this function will check whether current user is coordinator or not
             team_p = Teams.objects.get(primary = int(team_primary))
             is_task_started_by_any_coordinator = Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team_p)
-            is_task_started_by_any_incharge = Task_Assignation.is_co_ordinator_or_is_officer_of_team(task,team_p)
+            is_task_started_by_any_incharge = Task_Assignation.is_task_started_by_a_incharge_for_a_team(task,team_p)
 
         #Check if the user came from my task page. If yes then the back button will point to my tasks page
         my_task = False
@@ -5130,6 +5138,9 @@ def task_edit(request,task_id,team_primary = None):
         if (is_member_view or task.task_created_by != request.user.username) and not Branch_View_Access.common_access(request.user.username) and not Branch_View_Access.get_create_team_task_access(request,team_primary):
             create_individual_task_access = False
             create_team_task_access = False
+        elif is_task_of_teams_individuals:
+            create_individual_task_access = True
+            create_team_task_access = True
 
    
             
@@ -5230,8 +5241,6 @@ class GetTaskCategoryPointsAjax(View):
 class SaveMemberTaskPointsAjax(View):
     def get(self,request,team_primary = None):
         try:
-            create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary)
-            create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary)
 
             try:
                 logged_in_user = Members.objects.get(ieee_id = request.user.username)
@@ -5243,6 +5252,8 @@ class SaveMemberTaskPointsAjax(View):
             marks = request.GET.get('completed_points')
 
             task = Task.objects.get(id=task_id)
+            create_individual_task_access = Branch_View_Access.get_create_individual_task_access(request,team_primary,task.task_type,task)
+            create_team_task_access = Branch_View_Access.get_create_team_task_access(request,team_primary,task.task_type,task)
 
             if (create_individual_task_access or create_team_task_access) and not logged_in_user in task.members.all():
                 #checking to see if mark provided is negative or not if so send error message
