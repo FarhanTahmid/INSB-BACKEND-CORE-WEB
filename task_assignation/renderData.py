@@ -1846,7 +1846,8 @@ This is an automated message. Do not reply
 
         task = Task.objects.get(id=task_id)
 
-        
+        if Task_Assignation.is_task_forwarded_to_incharge(task,team_primary):
+            return True
 
         for member in Member_Task_Upload_Types.objects.filter(task=task):
 
