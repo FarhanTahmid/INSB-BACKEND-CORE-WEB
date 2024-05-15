@@ -1487,9 +1487,9 @@ This is an automated message. Do not reply
         elif team_primary == 4:
             return 'logistics_and_operations_team'
         elif team_primary == 5:
-            return ''
+            return 'promotions_team'
         elif team_primary == 6:
-            return ''
+            return 'public_relation_team'
         elif team_primary == 7:
             return 'membership_development_team'
         elif team_primary == 8:
