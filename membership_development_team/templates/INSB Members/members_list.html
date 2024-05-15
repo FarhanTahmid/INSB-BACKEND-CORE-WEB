@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
   <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
   <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
@@ -60,36 +59,57 @@
       color: #FFA300;
     }
     #notification{
-        height: 450px;
-        width: 300px;
-        position: absolute;
-        display: none;
-        background-color: rgba(255, 255, 255);
-        border-radius: 10px;
-        /* border: 2px solid rgb(227, 227, 227); */
-        backdrop-filter: blur(10px);
-        top: 45px;
-        right: 4%;
-        box-shadow: -2px 2px 20px 2px #0000000f;
-    }
-    .msg-box{
-        height: 420px;
-        width: 296px;
-        padding: 10px 10px 0px 10px;
-        overflow-y: auto;
-        overflow-x: clip;
-    }
-    .msg{
-        height: auto;
-        width: 276px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        border-radius: 4px;
-        /* border: 1px solid black; */
-        padding: 10px;
-        margin-bottom: 10px;
-    }
+      height: 450px;
+      width: 300px;
+      position: absolute;
+      display: none;
+      background-color: rgba(255, 255, 255);
+      border-radius: 4px;
+      /* border: 2px solid rgb(227, 227, 227); */
+      backdrop-filter: blur(10px);
+      top: 45px;
+      right: 4%;
+      box-shadow: -2px 2px 20px 2px #0000000f;
+  }
+  .msg-box{
+      height: 420px;
+      width: 296px;
+      padding: 8px 8px 0px 8px;
+      overflow-y: auto;
+      overflow-x: clip;
+  }
+  .msg{
+      height: auto;
+      width: 276px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      border-radius: 4px;
+      /* border: 1px solid #00629B; */
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: #e0f2fe;
+      color: #000;
+  }
+  .msg > h6{
+      padding: 0;
+  }
+  .sender_name{
+      font-weight: bold; 
+      font-size: 14px;
+  }
+  .notification_time{
+      color: gray;
+      font-size: 12px;
+      position: relative;
+      top: 3px;
+  }
+  .notification_content{
+      top: 20px;
+      font-size: 14px;
+      margin-bottom: 0;
+      color: gray;
+  }
     .see-all{
         display: flex;
         justify-content: center;
@@ -367,71 +387,59 @@
               <div ui-include="'../views/blocks/dropdown.user.html'"></div>
           </li>
           </ul>
-      <div id="notification">
-          <div class="msg-box">
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="1" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="1" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="1" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-              <div class="msg" onclick="msg_read(this)">
-                  <input type="hidden" id="hid-inp" value="2" data-namr="1">
-                  <h6 style="font-weight: bold; font-size: 15px;">Notification from</h6>
-                  <h6>10:53</h6>
-                  <h6 style="top: 20px; font-size: 15px; margin-bottom: 0;">Subject of the new notification</h6>
-              </div>
-          </div>
-              <a href="{% url 'notification:notification' %}" class="see-all">See All</a>
-      </div>
+          <div id="notification">
+            <div class="msg-box">
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+                <div class="msg" onclick="msg_read(this)">
+                    <input type="hidden" id="hid-inp" value="1" data-namr="1">
+                    <h6 class= 'sender_name' >Notification from</h6>
+                    <h6 class= 'notification_time'>10:53</h6>
+                    <h6 class= 'notification_content'>Subject of the new notification</h6>
+                </div>
+            </div>
+                <a href="{% url 'notification:notification' %}" class="see-all">See All</a>
+        </div>
 
       <!--Notification Modal-->
       <div id="modal1" class="notification_modal">
@@ -449,100 +457,103 @@
                   <hr>
                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga voluptates, quod dicta beatae cumque veritatis laboriosam, suscipit doloribus earum repudiandae expedita rerum reiciendis odio vero hic officia iste dolore quis perspiciatis possimus neque molestias. Placeat eum repudiandae fuga vitae perferendis.</p>
                   <!--notification link-->
-                  <a href="#" class="links"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                  <a href="#" class="links"><i class="fa fa-external-link" aria-hidden="true"></i></a>
                 </div>
               </div>
               <!-- / navbar right -->
             </div>
           </div>
-<script>
-  // Get the modal
-  var modal1 = document.getElementById("modal1");
-  
-  // Get the button that opens the modal
-  var btn1 = document.querySelectorAll(".msg");
-  
-  // Get the <span> element that closes the modal
-  var span1 = document.getElementsByClassName("close1")[0];
-  
-  btn1.forEach(function (row){
-  // When the user clicks the button, open the modal 
-  row.onclick = function() {
-  modal1.style.transform = 'translateY(0px)';
-  modal1.style.zIndex = '103100';
-  modal1.style.opacity = '1';
-  modal1.style.height = '120%';
-  }
-  })
-
-  // When the user clicks on <span> (x), close the modal
-  span1.onclick = function() {
-  modal1.style.transform = 'translateY(-50px)';
-  modal1.style.zIndex = '-100';
-  modal1.style.opacity = '0';
-  modal1.style.height = '0%';
-
-  }
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.onclick = function(event) {
-   if (event.target == modal1) {
-      modal1.style.transform = 'translateY(-50px)';
-      modal1.style.zIndex = '-100';
-      modal1.style.opacity = '0';
-      modal1.style.height = '0%';
-
-    }
-  }
-
-  function show_ntfn(){
-    var icon = document.querySelector(".bell-icon");
-    const ntfn_content = document.getElementById("notification");
-    if(ntfn_content.style.display === "block"){
-        ntfn_content.style.display = "none";
-        icon.style.color = "#000000";
-    }else{
-        ntfn_content.style.display = "block";
-        icon.style.color = "#7878ff";
-    }
-}
-function msg_read(msg_div){
-    msg_div.style.backgroundColor = "rgba(200, 200, 200, 0.304)";
-    msg_div.firstElementChild.value = "2";
-    var hiddenInputs = document.querySelectorAll('.msg input');
-    var val = 0;
-    
-    hiddenInputs.forEach(function(input) {
-        if (input.getAttribute("value") === "1") {
-            val++;
-        }
-    });
-    
-    var lbl = document.getElementById("nftn_lbl");
-    lbl.textContent = val;
-}
-window.onload = function(){
-    var divs = document.querySelectorAll(".msg");
-
-    divs.forEach(function(msg_val){
-        if(msg_val.firstElementChild.value == "2"){
-            msg_val.style.backgroundColor = "rgba(200, 200, 200, 0.304)";
-        }
-    });
-
-    var hiddenInputs = document.querySelectorAll('.msg input');
-    var val = 0;
-    
-    hiddenInputs.forEach(function(input) {
-        if (input.getAttribute("value") === "1") {
-            val++;
-        }
-    });
-    
-    var lbl = document.getElementById("nftn_lbl");
-    lbl.textContent = val;
-};
-</script>
+          <script> var modal1 = document.getElementById("modal1");
+            var btn1 = document.querySelectorAll(".msg");
+            var span1 = document.getElementsByClassName("close1")[0];
+            
+            var currentMsgDiv = null; // Variable to store the reference to the current message div
+            
+            btn1.forEach(function (row) {
+                row.onclick = function () {
+                    modal1.style.transform = 'translateY(0px)';
+                    modal1.style.zIndex = '103100';
+                    modal1.style.opacity = '1';
+                    modal1.style.height = '120%';
+                    currentMsgDiv = row; // Store the reference to the clicked message div
+                };
+            });
+            
+            span1.onclick = function () {
+                modal1.style.transform = 'translateY(-50px)';
+                modal1.style.zIndex = '-100';
+                modal1.style.opacity = '0';
+                modal1.style.height = '0%';
+                if (currentMsgDiv) {
+                    msg_read(currentMsgDiv); // Mark the message as read
+                    currentMsgDiv = null; // Clear the reference after marking as read
+                }
+            };
+            
+            window.onclick = function (event) {
+                if (event.target == modal1) {
+                    modal1.style.transform = 'translateY(-50px)';
+                    modal1.style.zIndex = '-100';
+                    modal1.style.opacity = '0';
+                    modal1.style.height = '0%';
+                    if (currentMsgDiv) {
+                        msg_read(currentMsgDiv); // Mark the message as read
+                        currentMsgDiv = null; // Clear the reference after marking as read
+                    }
+                }
+            };
+            
+            function show_ntfn() {
+                var icon = document.querySelector(".bell-icon");
+                const ntfn_content = document.getElementById("notification");
+                if (ntfn_content.style.display === "block") {
+                    ntfn_content.style.display = "none";
+                    icon.style.color = "#000000";
+                } else {
+                    ntfn_content.style.display = "block";
+                    icon.style.color = "#7878ff";
+                }
+            }
+            
+            function msg_read(msg_div) {
+                msg_div.style.backgroundColor = "#fff";
+                msg_div.style.color = "black";
+                msg_div.firstElementChild.value = "2";
+                var hiddenInputs = document.querySelectorAll('.msg input');
+                var val = 0;
+            
+                hiddenInputs.forEach(function (input) {
+                    if (input.getAttribute("value") === "1") {
+                        val++;
+                    }
+                });
+            
+                var lbl = document.getElementById("nftn_lbl");
+                lbl.textContent = val;
+            }
+            
+            window.onload = function () {
+                var divs = document.querySelectorAll(".msg");
+            
+                divs.forEach(function (msg_val) {
+                    if (msg_val.firstElementChild.value == "2") {
+                        msg_val.style.backgroundColor = "white";
+                    }
+                });
+            
+                var hiddenInputs = document.querySelectorAll('.msg input');
+                var val = 0;
+            
+                hiddenInputs.forEach(function (input) {
+                    if (input.getAttribute("value") === "1") {
+                        val++;
+                    }
+                });
+            
+                var lbl = document.getElementById("nftn_lbl");
+                lbl.textContent = val;
+            };
+             </script>
     
 <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">
 
