@@ -314,6 +314,7 @@ class Task_Assignation:
                 task.is_task_completed = False
 
             team_check = []
+            is_team_changed = False
             if team_select != None:
                 for team_primary in team_select:
                     team_check.append(Teams.objects.get(primary=team_primary))
