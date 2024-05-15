@@ -438,7 +438,7 @@
             left: 100px;
         }
 
-        .close , .close1 , .close2 , .close3{
+        .close , .close_1 , .close2 , .close3{
             color: #000;
             font-size: 28px;
             font-weight: bold;
@@ -448,8 +448,8 @@
 
         .close:hover,
         .close:focus,
-        .close1:hover,
-        .close1:focus,
+        .close_1:hover,
+        .close_1:focus,
         .close2:hover,
         .close2:focus,
         .close3:hover,
@@ -707,6 +707,7 @@
 }
     </style>
   </head>
+
   <body>
 
     <!--LAYOUT START-->
@@ -803,13 +804,14 @@
                 <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>                
               </div>
                 <!-- How to create a task modal -->
-                <div id="modal1" class="create_modal">
+                {% comment %} {% if is_new_task %} {% endcomment %}
+                <div id="modal_1" class="create_modal">
                     <!-- Modal content -->
                     <div class="modal-1-content">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
                             <h5 style="color: #fff;    position: relative;
                             top: 3px">How to create task?</h5>
-                            <span class="close1" style="color: white;">&times;</span>
+                            <span class="close_1" style="color: white;">&times;</span>
                         </div>
                             <ol style="font-size: 16px; margin: 15px">
                                 <li>To create a task you must have to fill title of the task, set deadline and write the task description</li>
@@ -907,11 +909,11 @@
                         <table class="table box" id="individuals-table">
                     <thead style="position: relative; z-index: 101;">
                         <tr>
+                            <th>Select</th>
                             <th>Name</th>
+                            <th>Task Type</th>
                             <th>Team</th>
                             <th>Position</th>
-                            <th>Select</th>
-                            <th>Task Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -930,6 +932,8 @@
                                     <option value="drive_link">Drive Link </option>
                                 </select>
                             </td>                
+                            <td>{{member.team.team_name}}</td>
+                            <td>{{member.position.role}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -1269,26 +1273,26 @@
     </script>
 <script>
     // Get the modal
-    var modal1 = document.getElementById("modal1");
+    var modal_1 = document.getElementById("modal_1");
     
     // Get the button that opens the modal
-    var btn1 = document.querySelector(".create_task_modal_btn");
+    var btn_1 = document.querySelector(".create_task_modal_btn");
     
     // Get the <span> element that closes the modal
-    var span1 = document.getElementsByClassName("close1")[0];
+    var span_1 = document.getElementsByClassName("close_1")[0];
     
     // When the user clicks the button, open the modal 
-    btn1.onclick = function() {
-    modal1.style.transform = 'translateY(0px)';
-    modal1.style.zIndex = '103100';
-    modal1.style.opacity = '1';
+    btn_1.onclick = function() {
+    modal_1.style.transform = 'translateY(0px)';
+    modal_1.style.zIndex = '103100';
+    modal_1.style.opacity = '1';
     }
 
     // When the user clicks on <span> (x), close the modal
-    span1.onclick = function() {
-    modal1.style.transform = 'translateY(-50px)';
-    modal1.style.zIndex = '-100';
-    modal1.style.opacity = '0';
+    span_1.onclick = function() {
+    modal_1.style.transform = 'translateY(-50px)';
+    modal_1.style.zIndex = '-100';
+    modal_1.style.opacity = '0';
     }
 
     // When the user clicks anywhere outside of the modal, close it
@@ -1303,10 +1307,16 @@
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
       }
-      else if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
+      else if (event.target == modal_1) {
+        modal_1.style.transform = 'translateY(-50px)';
+        modal_1.style.zIndex = '-100';
+        modal_1.style.opacity = '0';
+      }
+            else if (event.target == modal1) {
+                modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
+        modal1.style.height = '0%';
       }
     }
     </script>
@@ -1346,10 +1356,16 @@
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
       }
-      else if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
+      else if (event.target == modal_1) {
+        modal_1.style.transform = 'translateY(-50px)';
+        modal_1.style.zIndex = '-100';
+        modal_1.style.opacity = '0';
+      }
+            else if (event.target == modal1) {
+                modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
+        modal1.style.height = '0%';
       }
     }
     </script>
@@ -1389,10 +1405,16 @@
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
       }
-      else if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
+      else if (event.target == modal_1) {
+        modal_1.style.transform = 'translateY(-50px)';
+        modal_1.style.zIndex = '-100';
+        modal_1.style.opacity = '0';
+      }
+            else if (event.target == modal1) {
+                modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
+        modal1.style.height = '0%';
       }
     }
     </script>

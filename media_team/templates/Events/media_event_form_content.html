@@ -1,5 +1,6 @@
 {% load static %}
 {% block media_event_form_content %}
+
 <style>
     @media only screen and (max-width: 768px) {
       
@@ -61,6 +62,11 @@
       .cross-button:hover {
           color: gray; /* Change color on hover */
       }
+      .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
 </style>
 
 
@@ -86,12 +92,14 @@
         <label>Folder Drive Link for Event Pictures</label>
         <input placeholder="Provide Drive Link for The Event" class="form-control" type="url"
         autocomplete="off" id="field1" value="{{media_links.media_link}}" name="drive_link_of_event" />
+        <a href="{{media_links.media_link}}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
         </div>
 
         <div class="form-group">
         <label>Folder Drive Link for Pictures with Logos</label>
         <input placeholder="Provide Link for the Logo's" class="form-control" type="url" autocomplete="off"
         value="{{media_links.logo_link}}" name="logo_drive_link_of_event" />
+        <a href="{{media_links.logo_link}}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
         </div>
 
         <div class="form-group">

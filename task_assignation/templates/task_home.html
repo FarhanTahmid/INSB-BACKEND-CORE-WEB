@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+    <!--Sweet Alert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
 
@@ -262,7 +264,10 @@
     }
     </style>
   </head>
-
+  {% block preloader %}
+    {% include 'preloader.html' %}
+  {% endblock preloader %}
+ 
   <body>
     <div class="app" id="app">
       <!-- ############ LAYOUT START-->
@@ -307,15 +312,24 @@
           </button>
         </div>
         {% endif %}
-
+        <script>
+          {% for message in messages %}
+      
+            Swal.fire({
+              icon:"{{message.tags}}",
+              title:"{{message}}",
+              
+            })
+            {% endfor %}
+        </script>
         <!--Messages-->
         <div style="justify-content: center; text-align: center">
           {% if messages %} 
-          {% for message in messages %}
+          {% comment %} {% for message in messages %}
           <h4
             {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message }}
           </h4>
-          {% endfor %}
+          {% endfor %} {% endcomment %}
           <br/>
           {% endif %}
         </div>
@@ -516,7 +530,7 @@
         </div>
       </div>
     </div>
-
+  
     <!-- build:js scripts/app.html.js -->
     <!-- jQuery -->
     <script src="{% static 'script/jquery.js'%}"></script>

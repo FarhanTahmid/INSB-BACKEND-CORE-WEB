@@ -28,7 +28,11 @@
         content: '+';
     }
     
-    
+    .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
   </style>
 
 <div class="container">
@@ -168,6 +172,8 @@
                         name="form_link"s
                         value="{{link.graphics_form_link}}"/>
                         <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                        <a href="{{link.graphics_form_link}}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
+
                     </div>
             </div>
             <div class="modal-footer">
