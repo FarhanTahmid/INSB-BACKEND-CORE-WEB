@@ -131,6 +131,7 @@ class Branch_View_Access:
                             return True
                         elif not get_current_panel_member.position.is_co_ordinator and get_current_panel_member.position.is_officer:
                             return True
+            #reset head
             elif(team_primary and task_type == "Individuals" and len(task.team.all()) == 1):               
                 if (team_primary == "1"):
                     return True
