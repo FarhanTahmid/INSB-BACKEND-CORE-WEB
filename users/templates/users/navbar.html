@@ -146,70 +146,7 @@
     }
 </style>
 <!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    // Get the current page's URL
-    const currentPageUrl = window.location.href;
-  
-    // Find the links in the navigation bar
-    const navLinks = document.querySelectorAll(".nav a");
-  
-    // Loop through the links and add a "active" class to the matching link
-    navLinks.forEach(function (link) {
-      if (link.href === currentPageUrl) {
-        link.classList.add("active");
-      }
-    });
-});
-function show_ntfn(){
-    var icon = document.querySelector(".bell-icon");
-    const ntfn_content = document.getElementById("notification");
-    if(ntfn_content.style.display === "block"){
-        ntfn_content.style.display = "none";
-        icon.style.color = "#000000";
-    }else{
-        ntfn_content.style.display = "block";
-        icon.style.color = "#7878ff";
-    }
-}
-function msg_read(msg_div){
-    msg_div.style.backgroundColor = "#5bc0de";
-    msg_div.style.color = "white";
-    msg_div.firstElementChild.value = "2";
-    var hiddenInputs = document.querySelectorAll('.msg input');
-    var val = 0;
-    
-    hiddenInputs.forEach(function(input) {
-        if (input.getAttribute("value") === "1") {
-            val++;
-        }
-    });
-    
-    var lbl = document.getElementById("nftn_lbl");
-    lbl.textContent = val;
-}
-window.onload = function(){
-    var divs = document.querySelectorAll(".msg");
 
-    divs.forEach(function(msg_val){
-        if(msg_val.firstElementChild.value == "2"){
-            msg_val.style.backgroundColor = "white";
-        }
-    });
-
-    var hiddenInputs = document.querySelectorAll('.msg input');
-    var val = 0;
-    
-    hiddenInputs.forEach(function(input) {
-        if (input.getAttribute("value") === "1") {
-            val++;
-        }
-    });
-    
-    var lbl = document.getElementById("nftn_lbl");
-    lbl.textContent = val;
-};
-</script>
 <div class="app-header white box-shadow">
     <div class="navbar navbar-toggleable-sm flex-row align-items-center">
         <!-- Open side - Naviation on mobile -->
@@ -369,42 +306,103 @@ window.onload = function(){
                     <a href="#" class="links"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
             </div>
         </div>
-<script>
-    // Get the modal
-    var modal1 = document.getElementById("modal1");
-    
-    // Get the button that opens the modal
-    var btn1 = document.querySelectorAll(".msg");
-    
-    // Get the <span> element that closes the modal
-    var span1 = document.getElementsByClassName("close1")[0];
-    
-    btn1.forEach(function (row){
-    // When the user clicks the button, open the modal 
-    row.onclick = function() {
-    modal1.style.transform = 'translateY(0px)';
-    modal1.style.zIndex = '103100';
-    modal1.style.opacity = '1';
-    modal1.style.height = '120%';
-    }
-})
 
-    // When the user clicks on <span> (x), close the modal
-    span1.onclick = function() {
-    modal1.style.transform = 'translateY(-50px)';
-    modal1.style.zIndex = '-100';
-    modal1.style.opacity = '0';
-    modal1.style.height = '0%';
-    }
+        
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-     if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
-        modal1.style.zIndex = '-100';
-        modal1.style.opacity = '0';
-        modal1.style.height = '0%';
-      }
-    }
-    </script>
+
+
+
+    <!--chatgpt code-->
+
+    <script> var modal1 = document.getElementById("modal1");
+        var btn1 = document.querySelectorAll(".msg");
+        var span1 = document.getElementsByClassName("close1")[0];
+        
+        var currentMsgDiv = null; // Variable to store the reference to the current message div
+        
+        btn1.forEach(function (row) {
+            row.onclick = function () {
+                modal1.style.transform = 'translateY(0px)';
+                modal1.style.zIndex = '103100';
+                modal1.style.opacity = '1';
+                modal1.style.height = '120%';
+                currentMsgDiv = row; // Store the reference to the clicked message div
+            };
+        });
+        
+        span1.onclick = function () {
+            modal1.style.transform = 'translateY(-50px)';
+            modal1.style.zIndex = '-100';
+            modal1.style.opacity = '0';
+            modal1.style.height = '0%';
+            if (currentMsgDiv) {
+                msg_read(currentMsgDiv); // Mark the message as read
+                currentMsgDiv = null; // Clear the reference after marking as read
+            }
+        };
+        
+        window.onclick = function (event) {
+            if (event.target == modal1) {
+                modal1.style.transform = 'translateY(-50px)';
+                modal1.style.zIndex = '-100';
+                modal1.style.opacity = '0';
+                modal1.style.height = '0%';
+                if (currentMsgDiv) {
+                    msg_read(currentMsgDiv); // Mark the message as read
+                    currentMsgDiv = null; // Clear the reference after marking as read
+                }
+            }
+        };
+        
+        function show_ntfn() {
+            var icon = document.querySelector(".bell-icon");
+            const ntfn_content = document.getElementById("notification");
+            if (ntfn_content.style.display === "block") {
+                ntfn_content.style.display = "none";
+                icon.style.color = "#000000";
+            } else {
+                ntfn_content.style.display = "block";
+                icon.style.color = "#7878ff";
+            }
+        }
+        
+        function msg_read(msg_div) {
+            msg_div.style.backgroundColor = "#fff";
+            msg_div.style.color = "black";
+            msg_div.firstElementChild.value = "2";
+            var hiddenInputs = document.querySelectorAll('.msg input');
+            var val = 0;
+        
+            hiddenInputs.forEach(function (input) {
+                if (input.getAttribute("value") === "1") {
+                    val++;
+                }
+            });
+        
+            var lbl = document.getElementById("nftn_lbl");
+            lbl.textContent = val;
+        }
+        
+        window.onload = function () {
+            var divs = document.querySelectorAll(".msg");
+        
+            divs.forEach(function (msg_val) {
+                if (msg_val.firstElementChild.value == "2") {
+                    msg_val.style.backgroundColor = "white";
+                }
+            });
+        
+            var hiddenInputs = document.querySelectorAll('.msg input');
+            var val = 0;
+        
+            hiddenInputs.forEach(function (input) {
+                if (input.getAttribute("value") === "1") {
+                    val++;
+                }
+            });
+        
+            var lbl = document.getElementById("nftn_lbl");
+            lbl.textContent = val;
+        };
+         </script>
 {% endblock navbar %}
