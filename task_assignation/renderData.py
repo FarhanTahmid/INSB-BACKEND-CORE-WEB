@@ -2229,7 +2229,7 @@ You were assigned a task  - {task.title}.
 The Task has been updated/marked completed, and you have received {points} points!
 
 Keep up the good work, keep gathering points to be the top ranked member among 
-your team 👑 and to get featured on our website 😉.
+your team members 👑 and to get featured on our website 😉.
 
 We truely believe your contribution is enhancing the success of our branch.
 
