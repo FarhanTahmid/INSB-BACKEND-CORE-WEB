@@ -1846,35 +1846,37 @@ This is an automated message. Do not reply
 
         task = Task.objects.get(id=task_id)
 
-        if Task_Assignation.is_task_forwarded_to_incharge(task,team_primary):
-            return True
+        # if Task_Assignation.is_task_forwarded_to_incharge(task,team_primary):
+        #     return True
 
         for member in Member_Task_Upload_Types.objects.filter(task=task):
 
-            if str(member.task_member) not in task_types_per_member:
-                if member.has_content:
-                    Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_drive_link:
-                    Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_permission_paper:
-                    Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_file_upload:
-                    files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                    for file in files:
-                        Task_Assignation.delete_task_document(file)
-                if member.has_media:
-                    media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                    for media_file in media_files:
-                        Task_Assignation.delete_task_media(media_file)
+            if not member.task_member.position.is_officer:
 
-                task.members.remove(member.task_member)
-                task.save()
-                try:
-                    points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
-                    points.delete()
-                except:
-                    pass
-                member.delete()
+                if str(member.task_member) not in task_types_per_member:
+                    if member.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for file in files:
+                            Task_Assignation.delete_task_document(file)
+                    if member.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for media_file in media_files:
+                            Task_Assignation.delete_task_media(media_file)
+
+                    task.members.remove(member.task_member)
+                    task.save()
+                    try:
+                        points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
+                        points.delete()
+                    except:
+                        pass
+                    member.delete()
 
         if team_primary == None or team_primary == "1":
 
@@ -1996,7 +1998,7 @@ This is an automated message. Do not reply
                             task.members.remove(member)
                             task.save()
                             points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                            points_for_incharge.completion_points = task.task_category.points * (15/100)
+                            points_for_incharge.completion_points = task.task_category.points * (40/100)
                             points_for_incharge.save()
                             task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
                             #setting message
@@ -2121,7 +2123,7 @@ This is an automated message. Do not reply
                         task.members.remove(member)
                         task.save()
                         points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                        points_for_incharge.completion_points = task.task_category.points * (15/100)
+                        points_for_incharge.completion_points = task.task_category.points * (40/100)
                         points_for_incharge.save()
                         task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
                         #setting message
