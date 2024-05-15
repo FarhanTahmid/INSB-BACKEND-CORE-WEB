@@ -314,15 +314,16 @@ class Task_Assignation:
                 task.is_task_completed = False
 
             team_check = []
-            for team_primary in team_select:
-                team_check.append(Teams.objects.get(primary=team_primary))
+            if team_select != None:
+                for team_primary in team_select:
+                    team_check.append(Teams.objects.get(primary=team_primary))
 
-            current_teams = task.team.all()
-            is_team_changed = False
+                current_teams = task.team.all()
+                is_team_changed = False
 
-            for team in current_teams:
-                if team not in team_check:
-                    is_team_changed = True
+                for team in current_teams:
+                    if team not in team_check:
+                        is_team_changed = True
 
             #Checking to see if the list is empty depending on which task_type is selected
             #If empty then stop the creation
