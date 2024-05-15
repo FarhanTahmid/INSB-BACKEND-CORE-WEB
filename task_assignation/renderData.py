@@ -232,6 +232,7 @@ class Task_Assignation:
                         member_points.save()
                         member.completed_task_points += member_points.completion_points
                         member.save()
+                        Task_Assignation.task_completion_email(member,task,member_points.completion_points)
 
                     
                     if task.task_type == "Team":
@@ -247,6 +248,7 @@ class Task_Assignation:
                                 member.save()
                                 mem.is_task_completed = True
                                 mem.save()
+                                Task_Assignation.task_completion_email(member,task,mem.completion_points)
 
                         team_points = Team_Task_Point.objects.filter(task = task)
                         for team in team_points:
@@ -2206,7 +2208,50 @@ This is an automated message. Do not reply
         return task_started_by_member_in_team
         
           
-        
+    def task_completion_email(member,task,points):
+
+        '''This function will send email to the members regarding their task completion'''
+
+        try:
+            email_from = settings.EMAIL_HOST_USER
+            email_to = []
+            try:
+                task_created_by = Members.objects.get(ieee_id = task.task_created_by)
+                task_created_by = task_created_by.position.role
+            except:
+                task_created_by = "Admin"
+            email_to.append(member.email_ieee)
+            email_to.append(member.email_personal)
+            email_to.append(member.email_nsu)
+            subject = f"Your Assigned Task Has Been Marked Completed/Updated!"
+            message = f'''Dear {member.name},
+You were assigned a task  - {task.title}.
+The Task has been updated/marked completed, and you have received {points} points!
+
+Keep up the good work, keep gathering points to be the top ranked member among 
+your team 👑 and to get featured on our website 😉.
+
+We truely believe your contribution is enhancing the success of our branch.
+
+You total points so far: {member.completed_task_points}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+    '''
+            email=EmailMultiAlternatives(subject,message,
+                                    email_from,
+                                    email_to
+                                    )
+            #email.send()
+            task_log_message = f'Task Name: {task.title}, task completion email sent to {member.ieee_id}'
+            #setting message
+            Task_Assignation.save_task_logs(task,task_log_message)
+            print(message)
+            return True
+        except:
+            return False  
 
         
             
