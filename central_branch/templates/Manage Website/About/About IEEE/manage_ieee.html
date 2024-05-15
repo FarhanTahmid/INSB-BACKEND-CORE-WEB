@@ -1130,6 +1130,26 @@
                 checkSavedImage("students-and-member-activities-image-input", "{{ about_ieee.students_and_member_activities_image }}");
                 checkSavedImage("quality-image-input", "{{ about_ieee.quality_image }}");
                 // Add more calls for other image sections if needed
+
+                var divs = document.querySelectorAll(".msg");
+
+                divs.forEach(function(msg_val){
+                    if(msg_val.firstElementChild.value == "2"){
+                        msg_val.style.backgroundColor = "rgba(200, 200, 200, 0.304)";
+                    }
+                });
+            
+                var hiddenInputs = document.querySelectorAll('.msg input');
+                var val = 0;
+                
+                hiddenInputs.forEach(function(input) {
+                    if (input.getAttribute("value") === "1") {
+                        val++;
+                    }
+                });
+                
+                var lbl = document.getElementById("nftn_lbl");
+                lbl.textContent = val;
             };
         </script>
 
