@@ -232,6 +232,7 @@ class Task_Assignation:
                         member_points.save()
                         member.completed_task_points += member_points.completion_points
                         member.save()
+                        Task_Assignation.task_completion_email(member,task,member_points.completion_points)
 
                     
                     if task.task_type == "Team":
@@ -247,6 +248,7 @@ class Task_Assignation:
                                 member.save()
                                 mem.is_task_completed = True
                                 mem.save()
+                                Task_Assignation.task_completion_email(member,task,mem.completion_points)
 
                         team_points = Team_Task_Point.objects.filter(task = task)
                         for team in team_points:
@@ -1846,34 +1848,37 @@ This is an automated message. Do not reply
 
         task = Task.objects.get(id=task_id)
 
-        
+        # if Task_Assignation.is_task_forwarded_to_incharge(task,team_primary):
+        #     return True
 
         for member in Member_Task_Upload_Types.objects.filter(task=task):
 
-            if str(member.task_member) not in task_types_per_member:
-                if member.has_content:
-                    Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_drive_link:
-                    Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_permission_paper:
-                    Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
-                if member.has_file_upload:
-                    files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                    for file in files:
-                        Task_Assignation.delete_task_document(file)
-                if member.has_media:
-                    media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
-                    for media_file in media_files:
-                        Task_Assignation.delete_task_media(media_file)
+            if not member.task_member.position.is_officer:
 
-                task.members.remove(member.task_member)
-                task.save()
-                try:
-                    points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
-                    points.delete()
-                except:
-                    pass
-                member.delete()
+                if str(member.task_member) not in task_types_per_member:
+                    if member.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_drive_link:
+                        Task_Drive_Link.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_permission_paper:
+                        Permission_Paper.objects.filter(task=task, uploaded_by=member.task_member.ieee_id).delete()
+                    if member.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for file in files:
+                            Task_Assignation.delete_task_document(file)
+                    if member.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
+                        for media_file in media_files:
+                            Task_Assignation.delete_task_media(media_file)
+
+                    task.members.remove(member.task_member)
+                    task.save()
+                    try:
+                        points = Member_Task_Point.objects.get(task = task,member = member.task_member.ieee_id)
+                        points.delete()
+                    except:
+                        pass
+                    member.delete()
 
         if team_primary == None or team_primary == "1":
 
@@ -1995,7 +2000,7 @@ This is an automated message. Do not reply
                             task.members.remove(member)
                             task.save()
                             points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                            points_for_incharge.completion_points = task.task_category.points * (15/100)
+                            points_for_incharge.completion_points = task.task_category.points * (40/100)
                             points_for_incharge.save()
                             task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
                             #setting message
@@ -2120,7 +2125,7 @@ This is an automated message. Do not reply
                         task.members.remove(member)
                         task.save()
                         points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                        points_for_incharge.completion_points = task.task_category.points * (15/100)
+                        points_for_incharge.completion_points = task.task_category.points * (40/100)
                         points_for_incharge.save()
                         task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
                         #setting message
@@ -2203,7 +2208,50 @@ This is an automated message. Do not reply
         return task_started_by_member_in_team
         
           
-        
+    def task_completion_email(member,task,points):
+
+        '''This function will send email to the members regarding their task completion'''
+
+        try:
+            email_from = settings.EMAIL_HOST_USER
+            email_to = []
+            try:
+                task_created_by = Members.objects.get(ieee_id = task.task_created_by)
+                task_created_by = task_created_by.position.role
+            except:
+                task_created_by = "Admin"
+            email_to.append(member.email_ieee)
+            email_to.append(member.email_personal)
+            email_to.append(member.email_nsu)
+            subject = f"Your Assigned Task Has Been Marked Completed/Updated!"
+            message = f'''Dear {member.name},
+You were assigned a task  - {task.title}.
+The Task has been updated/marked completed, and you have received {points} points!
+
+Keep up the good work, keep gathering points to be the top ranked member among 
+your team members 👑 and to get featured on our website 😉.
+
+We truely believe your contribution is enhancing the success of our branch.
+
+You total points so far: {member.completed_task_points}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+    '''
+            email=EmailMultiAlternatives(subject,message,
+                                    email_from,
+                                    email_to
+                                    )
+            #email.send()
+            task_log_message = f'Task Name: {task.title}, task completion email sent to {member.ieee_id}'
+            #setting message
+            Task_Assignation.save_task_logs(task,task_log_message)
+            print(message)
+            return True
+        except:
+            return False  
 
         
             

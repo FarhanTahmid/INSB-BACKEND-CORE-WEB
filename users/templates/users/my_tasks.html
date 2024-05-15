@@ -256,7 +256,7 @@
                       {% for task,earned_points in all_tasks.items %}
                       <tr>
                         <td>{{forloop.counter }}</td>
-                          <td style="color: #00629b"><a href="{% url 'users:upload_task_user' task.pk %}" >{{task.title}}</a></td>
+                          <td style="color: #00629b"><a href="{% url 'users:edit_task_user' task.pk %}" >{{task.title}}</a></td>
                           <td>{{task.deadline}}</td>
                           <td>{{task.task_category.points}}</td>
                           {% if not user.position.is_eb_member %}

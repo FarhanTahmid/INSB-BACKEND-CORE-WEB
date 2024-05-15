@@ -1201,31 +1201,31 @@ def manage_website_homepage(request):
                     return redirect('central_branch:manage_website_home')
 
             '''For Volunteer Recognition'''
-            # get all insb members
-            get_all_insb_members=Members.objects.all()
-            if(request.method=="POST"):
-                volunteer_of_the_month_form=VolunteerOftheMonthForm(request.POST)
-                if(request.POST.get('add_volunteer_of_month')):
-                    ieee_id=request.POST.get('member_select1')
-                    if(volunteer_of_the_month_form.is_valid()):
-                        new_volunteer_of_the_month=VolunteerOfTheMonth.objects.create(
-                            ieee_id=Members.objects.get(ieee_id=ieee_id)
-                        )
-                        new_volunteer_of_the_month.contributions=request.POST['contributions']
-                        new_volunteer_of_the_month.save()
-                        messages.success(request,"A new Volunteer of the month was added!")
-                        return redirect('central_branch:manage_website_home')
-                if(request.POST.get('delete_volunteer_of_month')):
-                    volunteer_to_delete=VolunteerOfTheMonth.objects.get(ieee_id=request.POST['get_volunteer'])
-                    volunteer_to_delete.delete()
-                    messages.warning(request,'Member has been removed from the list of Volunteers of the Month')
-                    return redirect('central_branch:manage_website_home')
+            # # get all insb members
+            # get_all_insb_members=Members.objects.all()
+            # if(request.method=="POST"):
+            #     volunteer_of_the_month_form=VolunteerOftheMonthForm(request.POST)
+            #     if(request.POST.get('add_volunteer_of_month')):
+            #         ieee_id=request.POST.get('member_select1')
+            #         if(volunteer_of_the_month_form.is_valid()):
+            #             new_volunteer_of_the_month=VolunteerOfTheMonth.objects.create(
+            #                 ieee_id=Members.objects.get(ieee_id=ieee_id)
+            #             )
+            #             new_volunteer_of_the_month.contributions=request.POST['contributions']
+            #             new_volunteer_of_the_month.save()
+            #             messages.success(request,"A new Volunteer of the month was added!")
+            #             return redirect('central_branch:manage_website_home')
+            #     if(request.POST.get('delete_volunteer_of_month')):
+            #         volunteer_to_delete=VolunteerOfTheMonth.objects.get(ieee_id=request.POST['get_volunteer'])
+            #         volunteer_to_delete.delete()
+            #         messages.warning(request,'Member has been removed from the list of Volunteers of the Month')
+            #         return redirect('central_branch:manage_website_home')
 
-            else:
-                volunteer_of_the_month_form=VolunteerOftheMonthForm
+            # else:
+            #     volunteer_of_the_month_form=VolunteerOftheMonthForm
             
             # getall volunteers of the month
-            volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
+            # volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
             context={
                 'user_data':user_data,
                 'all_sc_ag':sc_ag,
@@ -1233,9 +1233,9 @@ def manage_website_homepage(request):
                 'bannerPictureWithNumbers':existing_banner_picture_with_numbers,
                 'media_url':settings.MEDIA_URL,
                 'all_thoughts':all_thoughts,
-                'insb_members':get_all_insb_members,
-                'volunteer_of_the_month_form':volunteer_of_the_month_form,
-                'all_volunteer_of_month':volunteers_of_the_month,
+                # 'insb_members':get_all_insb_members,
+                # 'volunteer_of_the_month_form':volunteer_of_the_month_form,
+                # 'all_volunteer_of_month':volunteers_of_the_month,
             }
             return render(request,'Manage Website/Homepage/manage_web_homepage.html',context)
         else:
@@ -1293,36 +1293,36 @@ def manage_website_homepage_top_banner_update(request, pk):
         return custom_500(request)
 
 
-@login_required
-@member_login_permission
-def update_volunteer_of_month(request,pk):
+# @login_required
+# @member_login_permission
+# def update_volunteer_of_month(request,pk):
 
-    try:
+#     try:
 
-        has_access = Branch_View_Access.get_manage_web_access(request)
-        if has_access:
-            volunteer_to_be_updated=VolunteerOfTheMonth.objects.get(pk=pk)
-            if(request.method=="POST"):
-                volunteer_update_form=VolunteerOftheMonthForm(request.POST,instance=volunteer_to_be_updated)
-                if(request.POST.get('update_vom')):
-                    if(volunteer_update_form.is_valid()):
-                        volunteer_update_form.save()
-                        messages.success(request,"Volunteer Information was updated!")
-                        return redirect('central_branch:manage_website_home')
-            else:
-                volunteer_update_form=VolunteerOftheMonthForm(instance=volunteer_to_be_updated)
+#         has_access = Branch_View_Access.get_manage_web_access(request)
+#         if has_access:
+#             volunteer_to_be_updated=VolunteerOfTheMonth.objects.get(pk=pk)
+#             if(request.method=="POST"):
+#                 volunteer_update_form=VolunteerOftheMonthForm(request.POST,instance=volunteer_to_be_updated)
+#                 if(request.POST.get('update_vom')):
+#                     if(volunteer_update_form.is_valid()):
+#                         volunteer_update_form.save()
+#                         messages.success(request,"Volunteer Information was updated!")
+#                         return redirect('central_branch:manage_website_home')
+#             else:
+#                 volunteer_update_form=VolunteerOftheMonthForm(instance=volunteer_to_be_updated)
             
-            context={
-                'volunteer':volunteer_to_be_updated,
-                'form':volunteer_update_form
-            }
-            return render(request,'Manage Website/Homepage/update_volunteer_of_the_month.html',context)
-        else:
-            return render(request,'access_denied2.html')
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return custom_500(request)
+#             context={
+#                 'volunteer':volunteer_to_be_updated,
+#                 'form':volunteer_update_form
+#             }
+#             return render(request,'Manage Website/Homepage/update_volunteer_of_the_month.html',context)
+#         else:
+#             return render(request,'access_denied2.html')
+#     except Exception as e:
+#         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+#         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+#         return custom_500(request)
 
 
 @login_required
@@ -4700,7 +4700,7 @@ def upload_task(request, task_id,team_primary = None):
             #####################################
             try:
                 member_task_type = Member_Task_Upload_Types.objects.get(task = task,task_member = logged_in_user)
-                if this_is_users_task and not member_task_type.is_task_started_by_member:
+                if this_is_users_task and not member_task_type.is_task_started_by_member and not has_coordinator_access_or_incharge_access_for_team_task:
                     member_task_type.is_task_started_by_member = True
                     member_task_type.save()
             except:
@@ -5053,7 +5053,9 @@ def task_edit(request,task_id,team_primary = None):
             logged_in_user = Members.objects.get(ieee_id = user)
             try:
                 is_task_started_by_member = Member_Task_Upload_Types.objects.get(task=task, task_member=logged_in_user).is_task_started_by_member
-                if logged_in_user.position.is_coordinator and logged_in_user.position.is_officer:
+                if logged_in_user.position.is_co_ordinator and logged_in_user.position.is_officer:
+                    pass
+                elif logged_in_user.position.is_officer and not logged_in_user.position.is_co_ordinator:
                     pass
                 elif task.members.contains(logged_in_user) and is_task_started_by_member and not is_user_redirected:
                     return redirect('central_branch:upload_task',task.pk)
