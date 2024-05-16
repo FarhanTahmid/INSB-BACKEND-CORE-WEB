@@ -2227,13 +2227,14 @@ This is an automated message. Do not reply
             email_to.append(member.email_nsu)
             subject = f"Your Assigned Task Has Been Marked Completed/Updated!"
             message = f'''Dear {member.name},
-You were assigned a task  - {task.title}.
-The Task has been updated/marked completed, and you have received {points} points!
+Your assigned task has been marked completed for which you have
+received {points} points!
 
-Keep up the good work, keep gathering points to be the top ranked member among 
-your team members 👑 and to get featured on our website 😉.
+Keep up the amazing work! Take the lead in the rankings with your
+consistent and valuable input to get featured in our website.
 
-We truely believe your contribution is enhancing the success of our branch.
+Thank you for being a valuable member of IEEE NSU Student Branch.
+Keep contributing to the success of our Branch.
 
 You total points so far: {member.completed_task_points}
 
