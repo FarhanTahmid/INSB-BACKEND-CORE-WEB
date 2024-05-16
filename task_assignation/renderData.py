@@ -1334,7 +1334,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
             #saving logs
@@ -1409,7 +1409,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1470,7 +1470,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2152,7 +2152,10 @@ This is an automated message. Do not reply
         else:
             if team_primary == None or team_primary == "1":
                 if len(task_team) == 1 and task.task_type == "Individuals":
-                    return True
+                    if member.position.is_eb_member:
+                        return True
+                    else:
+                        return False
                 else:
                     return False
             else:
@@ -2227,13 +2230,14 @@ This is an automated message. Do not reply
             email_to.append(member.email_nsu)
             subject = f"Your Assigned Task Has Been Marked Completed/Updated!"
             message = f'''Dear {member.name},
-You were assigned a task  - {task.title}.
-The Task has been updated/marked completed, and you have received {points} points!
+Your assigned task has been marked completed for which you have
+received {points} points!
 
-Keep up the good work, keep gathering points to be the top ranked member among 
-your team members 👑 and to get featured on our website 😉.
+Keep up the amazing work! Take the lead in the rankings with your
+consistent and valuable input to get featured in our website.
 
-We truely believe your contribution is enhancing the success of our branch.
+Thank you for being a valuable member of IEEE NSU Student Branch.
+Keep contributing to the success of our Branch.
 
 You total points so far: {member.completed_task_points}
 
@@ -2246,7 +2250,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            #email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task completion email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)

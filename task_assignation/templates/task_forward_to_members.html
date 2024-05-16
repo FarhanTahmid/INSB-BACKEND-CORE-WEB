@@ -406,10 +406,11 @@
             <form method="post">
 
               <!--forward task btn-->
+              {% if volunteer_members|length > 0%}
               <div style="text-align: center;">
                 <button type="submit" class="forward-task-btn" style="cursor: pointer;">Forward Task</button>
               </div>
-
+              {% endif %}
               {% csrf_token %}
               <div style="justify-content:center;text-align:center; margin-top:15px;">  
                 <div style="justify-content:center;">
