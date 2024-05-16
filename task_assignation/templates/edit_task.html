@@ -718,6 +718,35 @@
             .dropdown-menu input[type="submit"]:hover {
                 background-color: #f0f0f0; /* Change background color on hover */
             }
+.title_task_type{
+    display: flex;
+    justify-content: flex-end;
+}
+.title_task_type h5{
+    background: #489fb5;
+    padding: 4px 35px;
+    color: white;
+    border-radius: 25px;
+    font-size: 16px;
+    margin: 15px 0;
+}
+.title_task_name{
+    display: flex;
+    justify-content: center;
+    color: #000000d4;
+    font-weight: bold;
+    font-size: 25px;
+    font-style: italic;
+}
+@media screen and (max-width:768px) {
+    .title_task_type{
+        display: flex;
+        justify-content: center;
+    }
+    .title_task_type h5 {
+        border-radius: 4px;
+    }
+}
     </style>
   </head>
   <body>
@@ -811,9 +840,10 @@
                     <br>
                     {% endif %}
                 </div>
-
-                <h4>Task: {{task.title}}</h4>
-                <h5 style="align:center;">Task Type: {{task.task_type}}</h5>
+                <h5 class="title_task_name">Task Name: {{task.title}}</h5>
+                <div class="title_task_type">
+                    <h5>Type: {{task.task_type}}</h5>
+                </div>
 
               <!--create task heading-->
               <div class="queue">
