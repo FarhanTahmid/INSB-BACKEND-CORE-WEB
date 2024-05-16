@@ -2152,7 +2152,10 @@ This is an automated message. Do not reply
         else:
             if team_primary == None or team_primary == "1":
                 if len(task_team) == 1 and task.task_type == "Individuals":
-                    return True
+                    if member.position.is_eb_member:
+                        return True
+                    else:
+                        return False
                 else:
                     return False
             else:
