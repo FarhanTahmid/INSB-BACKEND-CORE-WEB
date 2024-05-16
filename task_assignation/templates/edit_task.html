@@ -1175,20 +1175,18 @@
                         <table class="table box" id="individuals-table">
                     <thead style="position: relative; z-index: 101;">
                         <tr>
+                            <th>Select</th>
                             <th>Name</th>
+                            <th>Task Type</th>
                             <th>Team</th>
                             <th>Position</th>
-                            <th>Select</th>
-                            <th>Task Type</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for member,types in all_members.items %}
                         <tr>
-                            <td>{{member.name}}</td>
-                            <td>{{member.team.team_name}}</td>
-                            <td>{{member.position.role}}</td>
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
+                            <td>{{member.name}}</td>
                             <td>
                                 <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
                                     <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
@@ -1198,6 +1196,8 @@
                                     <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
                                 </select>
                             </td>                
+                            <td>{{member.team.team_name}}</td>
+                            <td>{{member.position.role}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -1223,10 +1223,10 @@
                     <thead>
                         <tr>
                             <th>SL no.</th>
-                        <th>Team</th>
-                        <th>Select</th>
-                    </tr>
-                </thead>
+                            <th>Team</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
                 <tbody>
                     {% for team in teams %}
                         <tr>

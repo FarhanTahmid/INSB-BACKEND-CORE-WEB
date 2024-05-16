@@ -447,13 +447,13 @@
                         <table class="table box" id="individuals-table">
                     <thead style="position: relative; z-index: 101;">
                         <tr>
-                          <th>IEEE ID</th>
+                          <th>Select</th>
                           <th>Name</th>
+                          <th>Task Type</th>
+                          <th>IEEE ID</th>
                           <th>Team</th>
                           <th>Position</th>
                           <th>Contact</th>
-                          <th>Select</th>
-                          <th>Task Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -467,14 +467,10 @@
                       {% endif %}
                       {% for volunteers,types in volunteer_members.items %}
                       <tr>
-                        <td>{{volunteers.ieee_id}}</td>
-                        <td>{{volunteers.name}}</td>
-                        <td>{{volunteers.team.team_name}}</td>
-                        <td>{{volunteers.position}}</td>
-                        <td>{{volunteers.contact_no}}</td>
                         <td>
                           <input type="checkbox" name="member_select" value="{{volunteers.ieee_id}}" {% if volunteers in task.members.all %}checked{% endif %}>
                         </td>
+                        <td>{{volunteers.name}}</td>
                         <td>
                           <select name="{{volunteers.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
                               <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
@@ -484,6 +480,10 @@
                               <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
                           </select>
                         </td>                  
+                        <td>{{volunteers.ieee_id}}</td>
+                        <td>{{volunteers.team.team_name}}</td>
+                        <td>{{volunteers.position}}</td>
+                        <td>{{volunteers.contact_no}}</td>
                       </tr>
                       {% endfor %} 
                     </tbody>
