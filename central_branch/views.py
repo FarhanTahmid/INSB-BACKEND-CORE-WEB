@@ -4606,7 +4606,7 @@ def task_home(request,team_primary = None):
         
         else:
             team = Teams.objects.get(primary=team_primary)
-            all_tasks = Task.objects.filter(team=team).order_by('is_task_completed','-deadline')
+            all_tasks = Task.objects.filter(team=team).order_by('-pk','is_task_completed')
             desired_team = Task_Assignation.get_team_app_name(team_primary)
             
             #getting nav_bar_name
