@@ -37,7 +37,7 @@ urlpatterns = [
     #WEBSITE Management URL Path
     path('manage_website/homepage',views.manage_website_homepage,name="manage_website_home"),
     path('manage_website/homepage/update/<int:pk>',views.manage_website_homepage_top_banner_update,name="manage_website_home_top_banner_update"),
-    path('manage_website/homepage/volunteer_of_the_month/<int:pk>',views.update_volunteer_of_month,name="update_vom"),
+    # path('manage_website/homepage/volunteer_of_the_month/<int:pk>',views.update_volunteer_of_month,name="update_vom"),
     path('manage_website/achievements',views.manage_achievements,name="manage_achievements"),
     path('manage_website/achievements/update/<int:pk>',views.update_achievements,name="achievements_update"),
     path('manage_website/news',views.manage_news,name="manage_news"),
@@ -134,5 +134,5 @@ urlpatterns = [
     path('task/<int:task_id>/upload_task/',views.upload_task,name="upload_task"),
     path('task/<int:task_id>/add_task/',views.add_task,name="add_task"),
     path('task/get_task_category_points',GetTaskCategoryPointsAjax.as_view(),name="get_task_category_points"),
-    path('task/save_mem_task_points',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points")
+    path('task/save_mem_task_points/<team_primary>/',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points")
 ]

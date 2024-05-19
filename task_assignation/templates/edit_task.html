@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Create Task | IEEE NSU Student Branch</title>
+    <title>{% if is_member_view %}Task{% else %}Update Task{% endif %} | IEEE NSU Student Branch</title>
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
@@ -438,7 +438,7 @@
             left: 100px;
         }
 
-        .close , .close_1 , .close2 , .close3{
+        .close , .close1 , .close2 , .close3{
             color: #000;
             font-size: 28px;
             font-weight: bold;
@@ -448,8 +448,8 @@
 
         .close:hover,
         .close:focus,
-        .close_1:hover,
-        .close_1:focus,
+        .close1:hover,
+        .close1:focus,
         .close2:hover,
         .close2:focus,
         .close3:hover,
@@ -705,9 +705,41 @@
 .modal__wrapper.active .modal__container{
     transform: translateY(0px);
 }
+/* Custom CSS for dropdown menu items */
+            .dropdown-menu input[type="submit"] {
+                background-color: transparent;
+                border: none;
+                padding: 10px 10px;
+                width: 100%;
+                text-align: left;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .dropdown-menu input[type="submit"]:hover {
+                background-color: #f0f0f0; /* Change background color on hover */
+            }
+.title_task_type{
+    display: flex;
+    justify-content: center;
+}
+.title_task_type h5{
+    background: #489fb5;
+    padding: 4px 35px;
+    color: white;
+    border-radius: 25px;
+    font-size: 16px;
+    margin: 15px 0;
+}
+.title_task_name{
+    display: flex;
+    justify-content: center;
+    color: #000000d4;
+    font-weight: bold;
+    font-size: 25px;
+    font-style: italic;
+}
     </style>
   </head>
-
   <body>
 
     <!--LAYOUT START-->
@@ -721,56 +753,55 @@
       </div>
 
 
-      <!-- navbar -->
       <div id="content" class="app-content" role="main">
-        {% if app_name == "central_branch" %}
-        {% block navbar %}
-         {% include 'navbar.html' %} 
-        {% endblock navbar %}
-        {% else %}
-            {% if web_dev_team %}
-                {% block web_navbar %}
-                    {% include 'website_development_team/web_navbar.html' %} 
-                {% endblock web_navbar %}
-            {% elif content_and_writing_team %}
-                {% block content_navbar %}
-                    {% include 'content_navbar.html' %} 
-                {% endblock content_navbar %}
-            {% elif event_management_team %}
-                {% block event_navbar %}
-                    {% include 'emt_navbar.html' %} 
-                {% endblock event_navbar %}
-            {% elif logistic_and_operation_team %}
-                {% block logistic_navbar %}
-                    {% include 'logistics_navbar.html' %} 
-                {% endblock logistic_navbar %}
-            {% elif promotion_team %}
-                {% block promotion_navbar %}
-                    {% include 'promotions_team/promotions_navbar.html' %} 
-                {% endblock promotion_navbar %}
-            {% elif public_relation_team %}
-                {% block public_relation_team_navbar %}
-                    {% include 'public_relation_team/public_relation_navbar.html' %} 
-                {% endblock public_relation_team_navbar %}
-            {% elif membership_development_team %}
-                {% block membership_navbar %}
-                    {% include 'mdt_navbar.html' %} 
-                {% endblock membership_navbar %}
-            {% elif media_team %}
-                {% block medias_navbar %}
-                    {% include 'media_navbar.html' %} 
-                {% endblock medias_navbar %}
-            {% elif graphics_team %}
-                {% block graphicss_navbar %}
-                    {% include 'graphics_navbar.html' %} 
-                {% endblock graphicss_navbar %}
-            {% elif finance_and_corporate_team %}
-                {% block finanace_navbar %}
-                    {% include 'finance_and_corporate_team/finance_navbar.html' %} 
-                {% endblock finanace_navbar %}
-            {% endif %}
-        {% endif %}
-    </div>
+                {% if app_name == "central_branch" %}
+                {% block navbar %}
+                 {% include 'navbar.html' %} 
+                {% endblock navbar %}
+                {% else %}
+                    {% if web_dev_team %}
+                        {% block web_navbar %}
+                            {% include 'website_development_team/web_navbar.html' %} 
+                        {% endblock web_navbar %}
+                    {% elif content_and_writing_team %}
+                        {% block content_navbar %}
+                            {% include 'content_navbar.html' %} 
+                        {% endblock content_navbar %}
+                    {% elif event_management_team %}
+                        {% block event_navbar %}
+                            {% include 'emt_navbar.html' %} 
+                        {% endblock event_navbar %}
+                    {% elif logistic_and_operation_team %}
+                        {% block logistic_navbar %}
+                            {% include 'logistics_navbar.html' %} 
+                        {% endblock logistic_navbar %}
+                    {% elif promotion_team %}
+                        {% block promotion_navbar %}
+                            {% include 'promotions_team/promotions_navbar.html' %} 
+                        {% endblock promotion_navbar %}
+                    {% elif public_relation_team %}
+                        {% block public_relation_team_navbar %}
+                            {% include 'public_relation_team/public_relation_navbar.html' %} 
+                        {% endblock public_relation_team_navbar %}
+                    {% elif membership_development_team %}
+                        {% block membership_navbar %}
+                            {% include 'mdt_navbar.html' %} 
+                        {% endblock membership_navbar %}
+                    {% elif media_team %}
+                        {% block medias_navbar %}
+                            {% include 'media_navbar.html' %} 
+                        {% endblock medias_navbar %}
+                    {% elif graphics_team %}
+                        {% block graphicss_navbar %}
+                            {% include 'graphics_navbar.html' %} 
+                        {% endblock graphicss_navbar %}
+                    {% elif finance_and_corporate_team %}
+                        {% block finanace_navbar %}
+                            {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+                        {% endblock finanace_navbar %}
+                    {% endif %}
+                {% endif %}
+            </div>
 
 
       <!--PAGE START-->
@@ -780,14 +811,16 @@
           <div class="form-wrapper">
                 <!--back button-->
                 <div class="tooltip-container">
-                    {% if app_name == "central_branch" %}
+                    {% if my_task %}
+                    <a href="{% url 'users:my_tasks' %}" class="image-button">
+                    {% elif team_primary == None or team_primary == "1" %}
                     <a href="{% url 'central_branch:task_home' %}" class="image-button">
                     {% else %}
                     <a href="{% url ''|add:app_name|add:':task_home_team' team_primary %}" class="image-button">
                     {% endif %}
                         <img src="/static/back-arrow.png" alt="Go back to session">
                     </a>
-                    <span class="tooltip-text">Go back to Task Homepage</span>
+                    <span class="tooltip-text">Go back</span>
                 </div>
                 <!--Messages-->
                 <div style="justify-content:center; text-align:center;">
@@ -798,103 +831,357 @@
                     <br>
                     {% endif %}
                 </div>
+                <h5 class="title_task_name">Task Name: {{task.title}}</h5>
+                <div class="title_task_type">
+                    <h5>Type: {{task.task_type}}</h5>
+                </div>
 
               <!--create task heading-->
               <div class="queue">
-                <button type="button" class="queue_btn create_task_modal_btn">How to create a task</button>                
+                {% if create_individual_task_access or create_team_task_access or is_member_view %}
+                    {% if create_individual_task_access or create_team_task_access %}
+                    <button type="button" class="queue_btn distribute_task_modal_btn">Click to see Instructions</button>
+                    {% else %}
+                        {% if not task.is_task_completed %}
+                        <button type="button" class="queue_btn complete_task_modal_btn">How to complete a task</button>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
               </div>
                 <!-- How to create a task modal -->
-                {% comment %} {% if is_new_task %} {% endcomment %}
-                <div id="modal_1" class="create_modal">
-                    <!-- Modal content -->
-                    <div class="modal-1-content">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
-                            <h5 style="color: #fff;    position: relative;
-                            top: 3px">How to create task?</h5>
-                            <span class="close_1" style="color: white;">&times;</span>
+                {% if create_individual_task_access or create_team_task_access or is_member_view %}
+                    {% if create_individual_task_access or create_team_task_access %}
+                    
+                    <!-- How to distribute a task modal -->
+                    <div id="modal3" class="distribute_modal">
+                        <!-- Modal content -->
+                        <div class="modal-3-content">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                <h5 style="color: #fff;    position: relative;
+                                top: 3px">Instructions</h5>
+                                <span class="close3" style="color: white;">&times;</span>
+                            </div>
+                                <ol style="font-size: 16px; margin: 15px;">
+                                    <li>You can update the task as much as you want but after changing it you must have to press <span style="font-weight: 600;">Update Task</span> button</li>
+                                    <li>To delete the task simply press the <span style="font-weight: 600;">Delete</span> button</li>
+                                    <li>If the task is completed by the assigned individuals or teams then click <span style="font-weight: 600;">Mark as complete?</span> and then click <span style="font-weight: 600;">Update Task</span></li>
+                                    <li>If you want to distribute the task points for individuals by your own then go to the <span style="font-weight: 600;">Check task progress</span> and then simply update the <span style="font-weight: 600;">Points</span> of that individual and save it</li>
+                                </ol>
                         </div>
-                            <ol style="font-size: 16px; margin: 15px">
-                                <li>To create a task you must have to fill title of the task, set deadline and write the task description</li>
-                                <li>Also you have to select a task category based on the task and if you want to create your own task category then press back arrow icon and create a new task category</li>
-                                <li>You can give the task either for teams or for individuals</li>
-                                <ol style="margin-top: 20px;">
-                                    <span style="font-weight: 600;">If you select teams</span>
-                                    <li>You can choose multiple teams to complete the task</li>
-                                </ol>
-                                <ol style="margin-top: 20px;">
-                                    <span style="font-weight: 600;">If you select individuals</span>
-                                    <li>You can choose multiple individuals to complete the task</li>
-                                    <li>After choosing the individuals by select button, you have to assign them what type of fields you want them to fill to complete the task</li>
-                                </ol>
-                                <li>Must press <span style="font-weight: 600;">Create Task</span> button to save the task and then it will send a mail to that assigned individuals or teams co-ordinator</li>
+                    </div>
+                    {% else %}
+                            <!-- How to complete a task modal -->
+                        <div id="modal2" class="complete_modal">
+                            <!-- Modal content -->
+                            <div class="modal-2-content">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                    <h5 style="color: #fff;    position: relative;
+                                    top: 3px">How to complete task?</h5>
+                                    <span class="close2" style="color: white;">&times;</span>
+                                </div>
+                                    <ol style="font-size: 16px; margin: 15px;">
+                                        <li>To start the task, click <span style="font-weight: 600;">Start the task</span> button</li>
+                                        <li>Assigned tasks must be completed within the deadline</li>
+                                        <li>Not completing a task within deadline will deduct your Task Point</li>
+                                        <li>Task works can be saved by clicking the <span style="font-weight: 600;">Save for later</span> button and can be finished later</li>
+                                        <li>To submit a task click the <span style="font-weight: 600;">Task Completed</span> button and then an email will be sent to the person who created the task</li>
+                                    </ol>
+                                </div>
+                        </div>
+                        {% endif %}
+                {% endif %}
+
+
+                <!-- logs modal -->
+                <div class="modal__wrapper">
+                    <div class="modal__container">
+                        <button class="close-4">&times;</button>
+                        <h2>Task Logs</h2>
+                        <div class="modal__wrapper__container">
+                            <ol>
+                                {% for date,logs in task_logs.items %}
+                                <li style="margin-bottom: 5px;"><b>{{date}}:</b><br> {{logs}}</li>
+                                {% endfor %}
                             </ol>
+                        </div>
                     </div>
                 </div>
+              
+
             
+            <form method="post">
+               {% csrf_token %} 
+               <!-- The Modal -->
+               <div id="myModal" class="delete_modal">
+
+                   <!-- Modal content -->
+                   <div class="modal-content">
+                       <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                           <h5>Confirm Delete</h5>
+                           <span class="close">&times;</span>
+                       </div>
+                       <h6>Do you want to delete this task?</h6>
+                       <div style="display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
+                           <a href="#" class="cancel_delete_task_btn">Cancel</a>
+                           <button type="submit" class="confirm_delete_task_btn" name="delete_task">Confirm</button>
+                   </div>
+                   </div>
+               
+               </div>
+           </form> 
            <form method="post">
-                {% csrf_token %}
+            {% csrf_token %}
+            <!--Messages-->
+            {% if not is_new_task %}
+              <!--buttons showed when viewing task-->
+              <div class="task-btn">
+                    {% if create_individual_task_access or create_team_task_access %}
+                        {% if team_primary == None or team_primary == "1" %}
+                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        {% else %}
+                        <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                        {% endif %}
+                        {% comment %} elif condition for team task creation url from team {% endcomment %}
+
+                        {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False and not task.is_task_completed and task.task_type == "Team" %}
+                            
+                            <div class="dropdown">
+                                <button class="check-task-button dropdown-toggle" data-toggle="dropdown">Forward Task To Team Incharges</button>
+                                <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
+                                    {% for team,bool in is_task_forwared_to_incharge.0.items %}
+                                    {% if bool == False %}
+                                        <input type="submit" value="{{team.team_name}}" name="{{team.primary}}">
+                                        <input type="hidden" value="{{team.primary}}" name="teamclicked">
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed and task.task_type == "Team" %}
+                            <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
+                        {% endif %}
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
+                        {% if my_task %}
+                        <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                        {% elif team_primary != None and team_primary != "1" %}
+                        <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                        {% else %}
+                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                        {% endif %}
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if my_task %}
+                            <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% else %}
+                            <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% endif %}
+                            {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_started_by_member == False %}
+                                {% if not is_task_started_by_any_coordinator %}
+                                    <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
+                                {% endif %}
+                            {% endif %}
+                            {% if is_officer == True and is_task_forwarded_to_volunteers == False and is_task_started_by_member == False %}
+                                {% if not is_task_started_by_any_incharge %}
+                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary  %}" class="check-task-button">Forward Task to Volunteers</a>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if my_task %}
+                            <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% else %}
+                            <a href="{% url ''|add:app_name|add:':upload_task' task.pk  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% endif %}
+
+                        {% endif %}
+                    {% elif is_coordinator and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if is_task_forwared_to_incharge == True %}
+                                <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                            {% endif %}
+                        {% endif %}
+                    {% elif is_officer and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if is_task_forwarded_to_volunteers == True %}
+                                <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary  %}" class="check-task-button">Change Task Assination</a>
+                            {% endif %}
+                        {% endif %}
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% comment %} Task link for team {% endcomment %}
+                    {% elif is_coordinator and not is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
+                    {% elif is_officer and not is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
+                    {% elif is_member_view and task.is_task_completed %}
+                        <p  style="color: #d33838;">Task Completed!</p>
+                    {% endif %}
+
+                  {% comment %} {% if task.task_type == "Team" and has_team_task_options_view_access %}
+                        {% if is_branch %}
+                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                        {% else %}
+                        <a href="{% url ''|add:app_name|add:':upload_task' 8 task.pk  %}" class="check-task-button">Check task progress</a>
+                        {% endif %}
+
+                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Forward Task to Team Members</a>
+
+                  {% endif %} {% endcomment %}
+
+                  {% if create_individual_task_access or create_team_task_access %}
+                    <button type="button" class="log-task-button" id="trigger">Task Logs</button>
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                    <button type="submit" class="create-task-btn" name="update_task">Update Task</button>     
+                    {% endif %}         
+                  {% endif %}                  
+                  
+                </div>
+                {% endif %}     
+                    
+                    <!--delete and complete toggle btn-->
+                    {% if create_individual_task_access or create_team_task_access %}
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                    <div class="delete_complete_toggle">
+                        <button type="button" class="delete_task_btn">Delete</button>
+                        <div style="display: flex; margin: 0 10px;">
+                            <p class="complete_text">Mark as complete?</p>
+                            <label class="switch">
+                                <input type="checkbox" name="task_completed_toggle_switch" {% if task.is_task_completed %}checked{% endif %} >
+                                <span class="slider round"></span>
+                            </label>
+                            
+                        </div>
+                    </div>
+                    {% else %}
+                    {% endif %}
+
+                    {% endif %}
+
+                
+
+
 
                 <!--title and deadline of task-->
                 <div class="title-deadline">
-                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title" required>
+                    <input class="title-box title" type="text" placeholder="Title (eg: Get permission paper for venue)" name="task_title"  value="{{task.title}}" required {% if create_individual_task_access or create_team_task_access %}{% else %}disabled {% endif %}>
                     <div class="title-box deadline-container" style="padding: 1px 16px;">
-                        <label style="margin: 0;text-align: center; font-size: 14px;">Set deadline:</label>
+                        <label style="margin: 0;text-align: center; font-size: 14px;">
+                            {% if create_individual_task_access or create_team_task_access %}
+                                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %} 
+                                    Set deadline:
+                                    {% else %}
+                                    Deadline
+                                    {% endif %}
+                            {% else %}
+                            Deadline
+                            {% endif %}</label>
                     <input
                         id="deadline"
                         type="datetime-local"
                         name="deadline"
                         class="title-box"
                         style="padding: 4px; border-radius: 0; border: none; box-shadow: none;"
-                        required />
+                        value="{{task.deadline|date:'Y-m-d H:i'}}"
+                        required
+                        {% if create_individual_task_access or create_team_task_access %}
+                            {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                            {% else%} 
+                            disabled
+                            {% endif %}
+                        {% else %}
+                        disabled 
+                        {% endif %} />
                     </div>
                 </div>
                 
 
                 <!--task category-->
+                {% if create_individual_task_access or create_team_task_access %}
                 <div class="category">
                     <label class="category_label">Task Category:</label>                    
-                    <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required>
-                        <option value="" disabled selected style="display:none;">--Select Category--</option>
+
+                    <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required 
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                    {% else %}
+                    disabled
+                    {% endif%}>
                         {% for task_category in task_categories %}
-                        <option value="{{task_category.name}}">{{task_category.name}}</option>
+                        <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
                         {% endfor %}
                     </select>
+                    <div class="late_text">
+                        {% if is_late %}
+                        {% if not task.is_task_completed%}
+                        <p style="color: red;
+                        font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
-
+                {% endif %}
                 <div class="category user">
-                    <div>Task Point: <span class="task_point" id="task_points"></span></div>
+                    <div>Task Point: <span class="task_point" id="task_points">{{task.task_category.points}}</span></div>
+                    {% if create_individual_task_access or create_team_task_access %}
+                    {% else %}
+                    <div class="late_text">
+                        {% if is_late %}
+                        {% if not task.is_task_completed%}
+                        <p style="color: red;
+                        font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
                 </div>
 
 
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
                 <div class="ckeditor">
-                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details"></textarea>
+                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" 
+                    {% if create_individual_task_access or create_team_task_access%}    
+                        {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                        {% else %}
+                        disabled
+                        {% endif %}
+                    {% else %}
+                    disabled
+                    {% endif %}>{{task.description}}</textarea>
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
                 </div>
-                                
+                
+                
+
+                {% if create_team_task_access or create_individual_task_access %}
+                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                
                 <!--task type-->
                 <div class="task_type ">
+                    {% if is_new_task %}
                     <label class="task_type_label">Select Task Type and Individuals:</label>
+                    {% endif %}
                     <div class="radio-btns">
                         {% if create_team_task_access %}
+                        {% if new_task or task.task_type == "Team" %}
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn05' name="task_type" value="Team" checked>
+                            <input type="radio" id='btn05' name="task_type" value="Team" {% if task.task_type == "Team" %}checked{% endif %} required>
                             <label for="btn05">Teams</label>
                         </div>
                         {% endif %}
+                        {% endif %}
                         {% if create_individual_task_access %}
+                        {% if new_task or task.task_type == "Individuals" %}
                         <div class="radio-btns_content box">
-                            <input type="radio" id='btn06'name="task_type" value="Individuals" {% if not create_team_task_access %}checked{% endif %}>
+                            <input type="radio" id='btn06'name="task_type" value="Individuals" {% if task.task_type == "Individuals" %}checked{% endif %}>
                             <label for="btn06">Individuals</label>
                         </div>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
                 
                 {% if create_individual_task_access %}
                 <!--Search bar for individuals-->
-                <div class="tb_search search_input_individuals {% if create_team_task_access %}hide_table{% endif %}">
+                <div class="tb_search search_input_individuals {% if task.task_type == "Team" %}hide_table{% endif %}">
                     <input
                     type="text"
                     id="search_input_individuals"
@@ -905,7 +1192,7 @@
                 
                 
                 <!--Table for individuals-->
-                <div class="table-responsive individuals-table {% if create_team_task_access %}hide_table{% endif %}" >
+                    <div class="table-responsive individuals-table {% if task.task_type == "Team" %}hide_table{% endif %}">
                         <table class="table box" id="individuals-table">
                     <thead style="position: relative; z-index: 101;">
                         <tr>
@@ -919,15 +1206,15 @@
                     <tbody>
                         {% for member,types in all_members.items %}
                         <tr>
-                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
+                            <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}" {% if task.task_type == "Individuals" and member in task.members.all %}checked{% endif %}></td>
                             <td>{{member.name}}</td>
                             <td>
                                 <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper">Permission Paper</option>
-                                    <option value="content">Content </option>
-                                    <option value="file_upload">File Upload </option>
-                                    <option value="media">Media </option>
-                                    <option value="drive_link">Drive Link </option>
+                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
+                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
+                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
+                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
+                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
                                 </select>
                             </td>                
                             <td>{{member.team.team_name}}</td>
@@ -941,7 +1228,7 @@
 
                 {% if create_team_task_access %}
                 <!--Search bar for teams-->
-                <div class="tb_search  search_input_team" >
+                <div class="tb_search  search_input_team {% if task.task_type == "Individuals" %}hide_table{% endif %}" >
                     <input
                     type="text"
                     id="search_input_team"
@@ -952,21 +1239,21 @@
                 
                 
                 <!--Table for teams-->
-                <div class="table-responsive team-table">
+                <div class="table-responsive team-table {% if task.task_type == "Individuals" %}hide_table{% endif %}">
                     <table class="table box" id="team-table">
                     <thead>
                         <tr>
                             <th>SL no.</th>
-                        <th>Team</th>
-                        <th>Select</th>
-                    </tr>
-                </thead>
+                            <th>Team</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
                 <tbody>
                     {% for team in teams %}
                         <tr>
                             <td>{{forloop.counter}}.</td>
                             <td>{{team.team_name}}</td>
-                            <td><input type="checkbox" name="team_select" value="{{team.primary}}"></td>
+                            <td><input type="checkbox" name="team_select" value="{{team.primary}}" {% if task.task_type == "Team" and team in task.team.all %}checked{% endif %}></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -974,11 +1261,13 @@
                 </div>
                 {% endif %}
                 
+                
+                
+                {% endif %}
 
-                <!--create task btn-->
-                <div style="text-align: center;">
-                    <button type="submit" class="create-task-btn" name="create_task">Create Task</button>
-                </div>
+                {% endif %}
+
+
             </form>
         </div>
     </div>
@@ -1271,26 +1560,26 @@
     </script>
 <script>
     // Get the modal
-    var modal_1 = document.getElementById("modal_1");
+    var modal1 = document.getElementById("modal1");
     
     // Get the button that opens the modal
-    var btn_1 = document.querySelector(".create_task_modal_btn");
+    var btn1 = document.querySelector(".create_task_modal_btn");
     
     // Get the <span> element that closes the modal
-    var span_1 = document.getElementsByClassName("close_1")[0];
+    var span1 = document.getElementsByClassName("close1")[0];
     
     // When the user clicks the button, open the modal 
-    btn_1.onclick = function() {
-    modal_1.style.transform = 'translateY(0px)';
-    modal_1.style.zIndex = '103100';
-    modal_1.style.opacity = '1';
+    btn1.onclick = function() {
+    modal1.style.transform = 'translateY(0px)';
+    modal1.style.zIndex = '103100';
+    modal1.style.opacity = '1';
     }
 
     // When the user clicks on <span> (x), close the modal
-    span_1.onclick = function() {
-    modal_1.style.transform = 'translateY(-50px)';
-    modal_1.style.zIndex = '-100';
-    modal_1.style.opacity = '0';
+    span1.onclick = function() {
+    modal1.style.transform = 'translateY(-50px)';
+    modal1.style.zIndex = '-100';
+    modal1.style.opacity = '0';
     }
 
     // When the user clicks anywhere outside of the modal, close it
@@ -1305,16 +1594,10 @@
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
       }
-      else if (event.target == modal_1) {
-        modal_1.style.transform = 'translateY(-50px)';
-        modal_1.style.zIndex = '-100';
-        modal_1.style.opacity = '0';
-      }
-            else if (event.target == modal1) {
-                modal1.style.transform = 'translateY(-50px)';
+      else if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
-        modal1.style.height = '0%';
       }
     }
     </script>
@@ -1354,16 +1637,10 @@
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
       }
-      else if (event.target == modal_1) {
-        modal_1.style.transform = 'translateY(-50px)';
-        modal_1.style.zIndex = '-100';
-        modal_1.style.opacity = '0';
-      }
-            else if (event.target == modal1) {
-                modal1.style.transform = 'translateY(-50px)';
+      else if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
-        modal1.style.height = '0%';
       }
     }
     </script>
@@ -1403,16 +1680,10 @@
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
       }
-      else if (event.target == modal_1) {
-        modal_1.style.transform = 'translateY(-50px)';
-        modal_1.style.zIndex = '-100';
-        modal_1.style.opacity = '0';
-      }
-            else if (event.target == modal1) {
-                modal1.style.transform = 'translateY(-50px)';
+      else if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
-        modal1.style.height = '0%';
       }
     }
     </script>

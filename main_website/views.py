@@ -49,7 +49,7 @@ def homepage(request):
         # get featured events of branch
         get_featured_events=HomepageItems.load_featured_events(sc_ag_primary=1)
         # get volunteer of the months
-        get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
+        # get_volunteers_of_the_month=VolunteerOfTheMonth.objects.all().order_by('-pk')
 
         # get current panel of Branch
         current_panel_pk=PortData.get_current_panel()
@@ -82,7 +82,7 @@ def homepage(request):
             'recent_blogs':get_recent_blogs,
             'branch_teams':PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1), #loading all the teams of Branch
             'all_thoughts':all_thoughts,
-            'all_vom':get_volunteers_of_the_month,
+            # 'all_vom':get_volunteers_of_the_month,
             'awards':awards_of_current_panel,
             'start_time':start_time,#only for countdown
             'button_enabled':button_enabled,

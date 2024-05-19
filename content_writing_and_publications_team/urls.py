@@ -1,5 +1,6 @@
 from django.urls import path,include
 from . import views
+from central_branch.views import task_edit,add_task,create_task,upload_task,task_home
 
 app_name = "content_writing_and_publications_team"
 
@@ -14,4 +15,11 @@ urlpatterns = [
     path('create_content_form/',views.create_content_form,name="create_content_form"),
     path('content/<int:content_id>',views.content_edit,name="content_edit"),
     path('content/<int:content_id>/add_captions/',views.edit_content_form_add_notes,name="edit_content_form_add_notes"),
+
+    #Task
+    path('create_task/<int:team_primary>/',create_task,name="create_task_team"),
+    path('task_home/<int:team_primary>/',task_home,name="task_home_team"),
+    path('task/<int:task_id>/<int:team_primary>/',task_edit,name="task_edit_team"),
+    path('task/<int:task_id>/upload_task/<int:team_primary>/',upload_task,name="upload_task_team"),
+    path('task/<int:task_id>/add_task/<int:team_primary>/',add_task,name="add_task_team"),
 ]

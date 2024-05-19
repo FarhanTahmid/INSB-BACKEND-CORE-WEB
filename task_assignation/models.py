@@ -145,3 +145,18 @@ class Team_Task_Point(models.Model):
 
     def __str__(self) -> str:
         return str(self.pk)
+    
+class Team_Task_Forwarded(models.Model):
+
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    team = models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE)
+    task_forwarded_to_incharge = models.BooleanField(default = False)
+    task_forwarded_to_core_or_team_volunteers = models.BooleanField(default= False)
+    forwared_by = models.CharField(null=False,blank=False,max_length=15,default="")
+    forwarded_by_for_volunteers = models.CharField(null=False,blank=False,max_length=15,default="")
+
+    class Meta:
+        verbose_name="Team Task Forward"
+
+    def __str__(self) -> str:
+        return str(self.pk)

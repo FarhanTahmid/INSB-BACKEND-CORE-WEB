@@ -1,5 +1,13 @@
 {% load static %} 
 {% block content_edit_form_content %}
+<link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
+<style>
+      .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
+</style>
 <div class="container">
   <div class="box" style="border-radius: 6px;">
         <!--Heading-->
@@ -45,7 +53,8 @@
                 id="field1"
                 value="{{content.documents_link}}"
                 name="drive_link_of_documents" {% if not has_content_access %}disabled{% endif %}/>
-            </div>
+                <a href="{{drive_link_of_documents.documents_link}}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
+              </div>
 
             {% if has_content_access %}
             <!--upload doc-->
