@@ -4803,7 +4803,7 @@ def upload_task(request, task_id,team_primary = None):
 
                     if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
                         
-                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user,app_name):
+                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
                             messages.success(request,"You task has been requested for reviewing!")
                         else:
                             messages.warning(request,"Something went wrong while saving!")

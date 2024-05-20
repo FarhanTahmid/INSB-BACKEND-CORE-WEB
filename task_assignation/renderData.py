@@ -1367,12 +1367,12 @@ This is an automated message. Do not reply
         except:
             return False
     
-    def task_email_to_eb(request,task,logged_in_user,app_name):
+    def task_email_to_eb(request,task,logged_in_user):
 
         #This function will send an email to the Eb who created this task once task assignee finishes and hits
         #the complete button
 
-        try:
+        # try:
             username = task.task_created_by
             email_to = []
             try:
@@ -1383,8 +1383,15 @@ This is an automated message. Do not reply
                 member = adminUsers.objects.get(username=username)
                 email_to.append(member.email)
 
+
             email_from = settings.EMAIL_HOST_USER
             site_domain = request.META['HTTP_HOST']
+
+            if task.task_type == 'Individuals':
+                url = f'{site_domain}/portal/central_branch/task/{task.pk}/upload_task'
+            else:
+                url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
+            
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
             message = f'''Hello {username},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
@@ -1394,7 +1401,7 @@ dedicated members, and save them. To allocate their points please toggle 'on' th
 in the task edit page, if you think the entire task is completed.
 
 Please follow the link to view the completed task: 
-{site_domain}/portal/{app_name}/task/{task.pk}/upload_task
+{url}
 
 Best Regards
 IEEE NSU SB Portal
@@ -1405,14 +1412,14 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
 
-            return True
-        except:
-            return False
+        #     return True
+        # except:
+        #     return False
     
     def save_task_logs(task,message):
 
@@ -1466,7 +1473,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
