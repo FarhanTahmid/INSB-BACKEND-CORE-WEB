@@ -1367,7 +1367,7 @@ This is an automated message. Do not reply
         except:
             return False
     
-    def task_email_to_eb(request,task,logged_in_user):
+    def task_email_to_eb(request,task,logged_in_user,app_name):
 
         #This function will send an email to the Eb who created this task once task assignee finishes and hits
         #the complete button
@@ -1394,7 +1394,7 @@ dedicated members, and save them. To allocate their points please toggle 'on' th
 in the task edit page, if you think the entire task is completed.
 
 Please follow the link to view the completed task: 
-{site_domain}/portal/central_branch/task/{task.pk}/upload_task
+{site_domain}/portal/{app_name}/task/{task.pk}/upload_task
 
 Best Regards
 IEEE NSU SB Portal
