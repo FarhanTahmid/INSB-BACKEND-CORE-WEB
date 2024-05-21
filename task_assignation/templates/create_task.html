@@ -1267,6 +1267,16 @@
         modal.style.zIndex = '-100';
         modal.style.opacity = '0';
       }
+      if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
+        modal1.style.height = '0%';
+        if (currentMsgDiv) {
+            msg_read(currentMsgDiv); // Mark the message as read
+            currentMsgDiv = null; // Clear the reference after marking as read
+        }
+    }
     }
     </script>
 <script>
@@ -1310,12 +1320,16 @@
         modal_1.style.zIndex = '-100';
         modal_1.style.opacity = '0';
       }
-            else if (event.target == modal1) {
-                modal1.style.transform = 'translateY(-50px)';
+      if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
         modal1.style.height = '0%';
-      }
+        if (currentMsgDiv) {
+            msg_read(currentMsgDiv); // Mark the message as read
+            currentMsgDiv = null; // Clear the reference after marking as read
+        }
+    }
     }
     </script>
 <script>
@@ -1359,12 +1373,16 @@
         modal_1.style.zIndex = '-100';
         modal_1.style.opacity = '0';
       }
-            else if (event.target == modal1) {
-                modal1.style.transform = 'translateY(-50px)';
+      if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
         modal1.style.height = '0%';
-      }
+        if (currentMsgDiv) {
+            msg_read(currentMsgDiv); // Mark the message as read
+            currentMsgDiv = null; // Clear the reference after marking as read
+        }
+    }
     }
     </script>
 <script>
@@ -1408,12 +1426,16 @@
         modal_1.style.zIndex = '-100';
         modal_1.style.opacity = '0';
       }
-            else if (event.target == modal1) {
-                modal1.style.transform = 'translateY(-50px)';
+      if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
         modal1.style.height = '0%';
-      }
+        if (currentMsgDiv) {
+            msg_read(currentMsgDiv); // Mark the message as read
+            currentMsgDiv = null; // Clear the reference after marking as read
+        }
+    }
     }
     </script>
     <script>

@@ -165,6 +165,7 @@
             padding: 2px 26px;
             color: #d33838;
             background: white;
+            margin-bottom: 15px;
             border-radius: 4px;
             border: 1px solid #d33838;
             transition: all ease-in-out .3s;
@@ -287,16 +288,16 @@
         .table-responsive{
             overflow-x: hidden;
         }
-        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar{
+        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar, modal-4-content::-webkit-scrollbar, modal-5-content::-webkit-scrollbar{
             width: 6px;
             height: 6px;
         }
-        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb{
+        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb , .modal-4-content::-webkit-scrollbar-thumb , .modal-5-content::-webkit-scrollbar-thumb{
             background-color: #e7eeef;
             transition: all .4s ease-in-out;
             border-radius: 4px;
         }
-        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover{
+        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover , .modal-4-content::-webkit-scrollbar-thumb:hover , .modal-5-content::-webkit-scrollbar-thumb:hover{
             background-color: rgb(169, 170, 170);
         }
         .switch {
@@ -386,7 +387,7 @@
         overflow: auto;
         }
 
-       .create_modal , .complete_modal , .distribute_modal{
+       .create_modal , .complete_modal , .distribute_modal, .confirm_forward{
         opacity: 0;
         position: fixed;
         z-index: -1;
@@ -425,13 +426,13 @@
             border: 1px solid rgb(136, 136, 136);
             width: 40%;
         }
-        .modal-1-content , .modal-2-content , .modal-3-content{
+        .modal-1-content , .modal-2-content , .modal-3-content , .modal-4-content , .modal-5-content{
             background-color: #fefefe;
             margin: auto;
             border: 1px solid rgb(136, 136, 136);
             max-width: 850px;
             max-height: 70vh;
-            overflow-y: scroll;
+            overflow-y: auto;
             border-radius: 6px;
             box-shadow: 2px 2px 5px 0px #80808054;
             position: relative;
@@ -566,7 +567,7 @@
             .task-queue{
                 max-height: 50%;
             }
-            .modal-1-content , .modal-2-content , .modal-3-content{
+            .modal-1-content , .modal-2-content , .modal-3-content , .modal-4-content , .modal-5-content{
                 left: 0px;
                 margin: 10%;
             }
@@ -628,7 +629,7 @@
             .image-button img {
                 width: 32px;
             }
-            .modal-1-content , .modal-2-content , .modal-3-content{
+            .modal-1-content , .modal-2-content , .modal-3-content , .modal-4-content , .modal-5-content{
                 margin: 5%;
             }
         }
@@ -738,6 +739,20 @@
     font-size: 25px;
     font-style: italic;
 }
+
+    .forward_to_team_incharges_modal_button{
+        background-color:transparent;
+        border:none;
+        width:100%;
+        color:black;
+        padding:10px;
+    }
+    .forward_to_team_incharges_modal_button:hover{
+        background-color:white;
+    }
+    .close5{
+        cursor: pointer;
+    }
     </style>
   </head>
   <body>
@@ -950,12 +965,31 @@
                                 <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
                                     {% for team,bool in is_task_forwared_to_incharge.0.items %}
                                     {% if bool == False %}
-                                        <input type="submit" value="{{team.team_name}}" name="{{team.primary}}">
-                                        <input type="hidden" value="{{team.primary}}" name="teamclicked">
+                                        {% comment %} <input type="submit" value="{{team.team_name}}" name="{{team.primary}}"> {% endcomment %}
+                                        <button type="button" id="forward_to_team_incharges_modal_button" class="forward_to_team_incharges_modal_button" name="{{team.primary}}" value="{{team.team_name}}">{{team.team_name}}</button>
+                                        {% comment %} <input type="hidden" value="{{team.primary}}" name="teamclicked"> {% endcomment %}
                                     {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
+
+
+
+                            <div id="modal4" class="confirm_forward">
+                                <!-- Modal content -->
+                                <div class="modal-4-content">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
+                                        <h5 style="color: #fff; position: relative; top: 3px">Confirm Forward?</h5>
+                                        <span class="close4" style="color: white;">&times;</span>
+                                    </div>
+                                    <div style="margin: 25px; text-align: left;">Would You Like To Proceed To Forward Task To Team Incharges?</div>
+                                    <!-- Align the "Proceed" button to the right -->
+                                        <input type="submit" class="confirm_delete_task_btn">
+                                        <input type="hidden" name="teamclicked">
+                                </div>
+                            </div>
+                            
+
                         {% endif %}
                         {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed and task.task_type == "Team" %}
                             <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
@@ -1283,6 +1317,48 @@
     {% endblock common_js %}
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var modal4 = document.getElementById("modal4");
+            var closeBtn = modal4.querySelector(".close4");
+            var submitBtn = modal4.querySelector(".confirm_delete_task_btn");
+            var hiddenInput = modal4.querySelector("input[name='teamclicked']");
+            
+            closeBtn.addEventListener('click', function() {
+                modal4.style.transform = "translateY(-50px)";
+                modal4.style.zIndex = "-100";
+                modal4.style.opacity = "0";
+                setTimeout(() => { modal4.style.display = "none"; }, 300);
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target == modal4) {
+                    modal4.style.transform = "translateY(-50px)";
+                    modal4.style.zIndex = "-100";
+                    modal4.style.opacity = "0";
+                    setTimeout(() => { modal4.style.display = "none"; }, 300);
+                }
+            });
+
+            var buttons = document.querySelectorAll(".forward_to_team_incharges_modal_button");
+            buttons.forEach(function(btn_modal) {
+                btn_modal.addEventListener('click', function() {
+                    console.log(btn_modal.name);
+                    submitBtn.value = btn_modal.value;
+                    submitBtn.name = btn_modal.name;
+                    hiddenInput.value = btn_modal.name;
+                    modal4.style.display = "block";
+                    setTimeout(() => {
+                        modal4.style.transform = "translateY(0)";
+                        modal4.style.zIndex = "103100";
+                        modal4.style.opacity = "1";
+                    }, 10);
+                });
+            });
+        });
+    </script>
+
+
+    <script>
         const trigger = document.querySelector('#trigger');
         const modalWrapper = document.querySelector('.modal__wrapper');
         const closeBtn = document.querySelector('.close-4');
@@ -1558,135 +1634,98 @@
       }
     }
     </script>
-<script>
-    // Get the modal
-    var modal1 = document.getElementById("modal1");
+    <script>
+        // Modal 1
+        var modal1 = document.getElementById("modal1");
+        var btn1 = document.querySelector(".create_task_modal_btn");
+        var span1 = document.getElementsByClassName("close1")[0];
     
-    // Get the button that opens the modal
-    var btn1 = document.querySelector(".create_task_modal_btn");
+        btn1.onclick = function() {
+            modal1.style.transform = 'translateY(0px)';
+            modal1.style.zIndex = '103100';
+            modal1.style.opacity = '1';
+        }
     
-    // Get the <span> element that closes the modal
-    var span1 = document.getElementsByClassName("close1")[0];
-    
-    // When the user clicks the button, open the modal 
-    btn1.onclick = function() {
-    modal1.style.transform = 'translateY(0px)';
-    modal1.style.zIndex = '103100';
-    modal1.style.opacity = '1';
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span1.onclick = function() {
-    modal1.style.transform = 'translateY(-50px)';
-    modal1.style.zIndex = '-100';
-    modal1.style.opacity = '0';
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-     if (event.target == modal3) {
-        modal3.style.transform = 'translateY(-50px)';
-        modal3.style.zIndex = '-100';
-        modal3.style.opacity = '0';
-      }
-      else if (event.target == modal2) {
-        modal2.style.transform = 'translateY(-50px)';
-        modal2.style.zIndex = '-100';
-        modal2.style.opacity = '0';
-      }
-      else if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
-        modal1.style.zIndex = '-100';
-        modal1.style.opacity = '0';
-      }
-    }
+        span1.onclick = function() {
+            modal1.style.transform = 'translateY(-50px)';
+            modal1.style.zIndex = '-100';
+            modal1.style.opacity = '0';
+        }
     </script>
-<script>
-    // Get the modal
-    var modal2 = document.getElementById("modal2");
     
-    // Get the button that opens the modal
-    var btn2 = document.querySelector(".complete_task_modal_btn");
+    <script>
+        // Modal 2
+        var modal2 = document.getElementById("modal2");
+        var btn2 = document.querySelector(".complete_task_modal_btn");
+        var span2 = document.getElementsByClassName("close2")[0];
     
-    // Get the <span> element that closes the modal
-    var span2 = document.getElementsByClassName("close2")[0];
+        btn2.onclick = function() {
+            modal2.style.transform = 'translateY(0px)';
+            modal2.style.zIndex = '103100';
+            modal2.style.opacity = '1';
+        }
     
-    // When the user clicks the button, open the modal 
-    btn2.onclick = function() {
-    modal2.style.transform = 'translateY(0px)';
-    modal2.style.zIndex = '103100';
-    modal2.style.opacity = '1';
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span2.onclick = function() {
-    modal2.style.transform = 'translateY(-50px)';
-    modal2.style.zIndex = '-100';
-    modal2.style.opacity = '0';
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-     if (event.target == modal3) {
-        modal3.style.transform = 'translateY(-50px)';
-        modal3.style.zIndex = '-100';
-        modal3.style.opacity = '0';
-      }
-      else if (event.target == modal2) {
-        modal2.style.transform = 'translateY(-50px)';
-        modal2.style.zIndex = '-100';
-        modal2.style.opacity = '0';
-      }
-      else if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
-        modal1.style.zIndex = '-100';
-        modal1.style.opacity = '0';
-      }
-    }
+        span2.onclick = function() {
+            modal2.style.transform = 'translateY(-50px)';
+            modal2.style.zIndex = '-100';
+            modal2.style.opacity = '0';
+        }
     </script>
-<script>
-    // Get the modal
-    var modal3 = document.getElementById("modal3");
     
-    // Get the button that opens the modal
-    var btn3 = document.querySelector(".distribute_task_modal_btn");
+    <script>
+        // Modal 3
+        var modal3 = document.getElementById("modal3");
+        var btn3 = document.querySelector(".distribute_task_modal_btn");
+        var span3 = document.getElementsByClassName("close3")[0];
     
-    // Get the <span> element that closes the modal
-    var span3 = document.getElementsByClassName("close3")[0];
-
-    // When the user clicks the button, open the modal 
-    btn3.onclick = function() {
-    modal3.style.transform = 'translateY(0px)';
-    modal3.style.zIndex = '103100';
-    modal3.style.opacity = '1';
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span3.onclick = function() {
-    modal3.style.transform = 'translateY(-50px)';
-    modal3.style.zIndex = '-100';
-    modal3.style.opacity = '0';
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-     if (event.target == modal3) {
-        modal3.style.transform = 'translateY(-50px)';
-        modal3.style.zIndex = '-100';
-        modal3.style.opacity = '0';
-      }
-      else if (event.target == modal2) {
-        modal2.style.transform = 'translateY(-50px)';
-        modal2.style.zIndex = '-100';
-        modal2.style.opacity = '0';
-      }
-      else if (event.target == modal1) {
-        modal1.style.transform = 'translateY(-50px)';
-        modal1.style.zIndex = '-100';
-        modal1.style.opacity = '0';
-      }
-    }
+        btn3.onclick = function() {
+            modal3.style.transform = 'translateY(0px)';
+            modal3.style.zIndex = '103100';
+            modal3.style.opacity = '1';
+        }
+    
+        span3.onclick = function() {
+            modal3.style.transform = 'translateY(-50px)';
+            modal3.style.zIndex = '-100';
+            modal3.style.opacity = '0';
+        }
     </script>
+    
+    <script>
+        // Modal 4
+        var modal4 = document.getElementById("modal4");
+        var btn4 = document.querySelector(".forward_to_team_incharges_modal_button");
+        var span4 = document.getElementsByClassName("close4")[0];
+    
+        btn4.onclick = function() {
+            modal4.style.transform = 'translateY(0px)';
+            modal4.style.zIndex = '103100';
+            modal4.style.opacity = '1';
+        }
+    
+        span4.onclick = function() {
+            modal4.style.transform = 'translateY(-50px)';
+            modal4.style.zIndex = '-100';
+            modal4.style.opacity = '0';
+        }
+    </script>
+    
+
+    
+    <script>
+        // Handle clicks outside of any modal
+        window.onclick = function(event) {
+            var modals = [modal1, modal2, modal3, modal4];
+            modals.forEach(function(modal) {
+                if (event.target == modal) {
+                    modal.style.transform = 'translateY(-50px)';
+                    modal.style.zIndex = '-100';
+                    modal.style.opacity = '0';
+                }
+            });
+        }
+    </script>
+    
     <script>
         var style = document.createElement('style');
 style.setAttribute("id","multiselect_dropdown_styles");

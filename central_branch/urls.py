@@ -134,5 +134,12 @@ urlpatterns = [
     path('task/<int:task_id>/upload_task/',views.upload_task,name="upload_task"),
     path('task/<int:task_id>/add_task/',views.add_task,name="add_task"),
     path('task/get_task_category_points',GetTaskCategoryPointsAjax.as_view(),name="get_task_category_points"),
-    path('task/save_mem_task_points/<team_primary>/',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points")
+    path('task/save_mem_task_points/<team_primary>/',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points"),
+
+    #task history
+    path('individual_task_history/',views.individual_task_history,name="individual_task_history"),
+    path('team_task_history/',views.team_task_history,name="team_task_history"),
+    path('individual_task_leaderboard/',views.individual_task_leaderboard,name="individual_task_leaderboard"),
+    path('team_task_leaderboard/',views.team_task_leaderboard,name="team_task_leaderboard"),
+    
 ]

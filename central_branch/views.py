@@ -5280,3 +5280,15 @@ class SaveMemberTaskPointsAjax(View):
                 return JsonResponse('Access Denied',safe=False)
         except:
             return JsonResponse('Something went wrong!',safe=False)
+        
+# task history
+def individual_task_history(request):
+    return render(request,"Task History/per_individual_task_history.html")
+def team_task_history(request):
+    return render(request,"Task History/per_team_task_history.html")
+
+# task history
+def individual_task_leaderboard(request):
+    return render(request,"Task History/individual_task_leaderboard.html")
+def team_task_leaderboard(request):
+    return render(request,"Task History/team_task_leaderboard.html")
