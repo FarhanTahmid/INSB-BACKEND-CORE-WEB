@@ -747,47 +747,57 @@
     </script>
     <script>
       // Get the modal
-      var modal = document.getElementById("myModal");
+      var modal01 = document.getElementById("myModal");
 
       // Get the button that opens the modal
-      var btn = document.querySelector(".all_task_type_btn");
+      var btn01 = document.querySelector(".all_task_type_btn");
 
       // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[1];
+      var span01 = document.getElementsByClassName("close")[1];
 
       var cancel = document.getElementsByClassName("cancel_view_btn")[0];
 
       // When the user clicks the button, open the modal
-      btn.onclick = function () {
+      btn01.onclick = function () {
         //   modal.style.display = "block";
-        modal.style.transform = "translateY(0px)";
-        modal.style.zIndex = "103100";
-        modal.style.opacity = "1";
+        modal01.style.transform = "translateY(0px)";
+        modal01.style.zIndex = "103100";
+        modal01.style.opacity = "1";
       };
 
       // When the user clicks on <span> (x), close the modal
-      span.onclick = function () {
+        span01.onclick = function () {
         //   modal.style.display = "none";
-        modal.style.transform = "translateY(-50px)";
-        modal.style.zIndex = "-100";
-        modal.style.opacity = "0";
+        modal01.style.transform = "translateY(-50px)";
+        modal01.style.zIndex = "-100";
+        modal01.style.opacity = "0";
       };
 
       // When the user clicks on <span> (x), close the modal
       cancel.onclick = function () {
         //   modal.style.display = "none";
-        modal.style.transform = "translateY(-50px)";
-        modal.style.zIndex = "-100";
-        modal.style.opacity = "0";
+        modal01.style.transform = "translateY(-50px)";
+        modal01.style.zIndex = "-100";
+        modal01.style.opacity = "0";
       };
 
       // When the user clicks anywhere outside of the modal, close it
       window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.transform = "translateY(-50px)";
-          modal.style.zIndex = "-100";
-          modal.style.opacity = "0";
+        if (event.target == modal01) {
+          modal01.style.transform = "translateY(-50px)";
+          modal01.style.zIndex = "-100";
+          modal01.style.opacity = "0";
         }
+        if (event.target == modal1) {
+          modal1.style.transform = 'translateY(-50px)';
+          modal1.style.zIndex = '-100';
+          modal1.style.opacity = '0';
+          modal1.style.height = '0%';
+          if (currentMsgDiv) {
+              msg_read(currentMsgDiv); // Mark the message as read
+              currentMsgDiv = null; // Clear the reference after marking as read
+          }
+      }
       };
     </script>
     <!-- endbuild -->
