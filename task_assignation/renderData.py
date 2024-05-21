@@ -1060,12 +1060,12 @@ class Task_Assignation:
         #TODO:set to all instead of individuals after making teams
         dic={}
         if user.position.is_eb_member:
-            user_tasks = Task.objects.filter(task_created_by = user).order_by('is_task_completed','-deadline')
+            user_tasks = Task.objects.filter(task_created_by = user).order_by('-pk','is_task_completed')
             for task in user_tasks:
                 earned_points = 0
                 dic[task] = earned_points
         else:
-            user_tasks = Task.objects.filter(members = user).order_by('is_task_completed','-deadline')
+            user_tasks = Task.objects.filter(members = user).order_by('-pk','is_task_completed')
             for task in user_tasks:
                 earned_points = Member_Task_Point.objects.get(task = task,member = user)
                 dic[task] = earned_points
@@ -1375,7 +1375,7 @@ This is an automated message. Do not reply
         except:
             return False
     
-    def task_email_to_eb(request,task,logged_in_user):
+    def task_email_to_eb(request,task,logged_in_user,team_primary=None):
 
         #This function will send an email to the Eb who created this task once task assignee finishes and hits
         #the complete button
@@ -1391,8 +1391,16 @@ This is an automated message. Do not reply
                 member = adminUsers.objects.get(username=username)
                 email_to.append(member.email)
 
+
             email_from = settings.EMAIL_HOST_USER
             site_domain = request.META['HTTP_HOST']
+
+            
+            if task.task_type == 'Individuals' and len(task.team.all()) == 0:
+                url = f'{site_domain}/portal/central_branch/task/{task.pk}/upload_task'
+            else:
+                url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
+            
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
             message = f'''Hello {username},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
@@ -1402,7 +1410,7 @@ dedicated members, and save them. To allocate their points please toggle 'on' th
 in the task edit page, if you think the entire task is completed.
 
 Please follow the link to view the completed task: 
-{site_domain}/portal/central_branch/task/{task.pk}/upload_task
+{url}
 
 Best Regards
 IEEE NSU SB Portal

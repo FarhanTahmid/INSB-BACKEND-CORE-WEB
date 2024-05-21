@@ -4671,7 +4671,6 @@ def upload_task(request, task_id,team_primary = None):
         comments = None
         has_coordinator_access_or_incharge_access_for_team_task = False
 
-        print("sakib")
         print(create_individual_task_access)
         print(create_team_task_access)
         #to check if this is users task
@@ -4804,7 +4803,7 @@ def upload_task(request, task_id,team_primary = None):
 
                     if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
                         
-                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
+                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user,team_primary):
                             messages.success(request,"You task has been requested for reviewing!")
                         else:
                             messages.warning(request,"Something went wrong while saving!")
