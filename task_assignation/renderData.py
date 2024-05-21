@@ -328,6 +328,10 @@ class Task_Assignation:
                 for team in current_teams:
                     if team not in team_check:
                         is_team_changed = True
+                
+                for team in team_check:
+                    if team not in current_teams:
+                        is_team_changed = True
 
             #Checking to see if the list is empty depending on which task_type is selected
             #If empty then stop the creation
@@ -614,6 +618,7 @@ class Task_Assignation:
                     #For all team primaries in team_select, get their respective team reference and store in teams array
                     for team_primary in team_select:
                         teams.append(Teams.objects.get(primary=team_primary))
+                        print(teams)
                     #Set the array of teams as list for team inside the task and save the task with newly added teams
                     task.team.add(*teams)
 
@@ -1402,7 +1407,7 @@ This is an automated message. Do not reply
                 url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
             
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
-            message = f'''Hello {username},
+            message = f'''Hello {user_name},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
