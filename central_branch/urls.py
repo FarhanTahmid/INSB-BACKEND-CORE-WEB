@@ -138,5 +138,8 @@ urlpatterns = [
 
     #task history
     path('individual_task_history/',views.individual_task_history,name="individual_task_history"),
+    path('team_task_history/',views.team_task_history,name="team_task_history"),
+    path('individual_task_leaderboard/',views.individual_task_leaderboard,name="individual_task_leaderboard"),
+    path('team_task_leaderboard/',views.team_task_leaderboard,name="team_task_leaderboard"),
     
 ]

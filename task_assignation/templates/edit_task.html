@@ -165,6 +165,7 @@
             padding: 2px 26px;
             color: #d33838;
             background: white;
+            margin-bottom: 15px;
             border-radius: 4px;
             border: 1px solid #d33838;
             transition: all ease-in-out .3s;
@@ -749,6 +750,9 @@
     .forward_to_team_incharges_modal_button:hover{
         background-color:white;
     }
+    .close5{
+        cursor: pointer;
+    }
     </style>
   </head>
   <body>
@@ -980,8 +984,8 @@
                                     </div>
                                     <div style="margin: 25px; text-align: left;">Would You Like To Proceed To Forward Task To Team Incharges?</div>
                                     <!-- Align the "Proceed" button to the right -->
-                                        <input type="submit" value="{{team.team_name}}" name="{{team.primary}}" class="confirm_delete_task_btn">
-                                        <input type="hidden" value="{{team.primary}}" name="teamclicked">
+                                        <input type="submit" class="confirm_delete_task_btn">
+                                        <input type="hidden" name="teamclicked">
                                 </div>
                             </div>
                             
@@ -1327,19 +1331,43 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var btn_modal = document.getElementById("forward_to_team_incharges_modal_button");
             var modal4 = document.getElementById("modal4");
-            var submit_btn = modal4.queryselector(".confirm_delete_task_btn");
-            var hidden_input = modal4.queryselector("input[name='teamclicked']");
-            modal4.style.display = "none";
-            btn_modal.addEventListener('click', function() {
-                console.log(btn_modal.name);
-                submit_btn.value = btn_modal.value;
-                submit_btn.name = btn_modal.name;
-                hidden_input.value = btn_modal.name;
-                modal4.style.display = "block";
-            })
-        })
+            var closeBtn = modal4.querySelector(".close4");
+            var submitBtn = modal4.querySelector(".confirm_delete_task_btn");
+            var hiddenInput = modal4.querySelector("input[name='teamclicked']");
+            
+            closeBtn.addEventListener('click', function() {
+                modal4.style.transform = "translateY(-50px)";
+                modal4.style.zIndex = "-100";
+                modal4.style.opacity = "0";
+                setTimeout(() => { modal4.style.display = "none"; }, 300);
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target == modal4) {
+                    modal4.style.transform = "translateY(-50px)";
+                    modal4.style.zIndex = "-100";
+                    modal4.style.opacity = "0";
+                    setTimeout(() => { modal4.style.display = "none"; }, 300);
+                }
+            });
+
+            var buttons = document.querySelectorAll(".forward_to_team_incharges_modal_button");
+            buttons.forEach(function(btn_modal) {
+                btn_modal.addEventListener('click', function() {
+                    console.log(btn_modal.name);
+                    submitBtn.value = btn_modal.value;
+                    submitBtn.name = btn_modal.name;
+                    hiddenInput.value = btn_modal.name;
+                    modal4.style.display = "block";
+                    setTimeout(() => {
+                        modal4.style.transform = "translateY(0)";
+                        modal4.style.zIndex = "103100";
+                        modal4.style.opacity = "1";
+                    }, 10);
+                });
+            });
+        });
     </script>
 
 
