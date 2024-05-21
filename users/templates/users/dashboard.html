@@ -75,6 +75,66 @@
 	.my_task:hover{
 		color: #FFD100;
 	}
+	.profile{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		margin-top: 0;
+		
+	}
+	.profile_content{
+		width: 150px;
+		height: 150px;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+	.profile_content img{
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: all 0.3s;
+	}
+	.profile_content:hover img{
+		scale: 1.1;
+	}
+	.ranker-name{
+		margin-top: 10px;
+    	font-weight: bold;
+	}
+	.frame{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 170px;
+		width: 170px;
+		border-radius: 50%;
+		/* background-color: #000; */
+	}
+	.frame-out{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 155px;
+		width: 155px;
+		border-radius: 50%;
+		background-color: #ffffff;
+	}
+	@media (max-width: 570px){
+		.ranker-div{
+			scale: .7;
+		}
+	}
+	@media (max-width: 450px){
+		.ranker-div{
+			scale: .6;
+		}
+	}
+	@media (min-width: 1200px){
+		.ranker-div{
+			scale: .8;
+		}
+	}
   </style>
 </head>
 {% block preloader %}
@@ -111,10 +171,12 @@
 	</div>
 </div>
 <div class="padding">
-	<div class="row">
-		<div class="col-xl-6" style="    display: flex;
+	<div class="row" >
+		<div class="" style="    display: flex;
 		justify-content: center;
+    	margin: 0px 12px 15px 12px;
 		align-items: center;
+		width: 100%;
 		background: linear-gradient(to right bottom, #002855, #013262, #023d6f, #03487c, #025389, #015e95, #016aa2, #0076ae, #0085bc, #0095c9, #00a5d6, #00b5e2);
 		border-radius: 5px; 
 		box-shadow: rgba(0, 0, 0, 0.25) 1.95px 1.95px 2.6px;">
@@ -122,16 +184,81 @@
 				<div class="card-body">
 					<div class="text-center py-3">
 					   <div class="main-wid position-relative">
-							<h3 class="text-white">IEEE NSU SB - Portal Dashboard</h3>
+							<h4 class="text-white">IEEE NSU SB - Portal Dashboard</h4>
 
-							<h3 class="text-white mb-0"> Welcome Back, {{user_data.name}}</h3>
+							<h4 class="text-white mb-0"> Welcome Back, {{user_data.name}}</h4>
 
-							<p class="text-white-50 px-4 mt-4" style="color:#ffff; text-size=25px;">{{user_data.position}}, {{user_data.team}}</p>
+							<p class="text-white-50 px-4 mt-4" style="color:#ffff; text-size:25px; margin-top: 0;">{{user_data.position}}, {{user_data.team}}</p> 
 							
 							<div class="mt-4 pt-2 mb-2">
 								<a href="{% url 'users:profile' %}" class="btn">View Profile <i class="mdi mdi-arrow-right ms-1"></i></a>
 							</div>
 					   </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xl-6">
+			<div class="card">
+				<div class="card-body">
+					<div class="d-flex flex-wrap align-items-center mb-3" style="justify-content: center; height:59px">
+						<br><br><br><br><br>
+						<h3 class="card-title mb-0" >Top Performers of the Month</h3>
+					</div>
+
+					<div class="row align-items-center ranker-div">
+						<div class="col-xl-12" style="display: flex;
+													flex-direction: row;
+													justify-content: center;
+													padding-bottom: 30px;">
+							
+							<div style="margin-top: 130px; width: 170px;">
+								<div class="profile">
+									<div class="frame" style="background: linear-gradient(45deg, #5b2d8b, #8259af, #ceb9e4, #8259af, #5b2d8b);">
+										<div class="frame-out">
+											<div class="profile_content">
+												<img src="https://ieeensusb.org/media_files/user_profile_pictures/99131140_profile_picture.jpg" alt="profile_picture" onerror="this.onerror=null;">
+											</div>
+										</div>
+									</div>
+									<a href="https://ieeensusb.org/portal/users/profile" class="ranker-name"><h5>Md. Shakib Shahariar Junayed</h5></a>
+									<a>Website Development</a>
+									<a>Points : 123</a>
+								</div>
+							</div>
+							<div>
+								<div class="profile" style="margin: 20px; width: 170px;">
+									<div class="frame" style="background: linear-gradient(45deg, #7e493a, #e5ac40, #f9e4bb, #e5ac40, #7e493a);">
+										<div class="frame-out">
+											<div class="profile_content">
+												<img src="https://ieeensusb.org/media_files/user_profile_pictures/99135451_profile_picture.jpg" alt="profile_picture" onerror="this.onerror=null;">
+											</div>
+										</div>
+									</div>
+									<a href="https://ieeensusb.org/portal/users/profile" class="ranker-name"><h5>Washio Ferdous</h5></a>
+									<a>Website Development</a>
+									<a>Points : 1230</a>
+								</div>
+							</div>
+							<div style="margin-top: 130px; width: 170px;">
+								<div class="profile">
+									<div class="frame" style="background: linear-gradient(45deg, #7a7a97, #b7b7dc, #dfdffa, #afafc6, #7a7a97);">
+										<div class="frame-out">
+											<div class="profile_content">
+												<img src="https://ieeensusb.org/media_files/user_profile_pictures/98955436_profile_picture.jpg" alt="profile_picture" onerror="this.onerror=null;">
+											</div>
+										</div>
+									</div>
+									<a href="https://ieeensusb.org/portal/users/profile" class="ranker-name"><h5>Arman Mokammal</h5></a>
+									<a>Website Development</a>
+									<a>Points : 20</a>
+								</div>
+							</div>
+							
+						</div>
+					
 					</div>
 				</div>
 			</div>
