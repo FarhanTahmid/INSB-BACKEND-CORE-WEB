@@ -293,8 +293,8 @@
           Tasks
         </h2>
 
-        {% if has_task_create_access %}
         <div class="task-btn">
+        {% if has_task_create_access %}
           <a
             href="{% url 'central_branch:create_task' %}"
             class="create-task-btn"
@@ -310,8 +310,19 @@
           >
             Create Task Category
           </button>
-        </div>
+          {% endif %}
+          
+          {% if app_name == 'central_branch' %}
+          <a
+          href="{% url "central_branch:individual_task_leaderboard" %}"
+          class="check-task-button"
+          style="margin-bottom: 15px; cursor: pointer; background:#FFDE59; color:black; border: 2px solid #FCCB02"
+          >
+          Task LeaderBoard
+        </a>
         {% endif %}
+      </div>
+
         <script>
           {% for message in messages %}
       

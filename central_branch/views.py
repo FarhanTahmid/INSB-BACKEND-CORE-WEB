@@ -5289,6 +5289,13 @@ def team_task_history(request):
 
 # task history
 def individual_task_leaderboard(request):
-    return render(request,"Task History/individual_task_leaderboard.html")
+
+    all_members = Members.objects.all().exclude(completed_task_points=0).order_by('-completed_task_points')
+
+    context = {
+        'all_members': all_members
+    }
+
+    return render(request,"Task History/individual_task_leaderboard.html",context)
 def team_task_leaderboard(request):
     return render(request,"Task History/team_task_leaderboard.html")
