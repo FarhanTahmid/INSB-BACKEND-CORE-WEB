@@ -419,14 +419,14 @@
                         </div>
                         <table class="table table-striped table-class" id="table-id">
                             <thead>
-                                <tr>
+                                <tr class="unread">
                                     <th data-priority="1">Time</th>
                                     <th data-priority="1">Notification</th>
                                     <th data-priority="1">Options</th>
                                 </tr>
                             </thead>
                             <tbody id="nostripe">
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -445,7 +445,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -464,7 +464,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -483,7 +483,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -502,7 +502,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -521,7 +521,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -540,7 +540,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -559,7 +559,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -578,7 +578,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -597,7 +597,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -616,7 +616,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr class="unread">
                                     <td>2024-05-01 09:00:00</td>
                                     <td style="color: #00629b">
                                         <a href="#" class="notification_modal_btn">Dummy Notification 1</a>
@@ -963,6 +963,7 @@
         // Change the background color of the tr
         trElement.style.backgroundColor = 'white'; 
         trElement.classList.add('marked_read');
+        trElement.classList.remove('unread');
 
         // Change the text of the link to "Mark as unread"
         var dropdownContent = trElement.querySelector('.dropdown-content');
@@ -978,6 +979,7 @@
 
         // Add the 'marked_read' class back to the tr
         trElement.classList.remove('marked_read');
+        trElement.classList.add('unread');
 
         // Change the text of the link to "Mark as read"
         var dropdownContent = trElement.querySelector('.dropdown-content');
@@ -1000,13 +1002,13 @@
         <script>
             //filter unread toggle
             function toggleButton(buttonType) {
-            var rows = document.querySelectorAll('.marked_read');
+            let tableRow = document.querySelectorAll('tr');
             if (buttonType === 'all') {
-                rows.forEach(row => {
+                tableRow.forEach(row => {
                     row.style.display = 'table-row';
                 });
             } else if (buttonType === 'unread') {
-                rows.forEach(row => {
+                tableRow.forEach(row => {
                     row.style.display = row.classList.contains('unread') ? 'table-row' : 'none';
                 });
             }
