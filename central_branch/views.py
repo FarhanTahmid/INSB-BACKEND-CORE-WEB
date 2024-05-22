@@ -5289,6 +5289,8 @@ def team_task_history(request):
 
 # task history
 def individual_task_leaderboard(request):
-    return render(request,"Task History/individual_task_leaderboard.html")
+    return render(request,"LeaderBoards/individual_task_leaderboard.html")
 def team_task_leaderboard(request):
-    return render(request,"Task History/team_task_leaderboard.html")
+    return render(request,"LeaderBoards/team_task_leaderboard.html")
+def task_leaderboard(request):
+    return render(request,"LeaderBoards/task_leaderboard.html")
