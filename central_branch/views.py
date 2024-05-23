@@ -5289,13 +5289,26 @@ def team_task_history(request):
 
 # task history
 def individual_task_leaderboard(request):
+    return render(request,"LeaderBoards/individual_task_leaderboard.html")
+def team_task_leaderboard(request):
+    return render(request,"LeaderBoards/team_task_leaderboard.html")
+
+def task_leaderboard(request):
+
+    # get all sc ag for sidebar
+    sc_ag=PortData.get_all_sc_ag(request=request)
+    # get user data for side bar
+    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
 
     all_members = Members.objects.all().exclude(completed_task_points=0).order_by('-completed_task_points')
+    all_teams = Teams.objects.filter(team_of__primary=1).order_by('-completed_task_points')
 
     context = {
-        'all_members': all_members
+        'all_sc_ag':sc_ag,
+        'user_data':user_data,
+        'all_members': all_members,
+        'all_teams': all_teams
     }
 
-    return render(request,"Task History/individual_task_leaderboard.html",context)
-def team_task_leaderboard(request):
-    return render(request,"Task History/team_task_leaderboard.html")
+    return render(request,"LeaderBoards/task_leaderboard.html",context)

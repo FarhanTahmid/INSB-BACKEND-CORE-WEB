@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+{% load static %}
+{% block individual_task_leaderboard %}
+<style>
+    .search_box {
+        padding: 6px 10px;
+        border-radius: 3px;
+        border: 2px solid #d3d3d3;
+        color: black;
+        transition: 0.4s;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 2px solid white;
+    }
+
+    
+    /* All and unread toggle button style */
+    .mytogglebutton-container {
+        display: flex;
+        justify-content: start;
+        margin-bottom: 15px;
+
+    }
+
+    .mytogglebutton {
+        padding: 10px 20px;
+        margin-right: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        background-color: transparent;
+        color: black;
+        transition: background-color 0.3s ease;
+    }
+
+    .mytogglebutton.active {
+        background-color: #ddd;
+    }
+
+    table th,
+    table td {
+        text-align: center;
+    }
+
+    th {
+        background: #333;
+        color: #fff;
+    }
+
+    .pagination1 {
+        margin: 0;
+    }
+
+    .pagination1 li:hover {
+        cursor: pointer;
+    }
+
+    /* .header_wrap {
+    padding:50px 0;
+    } */
+    .num_rows {
+        width: 100px;
+        float: right;
+    }
+
+    .tb_search {
+        width: 40%;
+        float: left;
+    }
+
+    /* Responsive Styles for Pagination1 */
+    .pagination1-container {
+        display: flex;
+        flex-wrap: wrap;
+        /* Allow pagination1 items to wrap to the next line on small screens */
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .pagination1 {
+        margin: 2px;
+        flex-wrap: wrap;
+        /* Allow pagination1 items to wrap to the next line on small screens */
+    }
+
+    .pagination1 li {
+        display: inline-block;
+        margin: 0 3px;
+        padding: 5px 10px;
+        border: 1px solid #00629B;
+        background-color: transparent;
+        color: #00629B;
+        cursor: pointer;
+    }
+
+    /* Style for current active page */
+    .pagination1 li.active {
+        background-color: #00629B;
+        color: #ffffff;
+    }
+
+    /* Style for rows count section */
+    .rows_count {
+        color: #00629B;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        max-width: 100%;
+        /* padding: 15px; */
+    }
+</style>
+<body>
+        <!-- ############ LAYOUT START-->
+            <!--Messages-->
+            <div style="justify-content: center; text-align: center">
+                {% if messages %}
+                {% for message in messages %}
+                <h4 {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{message }}
+                </h4>
+                {% endfor %}
+                <br />
+                {% endif %}
+            </div>
+
+            <div style="justify-content: center; text-align: center; margin-top: 30px">
+                <div class="container" style="justify-content: center">
+                    <div class="header_wrap">
+                        <div class="num_rows">
+                            <div class="form-group">
+                                <!--		Show Numbers Of Rows 		-->
+                                <select class="form-control search_box" name="state" id="maxRows1">
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                    <option value="5000">Show all rows</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="tb_search">
+                            <input type="text" id="individual_search_input_all" onkeyup="FilterkeyWord_individual_table()"
+                                placeholder="Search.." class="form-control search_box" />
+                        </div>
+                    </div>
+
+
+                    <div class="table-responsive" style="border-radius: 4px 4px 0 0">
+                        <!-- <div class="mytogglebutton-container">
+                            <button class="mytogglebutton yearly active"
+                                onclick="toggleButton('yearly')">Yearly</button>
+                            <button class="mytogglebutton monthly" onclick="toggleButton('monthly')">Monthly</button>
+                            <button class="mytogglebutton daily" onclick="toggleButton('daily')">Daily</button>
+                        </div> -->
+                        <table class="table table-striped table-class" id="table-id">
+                            <thead>
+                                <tr>
+                                    <th data-priority="1">Rank</th>
+                                    <th data-priority="1">Name</th>
+                                    <th data-priority="1">IEEE ID</th>
+                                    <th data-priority="1">Team</th>
+                                    <th data-priority="1">Position</th>
+                                    <th data-priority="1">Points</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nostripe">
+                                {% for member in all_members %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td style="color: #00629b">
+                                        <a href="#">{{member.name}}</a>
+                                    </td>
+                                    <td>{{member.ieee_id}}</td>
+                                    <td>{{member.team}}</td>
+                                    <td>{{member.position}}</td>
+                                    <td>{{member.completed_task_points}}</td>
+                                </tr>
+                                {% endfor %}                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--		Start Pagination1 -->
+                    <div class="pagination1-container">
+                        <nav>
+                            <ul class="pagination1">
+                                <!--	Here the JS Function Will Add the Rows -->
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="rows_count">Showing 11 to 20 of 91 entries</div>
+                </div>
+            </div>
+        <!-- ############ PAGE END-->
+          <!-- build:js scripts/app.html.js -->
+    <!-- jQuery -->
+    <script src="{% static 'script/jquery.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'script/tether.min.js'%}"></script>
+    <script src="{% static 'script/bootstrap.js'%}"></script>
+    <!-- core -->
+    <script src="{% static 'script/underscore-min.js'%}"></script>
+    <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+    <script src="{% static 'script/pace.min.js'%}"></script>
+
+    {% comment %}
+    <script src="{% static 'script/config.lazyload.js'%}"></script>
+    {% endcomment %}
+
+    <script src="{% static 'script/palette.js'%}"></script>
+    <script src="{% static 'script/ui-load.js'%}"></script>
+    <script src="{% static 'script/ui-jp.js' %}"></script>
+    <script src="{% static 'script/ui-include.js'%}"></script>
+    <script src="{% static 'script/ui-device.js'%}"></script>
+    <script src="{% static 'script/ui-form.js'%}"></script>
+    <script src="{% static 'script/ui-nav.js'%}"></script>
+    <script src="{% static 'script/ui-screenfull.js'%}"></script>
+    <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+    <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+    {% comment %}
+    <script src="{% static 'script/screenfull.min.js'%}"></script>
+    {% endcomment %}
+    <script src="{% static 'script/app.js'%}"></script>
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <!-- Chart JS -->
+    <script src="{% static 'scripts/chartjs.js' %}"></script>
+    <!-- ajax -->
+    {% comment %}
+    <script src="{% static 'script/jquery.pjax.js'%}"></script>
+    {% endcomment %}
+    <script src="{% static 'script/ajax.js'%}"></script>
+    <script>
+        getPagination11("#table-id");
+        $("#maxRows1").trigger("change");
+        function getPagination11(table) {
+            $("#maxRows1").on("change", function () {
+                $(".pagination1").html(""); // reset pagination1 div
+                var trnum1 = 0; // reset tr counter
+                var maxRows1 = parseInt($(this).val()); // get Max Rows from select option
+
+                var totalRows1 = $(table + " tbody tr").length; // numbers of rows
+                $(table + " tr:gt(0)").each(function () {
+                    // each TR in  table and not the header
+                    trnum1++; // Start Counter
+                    if (trnum1 > maxRows1) {
+                        // if tr number gt maxRows1
+
+                        $(this).hide(); // fade it out
+                    }
+                    if (trnum1 <= maxRows1) {
+                        $(this).show();
+                    } // else fade in Important in case if it ..
+                }); //  was fade out to fade it in
+                if (totalRows1 > maxRows1) {
+                    // if tr total rows gt max rows option
+                    var pagenum1 = Math.ceil(totalRows1 / maxRows1); // ceil total(rows/maxrows1) to get ..
+                    //	numbers of pages
+                    for (var i = 1; i <= pagenum1;) {
+                        // for each page append pagination1 li
+                        $(".pagination1")
+                            .append(
+                                '<li data-page="' +
+                                i +
+                                '">\
+								      <span>' +
+                                i++ +
+                                '<span class="sr-only">(current)</span></span>\
+								    </li>'
+                            )
+                            .show();
+                    } // end for i
+                } // end if row count > max rows
+                $(".pagination1 li:first-child").addClass("active"); // add active class to the first li
+
+                //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+                showig_rows_count1(maxRows1, 1, totalRows1);
+                //SHOWING ROWS NUMBER OUT OF TOTAL DEFAULT
+
+                $(".pagination1 li").on("click", function (e) {
+                    // on click each page
+                    e.preventDefault();
+                    var pageNum1 = $(this).attr("data-page"); // get it's number
+                    var trIndex1 = 0; // reset tr counter
+                    $(".pagination1 li").removeClass("active"); // remove active class from all li
+                    $(this).addClass("active"); // add active class to the clicked
+
+                    //SHOWING ROWS NUMBER OUT OF TOTAL
+                    showig_rows_count1(maxRows1, pageNum1, totalRows1);
+                    //SHOWING ROWS NUMBER OUT OF TOTAL
+
+                    $(table + " tr:gt(0)").each(function () {
+                        // each tr in table not the header
+                        trIndex1++; // tr index counter
+                        // if tr index gt maxRows1*pageNum1 or lt maxRows1*pageNum1-maxRows1 fade if out
+                        if (
+                            trIndex1 > maxRows1 * pageNum1 ||
+                            trIndex1 <= maxRows1 * pageNum1 - maxRows1
+                        ) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        } //else fade in
+                    }); // end of for each tr in table
+                }); // end of on click pagination1 list
+            });
+            // end of on select change
+
+            // END OF PAGINATION1
+        }
+
+        // SI SETTING
+        $(function () {
+            // Just to append id number for each row
+            default_index();
+        });
+
+        //ROWS SHOWING FUNCTION
+        function showig_rows_count1(maxRows1, pageNum1, totalRows1) {
+            //Default rows showing
+            var end_index1 = maxRows1 * pageNum1;
+            var start_index1 = maxRows1 * pageNum1 - maxRows1 + parseFloat(1);
+            var string1 =
+                "Showing " +
+                start_index1 +
+                " to " +
+                end_index1 +
+                " of " +
+                totalRows1 +
+                " entries";
+            $(".rows_count").html(string1);
+        }
+
+        // // CREATING INDEX
+        // function default_index() {
+        //     $("table tr:eq(0)").prepend("<th> SL No. </th>");
+
+        //     var id = 0;
+
+        //     $("table tr:gt(0)").each(function () {
+        //         id++;
+        //         $(this).prepend("<td>" + id + "</td>");
+        //     });
+        // }
+
+        // All Table search script
+        function FilterkeyWord_individual_table() {
+            // Count td if you want to search on all table instead of specific column
+
+            let count = $(".table")
+                .children("tbody")
+                .children("tr:first-child")
+                .children("td").length;
+
+            // Declare variables
+            let input, filter, table, tr, td, i;
+            input = document.getElementById("individual_search_input_all");
+            let input_value = document.getElementById("individual_search_input_all").value;
+            filter = input.value.toLowerCase();
+            if (input_value != "") {
+                table = document.getElementById("table-id");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 1; i < tr.length; i++) {
+                    let flag = 0;
+
+                    for (j = 0; j < count; j++) {
+                        td = tr[i].getElementsByTagName("td")[j];
+                        if (td) {
+                            let td_text = td.innerHTML;
+                            if (td.innerHTML.toLowerCase().indexOf(filter) > -1) {
+                                //var td_text = td.innerHTML;
+                                //td.innerHTML = 'shaban';
+                                flag = 1;
+                            } else {
+                                //DO NOTHING
+                            }
+                        }
+                    }
+                    if (flag == 1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            } else {
+                //RESET TABLE
+                $("#maxRows1").trigger("change");
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the current page's URL
+            const currentPageUrl = window.location.href;
+
+            // Find the links in the navigation bar
+            const navLinks = document.querySelectorAll(".nav a");
+
+            // Loop through the links and add a "active" class to the matching link
+            navLinks.forEach(function (link) {
+                if (link.href === currentPageUrl) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+    <!-- <script>
+        function toggleButton(buttonType) {
+            // toggle button color
+            const buttons = document.querySelectorAll('.mytogglebutton');
+            buttons.forEach(btn => {
+                if (btn.classList.contains(buttonType)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+    </script> -->
+
+    <!-- endbuild -->
+</body>
+
+</html>
+{% endblock individual_task_leaderboard %}

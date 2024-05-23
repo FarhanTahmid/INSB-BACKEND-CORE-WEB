@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Task Leader-board Homepage | IEEE NSU Student Branch</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <!-- <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" /> -->
+
+    <!--common CSS-->
+    {% block common_css %}
+    {% include "common_css.html" %}
+    {% endblock common_css %}
+</head>
+<style>
+    body,
+    html {
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        background: white;
+    }
+    
+    .nav a.active {
+       color: #ffa300;
+    }
+
+    .table-class tbody tr:nth-child(1) {
+        background-color: rgba(255, 215, 0, 0.125);
+    }
+
+    .table-class tbody tr:nth-child(2) {
+        background-color: rgba(192, 192, 192, 0.3);
+    }
+
+    .table-class tbody tr:nth-child(3) {
+        background-color: rgba(205, 127, 50, 0.1);
+    }
+
+    /* All and unread toggle button style */
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .button {
+        padding: 5px 20px;
+        margin-right: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 16px;
+        background-color: transparent;
+        color: black;
+        transition: background-color 0.3s ease;
+    }
+
+    .button.active {
+        background-color: #002855;
+        color: white;
+    }
+    .txt_leaderboard{
+        text-align: center;
+        margin: 30px 0 40px 0;
+        font-weight: bold;  
+    }
+    .individual_table{
+        display: none;
+    }
+    .team_table{
+        display: none;
+    }
+    .show{
+        display: block;
+    }
+</style>
+    {% block preloader %}
+    {% include 'preloader.html' %}
+    {% endblock preloader %}
+
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+            {% block sidebar %} {% include 'users/sidebar.html' %} {% endblock %}
+        </div>
+
+
+        <!-- navbar -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %} {% include 'navbar.html' %} {% endblock navbar %}
+        </div>
+
+
+        <div ui-view class="app-body" style="justify-content: center; margin-left: 15%; margin-right: 15%" id="view">
+            <!-- heading -->
+            <h3 class="txt_leaderboard">Leaderboards</h3>
+            <!-- toggle button between tables -->
+            <div class="button-container">
+                <button class="button individual active" onclick="toggleButton('individual')">Individual</button>
+                <button class="button team" onclick="toggleButton('team')">Team</button>
+            </div>
+
+            <!-- individual table block -->
+            <div class="individual_table show">
+                {% block individual_task_leaderboard %} {% include 'LeaderBoards/individual_task_leaderboard.html'%} {% endblock individual_task_leaderboard %}
+            </div>
+
+            <!-- team table block -->
+            <div class="team_table">
+                {% block team_task_leaderboard %} {% include 'LeaderBoards/team_task_leaderboard.html'%} {% endblock team_task_leaderboard %}
+            </div>
+        </div>
+    </div>
+    <!--Theme Switcher-->
+    {% block theme_switcher %}
+    {% include "theme_switcher.html" %}
+    {% endblock theme_switcher %}
+
+
+    <!-- endbuild -->
+    <script>
+        //toggle button
+
+        //storing the blocks in variables
+        let individualTable = document.querySelector('.individual_table');
+        let teamTable = document.querySelector('.team_table');
+
+        function toggleButton(buttonType) {
+        //function to check which button is clicked
+        if (buttonType === 'individual') {
+            //adding and removing class according to the selected button
+            individualTable.classList.add('show');
+            teamTable.classList.remove('show');
+        } else if (buttonType === 'team') {
+            //adding and removing class according to the selected button
+            teamTable.classList.add('show');
+            individualTable.classList.remove('show');
+        }
+
+        // active toggle button color
+        const buttons = document.querySelectorAll('.button');
+        buttons.forEach(btn => {
+            if (btn.classList.contains(buttonType)) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+    </script>
+</body>
+</html>
