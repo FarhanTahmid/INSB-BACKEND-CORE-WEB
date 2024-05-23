@@ -197,44 +197,9 @@
                 </div>
             </div>
         <!-- ############ PAGE END-->
-          <!-- build:js scripts/app.html.js -->
-    <!-- jQuery -->
-    <script src="{% static 'script/jquery.js'%}"></script>
-    <!-- Bootstrap -->
-    <script src="{% static 'script/tether.min.js'%}"></script>
-    <script src="{% static 'script/bootstrap.js'%}"></script>
-    <!-- core -->
-    <script src="{% static 'script/underscore-min.js'%}"></script>
-    <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
-    <script src="{% static 'script/pace.min.js'%}"></script>
-
-    {% comment %}
-    <script src="{% static 'script/config.lazyload.js'%}"></script>
-    {% endcomment %}
-
-    <script src="{% static 'script/palette.js'%}"></script>
-    <script src="{% static 'script/ui-load.js'%}"></script>
-    <script src="{% static 'script/ui-jp.js' %}"></script>
-    <script src="{% static 'script/ui-include.js'%}"></script>
-    <script src="{% static 'script/ui-device.js'%}"></script>
-    <script src="{% static 'script/ui-form.js'%}"></script>
-    <script src="{% static 'script/ui-nav.js'%}"></script>
-    <script src="{% static 'script/ui-screenfull.js'%}"></script>
-    <script src="{% static 'script/ui-scroll-to.js'%}"></script>
-    <script src="{% static 'script/ui-toggle-class.js'%}"></script>
-    {% comment %}
-    <script src="{% static 'script/screenfull.min.js'%}"></script>
-    {% endcomment %}
-    <script src="{% static 'script/app.js'%}"></script>
-    <!-- apexcharts -->
-    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-    <!-- Chart JS -->
-    <script src="{% static 'scripts/chartjs.js' %}"></script>
-    <!-- ajax -->
-    {% comment %}
-    <script src="{% static 'script/jquery.pjax.js'%}"></script>
-    {% endcomment %}
-    <script src="{% static 'script/ajax.js'%}"></script>
+        {% block common_js %}
+        {% include "common_js.html" %}
+        {% endblock common_js %}
     <script>
         getPagination11("#table-id");
         $("#maxRows1").trigger("change");
@@ -394,22 +359,6 @@
                 $("#maxRows1").trigger("change");
             }
         }
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Get the current page's URL
-            const currentPageUrl = window.location.href;
-
-            // Find the links in the navigation bar
-            const navLinks = document.querySelectorAll(".nav a");
-
-            // Loop through the links and add a "active" class to the matching link
-            navLinks.forEach(function (link) {
-                if (link.href === currentPageUrl) {
-                    link.classList.add("active");
-                }
-            });
-        });
     </script>
 
 
