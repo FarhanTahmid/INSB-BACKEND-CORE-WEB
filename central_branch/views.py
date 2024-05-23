@@ -5314,16 +5314,33 @@ def individual_task_history(request, ieee_id):
         return custom_500(request)
 
 def team_task_history(request, team_primary):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
-    team = Teams.objects.get(primary=team_primary)
-    all_tasks_of_team_with_points = Team_Task_Point.objects.filter(team=team, task__is_task_completed=True).order_by('-task__deadline')
+        has_common_access = Branch_View_Access.common_access(username=request.user.username)
 
-    context = {
-        'team_details': team,
-        'all_tasks_of_team_with_points': all_tasks_of_team_with_points
-    }
+        if has_common_access:
+            team = Teams.objects.get(primary=team_primary)
+            all_tasks_of_team_with_points = Team_Task_Point.objects.filter(team=team, task__is_task_completed=True).order_by('-task__deadline')
 
-    return render(request,"Task History/per_team_task_history.html", context)
+            context = {
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'team_details': team,
+                'all_tasks_of_team_with_points': all_tasks_of_team_with_points
+            }
+
+            return render(request,"Task History/per_team_task_history.html", context)
+        else:
+            return render(request,"access_denied2.html", {'all_sc_ag':sc_ag, 'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
 
 def task_leaderboard(request):
     try:
