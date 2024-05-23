@@ -5282,33 +5282,34 @@ class SaveMemberTaskPointsAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
         
 # task history
-def individual_task_history(request):
+def individual_task_history(request, ieee_id):
     return render(request,"Task History/per_individual_task_history.html")
-def team_task_history(request):
+def team_task_history(request, team_primary):
     return render(request,"Task History/per_team_task_history.html")
 
-# task history
-def individual_task_leaderboard(request):
-    return render(request,"LeaderBoards/individual_task_leaderboard.html")
-def team_task_leaderboard(request):
-    return render(request,"LeaderBoards/team_task_leaderboard.html")
-
 def task_leaderboard(request):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        has_common_access = Branch_View_Access.common_access(username=request.user.username)
+        # has_common_access=False
 
-    # get all sc ag for sidebar
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    # get user data for side bar
-    current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
+        all_members = Members.objects.all().exclude(completed_task_points=0).order_by('-completed_task_points')
+        all_teams = Teams.objects.filter(team_of__primary=1).order_by('-completed_task_points')
 
-    all_members = Members.objects.all().exclude(completed_task_points=0).order_by('-completed_task_points')
-    all_teams = Teams.objects.filter(team_of__primary=1).order_by('-completed_task_points')
+        context = {
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'all_members': all_members,
+            'all_teams': all_teams,
+            'has_common_access': has_common_access
+        }
 
-    context = {
-        'all_sc_ag':sc_ag,
-        'user_data':user_data,
-        'all_members': all_members,
-        'all_teams': all_teams
-    }
-
-    return render(request,"LeaderBoards/task_leaderboard.html",context)
+        return render(request,"LeaderBoards/task_leaderboard.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)

@@ -192,8 +192,12 @@
                                 {% for team in all_teams %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">{{team.team_name}}</a>
+                                    <td>
+                                        {% if has_common_access %}
+                                        <a style="color: #00629b" href="{% url 'central_branch:team_task_history' team.primary %}">{{team.team_name}}</a>
+                                        {% else %}
+                                        {{team.team_name}}
+                                        {% endif %}
                                     </td>
                                     <td>{{team.completed_task_points}}</td>
                                 </tr>

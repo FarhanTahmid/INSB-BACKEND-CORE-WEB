@@ -169,8 +169,12 @@
                                 {% for member in all_members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td style="color: #00629b">
-                                        <a href="#">{{member.name}}</a>
+                                    <td>
+                                        {% if has_common_access %}
+                                        <a style="color: #00629b" href="{% url 'central_branch:individual_task_history' member.ieee_id %}">{{member.name}}</a>
+                                        {% else %}
+                                        {{member.name}}
+                                        {% endif %}
                                     </td>
                                     <td>{{member.ieee_id}}</td>
                                     <td>{{member.team}}</td>
