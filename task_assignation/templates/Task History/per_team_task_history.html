@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Individual Task History | IEEE NSU Student Branch</title>
+    <title>Team Task History | IEEE NSU Student Branch</title>
     <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -102,8 +102,8 @@
             <!--profile-->
             <div class="profile">
                 <div class="details">
-                    <h5>Website Development Team</h5>
-                    <a href="#">Team Homepage</a>
+                    <h5>{{team_details.team_name}} Team</h5>
+                    <a href="{% url 'main_website:team_intro' team_details.primary %}" target="_blank">Team Homepage</a>
                 
                 </div>
                 <div class="badges"></div>
@@ -148,102 +148,14 @@
                   </tr>
                 </thead>
                 <tbody>
+                  {% for team_task in all_tasks_of_team_with_points %}
                   <tr>
                     <td style="color: #00629b">
-                      <a href="#">test</a>
+                      <a href="{% url 'central_branch:task_edit' team_task.task.pk %}">{{team_task.task.title}}</a>
                     </td>
-                    <td style="color: #75d481; font-weight: bold;">50</td>
+                    <td style="color: #75d481; font-weight: bold;">{{team_task.completion_points}}</td>
                   </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test1</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">30</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">dummy2</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">20</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">dummy</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">14.5</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">5</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">10</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">50</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">5</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">10</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">50</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">5</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">10</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">50</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">5</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">10</td>
-                  </tr>
-                  <tr>
-                    <td style="color: #00629b">
-                      <a href="#">test</a>
-                    </td>
-                    <td style="color: #75d481; font-weight: bold;">50</td>
-                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>

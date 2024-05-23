@@ -27,6 +27,7 @@ from main_website.models import Research_Papers,Blog
 import users
 from users.models import MemberSkillSets, Members,Panel_Members
 from django.conf import settings
+from insb_port import settings as Settings
 from users.renderData import LoggedinUser,member_login_permission
 import os
 import xlwt
@@ -5283,9 +5284,46 @@ class SaveMemberTaskPointsAjax(View):
         
 # task history
 def individual_task_history(request, ieee_id):
-    return render(request,"Task History/per_individual_task_history.html")
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        has_common_access = Branch_View_Access.common_access(username=request.user.username)
+
+        if has_common_access:
+            member = Members.objects.get(ieee_id=ieee_id)
+            all_tasks_of_member_with_points = Member_Task_Point.objects.filter(member=member.ieee_id, task__is_task_completed=True).order_by('-task__deadline')
+
+            context = {
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'member': member,
+                'all_tasks_of_member_with_points': all_tasks_of_member_with_points,
+                'media_url': Settings.MEDIA_URL
+            }
+
+            return render(request,"Task History/per_individual_task_history.html", context)
+        else:
+            return render(request,"access_denied2.html", {'all_sc_ag':sc_ag, 'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
 def team_task_history(request, team_primary):
-    return render(request,"Task History/per_team_task_history.html")
+
+    team = Teams.objects.get(primary=team_primary)
+    all_tasks_of_team_with_points = Team_Task_Point.objects.filter(team=team, task__is_task_completed=True).order_by('-task__deadline')
+
+    context = {
+        'team_details': team,
+        'all_tasks_of_team_with_points': all_tasks_of_team_with_points
+    }
+
+    return render(request,"Task History/per_team_task_history.html", context)
 
 def task_leaderboard(request):
     try:
@@ -5295,7 +5333,6 @@ def task_leaderboard(request):
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         has_common_access = Branch_View_Access.common_access(username=request.user.username)
-        # has_common_access=False
 
         all_members = Members.objects.all().exclude(completed_task_points=0).order_by('-completed_task_points')
         all_teams = Teams.objects.filter(team_of__primary=1).order_by('-completed_task_points')
