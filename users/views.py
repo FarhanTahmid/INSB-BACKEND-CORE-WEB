@@ -204,7 +204,7 @@ def dashboard(request):
         monthly_members = Member_Task_Point.objects.filter(completion_date__month=datetime.now().month).order_by('-completion_points','member')
         monthly_top_3_members = {}
 
-        msg = "" + str(datetime.now())
+        msg = "" + str(datetime.now()) + "    " + str(monthly_members)
 
         for member in monthly_members :
             if (not member.member in monthly_top_3_members.keys()):
