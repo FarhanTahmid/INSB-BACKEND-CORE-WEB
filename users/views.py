@@ -209,9 +209,7 @@ def dashboard(request):
                 monthly_top_3_members[member.member] = [Members.objects.get(ieee_id=member.member), member.completion_points]
             else:
                 monthly_top_3_members[member.member][1] += member.completion_points
-        
-        print(monthly_top_3_members)
-        
+                
         # Get the SC & AGS
         sc_ag=PortData.get_all_sc_ag(request=request)
         #scheduler.start()
