@@ -201,7 +201,7 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
-        monthly_members = Member_Task_Point.objects.filter(completion_date__month=datetime.now().month).order_by('-completion_points','member')
+        monthly_members = Member_Task_Point.objects.filter(completion_date__month=datetime.now().month, completion_date__year=datetime.now().year).order_by('-completion_points','member')
         monthly_top_3_members = {}
 
         msg = "" + str(datetime.now()) + "    " + str(monthly_members)
