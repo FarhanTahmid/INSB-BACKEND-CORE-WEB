@@ -226,7 +226,7 @@
 									</div>
 									<a href="{% url 'main_website:member_profile' monthly_top_3_members.1.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.1.0.name}}</h5></a>
 									<a>{{monthly_top_3_members.1.0.team}}</a>
-									<a>Points : {{monthly_top_3_members.1.1}}</a>
+									<a>Points : {{monthly_top_3_members.1.1|floatformat:2}}</a>
 									{% endif %}
 								</div>
 							</div>
@@ -242,7 +242,7 @@
 									</div>
 									<a href="{% url 'main_website:member_profile' monthly_top_3_members.0.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.0.0.name}}</h5></a>
 									<a>{{monthly_top_3_members.0.0.team}}</a>
-									<a>Points : {{monthly_top_3_members.0.1}}</a>
+									<a>Points : {{monthly_top_3_members.0.1|floatformat:2}}</a>
 									{% endif %}
 								</div>
 							</div>
@@ -258,7 +258,7 @@
 									</div>
 									<a href="{% url 'main_website:member_profile' monthly_top_3_members.2.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.2.0.name}}</h5></a>
 									<a>{{monthly_top_3_members.2.0.team}}</a>
-									<a>Points : {{monthly_top_3_members.2.1}}</a>
+									<a>Points : {{monthly_top_3_members.2.1|floatformat:2}}</a>
 									{% endif %}
 								</div>
 							</div>
