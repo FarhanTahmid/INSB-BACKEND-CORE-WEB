@@ -1346,7 +1346,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
@@ -1430,7 +1430,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.ieee_id} and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1491,7 +1491,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2272,7 +2272,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task completion email sent to {member.ieee_id}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
