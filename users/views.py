@@ -30,8 +30,7 @@ from .renderData import member_login_permission
 from task_assignation.renderData import Task_Assignation
 import pytz
 
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger=logging.getLogger(__name__)
 
 # Create your views here.
 def login(request):
@@ -204,10 +203,8 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
-        logger.debug(f"Time zone: {settings.TIME_ZONE}, Use TZ: {settings.USE_TZ}")
         tz = pytz.timezone('Asia/Dhaka')
         monthly_members = Member_Task_Point.objects.filter(completion_date__month=tz.localize(datetime.now()).astimezone(tz).month).order_by('-completion_points','member')
-        logger.debug(f"Monthly members query result: {monthly_members}")
         monthly_top_3_members = {}
 
         for member in monthly_members :
