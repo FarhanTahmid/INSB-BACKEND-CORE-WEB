@@ -12,6 +12,7 @@ from django.db.utils import IntegrityError
 from recruitment.models import recruited_members
 from . models import Members,ResetPasswordTokenTable,UserSignupTokenTable
 import csv,datetime
+from django.utils.timezone import now
 from django.db import DatabaseError
 from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
@@ -201,7 +202,8 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
-        monthly_members = Member_Task_Point.objects.filter(completion_date__month=datetime.today().month).order_by('-completion_points','member')
+        current_month = now().month
+        monthly_members = Member_Task_Point.objects.filter(completion_date__month=current_month).order_by('-completion_points','member')
         monthly_top_3_members = {}
 
         for member in monthly_members :
