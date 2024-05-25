@@ -884,12 +884,20 @@ class Task_Assignation:
         files = Task_Document.objects.filter(task=task)
         for file in files:
             Task_Assignation.delete_task_document(file)
+        
+        task_member_points = Member_Task_Point.objects.filter(task = task)
+        for i in task_member_points:
 
+            member = Members.objects.get(ieee_id = i.member)
+            member.completed_task_points -= i.completion_points
+            member.save()
+        
         media_files = Task_Media.objects.filter(task=task)
         for media_file in media_files:
             Task_Assignation.delete_task_media(media_file)
 
         Member_Task_Upload_Types.objects.filter(task=task).delete()
+        Member_Task_Point.objects.filter(task = task).delete()
         Task_Log.objects.filter(task_number=task).delete()
 
         task.delete()
