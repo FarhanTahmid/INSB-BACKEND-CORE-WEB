@@ -4,7 +4,7 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from insb_port import settings
-from system_administration.models import adminUsers
+from system_administration.models import SystemErrors, adminUsers
 from task_assignation.models import Member_Task_Point
 from users import registerUser
 from django.db import connection
@@ -209,11 +209,22 @@ def dashboard(request):
         monthly_members = Member_Task_Point.objects.filter(completion_date__month=current_month).order_by('-completion_points','member')
         monthly_top_3_members = {}
 
+        msg = "" + str(datetime.now().month)
+
         for member in monthly_members :
             if (not member.member in monthly_top_3_members.keys()):
                 monthly_top_3_members[member.member] = [Members.objects.get(ieee_id=member.member), member.completion_points]
             else:
                 monthly_top_3_members[member.member][1] += member.completion_points
+
+        msg = msg + "\n\n" + str(monthly_top_3_members)
+
+        new_error=SystemErrors.objects.create(
+                date_time=datetime.now(),
+                error_name="error_name",
+                error_traceback=msg
+            )
+        new_error.save()
                 
         # Get the SC & AGS
         sc_ag=PortData.get_all_sc_ag(request=request)
