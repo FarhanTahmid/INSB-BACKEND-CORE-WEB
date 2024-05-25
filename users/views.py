@@ -28,6 +28,7 @@ import traceback
 from central_branch import views as cv
 from .renderData import member_login_permission
 from task_assignation.renderData import Task_Assignation
+import pytz
 
 logger=logging.getLogger(__name__)
 
@@ -202,8 +203,8 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
-        current_month = now().month
-        monthly_members = Member_Task_Point.objects.filter(completion_date__month=current_month).order_by('-completion_points','member')
+        tz = pytz.timezone('Asia/Dhaka')
+        monthly_members = Member_Task_Point.objects.filter(completion_date__month=tz.localize(datetime.now()).astimezone(tz).month).order_by('-completion_points','member')
         monthly_top_3_members = {}
 
         for member in monthly_members :
