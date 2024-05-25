@@ -203,13 +203,10 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
-        current_time = datetime.now().replace(tzinfo=timezone.utc)
-        current_month = current_time.month
-
-        monthly_members = Member_Task_Point.objects.filter(completion_date__month=current_month).order_by('-completion_points','member')
+        monthly_members = Member_Task_Point.objects.filter(completion_date__month=datetime.now().month, completion_date__year=datetime.now().year).order_by('-completion_points','member')
         monthly_top_3_members = {}
 
-        msg = "" + str(datetime.now().month)
+        msg = "" + str(datetime.now()) + "    " + str(monthly_members)
 
         for member in monthly_members :
             if (not member.member in monthly_top_3_members.keys()):
