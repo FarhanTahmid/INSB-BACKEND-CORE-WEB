@@ -3,7 +3,9 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from insb_port import settings
 from system_administration.models import adminUsers
+from task_assignation.models import Member_Task_Point
 from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
@@ -199,6 +201,16 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
+        monthly_members = Member_Task_Point.objects.filter(completion_date__month=datetime.now().month).order_by('-completion_points','member')
+        monthly_top_3_members = {}
+
+        for member in monthly_members :
+            if (not member.member in monthly_top_3_members.keys()):
+                monthly_top_3_members[member.member] = [Members.objects.get(ieee_id=member.member), member.completion_points]
+            else:
+                monthly_top_3_members[member.member][1] += member.completion_points
+        
+        print(monthly_top_3_members)
         
         # Get the SC & AGS
         sc_ag=PortData.get_all_sc_ag(request=request)
@@ -235,7 +247,9 @@ def dashboard(request):
             'current_year_month_name':hit_count_monthly[1],
             'hit_count_monthly_data':hit_count_monthly[2],
             'hit_count_over_5_years':hit_count_over_5_years,
+            'monthly_top_3_members':list(monthly_top_3_members.values()),
             'all_sc_ag':sc_ag,
+            'media_url':settings.MEDIA_URL
         }
 
         

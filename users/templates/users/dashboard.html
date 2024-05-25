@@ -219,13 +219,13 @@
 									<div class="frame" style="background: linear-gradient(45deg, #5b2d8b, #8259af, #ceb9e4, #8259af, #5b2d8b);">
 										<div class="frame-out">
 											<div class="profile_content">
-												<img src="https://ieeensusb.org/media_files/user_profile_pictures/99131140_profile_picture.jpg" alt="profile_picture" onerror="this.onerror=null;">
+												<img src="{{media_url}}{{monthly_top_3_members.1.0.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
 											</div>
 										</div>
 									</div>
-									<a href="https://ieeensusb.org/portal/users/profile" class="ranker-name"><h5>Md. Shakib Shahariar Junayed</h5></a>
-									<a>Website Development</a>
-									<a>Points : 123</a>
+									<a href="{% url 'main_website:member_profile' monthly_top_3_members.1.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.1.0.name}}</h5></a>
+									<a>{{monthly_top_3_members.1.0.team}}</a>
+									<a>Points : {{monthly_top_3_members.1.1}}</a>
 								</div>
 							</div>
 							<div>
@@ -233,13 +233,13 @@
 									<div class="frame" style="background: linear-gradient(45deg, #7e493a, #e5ac40, #f9e4bb, #e5ac40, #7e493a);">
 										<div class="frame-out">
 											<div class="profile_content">
-												<img src="https://ieeensusb.org/media_files/user_profile_pictures/99135451_profile_picture.jpg" alt="profile_picture" onerror="this.onerror=null;">
+												<img src="{{media_url}}{{monthly_top_3_members.0.0.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
 											</div>
 										</div>
 									</div>
-									<a href="https://ieeensusb.org/portal/users/profile" class="ranker-name"><h5>Washio Ferdous</h5></a>
-									<a>Website Development</a>
-									<a>Points : 1230</a>
+									<a href="{% url 'main_website:member_profile' monthly_top_3_members.0.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.0.0.name}}</h5></a>
+									<a>{{monthly_top_3_members.0.0.team}}</a>
+									<a>Points : {{monthly_top_3_members.0.1}}</a>
 								</div>
 							</div>
 							<div style="margin-top: 130px; width: 170px;">
@@ -247,13 +247,13 @@
 									<div class="frame" style="background: linear-gradient(45deg, #7a7a97, #b7b7dc, #dfdffa, #afafc6, #7a7a97);">
 										<div class="frame-out">
 											<div class="profile_content">
-												<img src="https://ieeensusb.org/media_files/user_profile_pictures/98955436_profile_picture.jpg" alt="profile_picture" onerror="this.onerror=null;">
+												<img src="{{media_url}}{{monthly_top_3_members.2.0.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
 											</div>
 										</div>
 									</div>
-									<a href="https://ieeensusb.org/portal/users/profile" class="ranker-name"><h5>Arman Mokammal</h5></a>
-									<a>Website Development</a>
-									<a>Points : 20</a>
+									<a href="{% url 'main_website:member_profile' monthly_top_3_members.2.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.2.0.name}}</h5></a>
+									<a>{{monthly_top_3_members.2.0.team}}</a>
+									<a>Points : {{monthly_top_3_members.2.1}}</a>
 								</div>
 							</div>
 							

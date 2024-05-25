@@ -232,6 +232,7 @@ class Task_Assignation:
                         #Get their respective task points and add it to their user id as the task is set to completed
                         member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                         member_points.is_task_completed = True
+                        member_points.completion_date = datetime.now()
                         member_points.save()
                         member.completed_task_points += member_points.completion_points
                         member.save()
@@ -250,6 +251,7 @@ class Task_Assignation:
                                 member.completed_task_points += mem.completion_points
                                 member.save()
                                 mem.is_task_completed = True
+                                mem.completion_date = datetime.now()
                                 mem.save()
                                 Task_Assignation.task_completion_email(member,task,mem.completion_points)
 
@@ -270,6 +272,7 @@ class Task_Assignation:
                     for member in task.members.all():
                         member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                         member_points.is_task_completed = True
+                        member_points.completion_date = datetime.now()
                         member_points.save()
 
             else:
@@ -285,6 +288,7 @@ class Task_Assignation:
                         #Get their respective task points and subtract it to their user id as the task is set back to undone
                         member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                         member_points.is_task_completed = False
+                        member_points.completion_date = None
                         member_points.save()
                         member.completed_task_points -= member_points.completion_points
                         member.save()
