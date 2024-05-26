@@ -216,7 +216,6 @@
 							
 							<div style="margin-top: 130px; width: 170px;">
 								<div class="profile">
-									{% if monthly_top_3_members.1 %}
 									<div class="frame" style="background: linear-gradient(45deg, #5b2d8b, #8259af, #ceb9e4, #8259af, #5b2d8b);">
 										<div class="frame-out">
 											<div class="profile_content">
@@ -224,15 +223,17 @@
 											</div>
 										</div>
 									</div>
+									{% if monthly_top_3_members.1 %}
 									<a href="{% url 'main_website:member_profile' monthly_top_3_members.1.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.1.0.name}}</h5></a>
 									<a>{{monthly_top_3_members.1.0.team}}</a>
 									<a>Points : {{monthly_top_3_members.1.1|floatformat:2}}</a>
+									{% else %}
+									<a class="ranker-name"><h5>Waiting...</h5></a>
 									{% endif %}
 								</div>
 							</div>
 							<div>
 								<div class="profile" style="margin: 20px; width: 170px;">
-									{% if monthly_top_3_members.0 %}
 									<div class="frame" style="background: linear-gradient(45deg, #7e493a, #e5ac40, #f9e4bb, #e5ac40, #7e493a);">
 										<div class="frame-out">
 											<div class="profile_content">
@@ -240,15 +241,17 @@
 											</div>
 										</div>
 									</div>
+									{% if monthly_top_3_members.0 %}
 									<a href="{% url 'main_website:member_profile' monthly_top_3_members.0.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.0.0.name}}</h5></a>
 									<a>{{monthly_top_3_members.0.0.team}}</a>
 									<a>Points : {{monthly_top_3_members.0.1|floatformat:2}}</a>
+									{% else %}
+									<a class="ranker-name"><h5>Waiting...</h5></a>
 									{% endif %}
 								</div>
 							</div>
 							<div style="margin-top: 130px; width: 170px;">
 								<div class="profile">
-									{% if monthly_top_3_members.2 %}
 									<div class="frame" style="background: linear-gradient(45deg, #7a7a97, #b7b7dc, #dfdffa, #afafc6, #7a7a97);">
 										<div class="frame-out">
 											<div class="profile_content">
@@ -256,9 +259,12 @@
 											</div>
 										</div>
 									</div>
+									{% if monthly_top_3_members.2 %}
 									<a href="{% url 'main_website:member_profile' monthly_top_3_members.2.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.2.0.name}}</h5></a>
 									<a>{{monthly_top_3_members.2.0.team}}</a>
 									<a>Points : {{monthly_top_3_members.2.1|floatformat:2}}</a>
+									{% else %}
+									<a class="ranker-name"><h5>Waiting...</h5></a>
 									{% endif %}
 								</div>
 							</div>
