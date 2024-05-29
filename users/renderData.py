@@ -1,3 +1,4 @@
+from task_assignation.models import Member_Task_Point
 from users.models import Members,MemberSkillSets
 from system_administration.models import adminUsers
 from port.models import Roles_and_Position, SkillSetTypes,Teams
@@ -8,7 +9,6 @@ from PIL import Image
 from recruitment.models import recruitment_session,recruited_members
 from central_events.models import Events,Event_Category,InterBranchCollaborations
 from system_administration.render_access import Access_Render
-from datetime import datetime
 from django.db.models import Q
 from users.models import User_IP_Address
 from recruitment.models import recruited_members
@@ -465,6 +465,24 @@ def getMonthName(numb: int)->str:
     elif numb==12:
         return "December"
 
+def getMonthlyTopMembers():
+    ''' This functions returns a list of all members who has the highest task points completed in that month '''
+
+    monthly_members = Member_Task_Point.objects.all().order_by('-completion_points','member')
+    monthly_top_members = {}
+
+    current_month = datetime.datetime.now().month
+    current_year = datetime.datetime.now().year
+
+    for member in monthly_members :
+        if member.completion_date and member.completion_date.month == current_month and member.completion_date.year == current_year:
+            if (not member.member in monthly_top_members.keys()):
+                monthly_top_members[member.member] = [Members.objects.get(ieee_id=member.member), member.completion_points]
+            else:
+                monthly_top_members[member.member][1] += member.completion_points
+    
+    return list(monthly_top_members.values())
+
 def add_new_skill_type(request,skill_type):
     try:
         new_skill_type=SkillSetTypes.objects.create(skill_type=skill_type)
@@ -732,3 +750,4 @@ class Alumnis:
             Alumnis.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
+        
