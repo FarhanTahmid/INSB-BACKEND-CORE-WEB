@@ -202,7 +202,7 @@
                                         {{team.team_name}}
                                         {% endif %}
                                     </td>
-                                    <td>{{team.completed_task_points}}</td>
+                                    <td class="task-points">{{team.completed_task_points}}</td>
                                 </tr>
                                 {% endfor %}
                             
@@ -397,6 +397,7 @@
         }
     </script> -->
     <script>
+        //code to add svg for top 3
         const tableOfTeam = document.getElementById('team-table');
         const teamRank1 = tableOfTeam.rows[1].cells[0];
         const teamRank2 = tableOfTeam.rows[2].cells[0];
