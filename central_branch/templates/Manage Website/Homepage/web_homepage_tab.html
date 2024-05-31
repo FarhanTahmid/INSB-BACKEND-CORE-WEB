@@ -35,7 +35,7 @@
     <ul class="tabs" style="display: flex; margin-right: 0px; justify-content: center;">
         <li class="tab active_tab" onclick="showTab('tab1')">Top Banner with Picture & Texts</li>
         <li class="tab" onclick="showTab('tab2')">Middle Banner Picture With Statistics</li>
-        <li class="tab" onclick="showTab('tab3')" style="border-right: 1px solid #00629B;">Volunteer Recognition</li>
+        {% comment %} <li class="tab" onclick="showTab('tab3')" style="border-right: 1px solid #00629B;">Volunteer Recognition</li> {% endcomment %}
         <li class="tab" onclick="showTab('tab4')" style="border-right: 1px solid #00629B;">HomePage Thoughts</li>
     </ul>
     <br>
@@ -47,9 +47,9 @@
         {% include "Manage Website/Homepage/banner_with_numbers_tab2.html" %}
     {% endblock banner_with_numbers %}
 
-    {% block volunteer_recognition %}
+    {% comment %} {% block volunteer_recognition %}
         {% include "Manage Website/Homepage/recognition_table_tab3.html" %}    
-    {% endblock volunteer_recognition %}
+    {% endblock volunteer_recognition %} {% endcomment %}
 
     {% block homepage_thoughts_tab%}
         {% include "Manage Website/Homepage/homepage_thoughts_tab4.html"%}

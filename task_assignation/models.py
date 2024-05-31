@@ -127,6 +127,9 @@ class Member_Task_Point(models.Model):
     is_task_completed = models.BooleanField(null=False,blank=False,default=False)
     deducted_points_logs = models.JSONField(default = dict)
     comments = models.TextField(null=True,blank=True,default="")
+    
+    #Set this value only when the task has been set to completed by task assignee
+    completion_date = models.DateTimeField(null=True,blank=True)
 
     class Meta:
         verbose_name="Member Task Point"
@@ -142,6 +145,21 @@ class Team_Task_Point(models.Model):
 
     class Meta:
         verbose_name="Team Task Point"
+
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class Team_Task_Forwarded(models.Model):
+
+    task = models.ForeignKey(Task,null=False,blank=False,on_delete=models.CASCADE)
+    team = models.ForeignKey(Teams,null=False,blank=False,on_delete=models.CASCADE)
+    task_forwarded_to_incharge = models.BooleanField(default = False)
+    task_forwarded_to_core_or_team_volunteers = models.BooleanField(default= False)
+    forwared_by = models.CharField(null=False,blank=False,max_length=15,default="")
+    forwarded_by_for_volunteers = models.CharField(null=False,blank=False,max_length=15,default="")
+
+    class Meta:
+        verbose_name="Team Task Forward"
 
     def __str__(self) -> str:
         return str(self.pk)

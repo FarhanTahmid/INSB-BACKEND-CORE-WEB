@@ -49,6 +49,7 @@ class Teams(models.Model):
     # team_of attribute means to which SC_AG or Branch The Team is registered to
     team_of=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=True,blank=True,on_delete=models.CASCADE)
     is_active=models.BooleanField(null=True,blank=True,default=True)
+    completed_task_points = models.FloatField(null=False,blank=False,default=0)
     
     class Meta:
         verbose_name="Registered Team"

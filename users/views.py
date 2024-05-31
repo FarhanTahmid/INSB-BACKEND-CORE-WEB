@@ -3,13 +3,16 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from system_administration.models import adminUsers
+from insb_port import settings
+from system_administration.models import SystemErrors, adminUsers
+from task_assignation.models import Member_Task_Point
 from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
 from recruitment.models import recruited_members
 from . models import Members,ResetPasswordTokenTable,UserSignupTokenTable
 import csv,datetime
+from django.utils.timezone import now
 from django.db import DatabaseError
 from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
@@ -25,6 +28,7 @@ import traceback
 from central_branch import views as cv
 from .renderData import member_login_permission
 from task_assignation.renderData import Task_Assignation
+from django.utils import timezone
 
 logger=logging.getLogger(__name__)
 
@@ -199,7 +203,20 @@ def dashboard(request):
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
 
-        
+        current_month = datetime.now().month
+        current_year = datetime.now().year
+
+        monthly_members = Member_Task_Point.objects.all().order_by('-completion_points','member')
+        monthly_top_3_members = {}
+
+
+        for member in monthly_members :
+            if member.completion_date and member.completion_date.month == current_month and member.completion_date.year == current_year:
+                if (not member.member in monthly_top_3_members.keys()):
+                    monthly_top_3_members[member.member] = [Members.objects.get(ieee_id=member.member), member.completion_points]
+                else:
+                    monthly_top_3_members[member.member][1] += member.completion_points
+                
         # Get the SC & AGS
         sc_ag=PortData.get_all_sc_ag(request=request)
         #scheduler.start()
@@ -235,7 +252,9 @@ def dashboard(request):
             'current_year_month_name':hit_count_monthly[1],
             'hit_count_monthly_data':hit_count_monthly[2],
             'hit_count_over_5_years':hit_count_over_5_years,
+            'monthly_top_3_members':list(monthly_top_3_members.values()),
             'all_sc_ag':sc_ag,
+            'media_url':settings.MEDIA_URL
         }
 
         

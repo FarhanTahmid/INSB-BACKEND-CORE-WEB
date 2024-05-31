@@ -75,6 +75,12 @@
       .cross-button:hover {
           color: gray; /* Change color on hover */
       }
+
+      .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
 </style>
 
 
@@ -104,6 +110,7 @@
                     id="field1"
                     value="{{graphic_links.graphics_link}}"
                     name="drive_link_of_graphics"/>
+                    <a href="{{graphic_links.graphics_link}}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
                 </div>
 
                 <div class="form-group">

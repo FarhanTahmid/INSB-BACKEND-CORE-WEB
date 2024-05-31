@@ -181,13 +181,13 @@
                                         <label for="create_individual_task_access">Create Individual Task Permission</label><br>
                                     {% endif %}
 
-                                    {% if member.create_team_task_access %}
+                                    {% comment %} {% if member.create_team_task_access %}
                                         <input type="checkbox" checked="True" class="checkbox" value="create_team_task_access" name="create_team_task_access">
                                         <label for="create_team_task_access">Create Team Task Permission</label><br>
                                     {% else %}
                                         <input type="checkbox" class="checkbox" value="create_team_task_access" name="create_team_task_access">
                                         <label for="create_team_task_access">Create Team Task Permission</label><br>
-                                    {% endif %}
+                                    {% endif %} {% endcomment %}
 
 
                                     {% if member.create_panels_access %}
