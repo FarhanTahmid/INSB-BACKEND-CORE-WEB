@@ -94,6 +94,7 @@
 		height: 100%;
 		object-fit: cover;
 		transition: all 0.3s;
+		transition: transform 0.3s ease-in-out;
 	}
 	.profile_content:hover img{
 		scale: 1.1;
@@ -2126,18 +2127,19 @@ async function initializeCircleChart2(){
 <script>
 	//img scale up when mouse is over name
 	document.addEventListener('DOMContentLoaded', function() {
-//   const elements = document.querySelectorAll('.profile_content');
-  const rankerName = document.querySelectorAll('.ranker-name');
+  const rankerNames = document.querySelectorAll('.ranker-name');
 
-  rankerName.forEach(element => {
-	let profile = element.closest('.profile_content');
-
-    profile.addEventListener('mouseover', function() {
-      profile.style.transform = 'scale(1.1)'; 
+  rankerNames.forEach(rankerName => {
+    rankerName.addEventListener('mouseover', function() {
+      const profile = rankerName.closest('.profile');
+      const profileContent = profile.querySelector('.profile_content img');
+      profileContent.style.transform = 'scale(1.1)';
     });
 
-    profile.addEventListener('mouseout', function() {
-      profile.style.transform = 'scale(1)';   
+    rankerName.addEventListener('mouseout', function() {
+      const profile = rankerName.closest('.profile');
+      const profileContent = profile.querySelector('.profile_content img');
+      profileContent.style.transform = 'scale(1)';
     });
   });
 });
