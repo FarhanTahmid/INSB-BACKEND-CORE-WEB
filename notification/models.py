@@ -7,6 +7,7 @@ class NotificationTypes(models.Model):
     
     '''This model stores all the types of notifications. Notification Types can be created from Branch Controls'''
     type=models.CharField(null=False,blank=False,max_length=100)
+    type_icon=models.ImageField(null=True,blank=True,upload_to='notification_icons/')
     
     class Meta:
         verbose_name="Notification Type"
@@ -27,7 +28,7 @@ class Notifications(models.Model):
     timestamp=models.DateTimeField(null=False,blank=False)
     general_message=models.CharField(null=True,blank=True,max_length=300)
     inside_link=models.URLField(null=False,blank=False)
-    created_by=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    created_by=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
     
     class Meta:
         verbose_name="Notification"
