@@ -162,7 +162,7 @@
 	}
 	.gold_laurel_wreath{
 		position: relative;
-		bottom: 172px;
+		top: 204px;
 		scale: 3.8;
 		left: 242px;
 	}
@@ -245,7 +245,7 @@
 	<div class="row">
 		<div class="col-xl-6">
 			<div class="card">
-				<div class="card-body">
+				<div class="card-body" style="max-height: 507px;">
 					<div class="d-flex flex-wrap align-items-center mb-3" style="text-align: center; justify-content: center; margin-top: 49px;">
 						<h3 class="card-title mb-0" >Top Performers of the Month</h3>
 					</div>
@@ -404,27 +404,7 @@
 									{% endif %}
 								</div>
 							</div>
-							<div>
-								<div class="profile" style="margin: 20px; width: 170px; display: flex;
-								flex-direction: column;
-								align-items: center;">
-									<div class="frame">
-									<div class="frame-out">
-											<div class="profile_content">
-												<img src="{{media_url}}{{monthly_top_3_members.0.0.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
-											</div>
-										</div>
-									</div>
-									<h5 class="gold_rank">1st</h5>
-									{% if monthly_top_3_members.0 %}
-									<a href="{% url 'main_website:member_profile' monthly_top_3_members.0.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.0.0.name}}</h5></a>
-									<a>{{monthly_top_3_members.0.0.position}}</a>
-									<a>{{monthly_top_3_members.0.0.team}}</a>
-									<!-- <a>Points : {{monthly_top_3_members.0.1|floatformat:2}}</a> -->
-									{% else %}
-									<a class="ranker-name"><h5>Waiting...</h5></a>
-									{% endif %}
-								</div>
+							<div style="position: relative; bottom: 77px;">
 								<div class="gold_laurel_wreath"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
 									<svg
 									   version="1.1"
@@ -552,6 +532,27 @@
 									  </g>
 									</svg>
 									</div>
+								<div class="profile" style="margin: 20px; width: 170px; display: flex;
+								flex-direction: column;
+								align-items: center;">
+									<div class="frame">
+									<div class="frame-out">
+											<div class="profile_content">
+												<img src="{{media_url}}{{monthly_top_3_members.0.0.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+											</div>
+										</div>
+									</div>
+									<h5 class="gold_rank">1st</h5>
+									{% if monthly_top_3_members.0 %}
+									<a href="{% url 'main_website:member_profile' monthly_top_3_members.0.0.ieee_id %}" class="ranker-name"><h5>{{monthly_top_3_members.0.0.name}}</h5></a>
+									<a>{{monthly_top_3_members.0.0.position}}</a>
+									<a>{{monthly_top_3_members.0.0.team}}</a>
+									<!-- <a>Points : {{monthly_top_3_members.0.1|floatformat:2}}</a> -->
+									{% else %}
+									<a class="ranker-name"><h5>Waiting...</h5></a>
+									{% endif %}
+								</div>
+
 							</div>
 							<div class="bronze_laurel_wreath">
 								<div class="profile">
