@@ -15,7 +15,7 @@
   .msg-box {
     max-height: 420px;
     width: 369px;
-    padding: 8px 8px 0px 8px;
+    padding: 4px 0px 0px 5px;
     overflow-y: auto;
     overflow-x: clip;
   }
@@ -26,8 +26,8 @@
     justify-content: space-between;
     border-radius: 4px;
     padding: 10px;
-    margin-bottom: -23px;
-    background-color: #e0f2fe;
+    margin-bottom: -27px;
+    background-color: rgb(224, 242, 254);
     color: #000;
     transition: all 0.2s ease-in;
   }
@@ -46,7 +46,7 @@
     top: 20px;
     font-size: 14px;
     margin-bottom: 0;
-    color: gray;
+    color: #464646;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -56,7 +56,6 @@
   }
   .sender_content {
     position: relative;
-    right: 5px;
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -84,9 +83,10 @@
   }
   .bell-icon {
     color: #000000;
+    transition: all .1s ease-in;
   }
   .bell-icon:hover {
-    scale: 1.2;
+    scale: 1.1;
   }
 
   .msg-box::-webkit-scrollbar {
@@ -124,7 +124,7 @@
     font-weight: bold;
     font-size: 19px;
     position: relative;
-    bottom: 21px;
+    bottom: 19px;
     left: 314px;
     cursor: pointer;
     border-radius: 50%;
@@ -238,12 +238,13 @@
 </li>
 <div id="notification">
   <div class="msg-box">
-    <div>
+    <!--redirect link-->
+    <div><a href="https://www.google.com/">
       <div
         class="msg"
         onmouseover="hoverIn(this)"
         onmouseout="hoverOut(this)"
-        onclick="msg_read_and_redirect(this)"
+        onclick="msg_read(this)"
       >
         <input
           type="hidden"
@@ -254,19 +255,16 @@
         />
         <div class="sender_content">
           <div class="sender_frame">
+            <!--image alternative-->
             <img
               src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
               alt=""
             />
           </div>
           <div class="notification_content">
-            <h6 class="sender_title">Notification from</h6>
+            <h6 class="sender_title">Notification Title</h6>
             <h6 class="notification_msg">
-              Subject of the new notification Subject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notification
+              Subject of the new notification 
             </h6>
           </div>
         </div>
@@ -274,6 +272,7 @@
           <h6 class="notification_time">10:53</h6>
         </div>
       </div>
+    </a>
       <div
         class="dropdown three_dots"
         onclick="toggleDropdown(event)"
@@ -290,12 +289,13 @@
         </div>
       </div>
     </div>
-    <div>
+    <!--redirect link-->
+    <div><a href="https://www.google.com/">
       <div
         class="msg"
         onmouseover="hoverIn(this)"
         onmouseout="hoverOut(this)"
-        onclick="msg_read_and_redirect(this)"
+        onclick="msg_read(this)"
       >
         <input
           type="hidden"
@@ -312,7 +312,7 @@
             />
           </div>
           <div class="notification_content">
-            <h6 class="sender_title"></h6>
+            <h6 class="sender_title">Notification Title</h6>
             <h6 class="notification_msg">
               Subject of the new notification Subject of the new
               notificationSubject of the new notificationSubject of the new
@@ -326,208 +326,7 @@
           <h6 class="notification_time">10:53</h6>
         </div>
       </div>
-      <div
-        class="dropdown three_dots"
-        onclick="toggleDropdown(event)"
-        onmouseover="hoverInDots(this)"
-        onmouseout="hoverOutDots(this)"
-      >
-        <div class="burger" id="burger">
-          <span style="position: relative; top: -4px">...</span>
-        </div>
-        <div class="dropdown-content" id="dropdownContent">
-          <a href="#" onclick="markAsRead_markAsUnread(this); return false;"
-            >Mark as read</a
-          >
-        </div>
-      </div>
-    </div>
-    <div>
-      <div
-        class="msg"
-        onmouseover="hoverIn(this)"
-        onmouseout="hoverOut(this)"
-        onclick="msg_read_and_redirect(this)"
-      >
-        <input
-          type="hidden"
-          class="hidden-input"
-          id="hid-inp"
-          value="1"
-          data-namr="1"
-        />
-        <div class="sender_content">
-          <div class="sender_frame">
-            <img
-              src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-              alt=""
-            />
-          </div>
-          <div class="notification_content">
-            <h6 class="sender_title">Notification from</h6>
-            <h6 class="notification_msg"></h6>
-          </div>
-        </div>
-        <div class="time_dropdown">
-          <h6 class="notification_time">10:53</h6>
-        </div>
-      </div>
-      <div
-        class="dropdown three_dots"
-        onclick="toggleDropdown(event)"
-        onmouseover="hoverInDots(this)"
-        onmouseout="hoverOutDots(this)"
-      >
-        <div class="burger" id="burger">
-          <span style="position: relative; top: -4px">...</span>
-        </div>
-        <div class="dropdown-content" id="dropdownContent">
-          <a href="#" onclick="markAsRead_markAsUnread(this); return false;"
-            >Mark as read</a
-          >
-        </div>
-      </div>
-    </div>
-    <div>
-      <div
-        class="msg"
-        onmouseover="hoverIn(this)"
-        onmouseout="hoverOut(this)"
-        onclick="msg_read_and_redirect(this)"
-      >
-        <input
-          type="hidden"
-          class="hidden-input"
-          id="hid-inp"
-          value="1"
-          data-namr="1"
-        />
-        <div class="sender_content">
-          <div class="sender_frame">
-            <img
-              src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-              alt=""
-            />
-          </div>
-          <div class="notification_content">
-            <h6 class="sender_title">Notification from</h6>
-            <h6 class="notification_msg">
-              Subject of the new notification Subject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notification
-            </h6>
-          </div>
-        </div>
-        <div class="time_dropdown">
-          <h6 class="notification_time">10:53</h6>
-        </div>
-      </div>
-      <div
-        class="dropdown three_dots"
-        onclick="toggleDropdown(event)"
-        onmouseover="hoverInDots(this)"
-        onmouseout="hoverOutDots(this)"
-      >
-        <div class="burger" id="burger">
-          <span style="position: relative; top: -4px">...</span>
-        </div>
-        <div class="dropdown-content" id="dropdownContent">
-          <a href="#" onclick="markAsRead_markAsUnread(this); return false;"
-            >Mark as read</a
-          >
-        </div>
-      </div>
-    </div>
-    <div>
-      <div
-        class="msg"
-        onmouseover="hoverIn(this)"
-        onmouseout="hoverOut(this)"
-        onclick="msg_read_and_redirect(this)"
-      >
-        <input
-          type="hidden"
-          class="hidden-input"
-          id="hid-inp"
-          value="1"
-          data-namr="1"
-        />
-        <div class="sender_content">
-          <div class="sender_frame">
-            <img
-              src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-              alt=""
-            />
-          </div>
-          <div class="notification_content">
-            <h6 class="sender_title">Notification from</h6>
-            <h6 class="notification_msg">
-              Subject of the new notification Subject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notification
-            </h6>
-          </div>
-        </div>
-        <div class="time_dropdown">
-          <h6 class="notification_time">10:53</h6>
-        </div>
-      </div>
-      <div
-        class="dropdown three_dots"
-        onclick="toggleDropdown(event)"
-        onmouseover="hoverInDots(this)"
-        onmouseout="hoverOutDots(this)"
-      >
-        <div class="burger" id="burger">
-          <span style="position: relative; top: -4px">...</span>
-        </div>
-        <div class="dropdown-content" id="dropdownContent">
-          <a href="#" onclick="markAsRead_markAsUnread(this); return false;"
-            >Mark as read</a
-          >
-        </div>
-      </div>
-    </div>
-    <div>
-      <div
-        class="msg"
-        onmouseover="hoverIn(this)"
-        onmouseout="hoverOut(this)"
-        onclick="msg_read_and_redirect(this)"
-      >
-        <input
-          type="hidden"
-          class="hidden-input"
-          id="hid-inp"
-          value="1"
-          data-namr="1"
-        />
-        <div class="sender_content">
-          <div class="sender_frame">
-            <img
-              src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-              alt=""
-            />
-          </div>
-          <div class="notification_content">
-            <h6 class="sender_title">Notification from</h6>
-            <h6 class="notification_msg">
-              Subject of the new notification Subject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notification
-            </h6>
-          </div>
-        </div>
-        <div class="time_dropdown">
-          <h6 class="notification_time">10:53</h6>
-        </div>
-      </div>
+    </a>
       <div
         class="dropdown three_dots"
         onclick="toggleDropdown(event)"
@@ -547,7 +346,9 @@
   </div>
   <a href="" class="see-all">See All</a>
 </div>
+
 <script>
+    //function to display the notification box
   function show_ntfn() {
     var icon = document.querySelector(".bell-icon");
     const ntfn_content = document.getElementById("notification");
@@ -556,29 +357,18 @@
       icon.style.color = "#000000";
     } else {
       ntfn_content.style.display = "block";
-      icon.style.color = "#7878ff";
+      icon.style.color = "#002855";
     }
   }
 
-  function msg_read_and_redirect(msg_div) {
-    msg_div.style.backgroundColor = "white";
-    msg_div.style.color = "black";
+  //function to change the color when clicked
+  function msg_read(msg_div) {
+    //updating the hidden input value
     msg_div.firstElementChild.value = "2";
-    var hiddenInputs = document.querySelectorAll(".msg input");
-    var val = 0;
 
-    hiddenInputs.forEach(function (input) {
-      if (input.getAttribute("value") === "1") {
-        val++;
-      }
-    });
+    notification_count();
 
-    var lbl = document.getElementById("nftn_lbl");
-    lbl.textContent = val;
-
-    //link to redirect to the task
-    // window.location.href = "https://www.google.com";
-
+    //changing the dropdown text as needed according to the hidden input value
     var dropdownContent = msg_div.nextElementSibling.children[1];
 
     if (msg_div.firstElementChild.value == "2") {
@@ -591,6 +381,23 @@
     }
   }
 
+  //counts the number of unread notification and shows up on the bell icon
+  function notification_count(){
+    var hiddenInputs = document.querySelectorAll(".msg input");
+    var val = 0;
+
+    hiddenInputs.forEach(function (input) {
+      if (input.getAttribute("value") === "1") {
+        val++;
+      }
+    });
+
+    //updating the unread notification count
+    var lbl = document.getElementById("nftn_lbl");
+    lbl.textContent = val;
+  }
+
+  //loading which msg is read/unread based on load nd updating the bell icon count
   window.onload = function () {
     var divs = document.querySelectorAll(".msg");
 
@@ -616,30 +423,33 @@
 <script>
   //change color on hover
   function hoverIn(element) {
-    element.style.backgroundColor = "#c0e6ff";
+    element.style.backgroundColor = "rgb(192, 230, 255)";
   }
 
   function hoverOut(element) {
     let value = element.firstElementChild.value;
 
     if (value === "1") {
-      element.style.backgroundColor = "#e0f2fe";
+      element.style.backgroundColor = "rgb(224, 242, 254)";
     } else {
       element.style.backgroundColor = "white";
     }
   }
+
+  //hover effect on three dots
   function hoverInDots(element) {
     let msgElement = element.previousElementSibling;
     hoverIn(msgElement);
   }
 
+    //hover effect on three dots
   function hoverOutDots(element) {
     let msgElement = element.previousElementSibling;
     hoverOut(msgElement);
   }
 </script>
-<!-- dropdown js for mark as read and unread -->
 <script>
+//dropdown js for mark as read and unread 
   document.addEventListener("click", function (event) {
     // Close dropdowns if the click is not inside any dropdown
     if (!event.target.closest(".dropdown")) {
@@ -682,6 +492,7 @@
   }
 </script>
 <script>
+    //change dropdown text and notification color based on click
   function markAsRead_markAsUnread(element) {
     // Find the closest .msg container
     var msgContainer = element.parentElement.parentElement.parentElement;
@@ -701,12 +512,15 @@
       msg.style.backgroundColor = "white";
       hiddenInput.value = "2";
     } else if (inputValue == "2") {
-      // Change the text of the link to "Mark as read"
-      dropdownContent.innerHTML =
+        // Change the text of the link to "Mark as read"
+        dropdownContent.innerHTML =
         '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>';
-      msg.style.backgroundColor = "rgb(224, 242, 254)";
+        msg.style.backgroundColor = "rgb(224, 242, 254)";
       hiddenInput.value = "1";
     }
+
+    //updating the bell icon count
+    notification_count();
   }
 </script>
 {% endblock bell_notification %}
