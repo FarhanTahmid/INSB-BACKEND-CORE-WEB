@@ -12,6 +12,7 @@
     right: 4%;
     box-shadow: -2px 2px 20px 2px #0000000f;
   }
+
   .msg-box {
     max-height: 420px;
     width: 369px;
@@ -19,9 +20,10 @@
     overflow-y: auto;
     overflow-x: clip;
   }
+
   .msg {
     height: auto;
-    width: 353px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     border-radius: 4px;
@@ -31,17 +33,20 @@
     color: #000;
     transition: all 0.2s ease-in;
   }
+
   .sender_title {
     color: black;
     font-weight: bold;
     font-size: 14px;
   }
+
   .notification_time {
     color: gray;
     font-size: 12px;
     position: relative;
     top: 3px;
   }
+
   .notification_msg {
     top: 20px;
     font-size: 14px;
@@ -54,6 +59,7 @@
     -webkit-box-orient: vertical;
     transition: all 0.3s ease-in-out;
   }
+
   .sender_content {
     position: relative;
     display: flex;
@@ -61,30 +67,43 @@
     gap: 10px;
     align-items: center;
   }
+
   .notification_content {
     max-width: 78%;
   }
-  .notification_content > h6 {
+
+  .notification_content>h6 {
     padding: 0;
   }
-  .see-all {
+
+  .see-all,
+  .see-all.active {
     display: flex;
     justify-content: center;
-    color: rgb(0 0 0 / 64%);
-    padding-top: 3px;
+    padding: 7px;
+    color: #00629b !important;
+    transition: all 0.3s ease;
   }
-  .see-all:hover {
-    color: #00629b;
-    color: #000;
+
+  .dropdown-content.active {
+    color: #000 !important;
   }
+
+  .see-all:hover,
+  .see-all.active:hover {
+    color: #FFA300 !important;
+  }
+
   .msg:hover,
   .see-all:hover {
     cursor: pointer;
   }
+
   .bell-icon {
     color: #000000;
     transition: all .1s ease-in;
   }
+
   .bell-icon:hover {
     scale: 1.1;
   }
@@ -93,30 +112,36 @@
     width: 6px;
     height: 6px;
   }
+
   .msg-box::-webkit-scrollbar-thumb {
     background-color: #e7eeef;
     transition: all 0.4s ease-in-out;
     border-radius: 4px;
   }
+
   .msg-box::-webkit-scrollbar-thumb:hover {
     background-color: rgb(169, 170, 170);
   }
+
   .sender_frame {
     height: 50px;
     width: 50px;
     overflow: hidden;
   }
+
   .sender_frame img {
     object-fit: cover;
     height: 100%;
     width: 100%;
     border-radius: 50%;
   }
+
   .time_dropdown {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
+
   .three_dots {
     color: #818da2;
     font-weight: bold;
@@ -129,11 +154,13 @@
     cursor: pointer;
     border-radius: 50%;
   }
+
   .three_dots:hover {
     color: #000000;
     background-color: #f6f6f6;
   }
-  .three_dots > p {
+
+  .three_dots>p {
     margin: 0;
     position: relative;
     bottom: 4px;
@@ -223,7 +250,7 @@
     .msg-box {
       width: auto;
     }
-    
+
     .three_dots {
       left: 89%;
     }
@@ -239,116 +266,79 @@
 <div id="notification">
   <div class="msg-box">
     <!--redirect link-->
-    <div><a href="https://www.google.com/">
-      <div
-        class="msg"
-        onmouseover="hoverIn(this)"
-        onmouseout="hoverOut(this)"
-        onclick="msg_read(this)"
-      >
-        <input
-          type="hidden"
-          class="hidden-input"
-          id="hid-inp"
-          value="1"
-          data-namr="1"
-        />
-        <div class="sender_content">
-          <div class="sender_frame">
-            <!--image alternative-->
-            <img
-              src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-              alt=""
-            />
+    <div class="msg-info-div">
+      <a href="#">
+        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+          <input type="hidden" class="hidden-input" id="hid-inp" value="1" data-namr="1" />
+          <div class="sender_content">
+            <div class="sender_frame">
+              <!--image alternative-->
+              <img src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg" alt="" />
+            </div>
+            <div class="notification_content">
+              <h6 class="sender_title">Notification Title</h6>
+              <h6 class="notification_msg">
+                Subject of the new notification
+              </h6>
+            </div>
           </div>
-          <div class="notification_content">
-            <h6 class="sender_title">Notification Title</h6>
-            <h6 class="notification_msg">
-              Subject of the new notification 
-            </h6>
+          <div class="time_dropdown">
+            <h6 class="notification_time">10:53</h6>
           </div>
         </div>
-        <div class="time_dropdown">
-          <h6 class="notification_time">10:53</h6>
-        </div>
-      </div>
-    </a>
-      <div
-        class="dropdown three_dots"
-        onclick="toggleDropdown(event)"
-        onmouseover="hoverInDots(this)"
-        onmouseout="hoverOutDots(this)"
-      >
+      </a>
+      <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+        onmouseout="hoverOutDots(this)">
         <div class="burger" id="burger">
           <span style="position: relative; top: -4px">...</span>
         </div>
         <div class="dropdown-content" id="dropdownContent">
-          <a href="#" onclick="markAsRead_markAsUnread(this); return false;"
-            >Mark as read</a
-          >
+          <a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>
         </div>
       </div>
     </div>
     <!--redirect link-->
-    <div><a href="https://www.google.com/">
-      <div
-        class="msg"
-        onmouseover="hoverIn(this)"
-        onmouseout="hoverOut(this)"
-        onclick="msg_read(this)"
-      >
-        <input
-          type="hidden"
-          class="hidden-input"
-          id="hid-inp"
-          value="1"
-          data-namr="1"
-        />
-        <div class="sender_content">
-          <div class="sender_frame">
-            <img
-              src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-              alt=""
-            />
+    <div class="msg-info-div">
+      <a href="#">
+        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+          <input type="hidden" class="hidden-input" id="hid-inp" value="1" data-namr="1" />
+          <div class="sender_content">
+            <div class="sender_frame">
+              <img src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg" alt="" />
+            </div>
+            <div class="notification_content">
+              <h6 class="sender_title">Notification Title</h6>
+              <h6 class="notification_msg">
+                Subject of the new notification Subject of the new
+                notificationSubject of the new notificationSubject of the new
+                notificationSubject of the new notificationSubject of the new
+                notificationSubject of the new notificationSubject of the new
+                notification
+              </h6>
+            </div>
           </div>
-          <div class="notification_content">
-            <h6 class="sender_title">Notification Title</h6>
-            <h6 class="notification_msg">
-              Subject of the new notification Subject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notificationSubject of the new notificationSubject of the new
-              notification
-            </h6>
+          <div class="time_dropdown">
+            <h6 class="notification_time">10:53</h6>
           </div>
         </div>
-        <div class="time_dropdown">
-          <h6 class="notification_time">10:53</h6>
-        </div>
-      </div>
-    </a>
-      <div
-        class="dropdown three_dots"
-        onclick="toggleDropdown(event)"
-        onmouseover="hoverInDots(this)"
-        onmouseout="hoverOutDots(this)"
-      >
+      </a>
+      <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+        onmouseout="hoverOutDots(this)">
         <div class="burger" id="burger">
           <span style="position: relative; top: -4px">...</span>
         </div>
         <div class="dropdown-content" id="dropdownContent">
-          <a href="#" onclick="markAsRead_markAsUnread(this); return false;"
-            >Mark as read</a
-          >
+          <a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>
         </div>
       </div>
     </div>
+
   </div>
-  <a href="" class="see-all">See All</a>
+  <a href="#" class="see-all">See All</a>
 </div>
 
 <script>
-    //function to display the notification box
+  //function to display the notification box
   function show_ntfn() {
     var icon = document.querySelector(".bell-icon");
     const ntfn_content = document.getElementById("notification");
@@ -382,7 +372,7 @@
   }
 
   //counts the number of unread notification and shows up on the bell icon
-  function notification_count(){
+  function notification_count() {
     var hiddenInputs = document.querySelectorAll(".msg input");
     var val = 0;
 
@@ -442,14 +432,14 @@
     hoverIn(msgElement);
   }
 
-    //hover effect on three dots
+  //hover effect on three dots
   function hoverOutDots(element) {
     let msgElement = element.previousElementSibling;
     hoverOut(msgElement);
   }
 </script>
 <script>
-//dropdown js for mark as read and unread 
+  //dropdown js for mark as read and unread 
   document.addEventListener("click", function (event) {
     // Close dropdowns if the click is not inside any dropdown
     if (!event.target.closest(".dropdown")) {
@@ -492,7 +482,7 @@
   }
 </script>
 <script>
-    //change dropdown text and notification color based on click
+  //change dropdown text and notification color based on click
   function markAsRead_markAsUnread(element) {
     // Find the closest .msg container
     var msgContainer = element.parentElement.parentElement.parentElement;
@@ -512,10 +502,10 @@
       msg.style.backgroundColor = "white";
       hiddenInput.value = "2";
     } else if (inputValue == "2") {
-        // Change the text of the link to "Mark as read"
-        dropdownContent.innerHTML =
+      // Change the text of the link to "Mark as read"
+      dropdownContent.innerHTML =
         '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>';
-        msg.style.backgroundColor = "rgb(224, 242, 254)";
+      msg.style.backgroundColor = "rgb(224, 242, 254)";
       hiddenInput.value = "1";
     }
 

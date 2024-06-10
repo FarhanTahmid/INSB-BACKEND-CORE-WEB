@@ -87,7 +87,8 @@
         #table-id td:nth-child(2) {
             width: 5%;
         }
-        .options{
+
+        .options {
             color: #818da2;
             font-weight: bold;
             text-align: center;
@@ -96,10 +97,12 @@
             cursor: pointer;
             border-radius: 50%;
         }
-        .options:hover{
+
+        .options:hover {
             color: #000000;
             background-color: #f6f6f6;
         }
+
         .dropdown {
             position: relative;
             display: inline-block;
@@ -197,98 +200,110 @@
         .button.active {
             background-color: rgb(224, 242, 254);
         }
+
         .button:hover {
             background-color: rgb(192, 230, 255);
         }
 
-        table th , table td{
-        text-align: center;
+        table th,
+        table td {
+            text-align: center;
         }
 
         th {
-        background: #333;
-        color: #fff;
+            background: #333;
+            color: #fff;
         }
 
         .pagination {
-        margin: 0;
+            margin: 0;
         }
 
-        .pagination li:hover{
-        cursor: pointer;
+        .pagination li:hover {
+            cursor: pointer;
         }
 
         /* .header_wrap {
         padding:50px 0;
         } */
         .num_rows {
-        width: 151px;
-        float: right;
+            width: 151px;
+            float: right;
         }
-        .tb_search{
-        width: 40%;
-        float:left;
+
+        .tb_search {
+            width: 40%;
+            float: left;
         }
+
         /* Responsive Styles for Pagination */
         .pagination-container {
-        display: flex;
-        flex-wrap: wrap; /* Allow pagination items to wrap to the next line on small screens */
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow pagination items to wrap to the next line on small screens */
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
         }
 
         .pagination {
-        margin: 2px;
-        flex-wrap: wrap; /* Allow pagination items to wrap to the next line on small screens */
+            margin: 2px;
+            flex-wrap: wrap;
+            /* Allow pagination items to wrap to the next line on small screens */
         }
 
         .pagination li {
-        display: inline-block;
-        margin: 0 3px;
-        padding: 5px 10px;
-        border: 1px solid #00629B;
-        background-color: transparent;
-        color: #00629B;
-        cursor: pointer;
+            display: inline-block;
+            margin: 0 3px;
+            padding: 5px 10px;
+            border: 1px solid #00629B;
+            background-color: transparent;
+            color: #00629B;
+            cursor: pointer;
         }
 
         /* Style for current active page */
         .pagination li.active {
-        background-color: #00629B;
-        color: #ffffff;
+            background-color: #00629B;
+            color: #ffffff;
         }
 
         /* Style for rows count section */
         .rows_count {
-        color: #00629B;
-        font-size: 14px;
-        margin-top: 10px;
+            color: #00629B;
+            font-size: 14px;
+            margin-top: 10px;
         }
+
         .table-responsive {
-        overflow-x: auto;
-        max-width: 100%;
-        /* padding: 15px; */
+            overflow-x: auto;
+            max-width: 100%;
+            /* padding: 15px; */
         }
-        .app-body{
+
+        .app-body {
             margin-left: 15%;
             margin-right: 15%
         }
+
         @media screen and (max-width: 500px) {
-            .header_wrap{
+            .header_wrap {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 margin-bottom: 10px;
             }
-            .tb_search{
+
+            .tb_search {
                 width: 100%;
             }
-            .app-body{
+
+            .app-body {
                 margin: 0;
             }
         }
-        .sender_content_row{
+
+        .sender_content_row {
             position: relative;
             right: 5px;
             display: flex;
@@ -297,80 +312,92 @@
             align-items: center;
             justify-content: space-between;
         }
-        .sender_frame{
+
+        .sender_frame {
             height: 50px;
             width: 50px;
             overflow: hidden;
             min-width: 50px;
         }
-        .sender_frame img{
+
+        .sender_frame img {
             object-fit: cover;
             height: 100%;
             width: 100%;
             border-radius: 50%;
         }
-        .notification_content_row{
-        max-width: 78%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        }
-    .notification_content_row > h6{
-        padding: 0;
-        text-align: left;
-    }
-    .sender_title_row{
-        color: black;
-        font-weight: bold; 
-        font-size: 14px;
-    }
-    .time_notification{
-        margin: 0;
-        padding: 0;
-        width: 80px;
-        color: black;
-        font-size: 12px;
-    }
-    .notification_msg_row{
-        top: 20px;
-        font-size: 14px;
-        margin-bottom: 0;
-        color: #464646;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        transition: all .3s ease-in-out;
-    }
 
-    .sender_inner_div{
-        display: flex;
-        align-items: center;
-        gap: 19px;     
-        width: 88%;
-    }
-    .notification_txt{
-        justify-content: center;
-        text-align: center;
-        margin-bottom: 15px;
-        margin-top: 30px;
-        font-weight: bold;
-    }
-    .tr_style{
-        border-radius: 4px;
-        border: 2px solid rgb(224, 242, 254);
-        /* box-shadow: 3px 4px 4px 0px #e6ebf0; */
-    }
-    .tbody_style{
-        /* padding: 6px; */
-        display: flex;
-        /* border: 1px solid #ddd; */
-        flex-direction: column;
-        gap: 2px;
-        border-radius: 10px;
-    }
-     </style>
+        .notification_content_row {
+            max-width: 78%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .notification_content_row>h6 {
+            padding: 0;
+            text-align: left;
+        }
+
+        .sender_title_row {
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .time_notification {
+            margin: 0;
+            padding: 0;
+            width: 80px;
+            color: black;
+            font-size: 12px;
+        }
+
+        .notification_msg_row {
+            top: 20px;
+            font-size: 14px;
+            margin-bottom: 0;
+            color: #464646;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: all .3s ease-in-out;
+        }
+
+        .sender_inner_div {
+            display: flex;
+            align-items: center;
+            gap: 19px;
+            width: 88%;
+        }
+
+        .notification_txt {
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        .tr_style {
+            border-radius: 4px;
+            /* border: 2px solid rgb(224, 242, 254); */
+            /* box-shadow: 3px 4px 4px 0px #e6ebf0; */
+        }
+
+        .tbody_style {
+            /* padding: 6px; */
+            display: flex;
+            /* border: 1px solid #ddd; */
+            flex-direction: column;
+            gap: 5px;
+            border-radius: 5px;
+            border: 1px solid rgb(224, 242, 254);
+            padding: 5px;
+        }
+    </style>
 </head>
 {% block preloader %}
 {% include 'preloader.html' %}
@@ -425,20 +452,27 @@
 
                         <table class="table table-striped table-class" id="table-id">
                             <tbody id="nostripe" class="tbody_style">
-                                <tr class="unread tr_style" onmouseover="hoverInRow(this)" onmouseout="hoverOutRow(this)">
-                                <td style="color: #00629b" onclick="removeUnread(this)">
-                                    <!--link here-->
-                                    <a href="#">
-                                        <div class="sender_content_row">
-                                            <div class="sender_inner_div">
-                                                <div class="sender_frame"><img src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg" alt=""></div>
-                                                <div class="notification_content_row">
-                                                    <h6 class= 'sender_title_row' >Notification Title</h6>
-                                                    <h6 class= 'notification_msg_row' >Subject of the new notification Subject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notification</h6>
+                                <tr class="unread tr_style" onmouseover="hoverInRow(this)"
+                                    onmouseout="hoverOutRow(this)">
+                                    <td style="color: #00629b" onclick="removeUnread(this)">
+                                        <!--link here-->
+                                        <a href="#">
+                                            <div class="sender_content_row">
+                                                <div class="sender_inner_div">
+                                                    <div class="sender_frame"><img
+                                                            src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
+                                                            alt=""></div>
+                                                    <div class="notification_content_row">
+                                                        <h6 class='sender_title_row'>Notification Title</h6>
+                                                        <h6 class='notification_msg_row'>Subject of the new notification
+                                                            Subject of the new notificationSubject of the new
+                                                            notificationSubject of the new notificationSubject of the
+                                                            new notificationSubject of the new notificationSubject of
+                                                            the new notificationSubject of the new notification</h6>
+                                                    </div>
                                                 </div>
+                                                <h6 class='time_notification'>March 14, 2024</h6>
                                             </div>
-                                            <h6 class = 'time_notification'>March 14, 2024</h6>
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="dropdown " onclick="toggleDropdownRow(event)">
@@ -446,27 +480,37 @@
                                                 <span style="position: relative; top: -3px;">...</span>
                                             </div>
                                             <div class="dropdown-content-row" id="dropdownContent">
-                                                <a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a>
+                                                <a href="#"
+                                                    onclick="markAsRead_markAsUnread_table(this); return false;">Mark as
+                                                    read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
                                     </td>
                                     </a>
                                 </tr>
-                                <tr class="unread tr_style" onmouseover="hoverInRow(this)" onmouseout="hoverOutRow(this)">
+                                <tr class="unread tr_style" onmouseover="hoverInRow(this)"
+                                    onmouseout="hoverOutRow(this)">
                                     <td style="color: #00629b" onclick="removeUnread(this)">
-                                    <!--link here-->
-                                    <a href="#">
-                                        <div class="sender_content_row">
-                                            <div class="sender_inner_div">
-                                                <div class="sender_frame"><img src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg" alt=""></div>
-                                                <div class="notification_content_row">
-                                                    <h6 class= 'sender_title_row' >Notification Title</h6>
-                                                    <h6 class= 'notification_msg_row' >Subject of the new notification Subject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notificationSubject of the new notification</h6>
+                                        <!--link here-->
+                                        <a href="#">
+                                            <div class="sender_content_row">
+                                                <div class="sender_inner_div">
+                                                    <div class="sender_frame"><img
+                                                            src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
+                                                            alt=""></div>
+                                                    <div class="notification_content_row">
+                                                        <h6 class='sender_title_row'>Notification Title</h6>
+                                                        <h6 class='notification_msg_row'>Subject of the new notification
+                                                            Subject of the new notificationSubject of the new
+                                                            notificationSubject of the new notificationSubject of the
+                                                            new notificationSubject of the new notificationSubject of
+                                                            the new notificationSubject of the new notification</h6>
+                                                    </div>
                                                 </div>
+                                                <h6 class='time_notification'>10:53</h6>
                                             </div>
-                                            <h6 class = 'time_notification'>10:53</h6>
-                                        </div></a>
+                                        </a>
                                     </td>
                                     <td>
                                         <div class="dropdown " onclick="toggleDropdownRow(event)">
@@ -474,7 +518,9 @@
                                                 <span style="position: relative; top: -3px;">...</span>
                                             </div>
                                             <div class="dropdown-content-row" id="dropdownContent">
-                                                <a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a>
+                                                <a href="#"
+                                                    onclick="markAsRead_markAsUnread_table(this); return false;">Mark as
+                                                    read</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                             </div>
                                         </div>
@@ -596,80 +642,80 @@
     </script>
 
 
-<script>
-    //script to delete notification
-    function deleteNotification(element) {
-        // Get the parent tr element of the clicked link
-        var trElement = element.closest('tr');
-        
-        // Remove the entire tr element from the DOM
-        trElement.remove();
-    }
+    <script>
+        //script to delete notification
+        function deleteNotification(element) {
+            // Get the parent tr element of the clicked link
+            var trElement = element.closest('tr');
 
-    //change dropdown text and notification color based on click
-    function markAsRead_markAsUnread_table(element) {
-        // Get the parent tr element of the clicked link
-        var trElement = element.closest('tr');
-        var dropdownContent = trElement.querySelector('.dropdown-content-row');
-        
-        if(trElement.classList.contains('unread')){
-            // Change the background color of the tr
-            trElement.style.backgroundColor = 'white'; 
+            // Remove the entire tr element from the DOM
+            trElement.remove();
+        }
+
+        //change dropdown text and notification color based on click
+        function markAsRead_markAsUnread_table(element) {
+            // Get the parent tr element of the clicked link
+            var trElement = element.closest('tr');
+            var dropdownContent = trElement.querySelector('.dropdown-content-row');
+
+            if (trElement.classList.contains('unread')) {
+                // Change the background color of the tr
+                trElement.style.backgroundColor = 'white';
+                trElement.classList.add('marked_read');
+                trElement.classList.remove('unread');
+
+                // Change the text of the link to "Mark as unread"
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+            else {
+                // Change the background color of the tr to its default color
+                trElement.style.backgroundColor = '';
+
+                // Add the 'marked_read' class back to the tr
+                trElement.classList.remove('marked_read');
+                trElement.classList.add('unread');
+
+                // Change the text of the link to "Mark as read"
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+        }
+        //change the dropdown text when a notification is clicked
+        function removeUnread(element) {
+            var trElement = element.closest('tr');
+
+            // Change the class to indicate the notification is read
             trElement.classList.add('marked_read');
             trElement.classList.remove('unread');
-    
-            // Change the text of the link to "Mark as unread"
-            dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+
+            // Find the dropdown content related to this notification
+            var dropdownContent = trElement.querySelector(".dropdown-content-row");
+
+            // Toggle the text
+            if (trElement.classList.contains("unread")) {
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+            else if (trElement.classList.contains("marked_read")) {
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
         }
-        else{
-            // Change the background color of the tr to its default color
-            trElement.style.backgroundColor = ''; 
+    </script>
 
-            // Add the 'marked_read' class back to the tr
-            trElement.classList.remove('marked_read');
-            trElement.classList.add('unread');
-
-            // Change the text of the link to "Mark as read"
-            dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
-        }
-    }
-    //change the dropdown text when a notification is clicked
-    function removeUnread(element) {
-        var trElement = element.closest('tr');
-
-    // Change the class to indicate the notification is read
-    trElement.classList.add('marked_read');
-    trElement.classList.remove('unread');
-
-    // Find the dropdown content related to this notification
-    var dropdownContent = trElement.querySelector(".dropdown-content-row");
-
-    // Toggle the text
-    if (trElement.classList.contains("unread")) {
-        dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
-    } 
-    else if (trElement.classList.contains("marked_read")){
-        dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
-    }
-}
-</script>
-    
-        <script>
-            //filters all unread notification 
-            function filterUnread() {
+    <script>
+        //filters all unread notification 
+        function filterUnread() {
             // Get all elements with the class 'marked_read'
             var unreadNotifications = document.querySelectorAll('.marked_read');
-            
+
             // Loop through each read notification and hide it
-            unreadNotifications.forEach(function(notification) {
+            unreadNotifications.forEach(function (notification) {
                 notification.style.display = 'none';
             });
         }
 
-        </script>
-        <script>
-            //filter unread toggle
-            function toggleButton(buttonType) {
+    </script>
+    <script>
+        //filter unread toggle
+        function toggleButton(buttonType) {
             let tableRow = document.querySelectorAll('tr');
             if (buttonType === 'all') {
                 tableRow.forEach(row => {
@@ -690,27 +736,25 @@
                 }
             });
         }
-        </script>
-            <script>
-            //change color on hover
-            function hoverInRow(element) {
-                element.style.backgroundColor = 'rgb(192, 230, 255)';
-                element.style.border = '2px solid rgb(192, 230, 255 / 80%)';
-                element.style.transition = 'all .1s ease-in'
+    </script>
+    <script>
+        //change color on hover
+        function hoverInRow(element) {
+            element.style.backgroundColor = 'rgb(192, 230, 255)';
+            element.style.transition = 'all .1s ease-in'
+        }
+
+        function hoverOutRow(element) {
+            let value = element.classList.contains('unread');
+
+            if (value) {
+                element.style.backgroundColor = 'rgb(224, 242, 254)';
             }
-            
-            function hoverOutRow(element) {
-                let value = element.classList.contains('unread');
-                element.style.border = '2px solid rgb(224, 242, 254)';
-                
-                if (value) {
-                    element.style.backgroundColor = 'rgb(224, 242, 254)';
-                }
-                else{
-                    element.style.backgroundColor = 'white';
-                }
+            else {
+                element.style.backgroundColor = 'white';
             }
-            </script>
+        }
+    </script>
     <!-- endbuild -->
 </body>
 
