@@ -17,8 +17,14 @@ import os
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
+from notification.notifications import Notifications
+from notification.models import *
+
 class Task_Assignation:
     
+    # notification types for tasks
+    task_creation_notification_type=NotificationTypes.objects.get(type="Task Creation")
+
     def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
 
@@ -33,6 +39,7 @@ class Task_Assignation:
             return False
         
         #Setting the task_created by using username.
+       
         #If it is a regular member then get the ieee_id. If it fails then it must be an admin user, hence get the admin username
         #task_created_by is a charfield so if ieee_id is stored we convert it to string
         try:
@@ -127,6 +134,21 @@ class Task_Assignation:
                 #sending the email to the coordinator
                 Task_Assignation.task_creation_email(request,member,new_task)
             
+            
+            # create and push a notification to coordinators for the task created
+            # for notification only
+            try:
+                notification_created_by=Members.objects.get(ieee_id=current_user.user.username)
+            except:
+                notification_created_by=None
+            notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{new_task.pk}"
+            Notifications.create_notifications(
+                notification_type=Task_Assignation.task_creation_notification_type.pk,
+                general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{new_task.title}'. Click to see the details.",
+                inside_link=inside_link,created_by=notification_created_by,reciever_list=coordinators
+            )
+                        
             return True
         
         #Else if task_type is Individuals
@@ -1478,23 +1500,25 @@ This is an automated message. Do not reply
             email_to.append(member.email_nsu)
             subject = f"You have been Assigned a Task!"
             site_domain = request.META['HTTP_HOST']
-            message = f'''Hello {member.name},
-You have been assigned a task - {task.title}.
-Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
+            message = f'''
+                Hello {member.name},
+                
+                You have been assigned a task - {task.title}.
+                Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
 
-You are requested to complete the task with in the due date. If not, you will be penalised daily
-5% of your task points.
+                You are requested to complete the task with in the due date. If not, you will be penalised daily
+                5% of your task points.
 
-Please follow the link or go through the portal for more details.
+                Please follow the link or go through the portal for more details.
 
-Deadline: {task.deadline}
-Task Assigned by: {task.task_created_by}, {task_created_by}
+                Deadline: {task.deadline}
+                Task Assigned by: {task.task_created_by}, {task_created_by}
 
-Best Regards
-IEEE NSU SB Portal
+                Best Regards
+                IEEE NSU SB Portal
 
-This is an automated message. Do not reply
-    '''
+                This is an automated message. Do not reply
+            '''
             email=EmailMultiAlternatives(subject,message,
                                     email_from,
                                     email_to
