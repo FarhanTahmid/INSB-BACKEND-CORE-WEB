@@ -45,10 +45,17 @@
         margin: 45px 20px;
         gap: 40px;
       }
-      .profile > .profile_picture > img{
+      .profile > .profile_picture{
         border-radius: 50%;
+        height: 150px;
+        width: 150px;
+        overflow: hidden;
+      }
+      .profile > .profile_picture > img{
+        height: 100%;
+        width: 100%;
         object-fit: cover;
-        max-height: 130px;
+        border-radius: 50%;
       }
       .profile > .details{
         display: flex;
@@ -152,7 +159,7 @@
                     <td style="color: #00629b">
                       <a href="{% url 'central_branch:task_edit' member_task.task.pk %}">{{member_task.task.title}}</a>
                     </td>
-                    <td style="color: #75d481; font-weight: bold;">{{member_task.completion_points}}</td>
+                    <td class='task-points' style="color: #75d481; font-weight: bold;">{{member_task.completion_points}}</td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -346,6 +353,22 @@
         }
       }
     </script>
+    <script>
+      //converting the task points to 2 decimals
+      document.addEventListener('DOMContentLoaded', function() {
+          // Select all table cells with the class 'task-points'
+          const taskPointsCells = document.querySelectorAll('.task-points');
+      
+          taskPointsCells.forEach(function(cell) {
+              // Get the text content of the cell
+              let points = cell.textContent;
+              // Convert the text content to a number and format it to 2 decimal places
+              let formattedPoints = parseFloat(points).toFixed(2);
+              // Set the formatted number back to the cell's text content
+              cell.textContent = formattedPoints;
+          });
+      });
+  </script>
     <!-- endbuild -->
   </body>
 </html>

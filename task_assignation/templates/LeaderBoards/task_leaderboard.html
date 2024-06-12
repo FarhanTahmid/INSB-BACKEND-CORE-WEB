@@ -186,5 +186,21 @@
             });
         });
     </script>
+    <script>
+      //converting the task points to 2 decimals
+      document.addEventListener('DOMContentLoaded', function() {
+          // Select all table cells with the class 'task-points'
+          const taskPointsCells = document.querySelectorAll('.task-points');
+      
+          taskPointsCells.forEach(function(cell) {
+              // Get the text content of the cell
+              let points = cell.textContent;
+              // Convert the text content to a number and format it to 2 decimal places
+              let formattedPoints = parseFloat(points).toFixed(2);
+              // Set the formatted number back to the cell's text content
+              cell.textContent = formattedPoints;
+          });
+      });
+  </script>
   </body>
 </html>
