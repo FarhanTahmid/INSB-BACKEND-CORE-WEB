@@ -17,7 +17,7 @@ import os
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
-from notification.notifications import Notifications
+from notification.notifications import NotificationHandler
 from notification.models import *
 
 class Task_Assignation:
@@ -134,21 +134,29 @@ class Task_Assignation:
                 #sending the email to the coordinator
                 Task_Assignation.task_creation_email(request,member,new_task)
             
-            
             # create and push a notification to coordinators for the task created
-            # for notification only
+            
             try:
                 notification_created_by=Members.objects.get(ieee_id=current_user.user.username)
             except:
                 notification_created_by=None
+            # this shows an admin if the task was created by an admin, otherwise shows the member name
             notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            # this is the inside link of the notification, in this case users will be redirected to the tasks
             inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{new_task.pk}"
-            Notifications.create_notifications(
+            
+            # reciever list of the notification. in this case the coordinators
+            reciever_list=[]
+            for member in coordinators:
+                # create_notifications() function requires ieee id in the list.
+                reciever_list.append(member.ieee_id)
+                        
+            NotificationHandler.create_notifications(
                 notification_type=Task_Assignation.task_creation_notification_type.pk,
                 general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{new_task.title}'. Click to see the details.",
-                inside_link=inside_link,created_by=notification_created_by,reciever_list=coordinators
+                inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list
             )
-                        
+                  
             return True
         
         #Else if task_type is Individuals

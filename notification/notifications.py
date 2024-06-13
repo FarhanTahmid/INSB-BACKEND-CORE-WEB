@@ -5,7 +5,7 @@ import logging
 import traceback
 
 
-class Notifications:
+class NotificationHandler:
     
     logger=logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class Notifications:
             return True
         
         except Exception as e:
-            Notifications.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+            NotificationHandler.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
             
