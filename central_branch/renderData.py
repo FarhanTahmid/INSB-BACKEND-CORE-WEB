@@ -504,6 +504,9 @@ class Branch:
             event.event_type.add(*event_type_list)
             event.start_date = event_start_date
             event.end_date = event_end_date
+            ####################################################
+            ######event publish/not publish trigger here####################
+            ####################################################
             event.publish_in_main_web = publish_event
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee

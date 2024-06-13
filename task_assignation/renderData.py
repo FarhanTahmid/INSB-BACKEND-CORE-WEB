@@ -47,6 +47,9 @@ class Task_Assignation:
         except:
             task_created_by=adminUsers.objects.get(username=current_user.user.username).username
         
+        ####################################################
+        ##### new task is created heere ####################
+        ####################################################
         #Create a new task and save it
         new_task = Task(title=title,
                         description=description,
@@ -249,7 +252,7 @@ class Task_Assignation:
             deadline = datetime.strptime(deadline, '%Y-%m-%dT%H:%M')
             #getting user
             user_name = Task_Assignation.get_user(request)
-
+            #logic for task completion button on or off
             if is_task_completed:
                 task_flag = task.is_task_completed
                 if task_flag == False:
@@ -414,6 +417,10 @@ class Task_Assignation:
                 task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
 
+            ####################################################
+            ######task category changed here####################
+            ####################################################
+
             #changing all points to members if task category is changed
             if task_category_changed:
                 #getting previous and new ones
@@ -440,6 +447,10 @@ class Task_Assignation:
             if task.task_type=="Individuals" and len(task.team.all()) == 1:
                 print("here1")
                 task.members.clear()
+
+            ####################################################
+            ######team changed here ############################
+            ####################################################
             elif task.task_type == "Team":
                 #prev_team
                 if is_team_changed: 
@@ -488,6 +499,9 @@ class Task_Assignation:
 
                                 member.delete()
                     task.team.clear()
+            ####################################################
+            ######Inidividual task member changed here##########
+            ####################################################
             elif task.task_type == "Individuals":
                 task.members.clear()
             #Set the new task_type
@@ -497,6 +511,9 @@ class Task_Assignation:
             if prev_task_type != task_type:
                 changed = True
 
+            ####################################################
+            ##task changed for team individual task creation####
+            ####################################################
             if task_type=="Individuals" and len(task.team.all()) == 1:
                 print("here2")
                 members = []
