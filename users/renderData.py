@@ -593,7 +593,7 @@ class PanelMembersData:
                 # check if Member already exists in the Panel
                 check_member=Panel_Members.objects.filter(tenure=panel_info.pk,member=i).exists()
                 if(check_member):
-                    # update Members Position and Teams in both current panel and in Members table
+                    # update Members Position and Teams in current panel
                     Panel_Members.objects.filter(tenure=panel_info.pk,member=i).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
                     messages.info(request,f"{i} already existed in the Panel. Positions and Team were updated.")
                 # if not then add members to the Panel members table
