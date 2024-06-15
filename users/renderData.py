@@ -595,9 +595,7 @@ class PanelMembersData:
                 if(check_member):
                     # update Members Position and Teams in both current panel and in Members table
                     Panel_Members.objects.filter(tenure=panel_info.pk,member=i).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
-                    # Members.objects.filter(ieee_id=i).update(position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
                     messages.info(request,f"{i} already existed in the Panel. Positions and Team were updated.")
-                    return True
                 # if not then add members to the Panel members table
                 else:
                     new_panel_member=Panel_Members.objects.create(tenure=Panels.objects.get(id=panel_info.pk),member=Members.objects.get(ieee_id=i),position=Roles_and_Position.objects.get(id=position),team=Teams.objects.get(primary=team_primary))
