@@ -1137,7 +1137,7 @@ def panel_members_page(request,year):
     
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc() + "<br>year = " + year)
         return cv.custom_500(request)
 
 def officers_page(request):
