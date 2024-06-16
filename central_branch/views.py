@@ -4487,7 +4487,7 @@ def create_task(request,team_primary = None):
                 else:
                     return redirect(f'{app_name}:task_home_team',team_primary)
             
-            task_categories = Task_Category.objects.all()
+            task_categories = Task_Category.objects.all().order_by('name')
             
             #loads central bracnh if none or if is 1
             if team_primary == None or team_primary == "1":
@@ -4567,7 +4567,7 @@ def task_home(request,team_primary = None):
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
             permission_for_co_ordinator_and_incharges_to_create_task = "Team"
         #getting all task categories
-        all_task_categories = Task_Category.objects.all()
+        all_task_categories = Task_Category.objects.all().order_by('name')
 
         if request.method == "POST":
 
