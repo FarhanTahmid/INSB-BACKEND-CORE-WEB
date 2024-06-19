@@ -1192,14 +1192,14 @@
                         <option value="{{ task_category.name }}" {% if task.task_category == task_category %}selected{% endif %}>{{ task_category.name }}</option>
                         {% endfor %}
                     </select>
+                </div>
 
-                    <div class="late_text">
-                        {% if is_late %}
-                        {% if not task.is_task_completed %}
-                        <p style="color: red; font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
-                        {% endif %}
-                        {% endif %}
-                    </div>
+                <div class="late_text">
+                    {% if is_late %}
+                    {% if not task.is_task_completed %}
+                    <p style="color: red; font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                    {% endif %}
+                    {% endif %}
                 </div>
                 {% endif %}
 
@@ -1219,57 +1219,75 @@
                 </div>
 
 
-                <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const searchInput = document.getElementById('search_task_category');
-                    const optionsContainer = document.getElementById('options_task_category');
-                    const options = optionsContainer.getElementsByClassName('option');
-                    const hiddenSelect = document.getElementById('task_category_select');
-                    const taskPointsDisplay = document.getElementById('task_points');
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search_task_category');
+            const optionsContainer = document.getElementById('options_task_category');
+            const options = optionsContainer.getElementsByClassName('option');
+            const hiddenSelect = document.getElementById('task_category_select');
+            const taskPointsDisplay = document.getElementById('task_points');
+            const lateTextContainer = document.querySelector('.category.user .late_text'); // Late text container
 
-                    // Function to set initial values based on existing task category
-                    function setInitialValues() {
-                        const selectedOption = hiddenSelect.value; // Get the selected value from hidden select
-                        const correspondingOption = Array.from(options).find(option => option.getAttribute('data-value') === selectedOption);
+            // Function to set initial values based on existing task category
+            function setInitialValues() {
+                const selectedOption = hiddenSelect.value; // Get the selected value from hidden select
+                const correspondingOption = Array.from(options).find(option => option.getAttribute('data-value') === selectedOption);
 
-                        if (correspondingOption) {
-                            searchInput.value = correspondingOption.textContent.trim(); // Set input value to selected option text
-                            taskPointsDisplay.textContent = correspondingOption.getAttribute('data-points'); // Update task points display
-                        }
-                    }
+                if (correspondingOption) {
+                    searchInput.value = correspondingOption.textContent.trim(); // Set input value to selected option text
+                    taskPointsDisplay.textContent = correspondingOption.getAttribute('data-points'); // Update task points display
+                }
+            }
 
-                    // Initialize initial values
-                    setInitialValues();
+            // Initialize initial values
+            setInitialValues();
 
-                    searchInput.addEventListener('focus', () => {
-                        optionsContainer.style.display = 'block';
-                    });
+            searchInput.addEventListener('focus', () => {
+                optionsContainer.style.display = 'block';
+            });
 
-                    searchInput.addEventListener('input', function() {
-                        const filter = this.value.toLowerCase();
-                        for (let i = 0; i < options.length; i++) {
-                            const option = options[i];
-                            const text = option.textContent || option.innerText;
-                            option.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
-                        }
-                    });
+            searchInput.addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const text = option.textContent || option.innerText;
+                    option.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+                }
+            });
 
-                    for (let i = 0; i < options.length; i++) {
-                        options[i].addEventListener('click', function() {
-                            searchInput.value = this.textContent;
-                            hiddenSelect.value = this.getAttribute('data-value');
-                            taskPointsDisplay.textContent = this.getAttribute('data-points');
-                            optionsContainer.style.display = 'none';
-                        });
-                    }
-
-                    document.addEventListener('click', function(e) {
-                        if (!e.target.closest('.searchable-select')) {
-                            optionsContainer.style.display = 'none';
-                        }
-                    });
+            for (let i = 0; i < options.length; i++) {
+                options[i].addEventListener('click', function() {
+                    searchInput.value = this.textContent;
+                    hiddenSelect.value = this.getAttribute('data-value');
+                    taskPointsDisplay.textContent = this.getAttribute('data-points');
+                    optionsContainer.style.display = 'none';
                 });
-                </script>
+            }
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.searchable-select')) {
+                    optionsContainer.style.display = 'none';
+                }
+            });
+
+            // Check if task is late and hide input field accordingly
+            function updateInputFieldVisibility() {
+                const isLate = lateTextContainer && lateTextContainer.querySelector('p') && lateTextContainer.querySelector('p').textContent.trim() === 'Task deadline has exceeded';
+                
+                if (isLate) {
+                    searchInput.style.display = 'none'; // Hide input field if task is late
+                } else {
+                    searchInput.style.display = 'block'; // Show input field otherwise
+                }
+            }
+
+            // Call the function initially and on relevant events
+            updateInputFieldVisibility();
+            hiddenSelect.addEventListener('change', updateInputFieldVisibility); // Update on hidden select change
+            document.addEventListener('DOMNodeInserted', updateInputFieldVisibility); // Update on DOM changes
+        });
+        </script>
+
 
 
     
