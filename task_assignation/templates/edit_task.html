@@ -1171,6 +1171,13 @@
                 <!-- Task Category -->
                 <br>
                 {% if create_individual_task_access or create_team_task_access %}
+                <div class="late_text">
+                    {% if is_late %}
+                    {% if not task.is_task_completed %}
+                    <p style="color: red; font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                    {% endif %}
+                    {% endif %}
+                </div>
                 <div class="category">
                     <label class="category_label" for="task_category">Task Category:</label>
                     
@@ -1194,13 +1201,7 @@
                     </select>
                 </div>
 
-                <div class="late_text">
-                    {% if is_late %}
-                    {% if not task.is_task_completed %}
-                    <p style="color: red; font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
-                    {% endif %}
-                    {% endif %}
-                </div>
+
                 {% endif %}
 
                 <div class="category user">
