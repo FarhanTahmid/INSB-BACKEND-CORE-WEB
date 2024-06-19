@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Task Leader-board Homepage | IEEE NSU Student Branch</title>
+    <meta
+      name="description"
+      content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <!-- <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" /> -->
+
+    <!--common CSS-->
+    {% block common_css %} {% include "common_css.html" %} {% endblock common_css %}
+    <style>
+      body,
+      html {
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .nav a.active {
+        color: #ffa300;
+      }
+
+      .table-class tbody tr:nth-child(1) {
+        background-color: rgba(255, 215, 0, 0.125);
+      }
+
+      .table-class tbody tr:nth-child(2) {
+        background-color: rgba(192, 192, 192, 0.3);
+      }
+
+      .table-class tbody tr:nth-child(3) {
+        background-color: rgba(205, 127, 50, 0.1);
+      }
+
+      /* All and unread toggle button style */
+      .button-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+      }
+
+      .button {
+        padding: 5px 20px;
+        margin-right: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 16px;
+        background-color: transparent;
+        color: black;
+        transition: background-color 0.3s ease;
+      }
+
+      .button.active {
+        background-color: #002855;
+        color: white;
+      }
+      .txt_leaderboard {
+        text-align: center;
+        margin: 30px 0 40px 0;
+        font-weight: bold;
+      }
+      .individual_table {
+        display: none;
+      }
+      .team_table {
+        display: none;
+      }
+      .show {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+      {% block preloader %} {% include 'preloader.html' %} {% endblock preloader %}
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+      <!-- aside -->
+      <div id="aside" class="app-aside modal nav-dropdown">
+        {% block sidebar %} {% include 'users/sidebar.html' %} {% endblock %}
+      </div>
+
+      <!-- navbar -->
+      <div id="content" class="app-content box-shadow-z0" role="main">
+        {% block navbar %} {% include 'navbar.html' %} {% endblock navbar %}
+      </div>
+
+      <div
+        ui-view
+        class="app-body"
+        style="justify-content: center; margin-left: 15%; margin-right: 15%"
+        id="view"
+      >
+        <!-- heading -->
+        <h3 class="txt_leaderboard">Leaderboards</h3>
+        <!-- toggle button between tables -->
+        <div class="button-container">
+          <button
+            class="button individual active"
+            onclick="toggleButton('individual')"
+          >
+            Individual
+          </button>
+          <button class="button team" onclick="toggleButton('team')">
+            Team
+          </button>
+        </div>
+
+        <!-- individual table block -->
+        <div class="individual_table show">
+          {% block individual_task_leaderboard %} {% include 'LeaderBoards/individual_task_leaderboard.html'%} {% endblock individual_task_leaderboard %}
+        </div>
+
+        <!-- team table block -->
+        <div class="team_table">
+          {% block team_task_leaderboard %} {% include 'LeaderBoards/team_task_leaderboard.html'%} {% endblock team_task_leaderboard %}
+        </div>
+      </div>
+    </div>
+
+    <!-- endbuild -->
+
+    <!--Theme Switcher-->
+    {% block theme_switcher %} 
+    {% include "theme_switcher.html" %} 
+    {% endblock theme_switcher %}
+    <!-- app end-->
+    
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
+    <script>
+      //toggle button
+
+      //storing the blocks in variables
+      let individualTable = document.querySelector(".individual_table");
+      let teamTable = document.querySelector(".team_table");
+
+      function toggleButton(buttonType) {
+        //function to check which button is clicked
+        if (buttonType === "individual") {
+          //adding and removing class according to the selected button
+          individualTable.classList.add("show");
+          teamTable.classList.remove("show");
+        } else if (buttonType === "team") {
+          //adding and removing class according to the selected button
+          teamTable.classList.add("show");
+          individualTable.classList.remove("show");
+        }
+
+        // active toggle button color
+        const buttons = document.querySelectorAll(".button");
+        buttons.forEach((btn) => {
+          if (btn.classList.contains(buttonType)) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+      }
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the current page's URL
+            const currentPageUrl = window.location.href;
+
+            // Find the links in the navigation bar
+            const navLinks = document.querySelectorAll(".nav a");
+
+            // Loop through the links and add a "active" class to the matching link
+            navLinks.forEach(function (link) {
+                if (link.href === currentPageUrl) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+    <script>
+      //converting the task points to 2 decimals
+      document.addEventListener('DOMContentLoaded', function() {
+          // Select all table cells with the class 'task-points'
+          const taskPointsCells = document.querySelectorAll('.task-points');
+      
+          taskPointsCells.forEach(function(cell) {
+              // Get the text content of the cell
+              let points = cell.textContent;
+              // Convert the text content to a number and format it to 2 decimal places
+              let formattedPoints = parseFloat(points).toFixed(2);
+              // Set the formatted number back to the cell's text content
+              cell.textContent = formattedPoints;
+          });
+      });
+  </script>
+  </body>
+</html>

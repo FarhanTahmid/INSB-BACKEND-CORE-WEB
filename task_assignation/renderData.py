@@ -170,14 +170,15 @@ class Task_Assignation:
                         message += "drive link"
                 #saving task log/ updating it
                 if message!="":
-                    message+=f" were added as task type by {request.user.username} to {memb.ieee_id}"
+                    user_name = Task_Assignation.get_user(request)
+                    message+=f" were added as task type by {user_name} to {memb.name}({memb.ieee_id})"
                     task_log_message = f'Task Name: {title}, {message}'
                     Task_Assignation.save_task_logs(new_task,task_log_message)
             
             #getting members IEEE_ID
             members_ieee_id = []
             for member in members:
-                members_ieee_id.append(member.ieee_id)
+                members_ieee_id.append(member.name)
             
             members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
 
@@ -198,7 +199,7 @@ class Task_Assignation:
                 Member_Task_Point.objects.create(task=new_task,member=member.ieee_id,completion_points=points_for_members)
 
             #updating task log details
-            task_log_message = f'Task Name: {title}, assigned to Members (IEEE ID): {members_ieee_id}'
+            task_log_message = f'Task Name: {title}, assigned to Members: {members_ieee_id}'
             Task_Assignation.save_task_logs(new_task,task_log_message)
 
             return True
@@ -216,12 +217,14 @@ class Task_Assignation:
             task_log_details = Task_Log.objects.get(task_number = task)
             #formatting deadline
             deadline = datetime.strptime(deadline, '%Y-%m-%dT%H:%M')
+            #getting user
+            user_name = Task_Assignation.get_user(request)
 
             if is_task_completed:
                 task_flag = task.is_task_completed
                 if task_flag == False:
                     task.is_task_completed = True
-                    task_log_message = f"Task marked completed by {request.user.username}"
+                    task_log_message = f"Task marked completed by {user_name}"
                     Task_Assignation.save_task_logs(task,task_log_message)
                     task.save()
                     #For each member in the selected members for the task
@@ -229,6 +232,7 @@ class Task_Assignation:
                         #Get their respective task points and add it to their user id as the task is set to completed
                         member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                         member_points.is_task_completed = True
+                        member_points.completion_date = datetime.now()
                         member_points.save()
                         member.completed_task_points += member_points.completion_points
                         member.save()
@@ -247,6 +251,7 @@ class Task_Assignation:
                                 member.completed_task_points += mem.completion_points
                                 member.save()
                                 mem.is_task_completed = True
+                                mem.completion_date = datetime.now()
                                 mem.save()
                                 Task_Assignation.task_completion_email(member,task,mem.completion_points)
 
@@ -267,6 +272,7 @@ class Task_Assignation:
                     for member in task.members.all():
                         member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                         member_points.is_task_completed = True
+                        member_points.completion_date = datetime.now()
                         member_points.save()
 
             else:
@@ -274,7 +280,7 @@ class Task_Assignation:
                 if task_flag == False:
                     pass
                 else:
-                    task_log_message = f"Task marked undone by {request.user.username}"
+                    task_log_message = f"Task marked undone by {user_name}"
                     Task_Assignation.save_task_logs(task,task_log_message)
                     task.save()
                     #For each member in the selected members for the task
@@ -282,6 +288,7 @@ class Task_Assignation:
                         #Get their respective task points and subtract it to their user id as the task is set back to undone
                         member_points = Member_Task_Point.objects.get(task=task, member=member.ieee_id)
                         member_points.is_task_completed = False
+                        member_points.completion_date = None
                         member_points.save()
                         member.completed_task_points -= member_points.completion_points
                         member.save()
@@ -325,6 +332,10 @@ class Task_Assignation:
                 for team in current_teams:
                     if team not in team_check:
                         is_team_changed = True
+                
+                for team in team_check:
+                    if team not in current_teams:
+                        is_team_changed = True
 
             #Checking to see if the list is empty depending on which task_type is selected
             #If empty then stop the creation
@@ -359,18 +370,18 @@ class Task_Assignation:
             task_category_changed = False
             #making necessary updates in task log history
             if prev_title != title:
-                task_log_message = f"Task Title changed from {prev_title} to {title} by {request.user.username}"
+                task_log_message = f"Task Title changed from {prev_title} to {title} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
             if description_without_tags != prev_description:
-                task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {request.user.username}"
+                task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
             if new_task_category != prev_task_category:
-                task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {request.user.username}"
+                task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
                 task_category_changed = True
             #deadline saving not correct
             if prev_deadline != str(deadline):
-                task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {request.user.username}"
+                task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
 
             #changing all points to members if task category is changed
@@ -480,7 +491,7 @@ class Task_Assignation:
                     
                     # Send email to only those members who were assigned the task in the update section
                     if volunteer not in existing_task_member:
-                        message = f'Task Name: {title}, task assiged to {volunteer.ieee_id} when updating by {task.task_created_by}'
+                        message = f'Task Name: {title}, task assiged to {volunteer.name}({volunteer.ieee_id}) when updating by {task.task_created_by}'
                         Task_Assignation.save_task_logs(task,message)
                         Task_Assignation.task_creation_email(request,volunteer,task)
                         
@@ -589,13 +600,13 @@ class Task_Assignation:
                     member_task_type.save()
 
                     if message!="":
-                        message+=f" by {request.user.username} for {memb.ieee_id}"
+                        message+=f" by {user_name} for {memb.name}({memb.ieee_id})"
                         Task_Assignation.save_task_logs(task,message)
 
                 #getting members IEEE_ID
                 members_ieee_id = []
                 for member in members:
-                    members_ieee_id.append(member.ieee_id)
+                    members_ieee_id.append(member.name)
                 
                 members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
                 if changed:
@@ -611,6 +622,7 @@ class Task_Assignation:
                     #For all team primaries in team_select, get their respective team reference and store in teams array
                     for team_primary in team_select:
                         teams.append(Teams.objects.get(primary=team_primary))
+                        print(teams)
                     #Set the array of teams as list for team inside the task and save the task with newly added teams
                     task.team.add(*teams)
 
@@ -701,7 +713,7 @@ class Task_Assignation:
                     
                     # Send email to only those members who were assigned the task in the update section
                     if volunteer not in existing_task_member:
-                        message = f'Task Name: {title}, task assiged to {volunteer.ieee_id} when updating by {task.task_created_by}'
+                        message = f'Task Name: {title}, task assiged to {volunteer.name}({volunteer.ieee_id}) when updating by {task.task_created_by}'
                         Task_Assignation.save_task_logs(task,message)
                         Task_Assignation.task_creation_email(request,volunteer,task)
                         
@@ -810,13 +822,13 @@ class Task_Assignation:
                     member_task_type.save()
 
                     if message!="":
-                        message+=f" by {request.user.username} for {memb.ieee_id}"
+                        message+=f" by {user_name} for {memb.name}({memb.ieee_id})"
                         Task_Assignation.save_task_logs(task,message)
 
                 #getting members IEEE_ID
                 members_ieee_id = []
                 for member in members:
-                    members_ieee_id.append(member.ieee_id)
+                    members_ieee_id.append(member.name)
                 
                 members_ieee_id = ", ".join(str(id) for id in members_ieee_id)
                 if changed:
@@ -872,12 +884,20 @@ class Task_Assignation:
         files = Task_Document.objects.filter(task=task)
         for file in files:
             Task_Assignation.delete_task_document(file)
+        
+        task_member_points = Member_Task_Point.objects.filter(task = task)
+        for i in task_member_points:
 
+            member = Members.objects.get(ieee_id = i.member)
+            member.completed_task_points -= i.completion_points
+            member.save()
+        
         media_files = Task_Media.objects.filter(task=task)
         for media_file in media_files:
             Task_Assignation.delete_task_media(media_file)
 
         Member_Task_Upload_Types.objects.filter(task=task).delete()
+        Member_Task_Point.objects.filter(task = task).delete()
         Task_Log.objects.filter(task_number=task).delete()
 
         task.delete()
@@ -1057,12 +1077,12 @@ class Task_Assignation:
         #TODO:set to all instead of individuals after making teams
         dic={}
         if user.position.is_eb_member:
-            user_tasks = Task.objects.filter(task_created_by = user).order_by('is_task_completed','-deadline')
+            user_tasks = Task.objects.filter(task_created_by = user).order_by('-pk','is_task_completed')
             for task in user_tasks:
                 earned_points = 0
                 dic[task] = earned_points
         else:
-            user_tasks = Task.objects.filter(members = user).order_by('is_task_completed','-deadline')
+            user_tasks = Task.objects.filter(members = user).order_by('-pk','is_task_completed')
             for task in user_tasks:
                 earned_points = Member_Task_Point.objects.get(task = task,member = user)
                 dic[task] = earned_points
@@ -1079,14 +1099,14 @@ class Task_Assignation:
                     permission_paper_save = Permission_Paper.objects.get(task=task,uploaded_by = member.ieee_id)
                     permission_paper_save.permission_paper = permission_paper
                     permission_paper_save.save()
-                    message = f'Task Name: {task.title}, permission paper category was updated by {member.ieee_id}'
+                    message = f'Task Name: {task.title}, permission paper category was updated by {member.name}({member.ieee_id})'
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
                 #permission paper does not exist
                 except:
                     permission_paper_save = Permission_Paper.objects.create(task=task,permission_paper = permission_paper,uploaded_by = member.ieee_id)
                     permission_paper_save.save()
-                    message = f'Task Name: {task.title}, new permission paper category was saved by {member.ieee_id}'
+                    message = f'Task Name: {task.title}, new permission paper category was saved by {member.name}({member.ieee_id})'
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
             if media:
@@ -1102,7 +1122,7 @@ class Task_Assignation:
                     #saving new one
                     media_save = Task_Media.objects.create(task=task,media = m,uploaded_by = member.ieee_id)
                     media_save.save()
-                    message = f'Task Name: {task.title}, new media was uploaded by {member.ieee_id}, name = {media_save}'
+                    message = f'Task Name: {task.title}, new media was uploaded by {member.name}({member.ieee_id}), name = {media_save}'
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
             if content!=None:
@@ -1111,13 +1131,13 @@ class Task_Assignation:
                     content_save.content = content
                     content_save.save()
                     #updating task_log details
-                    message = f'Task Name: {task.title}, previous content was updated by {member.ieee_id}'
+                    message = f'Task Name: {task.title}, previous content was updated by {member.name}({member.ieee_id})'
                     Task_Assignation.save_task_logs(task,message)
                 except:
                     #content does not exist new one is created
                     content_save = Task_Content.objects.create(task=task, content = content,uploaded_by = member.ieee_id)
                     content_save.save()
-                    message = f'Task Name: {task.title}, new content was saved by {member.ieee_id}'
+                    message = f'Task Name: {task.title}, new content was saved by {member.name}({member.ieee_id})'
                     Task_Assignation.save_task_logs(task,message)
             if file_upload:
                 # file_upload_save = Task_Document.objects.filter(task=task,uploaded_by = member.ieee_id)
@@ -1131,7 +1151,7 @@ class Task_Assignation:
                 for file in file_upload:
                     file_upload_save = Task_Document.objects.create(task = task,document = file,uploaded_by = member.ieee_id)
                     file_upload_save.save()
-                    message = f'Task Name: {task.title}, new document was uploaded by = {member.ieee_id}, document name = {file}'
+                    message = f'Task Name: {task.title}, new document was uploaded by = {member.name}({member.ieee_id}), document name = {file}'
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
             if drive_link!=None:
@@ -1139,14 +1159,14 @@ class Task_Assignation:
                     drive_link_save = Task_Drive_Link.objects.get(task=task,uploaded_by = member.ieee_id)
                     drive_link_save.drive_link = drive_link
                     drive_link_save.save()
-                    message = f'Task Name: {task.title}, previous drive link was updated by = {member.ieee_id}'
+                    message = f'Task Name: {task.title}, previous drive link was updated by = {member.name}({member.ieee_id})'
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
                 except:
                     #cdrive link does not exist new one is created
                     drive_link_save = Task_Drive_Link.objects.create(task=task,drive_link = drive_link,uploaded_by = member.ieee_id)
                     drive_link_save.save()
-                    message = f'Task Name: {task.title}, new drive link was saved by = {member.ieee_id}'
+                    message = f'Task Name: {task.title}, new drive link was saved by = {member.name}({member.ieee_id})'
                     #updating task_log details
                     Task_Assignation.save_task_logs(task,message)
 
@@ -1336,7 +1356,7 @@ This is an automated message. Do not reply
                                 )
             # email.send()
 
-            task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member_id}, work'
+            task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
             Task_Assignation.save_task_logs(task,task_log_message)
 
@@ -1350,6 +1370,7 @@ This is an automated message. Do not reply
 
         try:
             marks = float(marks)
+            member_user = Members.objects.get(ieee_id = ieee_id)
             member_task = Member_Task_Point.objects.get(task = task, member = ieee_id)
             #saving old marks
             previous_marks = member_task.completion_points
@@ -1363,7 +1384,7 @@ This is an automated message. Do not reply
                 member.completed_task_points += marks
                 member.save()
 
-            task_log_message =  f'Task Name: {task.title}, marks updated for {ieee_id} from {previous_marks} to {member_task.completion_points}'
+            task_log_message =  f'Task Name: {task.title}, marks updated for {member_user.name}({ieee_id}) from {previous_marks} to {member_task.completion_points}'
             #updating logs
             Task_Assignation.save_task_logs(task,task_log_message)
 
@@ -1371,11 +1392,11 @@ This is an automated message. Do not reply
         except:
             return False
     
-    def task_email_to_eb(request,task,logged_in_user):
+    def task_email_to_eb(request,task,logged_in_user,team_primary=None):
 
         #This function will send an email to the Eb who created this task once task assignee finishes and hits
         #the complete button
-
+        user_name = Task_Assignation.get_user(request)
         try:
             username = task.task_created_by
             email_to = []
@@ -1387,10 +1408,18 @@ This is an automated message. Do not reply
                 member = adminUsers.objects.get(username=username)
                 email_to.append(member.email)
 
+
             email_from = settings.EMAIL_HOST_USER
             site_domain = request.META['HTTP_HOST']
+
+            
+            if task.task_type == 'Individuals' and len(task.team.all()) == 0:
+                url = f'{site_domain}/portal/central_branch/task/{task.pk}/upload_task'
+            else:
+                url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
+            
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
-            message = f'''Hello {username},
+            message = f'''Hello {user_name},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
@@ -1398,7 +1427,7 @@ dedicated members, and save them. To allocate their points please toggle 'on' th
 in the task edit page, if you think the entire task is completed.
 
 Please follow the link to view the completed task: 
-{site_domain}/portal/central_branch/task/{task.pk}/upload_task
+{url}
 
 Best Regards
 IEEE NSU SB Portal
@@ -1697,7 +1726,7 @@ This is an automated message. Do not reply
                         if people.position.is_co_ordinator and people.position.is_officer:
                             task.members.remove(people)
                             task.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} removed. Marks obtained - 25% of task'
                             #points deduction
                             points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
                             points.completion_points = task.task_category.points * (25/100)
@@ -1715,7 +1744,7 @@ This is an automated message. Do not reply
                     task.members.add(people)
                     task.save()
 
-                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.name}({people.ieee_id}), of {team} added to the task'
                     #setting message
                     Task_Assignation.save_task_logs(task,task_log_message)
                     Task_Assignation.task_creation_email(request,people,task)
@@ -1750,7 +1779,7 @@ This is an automated message. Do not reply
                             print("people removed")
                             print(people)
                             task.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.ieee_id}, of {team} removed. Marks deducted 25%'
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} removed. Marks obtained - 25% of task'
                             #points deduction
                             points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
                             points.completion_points = task.task_category.points * (25/100)
@@ -1767,7 +1796,7 @@ This is an automated message. Do not reply
                 for people in team_incharges:
                     task.members.add(people)
                     task.save()
-                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.ieee_id}, of {team} added to the task'
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.name}({people.ieee_id}), of {team} added to the task'
                     #setting message
                     Task_Assignation.save_task_logs(task,task_log_message)
                     Task_Assignation.task_creation_email(request,people,task)
@@ -1849,6 +1878,7 @@ This is an automated message. Do not reply
         '''This function will forward the task to the core/team volunteers'''
 
         task = Task.objects.get(id=task_id)
+        user_name = Task_Assignation.get_user(request)
 
         # if Task_Assignation.is_task_forwarded_to_incharge(task,team_primary):
         #     return True
@@ -1973,7 +2003,7 @@ This is an automated message. Do not reply
                 member_task_type.save()
 
                 if message!="":
-                    message+=f" by {request.user.username} for {ieee_id}"
+                    message+=f" by {user_name} for {memb.name}({ieee_id})"
                     Task_Assignation.save_task_logs(task,message)
                     
                 if memb in task.members.all():
@@ -2004,7 +2034,7 @@ This is an automated message. Do not reply
                             points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
                             points_for_incharge.completion_points = task.task_category.points * (40/100)
                             points_for_incharge.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
 
@@ -2098,7 +2128,7 @@ This is an automated message. Do not reply
                 member_task_type.save()
 
                 if message!="":
-                    message+=f" by {request.user.username} for {ieee_id}"
+                    message+=f" by {user_name} for {memb.name}({ieee_id})"
                     Task_Assignation.save_task_logs(task,message)
                     
                 if memb in task.members.all():
@@ -2129,7 +2159,7 @@ This is an automated message. Do not reply
                         points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
                         points_for_incharge.completion_points = task.task_category.points * (40/100)
                         points_for_incharge.save()
-                        task_log_message = f'Task Name: {task.title}, task forwared by {request.user.username}, hence Incharge, {member.ieee_id}, of {team} removed from task. Points deducted by 15%'
+                        task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
                         #setting message
                         Task_Assignation.save_task_logs(task,task_log_message)
 
@@ -2179,12 +2209,12 @@ This is an automated message. Do not reply
 
         if team_primary == None or team_primary == "1":
             
-            return Task.objects.all().order_by('is_task_completed','-deadline')
+            return Task.objects.all().order_by('-pk','is_task_completed')
         else:
 
             team = Teams.objects.get(primary = int(team_primary))
-            tasks = list(Task.objects.filter(task_type = "Team",team = team).order_by('is_task_completed','-deadline'))
-            tasks += (Task.objects.filter(task_type = "Individuals",team=team).order_by('is_task_completed','-deadline'))
+            tasks = list(Task.objects.filter(task_type = "Team",team = team).order_by('-pk','is_task_completed'))
+            tasks += (Task.objects.filter(task_type = "Individuals",team=team).order_by('-pk','is_task_completed'))
 
         return tasks
                 
@@ -2258,7 +2288,21 @@ This is an automated message. Do not reply
             return True
         except:
             return False  
+    
+    def get_user(request):
+        
+        ''''This function will return the type of user logged in'''
 
+        user = request.user.username
+
+        try:
+            member = Members.objects.get(ieee_id = user)
+            member = member.name
+        except:
+            member = adminUsers.objects.get(username = user)
+            member = member.username
+
+        return member
         
             
         

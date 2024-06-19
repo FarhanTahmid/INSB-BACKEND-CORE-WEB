@@ -262,6 +262,21 @@
         background: white;
         border-color: #003f69;
     }
+
+    .leaderboards-button{
+      padding: 5px 15px;
+      color: black;
+      background: #FFDE59;
+      margin: 16px 4px 16px; 
+      border-radius: 4px;
+      border: 2px solid #FCCB02;
+      transition: all ease-in-out .3s;
+      cursor: pointer;
+    }
+    .leaderboards-button:hover{
+        background: white;
+        border-color: #FCCB02;
+    }
     </style>
   </head>
   {% block preloader %}
@@ -293,8 +308,8 @@
           Tasks
         </h2>
 
-        {% if has_task_create_access %}
         <div class="task-btn">
+        {% if has_task_create_access %}
           <a
             href="{% url 'central_branch:create_task' %}"
             class="create-task-btn"
@@ -310,8 +325,19 @@
           >
             Create Task Category
           </button>
-        </div>
+          {% endif %}
+          
+          {% if app_name == 'central_branch' %}
+          <a
+          href="{% url "central_branch:task_leaderboard" %}"
+          class="leaderboards-button"
+          style="margin-bottom: 15px; cursor: pointer"
+          >
+          Task LeaderBoards
+        </a>
         {% endif %}
+      </div>
+
         <script>
           {% for message in messages %}
       

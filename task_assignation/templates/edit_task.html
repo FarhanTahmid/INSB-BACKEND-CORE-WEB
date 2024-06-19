@@ -205,6 +205,7 @@
             padding: 2px 26px;
             color: #d33838;
             background: white;
+            margin-bottom: 15px;
             border-radius: 4px;
             border: 1px solid #d33838;
             transition: all ease-in-out .3s;
@@ -789,6 +790,9 @@
     .forward_to_team_incharges_modal_button:hover{
         background-color:white;
     }
+    .close5{
+        cursor: pointer;
+    }
     </style>
   </head>
   <body>
@@ -1020,29 +1024,16 @@
                                     </div>
                                     <div style="margin: 25px; text-align: left;">Would You Like To Proceed To Forward Task To Team Incharges?</div>
                                     <!-- Align the "Proceed" button to the right -->
-                                        <input type="submit" value="{{team.team_name}}" name="{{team.primary}}" class="confirm_delete_task_btn">
-                                        <input type="hidden" value="{{team.primary}}" name="teamclicked">
+                                        <input type="submit" class="confirm_delete_task_btn">
+                                        <input type="hidden" name="teamclicked">
                                 </div>
                             </div>
                             
 
                         {% endif %}
                         {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed and task.task_type == "Team" %}
-                            {% comment %} <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a> {% endcomment %}
-                            <button type="button" class="check-task-button forward_to_volunteers_modal_button" name="{{team.primary}}">Forward Task to Volunteers</button>
+                            <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
                         {% endif %}
-                        <div id="modal5" class="confirm_forward">
-                            <!-- Modal content -->
-                            <div class="modal-5-content">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; background: #002855; padding: 10px 20px; position: sticky; top: 0px;">
-                                    <h5 style="color: #fff; position: relative; top: 3px">Confirm Forward?</h5>
-                                    <span class="close5" style="color: white;">&times;</span>
-                                </div>
-                                <div style="margin: 25px; text-align: left;">Would You Like To Proceed To Forward Task To Volunteers?</div>
-                                <!-- Align the "Proceed" button to the right -->
-                                <a href="{% url 'central_branch:add_task' task.pk %}" class="confirm_delete_task_btn" style="margin-bottom: 15px; margin-right: 15px; float: right;">Forward Task to Volunteers</a> 
-                            </div>
-                        </div>
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                         {% if my_task %}
                         <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
@@ -1434,19 +1425,43 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var btn_modal = document.getElementById("forward_to_team_incharges_modal_button");
             var modal4 = document.getElementById("modal4");
-            var submit_btn = modal4.queryselector(".confirm_delete_task_btn");
-            var hidden_input = modal4.queryselector("input[name='teamclicked']");
-            modal4.style.display = "none";
-            btn_modal.addEventListener('click', function() {
-                console.log(btn_modal.name);
-                submit_btn.value = btn_modal.value;
-                submit_btn.name = btn_modal.name;
-                hidden_input.value = btn_modal.name;
-                modal4.style.display = "block";
-            })
-        })
+            var closeBtn = modal4.querySelector(".close4");
+            var submitBtn = modal4.querySelector(".confirm_delete_task_btn");
+            var hiddenInput = modal4.querySelector("input[name='teamclicked']");
+            
+            closeBtn.addEventListener('click', function() {
+                modal4.style.transform = "translateY(-50px)";
+                modal4.style.zIndex = "-100";
+                modal4.style.opacity = "0";
+                setTimeout(() => { modal4.style.display = "none"; }, 300);
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target == modal4) {
+                    modal4.style.transform = "translateY(-50px)";
+                    modal4.style.zIndex = "-100";
+                    modal4.style.opacity = "0";
+                    setTimeout(() => { modal4.style.display = "none"; }, 300);
+                }
+            });
+
+            var buttons = document.querySelectorAll(".forward_to_team_incharges_modal_button");
+            buttons.forEach(function(btn_modal) {
+                btn_modal.addEventListener('click', function() {
+                    console.log(btn_modal.name);
+                    submitBtn.value = btn_modal.value;
+                    submitBtn.name = btn_modal.name;
+                    hiddenInput.value = btn_modal.name;
+                    modal4.style.display = "block";
+                    setTimeout(() => {
+                        modal4.style.transform = "translateY(0)";
+                        modal4.style.zIndex = "103100";
+                        modal4.style.opacity = "1";
+                    }, 10);
+                });
+            });
+        });
     </script>
 
 
@@ -1802,29 +1817,12 @@
         }
     </script>
     
-    <script>
-        // Modal 5
-        var modal5 = document.getElementById("modal5");
-        var btn5 = document.querySelector(".forward_to_volunteers_modal_button");
-        var span5 = document.getElementsByClassName("close5")[0];
-    
-        btn5.onclick = function() {
-            modal5.style.transform = 'translateY(0px)';
-            modal5.style.zIndex = '103100';
-            modal5.style.opacity = '1';
-        }
-    
-        span5.onclick = function() {
-            modal5.style.transform = 'translateY(-50px)';
-            modal5.style.zIndex = '-100';
-            modal5.style.opacity = '0';
-        }
-    </script>
+
     
     <script>
         // Handle clicks outside of any modal
         window.onclick = function(event) {
-            var modals = [modal1, modal2, modal3, modal4, modal5];
+            var modals = [modal1, modal2, modal3, modal4];
             modals.forEach(function(modal) {
                 if (event.target == modal) {
                     modal.style.transform = 'translateY(-50px)';

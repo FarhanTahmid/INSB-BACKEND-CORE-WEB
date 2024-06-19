@@ -1,0 +1,529 @@
+{% block bell_notification %}
+<style>
+  #notification {
+    max-height: 450px;
+    width: 375px;
+    position: absolute;
+    display: none;
+    background-color: rgba(255, 255, 255);
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+    top: 45px;
+    right: 4%;
+    box-shadow: -2px 2px 20px 2px #0000000f;
+  }
+
+  .msg-box {
+    max-height: 420px;
+    width: 369px;
+    padding: 4px 0px 0px 5px;
+    overflow-y: auto;
+    overflow-x: clip;
+  }
+
+  .msg {
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: -27px;
+    background-color: rgb(224, 242, 254);
+    color: #000;
+    transition: all 0.2s ease-in;
+  }
+
+  .sender_title {
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .notification_time {
+    color: gray;
+    font-size: 12px;
+    position: relative;
+    top: 3px;
+  }
+
+  .notification_msg {
+    top: 20px;
+    font-size: 14px;
+    margin-bottom: 0;
+    color: #464646;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .sender_content {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .notification_content {
+    max-width: 78%;
+  }
+
+  .notification_content>h6 {
+    padding: 0;
+  }
+
+  .see-all,
+  .see-all.active {
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    color: #00629b !important;
+    transition: all 0.3s ease;
+  }
+
+  .dropdown-content.active {
+    color: #000 !important;
+  }
+
+  .see-all:hover,
+  .see-all.active:hover {
+    color: #FFA300 !important;
+  }
+
+  .msg:hover,
+  .see-all:hover {
+    cursor: pointer;
+  }
+
+  .bell-icon {
+    color: #000000;
+    transition: all .1s ease-in;
+  }
+
+  .bell-icon:hover {
+    scale: 1.1;
+  }
+
+  .msg-box::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .msg-box::-webkit-scrollbar-thumb {
+    background-color: #e7eeef;
+    transition: all 0.4s ease-in-out;
+    border-radius: 4px;
+  }
+
+  .msg-box::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(169, 170, 170);
+  }
+
+  .sender_frame {
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+  }
+
+  .sender_frame img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+  }
+
+  .time_dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .three_dots {
+    color: #818da2;
+    font-weight: bold;
+    text-align: center;
+    font-weight: bold;
+    font-size: 19px;
+    position: relative;
+    bottom: 19px;
+    left: 314px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .three_dots:hover {
+    color: #000000;
+    background-color: #f6f6f6;
+  }
+
+  .three_dots>p {
+    margin: 0;
+    position: relative;
+    bottom: 4px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 7px 10px;
+    text-decoration: none;
+    display: block;
+    font-weight: lighter;
+    font-size: 14px;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+  .burger {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .burger span:nth-of-type(1) {
+    top: 6px;
+  }
+
+  .burger span:nth-of-type(2) {
+    top: 12px;
+  }
+
+  .burger span:nth-of-type(3) {
+    top: 18px;
+  }
+
+  .burger.open span:nth-of-type(1) {
+    top: 6px;
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .burger.open span:nth-of-type(2) {
+    top: 12px;
+    opacity: 0;
+  }
+
+  .burger.open span:nth-of-type(3) {
+    top: 18px;
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  @media screen and (max-width: 425px) {
+    #notification {
+      width: 94%;
+    }
+
+    .msg {
+      width: auto;
+    }
+
+    .notification_content {
+      max-width: 75%;
+    }
+
+    .msg-box {
+      width: auto;
+    }
+
+    .three_dots {
+      left: 89%;
+    }
+  }
+  .bell_friend_svg {
+    position: absolute;
+    left: 30px;
+    bottom: -7px;
+}
+</style>
+<li class="nav-item dropdown pos-stc-xs">
+  <a class="nav-link mr-2" href data-toggle="dropdown">
+    <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
+    <span class="label label-sm up warn" id="nftn_lbl" value="4"></span>
+  </a>
+  <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
+</li>
+<div id="notification">
+  <div class="msg-box">
+    <!--redirect link-->
+    <div class="msg-info-div">
+      <a href="#">
+        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+          <input type="hidden" class="hidden-input" id="hid-inp" value="1" data-namr="1" />
+          <div class="sender_content">
+            <div class="sender_frame">
+              <!--image alternative-->
+              <img src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg" alt="" />
+            </div>
+            {% comment %} <div class="bell_friend_svg" >
+                <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
+                border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
+            </div> {% endcomment %}
+            <div class="notification_content">
+              <h6 class="sender_title">Notification Title</h6>
+              <h6 class="notification_msg">
+                Subject of the new notification
+              </h6>
+            </div>
+          </div>
+          <div class="time_dropdown">
+            <h6 class="notification_time">10:53</h6>
+          </div>
+        </div>
+      </a>
+      <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+        onmouseout="hoverOutDots(this)">
+        <div class="burger" id="burger">
+          <span style="position: relative; top: -4px">...</span>
+        </div>
+        <div class="dropdown-content" id="dropdownContent">
+          <a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>
+        </div>
+      </div>
+    </div>
+    <!--redirect link-->
+    <div class="msg-info-div">
+      <a href="#">
+        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+          <input type="hidden" class="hidden-input" id="hid-inp" value="1" data-namr="1" />
+          <div class="sender_content">
+            <div class="sender_frame">
+              <img src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg" alt="" />
+            </div>
+            <div class="bell_friend_svg" >
+                <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
+                border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
+            </div>
+            <div class="notification_content">
+              <h6 class="sender_title">Notification Title</h6>
+              <h6 class="notification_msg">
+                Subject of the new notification Subject of the new
+                notificationSubject of the new notificationSubject of the new
+                notificationSubject of the new notificationSubject of the new
+                notificationSubject of the new notificationSubject of the new
+                notification
+              </h6>
+            </div>
+          </div>
+          <div class="time_dropdown">
+            <h6 class="notification_time">10:53</h6>
+          </div>
+        </div>
+      </a>
+      <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+        onmouseout="hoverOutDots(this)">
+        <div class="burger" id="burger">
+          <span style="position: relative; top: -4px">...</span>
+        </div>
+        <div class="dropdown-content" id="dropdownContent">
+          <a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <a href="#" class="see-all">See All</a>
+</div>
+
+<script>
+  //function to display the notification box
+  function show_ntfn() {
+    var icon = document.querySelector(".bell-icon");
+    const ntfn_content = document.getElementById("notification");
+    if (ntfn_content.style.display === "block") {
+      ntfn_content.style.display = "none";
+      icon.style.color = "#000000";
+    } else {
+      ntfn_content.style.display = "block";
+      icon.style.color = "#002855";
+    }
+  }
+
+  //function to change the color when clicked
+  function msg_read(msg_div) {
+    //updating the hidden input value
+    msg_div.firstElementChild.value = "2";
+
+    notification_count();
+
+    //changing the dropdown text as needed according to the hidden input value
+    var dropdownContent = msg_div.nextElementSibling.children[1];
+
+    if (msg_div.firstElementChild.value == "2") {
+      dropdownContent.innerHTML =
+        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as unread</a>';
+    } else {
+      // Change the text of the link to "Mark as read"
+      dropdownContent.innerHTML =
+        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>';
+    }
+  }
+
+  //counts the number of unread notification and shows up on the bell icon
+  function notification_count() {
+    var hiddenInputs = document.querySelectorAll(".msg input");
+    var val = 0;
+
+    hiddenInputs.forEach(function (input) {
+      if (input.getAttribute("value") === "1") {
+        val++;
+      }
+    });
+
+    //updating the unread notification count
+    var lbl = document.getElementById("nftn_lbl");
+    lbl.textContent = val;
+  }
+
+  //loading which msg is read/unread based on load nd updating the bell icon count
+  window.onload = function () {
+    var divs = document.querySelectorAll(".msg");
+
+    divs.forEach(function (msg_val) {
+      if (msg_val.firstElementChild.value == "2") {
+        msg_val.style.backgroundColor = "white";
+      }
+    });
+
+    var hiddenInputs = document.querySelectorAll(".msg input");
+    var val = 0;
+
+    hiddenInputs.forEach(function (input) {
+      if (input.getAttribute("value") === "1") {
+        val++;
+      }
+    });
+
+    var lbl = document.getElementById("nftn_lbl");
+    lbl.textContent = val;
+  };
+</script>
+<script>
+  //change color on hover
+  function hoverIn(element) {
+    element.style.backgroundColor = "rgb(192, 230, 255)";
+  }
+
+  function hoverOut(element) {
+    let value = element.firstElementChild.value;
+
+    if (value === "1") {
+      element.style.backgroundColor = "rgb(224, 242, 254)";
+    } else {
+      element.style.backgroundColor = "white";
+    }
+  }
+
+  //hover effect on three dots
+  function hoverInDots(element) {
+    let msgElement = element.previousElementSibling;
+    hoverIn(msgElement);
+  }
+
+  //hover effect on three dots
+  function hoverOutDots(element) {
+    let msgElement = element.previousElementSibling;
+    hoverOut(msgElement);
+  }
+</script>
+<script>
+  //dropdown js for mark as read and unread 
+  document.addEventListener("click", function (event) {
+    // Close dropdowns if the click is not inside any dropdown
+    if (!event.target.closest(".dropdown")) {
+      var dropdownContents = document.querySelectorAll(".dropdown-content");
+      var burgers = document.querySelectorAll(".burger");
+
+      dropdownContents.forEach(function (content) {
+        content.style.display = "none";
+      });
+      burgers.forEach(function (burger) {
+        burger.classList.remove("open");
+      });
+    }
+  });
+
+  function toggleDropdown(event) {
+    var dropdownContent =
+      event.currentTarget.querySelector(".dropdown-content");
+    var burger = event.currentTarget.querySelector(".burger");
+
+    // Check if dropdown is currently open
+    var isOpen = dropdownContent.style.display === "block";
+
+    // Close all dropdowns and remove 'open' class from all burgers
+    var dropdownContents = document.querySelectorAll(".dropdown-content");
+    var burgers = document.querySelectorAll(".burger");
+
+    dropdownContents.forEach(function (content) {
+      content.style.display = "none";
+    });
+    burgers.forEach(function (burger) {
+      burger.classList.remove("open");
+    });
+
+    // If the clicked dropdown was not already open, open it
+    if (!isOpen) {
+      dropdownContent.style.display = "block";
+      burger.classList.add("open");
+    }
+  }
+</script>
+<script>
+  //change dropdown text and notification color based on click
+  function markAsRead_markAsUnread(element) {
+    // Find the closest .msg container
+    var msgContainer = element.parentElement.parentElement.parentElement;
+    var msg = element.parentElement.parentElement.parentElement.children[0];
+
+    // Find the hidden input within this container
+    var hiddenInput = msgContainer.querySelector(".hidden-input");
+
+    // Access the value of the hidden input
+    var inputValue = hiddenInput.value;
+
+    var dropdownContent = element.parentElement;
+
+    if (inputValue == "1") {
+      dropdownContent.innerHTML =
+        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as unread</a>';
+      msg.style.backgroundColor = "white";
+      hiddenInput.value = "2";
+    } else if (inputValue == "2") {
+      // Change the text of the link to "Mark as read"
+      dropdownContent.innerHTML =
+        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>';
+      msg.style.backgroundColor = "rgb(224, 242, 254)";
+      hiddenInput.value = "1";
+    }
+
+    //updating the bell icon count
+    notification_count();
+  }
+</script>
+{% endblock bell_notification %}

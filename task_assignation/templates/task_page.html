@@ -767,7 +767,7 @@
                         </div>
                     </div>
                     <br>
-                    
+                    {% endif %}
                     
                     <!--                         
                         {% if members_task_type.has_file_upload %}
@@ -797,6 +797,7 @@
                         {% endif %}
                     -->
                     <!--upload doc-->
+                    {% if members_task_type.has_file_upload %}
                     <div class="form-group">
                             <label for="documents">File Upload</label>
                             <div class="custom-file">

@@ -137,6 +137,9 @@ urlpatterns = [
     path('task/save_mem_task_points/<team_primary>/',SaveMemberTaskPointsAjax.as_view(),name="save_mem_task_points"),
 
     #task history
-    path('individual_task_history/',views.individual_task_history,name="individual_task_history"),
+    path('task_history/individual/<int:ieee_id>',views.individual_task_history,name="individual_task_history"),
+    path('task_history/team/<int:team_primary>',views.team_task_history,name="team_task_history"),
+    ##
+    path('task_leaderboard/',views.task_leaderboard,name="task_leaderboard"),
     
 ]
