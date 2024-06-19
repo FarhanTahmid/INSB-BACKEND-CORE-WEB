@@ -89,21 +89,70 @@
         .category{
             margin-top: 0px;
             margin-bottom: 25px;
+            display: flex; /* Use flexbox to align items */
+            align-items: center; /* Center items vertically */
+            width: 300px; /* Adjust width as needed */
         }
         .category.user{
             display: flex;
             justify-content: space-between;
             flex-direction: row;
         }
-        @media screen and (max-width: 400px) {
+        {% comment %} @media screen and (max-width: 400px) {
             .category.user{
                 flex-direction: column-reverse;
             }
-        }
+        } {% endcomment %}
         .category_label{
             margin-bottom: 8px;
             margin-right: 25px;
+            margin-right: 10px; /* Add spacing between label and select */
         }
+        .searchable-select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            flex: 1; /* Allow input and options div to expand */
+        }
+        .searchable-select input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+        .searchable-select .options {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+        .searchable-select .option {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .searchable-select .option:hover {
+            background: #f1f1f1;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         .category .radio-btns{
             display: flex;
             flex-wrap: wrap;
@@ -849,21 +898,70 @@
                     </div>
                 </div>
                 
-
-                <!--task category-->
+                <!-- Task Category -->
+                <br>
                 <div class="category">
-                    <label class="category_label">Task Category:</label>                    
-                    <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required>
-                        <option value="" disabled selected style="display:none;">--Select Category--</option>
+                    <label class="category_label" for="task_category">Task Category:</label>
+                    <div class="searchable-select">
+                        <input type="text" id="search" style="border-radius: 3px; border: none;  box-shadow: 2px 2px 5px 0px #80808054;%;" placeholder="--Select Category--" required>
+                        <div class="options" id="options">
+                            {% for task_category in task_categories %}
+                            <div class="option" data-value="{{ task_category.name }}" data-points="{{ task_category.points }}">{{ task_category.name }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <select name="task_category" id="task_category" style="display: none;">
                         {% for task_category in task_categories %}
-                        <option value="{{task_category.name}}">{{task_category.name}}</option>
+                        <option value="{{ task_category.name }}" data-points="{{ task_category.points }}">{{ task_category.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
+                
 
+                <!-- Task Points -->
                 <div class="category user">
                     <div>Task Point: <span class="task_point" id="task_points"></span></div>
                 </div>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const searchInput = document.getElementById('search');
+                    const optionsContainer = document.getElementById('options');
+                    const options = optionsContainer.getElementsByClassName('option');
+                    const hiddenSelect = document.getElementById('task_category');
+                    const taskPointsDisplay = document.getElementById('task_points');
+
+                    searchInput.addEventListener('focus', () => {
+                        optionsContainer.style.display = 'block';
+                    });
+
+                    searchInput.addEventListener('input', function() {
+                        const filter = this.value.toLowerCase();
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            const text = option.textContent || option.innerText;
+                            option.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+                        }
+                    });
+
+                    for (let i = 0; i < options.length; i++) {
+                        options[i].addEventListener('click', function() {
+                            searchInput.value = this.textContent;
+                            hiddenSelect.value = this.getAttribute('data-value');
+                            taskPointsDisplay.textContent = this.getAttribute('data-points');
+                            optionsContainer.style.display = 'none';
+                        });
+                    }
+
+                    document.addEventListener('click', function(e) {
+                        if (!e.target.closest('.searchable-select')) {
+                            optionsContainer.style.display = 'none';
+                        }
+                    });
+                });
+                </script>
+
+
 
 
                 <!--task description-->

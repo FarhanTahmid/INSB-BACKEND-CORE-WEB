@@ -89,21 +89,61 @@
         .category{
             margin-top: 0px;
             margin-bottom: 25px;
+            display: flex; /* Use flexbox to align items */
+            align-items: center; /* Center items vertically */
+            width: 300px; /* Adjust width as needed */
         }
         .category.user{
             display: flex;
             justify-content: space-between;
             flex-direction: row;
         }
-        @media screen and (max-width: 400px) {
+        {% comment %} @media screen and (max-width: 400px) {
             .category.user{
                 flex-direction: column-reverse;
             }
-        }
+        } {% endcomment %}
         .category_label{
             margin-bottom: 8px;
             margin-right: 25px;
+            margin-right: 10px; /* Add spacing between label and select */
         }
+        .searchable-select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            flex: 1; /* Allow input and options div to expand */
+        }
+        .searchable-select input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+        .searchable-select .options {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+            max-height: 150px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+        .searchable-select .option {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .searchable-select .option:hover {
+            background: #f1f1f1;
+        }
+
+
+
+
+
+
         .category .radio-btns{
             display: flex;
             flex-wrap: wrap;
@@ -1137,44 +1177,111 @@
                 </div>
                 
 
-                <!--task category-->
+                <!-- Task Category -->
+                <br>
                 {% if create_individual_task_access or create_team_task_access %}
                 <div class="category">
-                    <label class="category_label">Task Category:</label>                    
+                    <label class="category_label" for="task_category">Task Category:</label>
+                    
+                    <div class="searchable-select">
+                        <input type="text" id="search_task_category" style="border-radius: 3px; border: none; box-shadow: 2px 2px 5px 0px #80808054;" placeholder="--Select Category--" required>
+                        <div class="options" id="options_task_category">
+                            {% for task_category in task_categories %}
+                            <div class="option" data-value="{{ task_category.name }}" data-points="{{ task_category.points }}">{{ task_category.name }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-                    <select name="task_category" class="title-box" style="width: 170px;" id="task_category" required 
-                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
-                    {% else %}
-                    disabled
-                    {% endif%}>
+                    <select name="task_category" class="title-box" style="width: 170px; display: none;" id="task_category_select" required 
+                        {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                        {% else %}
+                        disabled
+                        {% endif%}>
                         {% for task_category in task_categories %}
-                        <option value="{{task_category.name}}" {% if task.task_category == task_category %}selected{% endif %}>{{task_category.name}}</option>
+                        <option value="{{ task_category.name }}" {% if task.task_category == task_category %}selected{% endif %}>{{ task_category.name }}</option>
                         {% endfor %}
                     </select>
+
                     <div class="late_text">
                         {% if is_late %}
-                        {% if not task.is_task_completed%}
-                        <p style="color: red;
-                        font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                        {% if not task.is_task_completed %}
+                        <p style="color: red; font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
                         {% endif %}
                         {% endif %}
                     </div>
                 </div>
                 {% endif %}
+
                 <div class="category user">
-                    <div>Task Point: <span class="task_point" id="task_points">{{task.task_category.points}}</span></div>
+                    <div>Task Point: <span class="task_point" id="task_points">{{ task.task_category.points }}</span></div>
+
                     {% if create_individual_task_access or create_team_task_access %}
                     {% else %}
                     <div class="late_text">
                         {% if is_late %}
-                        {% if not task.is_task_completed%}
-                        <p style="color: red;
-                        font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
+                        {% if not task.is_task_completed %}
+                        <p style="color: red; font-weight: 500; font-style: italic;">Task deadline has exceeded</p>
                         {% endif %}
                         {% endif %}
                     </div>
                     {% endif %}
                 </div>
+
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const searchInput = document.getElementById('search_task_category');
+                    const optionsContainer = document.getElementById('options_task_category');
+                    const options = optionsContainer.getElementsByClassName('option');
+                    const hiddenSelect = document.getElementById('task_category_select');
+                    const taskPointsDisplay = document.getElementById('task_points');
+
+                    // Function to set initial values based on existing task category
+                    function setInitialValues() {
+                        const selectedOption = hiddenSelect.value; // Get the selected value from hidden select
+                        const correspondingOption = Array.from(options).find(option => option.getAttribute('data-value') === selectedOption);
+
+                        if (correspondingOption) {
+                            searchInput.value = correspondingOption.textContent.trim(); // Set input value to selected option text
+                            taskPointsDisplay.textContent = correspondingOption.getAttribute('data-points'); // Update task points display
+                        }
+                    }
+
+                    // Initialize initial values
+                    setInitialValues();
+
+                    searchInput.addEventListener('focus', () => {
+                        optionsContainer.style.display = 'block';
+                    });
+
+                    searchInput.addEventListener('input', function() {
+                        const filter = this.value.toLowerCase();
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            const text = option.textContent || option.innerText;
+                            option.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+                        }
+                    });
+
+                    for (let i = 0; i < options.length; i++) {
+                        options[i].addEventListener('click', function() {
+                            searchInput.value = this.textContent;
+                            hiddenSelect.value = this.getAttribute('data-value');
+                            taskPointsDisplay.textContent = this.getAttribute('data-points');
+                            optionsContainer.style.display = 'none';
+                        });
+                    }
+
+                    document.addEventListener('click', function(e) {
+                        if (!e.target.closest('.searchable-select')) {
+                            optionsContainer.style.display = 'none';
+                        }
+                    });
+                });
+                </script>
+
+
+    
 
 
                 <!--task description-->
