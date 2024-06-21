@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Notifications Homepage | IEEE NSU Student Branch</title>
+    <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <!-- <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" /> -->
+
+    <!--common CSS-->
+    {% block common_css %}
+    {% include "common_css.html" %}
+    {% endblock common_css %}
+    <style>
+        body,
+        html {
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* .btn-container {
+            text-align: center;
+        }
+
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal;
+            word-wrap: break-word;
+            font-size: 16px;
+            height: 36px;
+            cursor: pointer;
+        }
+
+        .btn_flex {
+            display: flex;
+            justify-content: space-around;
+        } */
+
+
+        .search_box {
+            padding: 6px 10px;
+            border-radius: 3px;
+            border: 2px solid #d3d3d3;
+            color: black;
+            transition: 0.4s;
+            box-shadow: 2px 2px 5px 0px #80808054;
+            border: 2px solid white;
+        }
+
+        .nav a.active {
+            color: #ffa300;
+        }
+
+
+
+        .table-class tbody tr:nth-child(even) {
+            background-color: rgb(224, 242, 254);
+        }
+
+        .table-class tbody tr:nth-child(odd) {
+            background-color: rgb(224, 242, 254);
+        }
+
+        /* Define column widths */
+        #table-id th:nth-child(1),
+        #table-id td:nth-child(1) {
+            width: 95%;
+        }
+
+        #table-id th:nth-child(2),
+        #table-id td:nth-child(2) {
+            width: 5%;
+        }
+
+        .options {
+            color: #818da2;
+            font-weight: bold;
+            text-align: center;
+            font-weight: bold;
+            font-size: 19px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .options:hover {
+            color: #000000;
+            background-color: #f6f6f6;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content-row {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 3px 2px 5px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            right: 39px;
+            top: -8px;
+            border-radius: 3px;
+        }
+
+        .dropdown-content-row a {
+            color: black;
+            padding: 6px 0px;
+            text-decoration: none;
+            display: block;
+            transition: all .2s ease-in;
+        }
+
+        .dropdown-content-row a:hover {
+            background-color: #ddd;
+        }
+
+        .dot {
+            border: 0;
+            padding: 0;
+            background-color: transparent;
+            position: relative;
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            top: 12px;
+        }
+
+
+
+        .dot span:nth-of-type(1) {
+            top: 6px;
+        }
+
+        .dot span:nth-of-type(2) {
+            top: 12px;
+        }
+
+        .dot span:nth-of-type(3) {
+            top: 18px;
+        }
+
+        .dot.open span:nth-of-type(1) {
+            top: 6px;
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .dot.open span:nth-of-type(2) {
+            top: 12px;
+            opacity: 0;
+        }
+
+        .dot.open span:nth-of-type(3) {
+            top: 18px;
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+
+
+
+        /* All and unread toggle button style */
+        .button-container {
+            display: flex;
+            justify-content: start;
+            margin-bottom: 15px;
+
+        }
+
+        .button {
+            padding: 7px 20px;
+            margin-right: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            background-color: transparent;
+            color: rgb(58, 58, 58);
+            transition: background-color 0.3s ease;
+        }
+
+        .button.active {
+            background-color: rgb(224, 242, 254);
+        }
+
+        .button:hover {
+            background-color: rgb(192, 230, 255);
+        }
+
+        table th,
+        table td {
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: #fff;
+        }
+
+        .pagination {
+            margin: 0;
+        }
+
+        .pagination li:hover {
+            cursor: pointer;
+        }
+
+        /* .header_wrap {
+        padding:50px 0;
+        } */
+        .num_rows {
+            width: 151px;
+            float: right;
+        }
+
+        .tb_search {
+            width: 40%;
+            float: left;
+        }
+
+        /* Responsive Styles for Pagination */
+        .pagination-container {
+            display: flex;
+            flex-wrap: wrap;
+            /* Allow pagination items to wrap to the next line on small screens */
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            margin: 2px;
+            flex-wrap: wrap;
+            /* Allow pagination items to wrap to the next line on small screens */
+        }
+
+        .pagination li {
+            display: inline-block;
+            margin: 0 3px;
+            padding: 5px 10px;
+            border: 1px solid #00629B;
+            background-color: transparent;
+            color: #00629B;
+            cursor: pointer;
+        }
+
+        /* Style for current active page */
+        .pagination li.active {
+            background-color: #00629B;
+            color: #ffffff;
+        }
+
+        /* Style for rows count section */
+        .rows_count {
+            color: #00629B;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            max-width: 100%;
+            /* padding: 15px; */
+        }
+
+        .app-body {
+            margin-left: 15%;
+            margin-right: 15%
+        }
+
+        @media screen and (max-width: 500px) {
+            .header_wrap {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .tb_search {
+                width: 100%;
+            }
+
+            .app-body {
+                margin: 0;
+            }
+        }
+
+        .sender_content_row {
+            position: relative;
+            right: 5px;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sender_frame {
+            height: 50px;
+            width: 50px;
+            overflow: hidden;
+            min-width: 50px;
+        }
+
+        .sender_frame img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+        }
+
+        .notification_content_row {
+            max-width: 78%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .notification_content_row>h6 {
+            padding: 0;
+            text-align: left;
+        }
+
+        .sender_title_row {
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .time_notification {
+            margin: 0;
+            padding: 0;
+            width: 80px;
+            color: black;
+            font-size: 12px;
+        }
+
+        .notification_msg_row {
+            top: 20px;
+            font-size: 14px;
+            margin-bottom: 0;
+            color: #464646;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: all .3s ease-in-out;
+        }
+
+        .sender_inner_div {
+            display: flex;
+            align-items: center;
+            gap: 19px;
+            width: 88%;
+        }
+
+        .notification_txt {
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 15px;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        .tr_style {
+            border-radius: 4px;
+            /* border: 2px solid rgb(224, 242, 254); */
+            /* box-shadow: 3px 4px 4px 0px #e6ebf0; */
+        }
+
+        .tbody_style {
+            /* padding: 6px; */
+            display: flex;
+            /* border: 1px solid #ddd; */
+            flex-direction: column;
+            gap: 5px;
+            border-radius: 5px;
+            border: 1px solid rgb(224, 242, 254);
+            padding: 5px;
+        }
+
+        .friend_svg {
+            position: absolute;
+            left: 30px;
+            bottom: -7px;
+        }
+    </style>
+</head>
+{% block preloader %}
+{% include 'preloader.html' %}
+{% endblock preloader %}
+
+<body>
+    <div class="app" id="app">
+        <!-- ############ LAYOUT START-->
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+            {% block sidebar %} {% include 'users/sidebar.html' %} {% endblock %}
+        </div>
+
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% block navbar %} {% include 'navbar.html' %} {% endblock navbar %}
+        </div>
+
+        <div ui-view class="app-body" style="justify-content: center;" id="view">
+            <h4 class="notification_txt">
+                Notifications
+            </h4>
+
+            <!--Messages-->
+            <div style="justify-content: center; text-align: center">
+                {% if messages %}
+                {% for message in messages %}
+                <h4 {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{message }}
+                </h4>
+                {% endfor %}
+                <br />
+                {% endif %}
+            </div>
+
+            <div style="justify-content: center; text-align: center; margin-top: 30px">
+                <div class="container" style="justify-content: center">
+                    <div class="header_wrap">
+                        <div class="num_rows">
+                            <div class="button-container">
+                                <button class="button all active" onclick="toggleButton('all')">All</button>
+                                <button class="button unread" onclick="toggleButton('unread')">Unread</button>
+                            </div>
+                        </div>
+                        <div class="tb_search">
+                            <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()"
+                                placeholder="Search.." class="form-control search_box" />
+                        </div>
+                    </div>
+
+
+                    <div class="table-responsive" style="border-radius: 4px 4px 0 0">
+
+                        <table class="table table-striped table-class" id="table-id">
+                            <tbody id="nostripe" class="tbody_style">
+                                <tr class="unread tr_style" onmouseover="hoverInRow(this)"
+                                    onmouseout="hoverOutRow(this)">
+                                    <td style="color: #00629b" onclick="removeUnread(this)">
+                                        <!--link here-->
+                                        <a href="#">
+                                            <div class="sender_content_row">
+                                                <div class="sender_inner_div">
+                                                    <div class="sender_frame"><img
+                                                            src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
+                                                            alt=""></div>
+                                                    <!-- <div class="friend_svg" >
+                                                                <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
+                                                                border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
+                                                            </div> -->
+                                                    <div class="notification_content_row">
+                                                        <h6 class='sender_title_row'>Notification Title</h6>
+                                                        <h6 class='notification_msg_row'>Subject of the new notification
+                                                            Subject of the new notificationSubject of the new
+                                                            notificationSubject of the new notificationSubject of the
+                                                            new notificationSubject of the new notificationSubject of
+                                                            the new notificationSubject of the new notification</h6>
+                                                    </div>
+                                                </div>
+                                                <h6 class='time_notification'>March 14, 2024</h6>
+                                            </div>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown " onclick="toggleDropdownRow(event)">
+                                            <div class="dot options" id="dot">
+                                                <span style="position: relative; top: -3px;">...</span>
+                                            </div>
+                                            <div class="dropdown-content-row" id="dropdownContent">
+                                                <a href="#"
+                                                    onclick="markAsRead_markAsUnread_table(this); return false;">Mark as
+                                                    read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    </a>
+                                </tr>
+                                <tr class="unread tr_style" onmouseover="hoverInRow(this)"
+                                    onmouseout="hoverOutRow(this)">
+                                    <td style="color: #00629b" onclick="removeUnread(this)">
+                                        <!--link here-->
+                                        <a href="#">
+                                            <div class="sender_content_row">
+                                                <div class="sender_inner_div">
+                                                    <div class="sender_frame"><img
+                                                            src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
+                                                            alt=""></div>
+                                                    <div class="friend_svg">
+                                                        <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
+                                                                border-radius: 50%;" width="24px" height="24px"
+                                                            viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg"
+                                                            stroke-width="3" fill="white">
+                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                                stroke-linejoin="round"></g>
+                                                            <g id="SVGRepo_iconCarrier">
+                                                                <circle cx="29.22" cy="16.28" r="11.14"></circle>
+                                                                <path
+                                                                    d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9">
+                                                                </path>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="notification_content_row">
+                                                        <h6 class='sender_title_row'>Notification Title</h6>
+                                                        <h6 class='notification_msg_row'>Subject of the new notification
+                                                            Subject of the new notificationSubject of the new
+                                                            notificationSubject of the new notificationSubject of the
+                                                            new notificationSubject of the new notificationSubject of
+                                                            the new notificationSubject of the new notification</h6>
+                                                    </div>
+                                                </div>
+                                                <h6 class='time_notification'>10:53</h6>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown " onclick="toggleDropdownRow(event)">
+                                            <div class="dot options" id="dot">
+                                                <span style="position: relative; top: -3px;">...</span>
+                                            </div>
+                                            <div class="dropdown-content-row" id="dropdownContent">
+                                                <a href="#"
+                                                    onclick="markAsRead_markAsUnread_table(this); return false;">Mark as
+                                                    read</a>
+                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ############ PAGE END-->
+    </div>
+
+    <!--Theme Switcher-->
+    {% block theme_switcher %}
+    {% include "theme_switcher.html" %}
+    {% endblock theme_switcher %}
+
+
+    <!-- build:js scripts/app.html.js -->
+    <!-- jQuery -->
+    <script src="{% static 'script/jquery.js'%}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static 'script/tether.min.js'%}"></script>
+    <script src="{% static 'script/bootstrap.js'%}"></script>
+    <!-- core -->
+    <script src="{% static 'script/underscore-min.js'%}"></script>
+    <script src="{% static 'script/jquery.storageapi.min.js'%}"></script>
+    <script src="{% static 'script/pace.min.js'%}"></script>
+
+    {% comment %}
+    <script src="{% static 'script/config.lazyload.js'%}"></script>
+    {% endcomment %}
+
+    <script src="{% static 'script/palette.js'%}"></script>
+    <script src="{% static 'script/ui-load.js'%}"></script>
+    <script src="{% static 'script/ui-jp.js' %}"></script>
+    <script src="{% static 'script/ui-include.js'%}"></script>
+    <script src="{% static 'script/ui-device.js'%}"></script>
+    <script src="{% static 'script/ui-form.js'%}"></script>
+    <script src="{% static 'script/ui-nav.js'%}"></script>
+    <script src="{% static 'script/ui-screenfull.js'%}"></script>
+    <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+    <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+    {% comment %}
+    <script src="{% static 'script/screenfull.min.js'%}"></script>
+    {% endcomment %}
+    <script src="{% static 'script/app.js'%}"></script>
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <!-- Chart JS -->
+    <script src="{% static 'scripts/chartjs.js' %}"></script>
+    <!-- ajax -->
+    {% comment %}
+    <script src="{% static 'script/jquery.pjax.js'%}"></script>
+    {% endcomment %}
+    <script src="{% static 'script/ajax.js'%}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the current page's URL
+            const currentPageUrl = window.location.href;
+
+            // Find the links in the navigation bar
+            const navLinks = document.querySelectorAll(".nav a");
+
+            // Loop through the links and add a "active" class to the matching link
+            navLinks.forEach(function (link) {
+                if (link.href === currentPageUrl) {
+                    link.classList.add("active");
+                }
+            });
+        });
+    </script>
+
+    <!-- dropdown js for mark as read and unread -->
+    <script>
+        document.addEventListener("click", function (event) {
+            // Close dropdowns if the click is not inside any dropdown
+            if (!event.target.closest(".dropdown")) {
+                var dropdownContents = document.querySelectorAll(".dropdown-content-row");
+                var dots = document.querySelectorAll(".dot");
+
+                dropdownContents.forEach(function (content) {
+                    content.style.display = "none";
+                });
+                dots.forEach(function (dot) {
+                    dot.classList.remove("open");
+                });
+            }
+        });
+
+        function toggleDropdownRow(event) {
+            var dropdownContent = event.currentTarget.querySelector(".dropdown-content-row");
+            var dot = event.currentTarget.querySelector(".dot");
+
+            // Check if dropdown is currently open
+            var isOpen = dropdownContent.style.display === "block";
+
+            // Close all dropdowns and remove 'open' class from all dots
+            var dropdownContents = document.querySelectorAll(".dropdown-content-row");
+            var dots = document.querySelectorAll(".dot");
+
+            dropdownContents.forEach(function (content) {
+                content.style.display = "none";
+            });
+            dots.forEach(function (dot) {
+                dot.classList.remove("open");
+            });
+
+            // If the clicked dropdown was not already open, open it
+            if (!isOpen) {
+                dropdownContent.style.display = "block";
+                dot.classList.add("open");
+            }
+        }
+
+    </script>
+
+
+    <script>
+        //script to delete notification
+        function deleteNotification(element) {
+            // Get the parent tr element of the clicked link
+            var trElement = element.closest('tr');
+
+            // Remove the entire tr element from the DOM
+            trElement.remove();
+        }
+
+        //change dropdown text and notification color based on click
+        function markAsRead_markAsUnread_table(element) {
+            // Get the parent tr element of the clicked link
+            var trElement = element.closest('tr');
+            var dropdownContent = trElement.querySelector('.dropdown-content-row');
+
+            if (trElement.classList.contains('unread')) {
+                // Change the background color of the tr
+                trElement.style.backgroundColor = 'white';
+                trElement.classList.add('marked_read');
+                trElement.classList.remove('unread');
+
+                // Change the text of the link to "Mark as unread"
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+            else {
+                // Change the background color of the tr to its default color
+                trElement.style.backgroundColor = '';
+
+                // Add the 'marked_read' class back to the tr
+                trElement.classList.remove('marked_read');
+                trElement.classList.add('unread');
+
+                // Change the text of the link to "Mark as read"
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+        }
+        //change the dropdown text when a notification is clicked
+        function removeUnread(element) {
+            var trElement = element.closest('tr');
+
+            // Change the class to indicate the notification is read
+            trElement.classList.add('marked_read');
+            trElement.classList.remove('unread');
+
+            // Find the dropdown content related to this notification
+            var dropdownContent = trElement.querySelector(".dropdown-content-row");
+
+            // Toggle the text
+            if (trElement.classList.contains("unread")) {
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+            else if (trElement.classList.contains("marked_read")) {
+                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            }
+        }
+    </script>
+
+    <script>
+        //filters all unread notification 
+        function filterUnread() {
+            // Get all elements with the class 'marked_read'
+            var unreadNotifications = document.querySelectorAll('.marked_read');
+
+            // Loop through each read notification and hide it
+            unreadNotifications.forEach(function (notification) {
+                notification.style.display = 'none';
+            });
+        }
+
+    </script>
+    <script>
+        //filter unread toggle
+        function toggleButton(buttonType) {
+            let tableRow = document.querySelectorAll('tr');
+            if (buttonType === 'all') {
+                tableRow.forEach(row => {
+                    row.style.display = 'table-row';
+                });
+            } else if (buttonType === 'unread') {
+                tableRow.forEach(row => {
+                    row.style.display = row.classList.contains('unread') ? 'table-row' : 'none';
+                });
+            }
+            // toggle button color
+            const buttons = document.querySelectorAll('.button');
+            buttons.forEach(btn => {
+                if (btn.classList.contains(buttonType)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+    </script>
+    <script>
+        //change color on hover
+        function hoverInRow(element) {
+            element.style.backgroundColor = 'rgb(192, 230, 255)';
+            element.style.transition = 'all .1s ease-in'
+        }
+
+        function hoverOutRow(element) {
+            let value = element.classList.contains('unread');
+
+            if (value) {
+                element.style.backgroundColor = 'rgb(224, 242, 254)';
+            }
+            else {
+                element.style.backgroundColor = 'white';
+            }
+        }
+    </script>
+    <!-- endbuild -->
+</body>
+
+</html>

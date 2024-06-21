@@ -619,6 +619,9 @@
 }
     </style>
   </head>
+  {% block preloader %}
+    {% include 'preloader.html' %}
+{% endblock preloader %}
   <body>
 
     <!--LAYOUT START-->
@@ -632,11 +635,54 @@
             </div>
 
 
-            <!-- navbar -->
             <div id="content" class="app-content" role="main">
+                {% if app_name == "central_branch" %}
                 {% block navbar %}
-                {% include 'navbar.html' %} 
+                 {% include 'navbar.html' %} 
                 {% endblock navbar %}
+                {% else %}
+                    {% if web_dev_team %}
+                        {% block web_navbar %}
+                            {% include 'website_development_team/web_navbar.html' %} 
+                        {% endblock web_navbar %}
+                    {% elif content_and_writing_team %}
+                        {% block content_navbar %}
+                            {% include 'content_navbar.html' %} 
+                        {% endblock content_navbar %}
+                    {% elif event_management_team %}
+                        {% block event_navbar %}
+                            {% include 'emt_navbar.html' %} 
+                        {% endblock event_navbar %}
+                    {% elif logistic_and_operation_team %}
+                        {% block logistic_navbar %}
+                            {% include 'logistics_navbar.html' %} 
+                        {% endblock logistic_navbar %}
+                    {% elif promotion_team %}
+                        {% block promotion_navbar %}
+                            {% include 'promotions_team/promotions_navbar.html' %} 
+                        {% endblock promotion_navbar %}
+                    {% elif public_relation_team %}
+                        {% block public_relation_team_navbar %}
+                            {% include 'public_relation_team/public_relation_navbar.html' %} 
+                        {% endblock public_relation_team_navbar %}
+                    {% elif membership_development_team %}
+                        {% block membership_navbar %}
+                            {% include 'mdt_navbar.html' %} 
+                        {% endblock membership_navbar %}
+                    {% elif media_team %}
+                        {% block medias_navbar %}
+                            {% include 'media_navbar.html' %} 
+                        {% endblock medias_navbar %}
+                    {% elif graphics_team %}
+                        {% block graphicss_navbar %}
+                            {% include 'graphics_navbar.html' %} 
+                        {% endblock graphicss_navbar %}
+                    {% elif finance_and_corporate_team %}
+                        {% block finanace_navbar %}
+                            {% include 'finance_and_corporate_team/finance_navbar.html' %} 
+                        {% endblock finanace_navbar %}
+                    {% endif %}
+                {% endif %}
             </div>
 
 
@@ -647,7 +693,11 @@
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
-                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                        {% if app_name == "central_branch" %}
+                            <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                        {% else %}
+                            <a href="{% url ''|add:app_name|add:':task_edit_team' task.pk team_primary  %}" class="image-button">
+                        {% endif %}
                           <img src="/static/back-arrow.png" alt="Go to Task Details">
                         </a>
                         <span class="tooltip-text">Go to Task Details</span>
@@ -717,7 +767,7 @@
                         </div>
                     </div>
                     <br>
-                    
+                    {% endif %}
                     
                     <!--                         
                         {% if members_task_type.has_file_upload %}
@@ -747,6 +797,7 @@
                         {% endif %}
                     -->
                     <!--upload doc-->
+                    {% if members_task_type.has_file_upload %}
                     <div class="form-group">
                             <label for="documents">File Upload</label>
                             <div class="custom-file">
@@ -861,8 +912,12 @@
             <div class="form-wrapper">
                 <form>
                     <div class="tooltip-container">
-                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                          <img src="/static/back-arrow.png" alt="Go back to session">
+                        {% if app_name == "central_branch" %}
+                            <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                        {% else %}
+                            <a href="{% url ''|add:app_name|add:':task_edit_team' task.pk team_primary  %}" class="image-button">
+                        {% endif %}
+                        <img src="/static/back-arrow.png" alt="Go back to session">
                         </a>
                         <span class="tooltip-text">Go back</span>
                     </div>
@@ -1324,7 +1379,11 @@
 
                 // Make an AJAX request to retrieve data for the selected category
                 $.ajax({
-                    url: "{% url 'central_branch:save_mem_task_points' %}",
+                    {% if team_primary == None or team_primary == "1" %}
+                    url: "{% url 'central_branch:save_mem_task_points' None %}",
+                    {% else %}
+                    url: "{% url 'central_branch:save_mem_task_points' team_primary %}",
+                    {% endif %}
                     type: "GET",
                     data: {'task_id':task_id, 
                             'completed_points': points.val(), 

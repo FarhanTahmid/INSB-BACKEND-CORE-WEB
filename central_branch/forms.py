@@ -279,7 +279,7 @@ class ToolkitForm(forms.ModelForm):
             instance.save()
         return instance
 
-class VolunteerOftheMonthForm(forms.ModelForm):
-    class Meta:
-        model=VolunteerOfTheMonth
-        fields=['contributions']
+# class VolunteerOftheMonthForm(forms.ModelForm):
+#     class Meta:
+#         model=VolunteerOfTheMonth
+#         fields=['contributions']

@@ -1,26 +1,31 @@
 {% load static %}
 {% block navbar %}
+<link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
+
 <style>
     .nav a.active {
         color: #FFA300;
     }
+    .app-header{
+        left: 2px;
+    }
 </style>
 <!--This is scrip is to get the link of the current page and cross match it with the navlink to change colors-->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     // Get the current page's URL
     const currentPageUrl = window.location.href;
-  
+
     // Find the links in the navigation bar
     const navLinks = document.querySelectorAll(".nav a");
-  
+
     // Loop through the links and add a "active" class to the matching link
     navLinks.forEach(function (link) {
       if (link.href === currentPageUrl) {
         link.classList.add("active");
       }
     });
-  });
+});
 </script>
 <div class="app-header white box-shadow">
     <div class="navbar navbar-toggleable-sm flex-row align-items-center">
@@ -73,13 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <i class="material-icons">more_horiz</i>
             </a>
         </li>
-        <li class="nav-item dropdown pos-stc-xs">
-            <a class="nav-link mr-2" href data-toggle="dropdown">
-            <i class="material-icons">&#xe7f5;</i>
-            <span class="label label-sm up warn">3</span>
-            </a>
-            <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
-        </li>
+        <!--notification bell-->
+        {% block bell_notification %}
+            {% include 'users/bell_notification.html' %}
+        {% endblock bell_notification %}
+        
         <li class="nav-item dropdown">
             <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
             <span class="avatar w-32" style="border-radius: 50%;
@@ -96,4 +99,5 @@ document.addEventListener("DOMContentLoaded", function () {
         </ul>
         <!-- / navbar right -->
 </div>
+
 {% endblock navbar %}

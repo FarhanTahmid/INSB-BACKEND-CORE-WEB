@@ -48,6 +48,9 @@
       align-items: center;
       height: 100%;
     }
+  .app-header{
+      left: 2px;
+  }
   </style>
 </head>
 <body>
@@ -131,32 +134,33 @@
             </div>
             <!-- / navbar collapse -->
         
-            <!-- navbar right -->
-            <ul class="nav navbar-nav ml-auto flex-row">
-              <li class="nav-item hidden-md-up">
-                <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
-                  <i class="material-icons">more_horiz</i>
-                </a>
-              </li>
-              <li class="nav-item dropdown pos-stc-xs">
-                <a class="nav-link mr-2" href data-toggle="dropdown">
-                  <i class="material-icons">&#xe7f5;</i>
-                  <span class="label label-sm up warn">3</span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
-                  <span class="avatar w-32">
-                    <img src="{{ user_data.profile_picture }}" alt="user_profile">
-                    <i class="on b-white bottom"></i>
-                  </span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.user.html'"></div>
-              </li>
-            </ul>
-            <!-- / navbar right -->
-        </div>
+        <!-- / navbar right -->
+        <ul class="nav navbar-nav ml-auto flex-row">
+          <li class="nav-item hidden-md-up">
+              <a class="nav-link pl-2" data-toggle="collapse" data-target="#collapse">
+              <i class="material-icons">more_horiz</i>
+              </a>
+          </li>
+          <!--notification bell-->
+          {% block bell_notification %}
+              {% include 'users/bell_notification.html' %}
+          {% endblock bell_notification %}
+          <li class="nav-item dropdown">
+              <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
+              <span class="avatar w-32" style="border-radius: 50%;
+              overflow: hidden;">
+                  <img src="{{ user_data.profile_picture }}" alt="user_profile" style="border-radius: 0;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;">
+                  <i class="on b-white bottom"></i>
+              </span>
+              </a>
+              <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+          </li>
+          </ul>
+      <!-- / navbar right -->
+    </div>
 </div>
     
 <div ui-view class="app-body" style="justify-content:center; margin-left:15%; margin-right:15%;" id="view">

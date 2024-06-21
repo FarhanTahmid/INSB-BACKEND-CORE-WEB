@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
 
     <!--common CSS-->
     {% block common_css %}
@@ -76,7 +77,11 @@
           font-size: 1.5rem;
         }
       }
-
+      .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
     </style>
   </head>
 
@@ -293,6 +298,7 @@
                             value="{{link.link}}"
                             {% if not has_graphics_access %}disabled{% endif %}/>
                             <input type="hidden" name = "link_pk" value ="{{link.pk}}">
+                            <a href="{{link.link}}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
                         </div>
                 </div>
                 <div class="modal-footer">
