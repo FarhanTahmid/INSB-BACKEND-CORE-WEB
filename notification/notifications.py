@@ -77,6 +77,12 @@ class NotificationHandler:
     
     def update_notification(notification_of, notification_type, content):
 
+        '''This function updates old notification instances, marks them as unread for all related users and changes the timestamp to current to show the notification higher in list
+                -`notification_of`: it is the instance of the object whose notification is to be updated
+                -`notification_type`: must be a pk of an NotificationTypes object
+                -`content`: a dict in which the keys must be of a field of Notifications that needs to update and the respective values to update with
+        '''
+
         notification=Notifications.objects.get(object_id=notification_of.pk, type=notification_type)
         timestamp = datetime.now()
         
@@ -89,7 +95,6 @@ class NotificationHandler:
                 notification.timestamp = timestamp
             except:
                 print(f"Field '{field}' does not exist in {Notifications.__name__}")
-                # Optionally handle non-existent fields
         
         notification.save()
 
