@@ -7,5 +7,5 @@ app_name='notification'
 
 urlpatterns = [
     #landing_page
-    path('',views.notification, name='notification')
+    path('',views.notification, name='all_notifications')
 ]

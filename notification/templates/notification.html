@@ -458,30 +458,43 @@
 
                         <table class="table table-striped table-class" id="table-id">
                             <tbody id="nostripe" class="tbody_style">
+                                {% for notification in member_notifications %}
                                 <tr class="unread tr_style" onmouseover="hoverInRow(this)"
                                     onmouseout="hoverOutRow(this)">
                                     <td style="color: #00629b" onclick="removeUnread(this)">
                                         <!--link here-->
-                                        <a href="#">
+                                        <a href="//{{notification.notification.inside_link}}">
                                             <div class="sender_content_row">
                                                 <div class="sender_inner_div">
                                                     <div class="sender_frame"><img
-                                                            src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-                                                            alt=""></div>
+                                                        src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
+                                                        alt=""></div>
+                                                    <div class="friend_svg">
+                                                        <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
+                                                                border-radius: 50%;" width="24px" height="24px"
+                                                            viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg"
+                                                            stroke-width="3" fill="white">
+                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                                stroke-linejoin="round"></g>
+                                                            <g id="SVGRepo_iconCarrier">
+                                                                <circle cx="29.22" cy="16.28" r="11.14"></circle>
+                                                                <path
+                                                                    d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9">
+                                                                </path>
+                                                            </g>
+                                                        </svg>
+                                                    </div>
                                                     <!-- <div class="friend_svg" >
                                                                 <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
                                                                 border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
                                                             </div> -->
                                                     <div class="notification_content_row">
-                                                        <h6 class='sender_title_row'>Notification Title</h6>
-                                                        <h6 class='notification_msg_row'>Subject of the new notification
-                                                            Subject of the new notificationSubject of the new
-                                                            notificationSubject of the new notificationSubject of the
-                                                            new notificationSubject of the new notificationSubject of
-                                                            the new notificationSubject of the new notification</h6>
+                                                        <h6 class='sender_title_row'>{{notification.notification.general_message}}</h6>
+                                                        <h6 class='notification_msg_row'>{{notification.notification.general_message}}</h6>
                                                     </div>
                                                 </div>
-                                                <h6 class='time_notification'>March 14, 2024</h6>
+                                                <h6 class='time_notification'>{{notification.notification.timestamp}}</h6>
                                             </div>
                                     </td>
                                     <td>
@@ -499,59 +512,7 @@
                                     </td>
                                     </a>
                                 </tr>
-                                <tr class="unread tr_style" onmouseover="hoverInRow(this)"
-                                    onmouseout="hoverOutRow(this)">
-                                    <td style="color: #00629b" onclick="removeUnread(this)">
-                                        <!--link here-->
-                                        <a href="#">
-                                            <div class="sender_content_row">
-                                                <div class="sender_inner_div">
-                                                    <div class="sender_frame"><img
-                                                            src="https://ieeensusb.org/media_files/user_profile_pictures/99579190_profile_picture.jpeg"
-                                                            alt=""></div>
-                                                    <div class="friend_svg">
-                                                        <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
-                                                                border-radius: 50%;" width="24px" height="24px"
-                                                            viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg"
-                                                            stroke-width="3" fill="white">
-                                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                                stroke-linejoin="round"></g>
-                                                            <g id="SVGRepo_iconCarrier">
-                                                                <circle cx="29.22" cy="16.28" r="11.14"></circle>
-                                                                <path
-                                                                    d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9">
-                                                                </path>
-                                                            </g>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="notification_content_row">
-                                                        <h6 class='sender_title_row'>Notification Title</h6>
-                                                        <h6 class='notification_msg_row'>Subject of the new notification
-                                                            Subject of the new notificationSubject of the new
-                                                            notificationSubject of the new notificationSubject of the
-                                                            new notificationSubject of the new notificationSubject of
-                                                            the new notificationSubject of the new notification</h6>
-                                                    </div>
-                                                </div>
-                                                <h6 class='time_notification'>10:53</h6>
-                                            </div>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown " onclick="toggleDropdownRow(event)">
-                                            <div class="dot options" id="dot">
-                                                <span style="position: relative; top: -3px;">...</span>
-                                            </div>
-                                            <div class="dropdown-content-row" id="dropdownContent">
-                                                <a href="#"
-                                                    onclick="markAsRead_markAsUnread_table(this); return false;">Mark as
-                                                    read</a>
-                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
