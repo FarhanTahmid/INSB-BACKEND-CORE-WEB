@@ -1,16 +1,16 @@
 from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
+from notification.models import MemberNotifications
 from port.renderData import PortData
 from recruitment.models import recruitment_session, recruited_members
 import users
-from users.models import MemberSkillSets, Members
+from users.models import Members
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
 import xlwt,csv
-from django.db.utils import IntegrityError
 from membership_development_team.renderData import MDT_DATA
 from membership_development_team import email_sending
 from system_administration.render_access import Access_Render
@@ -38,21 +38,18 @@ def notification(request):
 
         #Checking user access
         user=request.user
-        has_access=(MDT_DATA.recruitment_session_view_access_control(user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
-        if has_access:
+        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        if True:
             
-            if request.method == "POST":
-                session_name = request.POST["recruitment_session"]
-                session_time=datetime.now()
-                try:
-                    add_session = recruitment_session(session=session_name,session_time=session_time)
-                    add_session.save()
-                except DatabaseError:
-                    return DatabaseError
+            try:
+                member_notifications = MemberNotifications.objects.filter(member=Members.objects.get(ieee_id=request.user.username)).order_by('-notification__timestamp')
+            except:
+                member_notifications = None
             
             context={
                 'all_sc_ag':sc_ag,
-                "user_data":user_data
+                "user_data":user_data,
+                'member_notifications':member_notifications
             }
 
             return render(request, 'notification.html', context)

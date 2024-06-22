@@ -235,6 +235,27 @@ class Task_Assignation:
             task_log_message = f'Task Name: {title}, assigned to Members: {members_ieee_id}'
             Task_Assignation.save_task_logs(new_task,task_log_message)
 
+            try:
+                notification_created_by=Members.objects.get(ieee_id=current_user.user.username)
+            except:
+                notification_created_by=None
+            # this shows an admin if the task was created by an admin, otherwise shows the member name
+            notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            # this is the inside link of the notification, in this case users will be redirected to the tasks
+            inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{new_task.pk}"
+
+            #receiver list in this case the members who were assigned the task individually
+            reciever_list = []
+            for member in members:
+                reciever_list.append(member.ieee_id)
+            print(reciever_list)
+
+            NotificationHandler.create_notifications(
+                notification_type=Task_Assignation.task_creation_notification_type.pk,
+                general_message=f"{notification_created_by_name} has just assigned you a new task titled -'{new_task.title}'. Click to see the details.",
+                inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list
+            )
+
             return True
         # except:
         #     return False
@@ -1401,7 +1422,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
