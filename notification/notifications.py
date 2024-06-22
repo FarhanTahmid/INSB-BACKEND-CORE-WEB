@@ -12,7 +12,7 @@ class NotificationHandler:
     def create_notification_type():
         pass
     
-    def create_notifications(notification_type,general_message,inside_link,created_by,reciever_list):
+    def create_notifications(notification_type,general_message,inside_link,created_by,reciever_list,notification_of):
         
         '''this function creates new notification instances, assigns new notifications to the users as well
                 -notification_type: must be a pk of an NotificationTypes object
@@ -36,7 +36,7 @@ class NotificationHandler:
             # create new object of Notifications
             new_notification = Notifications.objects.create(
                 type=notification_type,timestamp=timestamp,general_message=general_message,
-                inside_link=inside_link,created_by=created_by
+                inside_link=inside_link,created_by=created_by,notification_of=notification_of
             )
             # save the new instance of notification
             new_notification.save()
@@ -47,7 +47,7 @@ class NotificationHandler:
             # create new object of Notifications without created_by option
             new_notification = Notifications.objects.create(
                 type=notification_type,timestamp=timestamp,general_message=general_message,
-                inside_link=inside_link
+                inside_link=inside_link,notification_of=notification_of
             )
             # save the new instance of notification
             new_notification.save()
@@ -75,8 +75,30 @@ class NotificationHandler:
             
     
     
-    def update_notification():
-        pass
+    def update_notification(notification_of, notification_type, content):
+
+        notification=Notifications.objects.get(object_id=notification_of.pk, type=notification_type)
+        timestamp = datetime.now()
+        
+        for field, value in content.items():
+            try:
+                # Check if the field exists in the model
+                Notifications._meta.get_field(field)
+                # Set the value to the field
+                setattr(notification, field, value)
+                notification.timestamp = timestamp
+            except:
+                print(f"Field '{field}' does not exist in {Notifications.__name__}")
+                # Optionally handle non-existent fields
+        
+        notification.save()
+
+        member_notifications = MemberNotifications.objects.filter(notification=notification)
+
+        for member in member_notifications:
+            member.is_read = False
+            member.save()
+
     
     def delete_notification():
         pass

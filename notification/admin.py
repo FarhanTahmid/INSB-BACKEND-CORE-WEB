@@ -10,7 +10,7 @@ class NotificationTypes(admin.ModelAdmin):
 @admin.register(Notifications)
 class Notifications(admin.ModelAdmin):
     list_display=[
-         'pk','type','created_by','general_message','timestamp'
+         'pk','notification_of','object_id','content_type','type','created_by','general_message','timestamp'
     ]
     
 @admin.register(MemberNotifications)
