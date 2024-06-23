@@ -74,26 +74,30 @@ class NotificationHandler:
             return False
             
 
-    def update_notification(notification_of, notification_type, content=None):
+    def update_notification(notification_of, notification_type, contents=None):
 
         '''This function updates old notification instances, marks them as unread for all related users and changes the timestamp to current to show the notification higher in list
-                -`notification_of`: it is the instance of the object whose notification is to be updated-`notification_type`: must be a pk of an NotificationTypes object
-                -`content`: a dict in which the keys must be of a field of Notifications that needs to update and the respective values to update with
+                -`notification_of`: it is the instance of the object whose notification is to be updated
+                -`notification_type`: must be a pk of an NotificationTypes object
+                -`contents`: a dict in which the keys must be of a field of Notifications that needs to update and the respective values to update with
         '''
 
         notification=Notifications.objects.get(object_id=notification_of.pk, type=notification_type)
         timestamp = datetime.now()
         
-        for field, value in content.items():
-            try:
-                # Check if the field exists in the model
-                Notifications._meta.get_field(field)
-                # Set the value to the field
-                setattr(notification, field, value)
-                notification.timestamp = timestamp
-            except:
-                print(f"Field '{field}' does not exist in {Notifications.__name__}")
+        #if there is contents then update each content
+        if contents:
+            for field, value in contents.items():
+                try:
+                    # Check if the field exists in the model
+                    Notifications._meta.get_field(field)
+                    # Set the value to the field
+                    setattr(notification, field, value)
+                except:
+                    print(f"Field '{field}' does not exist in {Notifications.__name__}")
         
+        #update timestamp to show it at the top of the user's notifications list
+        notification.timestamp = timestamp
         notification.save()
 
         member_notifications = MemberNotifications.objects.filter(notification=notification)
@@ -104,8 +108,26 @@ class NotificationHandler:
 
     def has_notification(notification_of, notification_type):
 
+        '''This functions check if a notification exists or not. Returns a boolean
+                -`notification_of`: Stores the object for which we are searching
+                -`notification_type`: Type of the notification we are searching
+        
+        '''
+
         notification_exists=Notifications.objects.filter(object_id=notification_of.pk, type=notification_type).exists()
         return notification_exists
+
+    def mark_as_read(member_notification_id):
+        
+        member_notification = MemberNotifications.objects.get(id = member_notification_id)
+        member_notification.is_read = True
+        member_notification.save()
+
+    def mark_as_unread(member_notification_id):
+        
+        member_notification = MemberNotifications.objects.get(id = member_notification_id)
+        member_notification.is_read = False
+        member_notification.save()
     
     def delete_notification():
         pass

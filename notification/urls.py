@@ -7,5 +7,7 @@ app_name='notification'
 
 urlpatterns = [
     #landing_page
-    path('',views.notification, name='all_notifications')
+    path('',views.notification, name='all_notifications'),
+    path('mark_as_read/',views.MarkNotificationAsReadAjax.as_view(), name='mark_as_read'),
+    path('mark_as_unread/',views.MarkNotificationAsUnReadAjax.as_view(), name='mark_as_unread')
 ]

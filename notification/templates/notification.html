@@ -459,8 +459,8 @@
                         <table class="table table-striped table-class" id="table-id">
                             <tbody id="nostripe" class="tbody_style">
                                 {% for notification in member_notifications %}
-                                <tr class="unread tr_style" onmouseover="hoverInRow(this)"
-                                    onmouseout="hoverOutRow(this)">
+                                <tr class="{% if notification.is_read %}marked_read{% else %}unread{% endif %} tr_style" onmouseover="hoverInRow(this)"
+                                    onmouseout="hoverOutRow(this)" style="background-color: {% if notification.is_read %}white{% endif %}">
                                     <td style="color: #00629b" onclick="removeUnread(this)">
                                         <!--link here-->
                                         <a href="//{{notification.notification.inside_link}}">
@@ -504,9 +504,9 @@
                                             </div>
                                             <div class="dropdown-content-row" id="dropdownContent">
                                                 <a href="#"
-                                                    onclick="markAsRead_markAsUnread_table(this); return false;">Mark as
-                                                    read</a>
+                                                    onclick="markAsRead_markAsUnread_table(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
                                                 <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                                <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
                                             </div>
                                         </div>
                                     </td>
@@ -645,45 +645,82 @@
             var trElement = element.closest('tr');
             var dropdownContent = trElement.querySelector('.dropdown-content-row');
 
-            if (trElement.classList.contains('unread')) {
-                // Change the background color of the tr
-                trElement.style.backgroundColor = 'white';
-                trElement.classList.add('marked_read');
-                trElement.classList.remove('unread');
+            // Find the closest parent with the class "dropdown-content-row"
+            var closestDropdownContentRow = element.closest('.dropdown-content-row');             
+            // Get the hidden input element within this closest parent
+            var member_notification_id = closestDropdownContentRow.querySelector("#member_notification_id").value;
 
-                // Change the text of the link to "Mark as unread"
-                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+            if (trElement.classList.contains('unread')) {
+
+                // Make an AJAX request to retrieve data for the selected category
+                $.ajax({
+                    url: "{% url 'notification:mark_as_read' %}",
+
+                    type: "GET",
+                    data: {'member_notification_id':member_notification_id},
+                    success: function (response) {
+                        // Change the background color of the tr
+                        trElement.style.backgroundColor = 'white';
+                        trElement.classList.add('marked_read');
+                        trElement.classList.remove('unread');
+
+                        // Change the text of the link to "Mark as unread"
+                        dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
             }
             else {
-                // Change the background color of the tr to its default color
-                trElement.style.backgroundColor = '';
+                // Make an AJAX request to retrieve data for the selected category
+                $.ajax({
+                    url: "{% url 'notification:mark_as_unread' %}",
 
-                // Add the 'marked_read' class back to the tr
-                trElement.classList.remove('marked_read');
-                trElement.classList.add('unread');
+                    type: "GET",
+                    data: {'member_notification_id':member_notification_id},
+                    success: function (response) {
+                        // Change the background color of the tr to its default color
+                        trElement.style.backgroundColor = '';
 
-                // Change the text of the link to "Mark as read"
-                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+                        // Add the 'marked_read' class back to the tr
+                        trElement.classList.remove('marked_read');
+                        trElement.classList.add('unread');
+
+                        // Change the text of the link to "Mark as read"
+                        dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+                
             }
         }
         //change the dropdown text when a notification is clicked
         function removeUnread(element) {
             var trElement = element.closest('tr');
-
-            // Change the class to indicate the notification is read
-            trElement.classList.add('marked_read');
-            trElement.classList.remove('unread');
-
             // Find the dropdown content related to this notification
             var dropdownContent = trElement.querySelector(".dropdown-content-row");
 
-            // Toggle the text
-            if (trElement.classList.contains("unread")) {
-                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as read</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
-            }
-            else if (trElement.classList.contains("marked_read")) {
-                dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
-            }
+            // Make an AJAX request to retrieve data for the selected category
+            $.ajax({
+                url: "{% url 'notification:mark_as_read' %}",
+
+                type: "GET",
+                data: {'member_notification_id':member_notification_id},
+                success: function (response) {
+                    // Change the class to indicate the notification is read
+                    trElement.classList.add('marked_read');
+                    trElement.classList.remove('unread');
+
+
+                    dropdownContent.innerHTML = '<a href="#" onclick="markAsRead_markAsUnread_table(this); return false;">Mark as unread</a><a href="#" onclick="deleteNotification(this); return false;">Delete</a>';
+                },
+                error: function (error) {
+                    console.log("Error:", error);
+                }
+            });
         }
     </script>
 
