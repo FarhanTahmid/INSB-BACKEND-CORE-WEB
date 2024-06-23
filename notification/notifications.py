@@ -73,9 +73,8 @@ class NotificationHandler:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
             
-    
-    
-    def update_notification(notification_of, notification_type, content):
+
+    def update_notification(notification_of, notification_type, content=None):
 
         '''This function updates old notification instances, marks them as unread for all related users and changes the timestamp to current to show the notification higher in list
                 -`notification_of`: it is the instance of the object whose notification is to be updated
@@ -104,8 +103,11 @@ class NotificationHandler:
             member.is_read = False
             member.save()
 
+    def has_notification(notification_of, notification_type):
+
+        notification_exists=Notifications.objects.filter(object_id=notification_of.pk, type=notification_type).exists()
+        return notification_exists
     
     def delete_notification():
         pass
-    
-    
+

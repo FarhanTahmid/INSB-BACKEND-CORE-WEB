@@ -25,7 +25,7 @@ class Task_Assignation:
     # notification types for tasks
     try:
         task_creation_notification_type=NotificationTypes.objects.get(type="Task Creation")
-        task_update_notification_type=NotificationTypes.objects.get(type="Task Creation")
+        task_update_notification_type=NotificationTypes.objects.get(type="Task Update")
     except:
         task_creation_notification_type=None
         task_update_notification_type=None
@@ -426,7 +426,25 @@ class Task_Assignation:
             #making necessary updates in task log history
             if prev_title != title:
                 task_log_message = f"Task Title changed from {prev_title} to {title} by {user_name}"
-                NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':'Task Details have been updated. Check back on the task!'})
+                if NotificationHandler.has_notification(task, Task_Assignation.task_update_notification_type):
+                    NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':'Task Details have been updated. Check back on the task!'})
+                else:
+                    try:
+                        notification_created_by=Members.objects.get(ieee_id=request.user.username)
+                    except:
+                        notification_created_by=None
+
+                    # this shows an admin if the task was created by an admin, otherwise shows the member name
+                    receiver_list = []
+                    for member in task.members.all():
+                        receiver_list.append(member.ieee_id)
+                    notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+                    NotificationHandler.create_notifications(notification_type=Task_Assignation.task_update_notification_type.pk,
+                                                            general_message='Task Details have been updated. Check back on the task!',
+                                                            inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",
+                                                            created_by=notification_created_by_name,
+                                                            reciever_list=receiver_list,
+                                                            notification_of=task)
                 Task_Assignation.save_task_logs(task,task_log_message)
             if description_without_tags != prev_description:
                 task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {user_name}"
