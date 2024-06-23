@@ -426,8 +426,10 @@ class Task_Assignation:
             #making necessary updates in task log history
             if prev_title != title:
                 task_log_message = f"Task Title changed from {prev_title} to {title} by {user_name}"
+                
+                general_message='Task Details have been updated. Check back on the task!'
                 if NotificationHandler.has_notification(task, Task_Assignation.task_update_notification_type):
-                    NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':'Task Details have been updated. Check back on the task!'})
+                    NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':general_message})
                 else:
                     try:
                         notification_created_by=Members.objects.get(ieee_id=request.user.username)
@@ -440,7 +442,7 @@ class Task_Assignation:
                         receiver_list.append(member.ieee_id)
                     notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
                     NotificationHandler.create_notifications(notification_type=Task_Assignation.task_update_notification_type.pk,
-                                                            general_message='Task Details have been updated. Check back on the task!',
+                                                            general_message=general_message,
                                                             inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",
                                                             created_by=notification_created_by_name,
                                                             reciever_list=receiver_list,
