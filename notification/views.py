@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
+from django.views import View
+from insb_port import settings
 from notification.models import MemberNotifications
+from notification.notifications import NotificationHandler
 from port.renderData import PortData
 from recruitment.models import recruitment_session, recruited_members
 import users
@@ -49,7 +52,8 @@ def notification(request):
             context={
                 'all_sc_ag':sc_ag,
                 "user_data":user_data,
-                'member_notifications':member_notifications
+                'member_notifications':member_notifications,
+                'media_url':settings.MEDIA_URL
             }
 
             return render(request, 'notification.html', context)
@@ -59,3 +63,22 @@ def notification(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
+    
+class MarkNotificationAsReadAjax(View):
+    def get(self,request):
+        member_notification_id = request.GET.get('member_notification_id')
+        try:
+            NotificationHandler.mark_as_read(member_notification_id)
+            return JsonResponse('Success', safe=False)
+        except:
+            return JsonResponse('Something went wrong!',safe=False)
+        
+class MarkNotificationAsUnReadAjax(View):
+    def get(self,request):
+        member_notification_id = request.GET.get('member_notification_id')
+        try:
+            NotificationHandler.mark_as_unread(member_notification_id)
+            return JsonResponse('Success', safe=False)
+        except:
+            return JsonResponse('Something went wrong!',safe=False)

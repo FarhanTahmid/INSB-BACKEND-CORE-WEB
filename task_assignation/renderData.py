@@ -23,7 +23,12 @@ from notification.models import *
 class Task_Assignation:
     
     # notification types for tasks
-    task_creation_notification_type=NotificationTypes.objects.get(type="Task Creation")
+    try:
+        task_creation_notification_type=NotificationTypes.objects.get(type="Task Creation")
+        task_update_notification_type=NotificationTypes.objects.get(type="Task Update")
+    except:
+        task_creation_notification_type=None
+        task_update_notification_type=None
 
     def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
@@ -157,7 +162,7 @@ class Task_Assignation:
             NotificationHandler.create_notifications(
                 notification_type=Task_Assignation.task_creation_notification_type.pk,
                 general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{new_task.title}'. Click to see the details.",
-                inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list
+                inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list,notification_of=new_task
             )
                   
             return True
@@ -248,12 +253,11 @@ class Task_Assignation:
             reciever_list = []
             for member in members:
                 reciever_list.append(member.ieee_id)
-            print(reciever_list)
 
             NotificationHandler.create_notifications(
                 notification_type=Task_Assignation.task_creation_notification_type.pk,
                 general_message=f"{notification_created_by_name} has just assigned you a new task titled -'{new_task.title}'. Click to see the details.",
-                inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list
+                inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list,notification_of=new_task
             )
 
             return True
@@ -425,6 +429,27 @@ class Task_Assignation:
             #making necessary updates in task log history
             if prev_title != title:
                 task_log_message = f"Task Title changed from {prev_title} to {title} by {user_name}"
+                
+                general_message='Task Details have been updated. Check back on the task!'
+                if NotificationHandler.has_notification(task, Task_Assignation.task_update_notification_type):
+                    NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':general_message})
+                else:
+                    try:
+                        notification_created_by=Members.objects.get(ieee_id=request.user.username)
+                    except:
+                        notification_created_by=None
+
+                    # this shows an admin if the task was created by an admin, otherwise shows the member name
+                    receiver_list = []
+                    for member in task.members.all():
+                        receiver_list.append(member.ieee_id)
+                    notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+                    NotificationHandler.create_notifications(notification_type=Task_Assignation.task_update_notification_type.pk,
+                                                            general_message=general_message,
+                                                            inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",
+                                                            created_by=notification_created_by_name,
+                                                            reciever_list=receiver_list,
+                                                            notification_of=task)
                 Task_Assignation.save_task_logs(task,task_log_message)
             if description_without_tags != prev_description:
                 task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {user_name}"

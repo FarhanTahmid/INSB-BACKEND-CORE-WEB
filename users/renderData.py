@@ -1,3 +1,4 @@
+from notification.models import MemberNotifications
 from task_assignation.models import Member_Task_Point
 from users.models import Members,MemberSkillSets
 from system_administration.models import adminUsers
@@ -40,6 +41,10 @@ class LoggedinUser:
         ieee_id=self.user.username
         try:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
+            try:
+                member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:3]
+            except:
+                member_notifications = None
             return {
             'is_admin_user': False,
             'name':get_Member_details.name,
@@ -60,7 +65,7 @@ class LoggedinUser:
             'facebook_url':get_Member_details.facebook_url,
             'linkedin_url':get_Member_details.linkedin_url,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
-        
+            'notifications':member_notifications
         }
         except Members.DoesNotExist:
             try:
