@@ -49,10 +49,7 @@ class Task_Assignation:
             task_created_by=str(Members.objects.get(ieee_id=current_user.user.username).ieee_id)
         except:
             task_created_by=adminUsers.objects.get(username=current_user.user.username).username
-        
-        ####################################################
-        ##### new task is created heere ####################
-        ####################################################
+    
         #Create a new task and save it
         new_task = Task(title=title,
                         description=description,
@@ -267,6 +264,10 @@ class Task_Assignation:
             ''' This function is used to update task for both Branch and SC_AG '''
 
         # try:
+            try:
+                task_completion_notification_type=NotificationTypes.objects.get(type="Task Creation")
+            except:
+                task_completion_notification_type = None
             #Get the task using the task_id
             task = Task.objects.get(id=task_id)
             #getting the task log
