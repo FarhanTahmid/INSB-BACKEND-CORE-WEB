@@ -277,7 +277,7 @@
       <div class="msg-info-div">
         <a href="//{{notification.notification.inside_link}}" target="_self">
           <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
-            <input type="hidden" class="hidden-input" id="hid-inp" value="1" data-namr="1" />
+            <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
               <div class="sender_frame">
                 <img src="/media_files/{{notification.notification.created_by.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
@@ -304,7 +304,8 @@
             <span style="position: relative; top: -4px">...</span>
           </div>
           <div class="dropdown-content" id="dropdownContent">
-            <a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>
+            <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
+            <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
           </div>
         </div>
       </div>
@@ -472,18 +473,49 @@
     var inputValue = hiddenInput.value;
 
     var dropdownContent = element.parentElement;
+    // Get the hidden input element within this closest parent
+    var member_notification_id = dropdownContent.querySelector("#member_notification_id").value;
 
     if (inputValue == "1") {
-      dropdownContent.innerHTML =
-        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as unread</a>';
-      msg.style.backgroundColor = "white";
-      hiddenInput.value = "2";
+
+        // Make an AJAX request to retrieve data for the selected category
+        $.ajax({
+            url: "{% url 'notification:mark_as_read' %}",
+
+            type: "GET",
+            data: {'member_notification_id':member_notification_id},
+            success: function (response) {
+                // Change the background color of the tr
+                msg.children[0].style.backgroundColor = "white";
+                hiddenInput.value = "2";
+
+                // Change the text of the link to "Mark as unread"
+                dropdownContent.querySelector('#notify_action').textContent = 'Mark as unread';
+            },
+            error: function (error) {
+                console.log("Error:", error);
+            }
+        });
     } else if (inputValue == "2") {
-      // Change the text of the link to "Mark as read"
-      dropdownContent.innerHTML =
-        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>';
-      msg.style.backgroundColor = "rgb(224, 242, 254)";
-      hiddenInput.value = "1";
+
+      // Make an AJAX request to retrieve data for the selected category
+      $.ajax({
+          url: "{% url 'notification:mark_as_unread' %}",
+
+          type: "GET",
+          data: {'member_notification_id':member_notification_id},
+          success: function (response) {
+              // Change the background color of the tr
+              msg.children[0].style.backgroundColor = "rgb(224, 242, 254)";
+              hiddenInput.value = "1";
+
+              // Change the text of the link to "Mark as read"
+              dropdownContent.querySelector('#notify_action').textContent = 'Mark as read';
+          },
+          error: function (error) {
+              console.log("Error:", error);
+          }
+      });
     }
 
     //updating the bell icon count
