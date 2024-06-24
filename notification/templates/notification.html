@@ -428,14 +428,13 @@
             </h4>
 
             <!--Messages-->
-            <div style="justify-content: center; text-align: center">
-                {% if messages %}
-                {% for message in messages %}
-                <h4 {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{message }}
-                </h4>
-                {% endfor %}
-                <br />
-                {% endif %}
+            <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
+                <div id="messageBox" class="alert alert-success" role="alert">
+                    <span id="messageText"></span>
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             </div>
 
             <div style="justify-content: center; text-align: center; margin-top: 30px">
@@ -632,9 +631,35 @@
         function deleteNotification(element) {
             // Get the parent tr element of the clicked link
             var trElement = element.closest('tr');
+            var dropdownContent = trElement.querySelector('.dropdown-content-row');
+            var member_notification_id = dropdownContent.querySelector("#member_notification_id").value;
+            console.log(member_notification_id);
+            $.ajax({
+                url: "{% url 'notification:delete_notification_user' %}",
+                type: "GET",
+                data: {'member_notification_id':member_notification_id},
+                success: function(response) {
+                    // Handle success response from the backend
+                    console.log('AJAX request successful');
+                    showMessage(response.message);
+                    if (response.deleted === true){
+                        trElement.remove();
+                    }
+                   
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response from the backend
+                    console.error('AJAX request error:', error);
+                    showMessage("Error deleting notification");
+                }
+            });
+           
+        }
 
-            // Remove the entire tr element from the DOM
-            trElement.remove();
+        function showMessage(message) {
+            $('#messageBox').text(message);
+            $('#messageContainer').show();
+
         }
 
         //change dropdown text and notification color based on click

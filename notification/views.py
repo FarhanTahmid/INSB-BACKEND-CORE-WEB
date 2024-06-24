@@ -82,3 +82,16 @@ class MarkNotificationAsUnReadAjax(View):
             return JsonResponse('Success', safe=False)
         except:
             return JsonResponse('Something went wrong!',safe=False)
+        
+class DeleteNotifcationUserAjax(View):
+    def get(self,request, *args, **kwargs):
+        member_notification_id = request.GET.get('member_notification_id')
+        try:
+            if NotificationHandler.delete_member_notification(request,member_notification_id):
+                message = "Notifcation deleted!"
+                return JsonResponse({'message': message,'deleted':True}, status=200)
+            else:
+                message = "Task not yet completed, you can't delete this notification!"
+                return JsonResponse({'message': message,'deleted':False}, status=200)     
+        except:
+            return JsonResponse('Something went wrong!',safe=False)
