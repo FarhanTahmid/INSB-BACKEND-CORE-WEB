@@ -265,7 +265,7 @@ class Task_Assignation:
 
         # try:
             try:
-                task_completion_notification_type=NotificationTypes.objects.get(type="Task Creation")
+                task_completion_notification_type=NotificationTypes.objects.get(type="Task Completion")
             except:
                 task_completion_notification_type = None
             #Get the task using the task_id
