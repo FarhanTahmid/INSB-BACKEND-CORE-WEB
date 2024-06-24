@@ -3,8 +3,7 @@ from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
 import logging
 import traceback
-
-
+from task_assignation.models import Task
 class NotificationHandler:
     
     logger=logging.getLogger(__name__)
@@ -137,6 +136,22 @@ class NotificationHandler:
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         member_notification.is_read = False
         member_notification.save()
+
+    def delete_member_notification(request,member_notification_id):
+        
+        '''This function will remove the notification that the user requested to be deleted'''
+        
+        member_notification = MemberNotifications.objects.get(id = member_notification_id)
+        object_type = member_notification.notification.content_type
+
+        if object_type.name == "Task":
+            object_id = member_notification.notification.object_id
+            task = Task.objects.get(pk = object_id)
+            if task.is_task_completed:
+                member_notification.delete()
+                return True
+            else:
+                return False
     
     def delete_notification():
         pass
