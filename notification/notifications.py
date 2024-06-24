@@ -102,6 +102,7 @@ class NotificationHandler:
 
         member_notifications = MemberNotifications.objects.filter(notification=notification)
 
+        #Set all the member notifications to unread
         for member in member_notifications:
             member.is_read = False
             member.save()
@@ -118,12 +119,20 @@ class NotificationHandler:
         return notification_exists
 
     def mark_as_read(member_notification_id):
+
+        '''This functions marks a notification as read
+                -`member_notification_id`: The id of the member_notification object        
+        '''
         
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         member_notification.is_read = True
         member_notification.save()
 
     def mark_as_unread(member_notification_id):
+
+        '''This functions marks a notification as unread
+                -`member_notification_id`: The id of the member_notification object        
+        '''
         
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         member_notification.is_read = False

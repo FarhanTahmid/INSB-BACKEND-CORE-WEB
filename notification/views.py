@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
 from django.views import View
+from insb_port import settings
 from notification.models import MemberNotifications
 from notification.notifications import NotificationHandler
 from port.renderData import PortData
@@ -51,7 +52,8 @@ def notification(request):
             context={
                 'all_sc_ag':sc_ag,
                 "user_data":user_data,
-                'member_notifications':member_notifications
+                'member_notifications':member_notifications,
+                'media_url':settings.MEDIA_URL
             }
 
             return render(request, 'notification.html', context)
