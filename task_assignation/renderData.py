@@ -5,7 +5,6 @@ from central_branch.renderData import Branch
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from port.models import Chapters_Society_and_Affinity_Groups, Panels, Teams
 from system_administration.models import adminUsers
-
 from task_assignation.models import *
 from users.models import Members, Panel_Members
 from datetime import datetime,timedelta
@@ -16,7 +15,6 @@ from insb_port import settings
 import os
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-
 from notification.notifications import NotificationHandler
 from notification.models import *
 
@@ -429,43 +427,26 @@ class Task_Assignation:
             #making necessary updates in task log history
             if prev_title != title:
                 task_log_message = f"Task Title changed from {prev_title} to {title} by {user_name}"
-                
-                general_message='Task Details have been updated. Check back on the task!'
-                if NotificationHandler.has_notification(task, Task_Assignation.task_update_notification_type):
-                    NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':general_message})
-                else:
-                    try:
-                        notification_created_by=Members.objects.get(ieee_id=request.user.username)
-                    except:
-                        notification_created_by=None
-
-                    # this shows an admin if the task was created by an admin, otherwise shows the member name
-                    receiver_list = []
-                    for member in task.members.all():
-                        receiver_list.append(member.ieee_id)
-                    notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
-                    NotificationHandler.create_notifications(notification_type=Task_Assignation.task_update_notification_type.pk,
-                                                            general_message=general_message,
-                                                            inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",
-                                                            created_by=notification_created_by_name,
-                                                            reciever_list=receiver_list,
-                                                            notification_of=task)
+                #updating task log
                 Task_Assignation.save_task_logs(task,task_log_message)
+                #updating notification
+                NotificationHandler.notification_task_details_update(request,task,'Task Details have been updated. Check back on the task!')
             if description_without_tags != prev_description:
                 task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
+                NotificationHandler.notification_task_details_update(request,task,'Task Description has been updated. Check back on the task!')
             if new_task_category != prev_task_category:
                 task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
+                NotificationHandler.notification_task_details_update(request,task,'Task Category has been updated. Check back on the task!')
                 task_category_changed = True
             #deadline saving not correct
             if prev_deadline != str(deadline):
                 task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {user_name}"
+                NotificationHandler.notification_task_details_update(request,task,'Task Deadline has been updated. Check back on the task!')
+                for member in task.members.all():
+                    Task_Assignation.task_deadline_change_email(request,member,task)
                 Task_Assignation.save_task_logs(task,task_log_message)
-
-            ####################################################
-            ######task category changed here####################
-            ####################################################
 
             #changing all points to members if task category is changed
             if task_category_changed:
@@ -491,12 +472,8 @@ class Task_Assignation:
                 existing_task_member.append(mem)
             #Check the task's task_type and clear their respective fields
             if task.task_type=="Individuals" and len(task.team.all()) == 1:
-                print("here1")
                 task.members.clear()
 
-            ####################################################
-            ######team changed here ############################
-            ####################################################
             elif task.task_type == "Team":
                 #prev_team
                 if is_team_changed: 
@@ -511,7 +488,6 @@ class Task_Assignation:
                         #removing the task members points and task type along with deleting any files uploaded
                         task_members = task.members.all()
                         #removing the member from the task
-                        print(task_members)
                         for member in task_members:
 
                             if member.team == team:
@@ -545,9 +521,7 @@ class Task_Assignation:
 
                                 member.delete()
                     task.team.clear()
-            ####################################################
-            ######Inidividual task member changed here##########
-            ####################################################
+ 
             elif task.task_type == "Individuals":
                 task.members.clear()
             #Set the new task_type
@@ -557,9 +531,6 @@ class Task_Assignation:
             if prev_task_type != task_type:
                 changed = True
 
-            ####################################################
-            ##task changed for team individual task creation####
-            ####################################################
             if task_type=="Individuals" and len(task.team.all()) == 1:
                 print("here2")
                 members = []
@@ -2383,6 +2354,55 @@ This is an automated message. Do not reply
             return True
         except:
             return False  
+
+    def task_deadline_change_email(request,member,task):
+
+        '''This function will send an email to the member who has been assigned with the task regarding task deadline update'''
+
+        try:
+            email_from = settings.EMAIL_HOST_USER
+            email_to = []
+            try:
+                task_created_by = Members.objects.get(ieee_id = task.task_created_by)
+                task_created_by = task_created_by.position.role
+            except:
+                task_created_by = "Admin"
+            email_to.append(member.email_ieee)
+            email_to.append(member.email_personal)
+            email_to.append(member.email_nsu)
+            subject = f"Task Details Updated!"
+            site_domain = request.META['HTTP_HOST']
+            message = f'''
+Hello {member.name},
+                
+Your assigend task's - {task.title}, deadline was updated.
+Please follow this link to view the changed details task:{site_domain}/portal/central_branch/task/{task.pk}
+
+As a reminder, you are requested to complete the task with in the due date. If not, you will be penalised daily
+5% of your task points.
+
+Please follow the link or go through the portal for more details.
+
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task_created_by}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+            '''
+            email=EmailMultiAlternatives(subject,message,
+                                    email_from,
+                                    email_to
+                                    )
+            # email.send()
+            task_log_message = f'Task Name: {task.title}, task edit email sent to {member.name}({member.ieee_id})'
+            #setting message
+            Task_Assignation.save_task_logs(task,task_log_message)
+            return True
+        except:
+            return False
+
     
     def get_user(request):
         

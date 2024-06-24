@@ -3,7 +3,7 @@ from datetime import datetime
 from system_administration.system_error_handling import ErrorHandling
 import logging
 import traceback
-
+from task_assignation.renderData import Task_Assignation
 
 class NotificationHandler:
     
@@ -137,6 +137,32 @@ class NotificationHandler:
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         member_notification.is_read = False
         member_notification.save()
+
+    def notification_task_details_update(request,task,message):
+
+        '''This function will update the task-related-notification'''
+        
+        general_message=message
+        if NotificationHandler.has_notification(task, Task_Assignation.task_update_notification_type):
+            NotificationHandler.update_notification(task, Task_Assignation.task_update_notification_type, {'general_message':general_message})
+        else:
+            try:
+                notification_created_by=Members.objects.get(ieee_id=request.user.username)
+            except:
+                notification_created_by=None
+
+            # this shows an admin if the task was created by an admin, otherwise shows the member name
+            receiver_list = []
+            for member in task.members.all():
+                receiver_list.append(member.ieee_id)
+            notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            NotificationHandler.create_notifications(notification_type=Task_Assignation.task_update_notification_type.pk,
+                                                    general_message=general_message,
+                                                    inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",
+                                                    created_by=notification_created_by_name,
+                                                    reciever_list=receiver_list,
+                                                    notification_of=task)
+        
     
     def delete_notification():
         pass
