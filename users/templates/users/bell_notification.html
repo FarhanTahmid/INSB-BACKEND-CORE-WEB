@@ -275,7 +275,7 @@
     {% for notification in user_data.notifications %}
       <!--redirect link-->
       <div class="msg-info-div">
-        <a href="//{{notification.notification.inside_link}}" target="_self">
+        <a href="//{{notification.notification.inside_link}}" target="_blank">
           <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
             <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
@@ -331,21 +331,32 @@
 
   //function to change the color when clicked
   function msg_read(msg_div) {
-    //updating the hidden input value
-    msg_div.firstElementChild.value = "2";
 
-    notification_count();
+    if(msg_div.firstElementChild.value != "2")
+    {   
+        var dropdownContent = msg_div.closest(".msg-info-div").querySelector(".dropdown-content");
+        var member_notification_id = dropdownContent.querySelector("#member_notification_id").value;
+        // Make an AJAX request to retrieve data for the selected category
+        $.ajax({
+          url: "{% url 'notification:mark_as_read' %}",
+    
+          type: "GET",
+          data: {'member_notification_id':member_notification_id},
+          success: function (response) {
+              //updating the hidden input value
+              msg_div.firstElementChild.value = "2";
+          
+              notification_count();
 
-    //changing the dropdown text as needed according to the hidden input value
-    var dropdownContent = msg_div.nextElementSibling.children[1];
-
-    if (msg_div.firstElementChild.value == "2") {
-      dropdownContent.innerHTML =
-        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as unread</a>';
-    } else {
-      // Change the text of the link to "Mark as read"
-      dropdownContent.innerHTML =
-        '<a href="#" onclick="markAsRead_markAsUnread(this); return false;">Mark as read</a>';
+              // Change the background color of the tr
+              msg_div.style.backgroundColor = "white";
+              //changing the dropdown text as needed according to the hidden input value
+              dropdownContent.querySelector('#notify_action').textContent = 'Mark as unread';
+          },
+          error: function (error) {
+              console.log("Error:", error);
+          }
+      });
     }
   }
 
@@ -359,6 +370,7 @@
         val++;
       }
     });
+    console.log(val);
 
     //updating the unread notification count
     var lbl = document.getElementById("nftn_lbl");
@@ -491,6 +503,9 @@
 
                 // Change the text of the link to "Mark as unread"
                 dropdownContent.querySelector('#notify_action').textContent = 'Mark as unread';
+                
+                //updating the bell icon count
+                notification_count();
             },
             error: function (error) {
                 console.log("Error:", error);
@@ -511,15 +526,15 @@
 
               // Change the text of the link to "Mark as read"
               dropdownContent.querySelector('#notify_action').textContent = 'Mark as read';
+
+              //updating the bell icon count
+              notification_count();
           },
           error: function (error) {
               console.log("Error:", error);
           }
       });
     }
-
-    //updating the bell icon count
-    notification_count();
   }
 </script>
 {% endblock bell_notification %}

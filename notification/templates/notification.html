@@ -674,7 +674,7 @@
 
             if (trElement.classList.contains('unread')) {
 
-                // Make an AJAX request to retrieve data for the selected category
+                // Make an AJAX request to mark notification as read for user
                 $.ajax({
                     url: "{% url 'notification:mark_as_read' %}",
 
@@ -695,7 +695,7 @@
                 });
             }
             else {
-                // Make an AJAX request to retrieve data for the selected category
+                // Make an AJAX request to mark notification as unread for user
                 $.ajax({
                     url: "{% url 'notification:mark_as_unread' %}",
 
@@ -729,7 +729,7 @@
             
             if (trElement.classList.contains('unread'))
             {
-                // Make an AJAX request to retrieve data for the selected category
+                // Make an AJAX request to mark notification as read for user
                 $.ajax({
                     url: "{% url 'notification:mark_as_read' %}",
     
