@@ -98,13 +98,14 @@ class DeleteNotifcationUserAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
 
 class ReceiveTokenAjax(View):
-    def get(self,request, *args, **kwargs):
-        token = request.GET.get('token')
-        try:
-            title = 'Hello'
-            body = 'This is a test notification'
-            # Send the push notification
-            response = push_notification.send_push_notification(token, title, body)   
-            return JsonResponse('Message sent!',response)  
-        except:
-            return JsonResponse('Something went wrong!',safe=False)
+    # def get(self,request, *args, **kwargs):
+    #     token = request.GET.get('token')
+    #     try:
+    #         title = 'Hello'
+    #         body = 'This is a test notification'
+    #         # Send the push notification
+    #         response = push_notification.send_push_notification(token, title, body)   
+    #         return JsonResponse('Message sent!',response)  
+    #     except:
+    #         return JsonResponse('Something went wrong!',safe=False)
+    pass
