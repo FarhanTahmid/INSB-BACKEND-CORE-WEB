@@ -70,6 +70,10 @@ def signup_user_validation(request):
     if(request.method=="POST"):
         if(request.POST.get('signup')):
             ieee_id=request.POST['ieee_id']
+            if(not ieee_id.isnumeric()):
+                messages.info(request,"Your IEEE ID is an 8 or 9 digits number.")
+                return redirect('users:signup_validation')
+            
             try:
                 getMember=Members.objects.get(ieee_id=ieee_id)
                 # check if member is already signed in
