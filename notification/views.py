@@ -23,6 +23,7 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
+from . import push_notification
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -93,5 +94,18 @@ class DeleteNotifcationUserAjax(View):
             else:
                 message = "Task not yet completed, you can't delete this notification!"
                 return JsonResponse({'message': message,'deleted':False}, status=200)     
+        except:
+            return JsonResponse('Something went wrong!',safe=False)
+
+class ReceiveTokenAjax(View):
+    def get(self,request, *args, **kwargs):
+        token = request.GET.get('token')
+        try:
+            title = 'Hello'
+            body = 'This is a test notification'
+            print("here21")
+            print(token)
+            # Send the push notification
+            push_notification.send_push_notification(token, title, body)     
         except:
             return JsonResponse('Something went wrong!',safe=False)

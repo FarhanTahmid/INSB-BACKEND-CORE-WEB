@@ -266,6 +266,16 @@ class Task_Assignation:
             ''' This function is used to update task for both Branch and SC_AG '''
 
         # try:
+            #settings for notification
+            try:
+                notification_created_by=Members.objects.get(ieee_id=request.user.username)
+            except:
+                notification_created_by=None
+            # this shows an admin if the task was created by an admin, otherwise shows the member name
+            notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            # this is the inside link of the notification, in this case users will be redirected to the tasks
+            inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}" 
+
             #Get the task using the task_id
             task = Task.objects.get(id=task_id)
             #getting the task log
@@ -556,16 +566,6 @@ class Task_Assignation:
                     
                     # Send email to only those members who were assigned the task in the update section and create notification
                     if volunteer not in existing_task_member:
-
-                        try:
-                            notification_created_by=Members.objects.get(ieee_id=request.user.username)
-                        except:
-                            notification_created_by=None
-                        # this shows an admin if the task was created by an admin, otherwise shows the member name
-                        notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
-                        # this is the inside link of the notification, in this case users will be redirected to the tasks
-                        inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}"
-
                         message = f'Task Name: {title}, task assiged to {volunteer.name}({volunteer.ieee_id}) when updating by {task.task_created_by}'
                         Task_Assignation.save_task_logs(task,message)
                         Task_Assignation.task_creation_email(request,volunteer,task)
@@ -756,17 +756,8 @@ class Task_Assignation:
                                 ##
                     #appending the task to team cooridnator
                     task.members.add(*coordinators)
-                    #creating those members points in Member Task Points
-                    try:
-                        notification_created_by=Members.objects.get(ieee_id=request.user.username)
-                    except:
-                        notification_created_by=None
-                    # this shows an admin if the task was created by an admin, otherwise shows the member name
-                    notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
-                    # this is the inside link of the notification, in this case users will be redirected to the tasks
-                    inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}"
+                    #creating those members points in Member Task Points and updating notifications
                     receiver_list = []
-
                     for member in coordinators:
                         #making all task type true for those coordinators and creating their task points and task upload type
                         member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
@@ -791,10 +782,10 @@ class Task_Assignation:
                         general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
                         inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
                     )
-            #start from here plzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+            
             #Else if task_type is Individuals
             elif task_type == "Individuals":
-                print("here4")
+       
                 members = []
                 prev_no_of_volunteers=Member_Task_Point.objects.filter(task=task).count()
                 prev_points_div = task.task_category.points / float(prev_no_of_volunteers)
@@ -820,6 +811,14 @@ class Task_Assignation:
                         message = f'Task Name: {title}, task assiged to {volunteer.name}({volunteer.ieee_id}) when updating by {task.task_created_by}'
                         Task_Assignation.save_task_logs(task,message)
                         Task_Assignation.task_creation_email(request,volunteer,task)
+
+                        receiver_list = []
+                        receiver_list.append(volunteer.ieee_id)
+                        NotificationHandler.create_notifications(
+                            notification_type=Task_Assignation.task_creation_notification_type.pk,
+                            general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
+                            inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
+                        )
                         
 
                 #Add those members to task

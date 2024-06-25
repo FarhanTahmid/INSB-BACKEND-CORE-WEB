@@ -490,4 +490,71 @@
     notification_count();
   }
 </script>
+<!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDj1YviC5nz_96MX1wqCZuir67QNsyWunY",
+    authDomain: "ieee-nsu-sb-portal.firebaseapp.com",
+    projectId: "ieee-nsu-sb-portal",
+    storageBucket: "ieee-nsu-sb-portal.appspot.com",
+    messagingSenderId: "608760512807",
+    appId: "1:608760512807:web:8730f4f3588840636aa902",
+    measurementId: "G-4G0H22SDX5"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('{% static 'firebase/firebase.js' %}')
+    .then(function(registration) {
+      console.log('Service Worker registered with scope:', registration.scope);
+      messaging.useServiceWorker(registration);
+
+      // Request permission and get token
+      messaging.requestPermission()
+      .then(function() {
+        return messaging.getToken();
+      })
+      .then(function(token) {
+        console.log("FCM Token:", token);
+        $.ajax({
+          url: "{% url 'notification:receive_token' %}",
+          type: "GET",
+          data: {'token': token},
+          success: function (response) {
+            console.log("Success:", response);
+          },
+          error: function (error) {
+              console.log("Error:", error);
+          }
+        });
+      })
+      .catch(function(err) {
+        console.error("Error getting FCM token:", err);
+      });
+    })
+    .catch(function(err) {
+      console.error('Service Worker registration failed:', err);
+    });
+  }
+
+  messaging.onMessage(function(payload) {
+    console.log("Message received. ", payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+    };
+
+    if (Notification.permission === 'granted') {
+      var notification = new Notification(notificationTitle, notificationOptions);
+    }
+  });
+</script>
+
 {% endblock bell_notification %}

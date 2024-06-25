@@ -11,4 +11,5 @@ urlpatterns = [
     path('mark_as_read/',views.MarkNotificationAsReadAjax.as_view(), name='mark_as_read'),
     path('mark_as_unread/',views.MarkNotificationAsUnReadAjax.as_view(), name='mark_as_unread'),
     path('delete_notification_user/',views.DeleteNotifcationUserAjax.as_view(),name="delete_notification_user"),
+    path('receive_token/',views.ReceiveTokenAjax.as_view(),name="receive_token"),
 ]
