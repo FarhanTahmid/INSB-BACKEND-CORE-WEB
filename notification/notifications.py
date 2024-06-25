@@ -147,7 +147,7 @@ class NotificationHandler:
         if object_type.name == "Task":
             object_id = member_notification.notification.object_id
             task = Task.objects.get(pk = object_id)
-            if task.is_task_completed:
+            if task.is_task_completed and member_notification.member in task.members.all():
                 member_notification.delete()
                 return True
             else:
