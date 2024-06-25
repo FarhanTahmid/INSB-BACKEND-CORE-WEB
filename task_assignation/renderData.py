@@ -266,6 +266,9 @@ class Task_Assignation:
             ''' This function is used to update task for both Branch and SC_AG '''
 
         # try:
+            #Get the task using the task_id
+            task = Task.objects.get(id=task_id)
+            
             #settings for notification
             try:
                 notification_created_by=Members.objects.get(ieee_id=request.user.username)
@@ -276,8 +279,7 @@ class Task_Assignation:
             # this is the inside link of the notification, in this case users will be redirected to the tasks
             inside_link=f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}" 
 
-            #Get the task using the task_id
-            task = Task.objects.get(id=task_id)
+            
             #getting the task log
             task_log_details = Task_Log.objects.get(task_number = task)
             #formatting deadline

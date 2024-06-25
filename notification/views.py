@@ -103,9 +103,8 @@ class ReceiveTokenAjax(View):
         try:
             title = 'Hello'
             body = 'This is a test notification'
-            print("here21")
-            print(token)
             # Send the push notification
-            push_notification.send_push_notification(token, title, body)     
+            response = push_notification.send_push_notification(token, title, body)   
+            return JsonResponse('Message sent!',response)  
         except:
             return JsonResponse('Something went wrong!',safe=False)
