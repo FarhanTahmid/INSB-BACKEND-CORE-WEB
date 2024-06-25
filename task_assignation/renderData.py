@@ -779,7 +779,9 @@ class Task_Assignation:
                         task_type_member.has_media = True
                         task_type_member.has_permission_paper = True
                         task_type_member.save()
-                        #sending the email to the coordinator
+                        #sending the email to the coordinator and saving to task logs
+                        message = f'Task Name: {title}, task assiged to {member.name}({member.ieee_id}) when updating by {notification_created_by_name}'
+                        Task_Assignation.save_task_logs(task,message)
                         Task_Assignation.task_creation_email(request,member,task)
                         #notification receipient list
                         receiver_list.append(member.ieee_id)
