@@ -68,6 +68,8 @@ def notification(request):
 class MarkNotificationAsReadAjax(View):
     def get(self,request):
         member_notification_id = request.GET.get('member_notification_id')
+        print(member_notification_id)
+        print("Mark as read")
         try:
             NotificationHandler.mark_as_read(member_notification_id)
             return JsonResponse('Success', safe=False)
@@ -114,7 +116,7 @@ class ReceiveTokenAjax(View):
 def fetch_notifications(request):
     try:
         member = Members.objects.get(ieee_id=request.user.username)
-        member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')[:3]
+        member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')[:1]
     except:
         member_notifications = None
     notifications = []
@@ -128,7 +130,7 @@ def fetch_notifications(request):
             except:
                 profile_picture = 'default_profile_picture.png'
             dic = {
-                'id': member_notification.notification.pk,
+                'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
                 'general_message': member_notification.notification.general_message,
                 'timestamp': member_notification.notification.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
