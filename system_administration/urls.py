@@ -7,5 +7,4 @@ app_name='system_administration'
 
 urlpatterns = [
     path('',views.main_website_update_view,name="main_web_update"),
-    path('restriction/',views.restriction,name="restriction"),
 ]

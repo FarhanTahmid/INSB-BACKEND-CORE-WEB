@@ -4,13 +4,19 @@
 <script>
   function checkNotificationPermission() {
     if (Notification.permission === "granted") {
+        // User has granted permission for notifications
         console.log("Notifications are enabled.");
+        // Allow access to the site by removing any blur effect and message
+        removeBlurAndMessage();
     } else if (Notification.permission === "denied") {
-
+        // User has denied permission for notifications
         console.log("Notifications are denied.");
+        // Restrict access to the site
         restrictAccess();
     } else {
+        // User hasn't been asked for notification permission yet
         console.log("Notifications are not yet requested.");
+        // Ask for permission
         requestNotificationPermission();
     }
 }
@@ -19,18 +25,32 @@ function requestNotificationPermission() {
     Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
             console.log("Notifications are enabled.");
+            // Allow access to the site by removing any blur effect and message
+            removeBlurAndMessage();
         } else {
             console.log("Notifications are denied.");
+            // Restrict access to the site
             restrictAccess();
         }
     });
 }
 
 function restrictAccess() {
-    window.location.href = "{% url 'system_administration:restriction' %}";  
+    // Blur the current page and display an alert message
+    document.body.style.filter = "blur(10px)";
+    alert('Allow Notifications to enable page');
+    setInterval(checkNotificationPermission, 30000);
 }
 
+function removeBlurAndMessage() {
+    document.body.style.filter = "none";
+    const messageDiv = document.getElementById("notification-message");
+    if (messageDiv) {
+        messageDiv.remove();
+    }
+}
 
+// Run the check when the page loads
 document.addEventListener("DOMContentLoaded", checkNotificationPermission);
 </script>
 <style>
