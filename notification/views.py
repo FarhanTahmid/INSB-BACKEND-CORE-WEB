@@ -7,7 +7,6 @@ from notification.models import MemberNotifications
 from notification.notifications import NotificationHandler
 from port.renderData import PortData
 from recruitment.models import recruitment_session, recruited_members
-import users
 from users.models import Members
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -24,6 +23,7 @@ from datetime import datetime
 import traceback
 from central_branch import views as cv
 from . import push_notification
+from users.renderData import LoggedinUser
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -64,8 +64,7 @@ def notification(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
-    
-    
+     
 class MarkNotificationAsReadAjax(View):
     def get(self,request):
         member_notification_id = request.GET.get('member_notification_id')
@@ -73,8 +72,7 @@ class MarkNotificationAsReadAjax(View):
             NotificationHandler.mark_as_read(member_notification_id)
             return JsonResponse('Success', safe=False)
         except:
-            return JsonResponse('Something went wrong!',safe=False)
-        
+            return JsonResponse('Something went wrong!',safe=False)   
 class MarkNotificationAsUnReadAjax(View):
     def get(self,request):
         member_notification_id = request.GET.get('member_notification_id')
@@ -98,14 +96,14 @@ class DeleteNotifcationUserAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
 
 class ReceiveTokenAjax(View):
-    # def get(self,request, *args, **kwargs):
-    #     token = request.GET.get('token')
-    #     try:
-    #         title = 'Hello'
-    #         body = 'This is a test notification'
-    #         # Send the push notification
-    #         response = push_notification.send_push_notification(token, title, body)   
-    #         return JsonResponse('Message sent!',response)  
-    #     except:
-    #         return JsonResponse('Something went wrong!',safe=False)
-    pass
+    def get(self,request, *args, **kwargs):
+        token = request.GET.get('token')
+        try:
+            title = 'Hello'
+            body = 'This is a test notification'
+            # Send the push notification
+            response = push_notification.send_push_notification(token, title, body)   
+            return JsonResponse('Message sent!',response)  
+        except:
+            return JsonResponse('Something went wrong!',safe=False)
+
