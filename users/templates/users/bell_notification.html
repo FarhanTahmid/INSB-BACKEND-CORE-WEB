@@ -261,6 +261,11 @@
     left: 30px;
     bottom: -7px;
 }
+.new-notification {
+  background-color: lightblue;
+  transition: background-color 0.5s ease-out;
+}
+
 </style>
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
@@ -542,7 +547,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-  // Your web app's Firebase configuration
   var firebaseConfig = {
     apiKey: "AIzaSyDj1YviC5nz_96MX1wqCZuir67QNsyWunY",
     authDomain: "ieee-nsu-sb-portal.firebaseapp.com",
@@ -601,6 +605,108 @@
     if (Notification.permission === 'granted') {
       var notification = new Notification(notificationTitle, notificationOptions);
     }
+  });
+</script>
+<script>
+  let latestNotificationId = null;
+  function fetchNotifications() {
+      $.ajax({
+          url: "{% url 'notification:fetch_notifications' %}",
+          method: "GET",
+          success: function(data) {
+              const notifications = data.notifications;
+              if (notifications.length > 0) {
+                console.log('New notifications:', notifications);
+                updateNotifications(notifications);
+                updateNotificationCount(notifications.length);
+                playNotificationSound();
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error('Error fetching notifications:', error);
+          }
+      });
+  }
+
+  function updateNotifications(notifications) {
+    const msgBox = document.querySelector('.msg-box');
+    let newNotificationCount = 0;
+
+    notifications.forEach(notification => {
+        if (!latestNotificationId || notification.id > latestNotificationId) {
+            latestNotificationId = notification.id;
+            newNotificationCount++;
+
+            const notificationElement = `
+                <div class="msg-info-div new-notification">
+                    <a href="//${notification.inside_link}" target="_blank">
+                        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+                            <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
+                            <div class="sender_content">
+                                <div class="sender_frame">
+                                    <img src="/media_files/${notification.created_by.profile_picture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                </div>
+                                <div class="bell_friend_svg">
+                                    <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe); border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <circle cx="29.22" cy="16.28" r="11.14"></circle>
+                                            <path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="notification_content">
+                                    <h6 class="sender_title">${notification.general_message}</h6>
+                                    <h6 class="notification_msg">${notification.general_message}</h6>
+                                </div>
+                            </div>
+                            <div class="time_dropdown">
+                                <h6 class="notification_time">${notification.timestamp}</h6>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
+                        <div class="burger" id="burger">
+                            <span style="position: relative; top: -4px">...</span>
+                        </div>
+                        <div class="dropdown-content" id="dropdownContent">
+                            <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">${notification.is_read ? 'Mark as unread' : 'Mark as read'}</a>
+                            <input type="hidden" id="member_notification_id" name="member_notification_id" value="${notification.id}"/>
+                        </div>
+                    </div>
+                </div>
+            `;
+            msgBox.insertAdjacentHTML('afterbegin', notificationElement);
+        }
+    });
+
+    // Attach event listeners for new notifications
+    document.querySelectorAll('.msg').forEach(msg => {
+        msg.addEventListener('click', function() {
+            msg_read(this);
+        });
+    });
+
+    document.querySelectorAll('.three_dots').forEach(dot => {
+        dot.addEventListener('click', function(event) {
+            toggleDropdown(event);
+        });
+    });
+  }
+  function updateNotificationCount(count) {
+    const notificationLabel = document.getElementById('nftn_lbl');
+    notificationLabel.textContent = count;
+  }
+  function playNotificationSound() {
+    // Replace with your sound file path
+    const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
+
+    sound.play();
+  }
+  $(document).ready(function() {
+      // Poll for new notifications every 3 seconds
+      setInterval(fetchNotifications, 10000);
   });
 </script>
 
