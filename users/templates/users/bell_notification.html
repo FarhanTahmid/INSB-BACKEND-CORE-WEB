@@ -570,7 +570,7 @@
         if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
             newNotificationCount++;
-            const formattedDate = formatTimestamp(notification.timestamp);
+         
             const notificationElement = `
                 <div class="msg-info-div new-notification">
                     <a href="//${notification.inside_link}" target="_blank">
@@ -596,7 +596,7 @@
                                 </div>
                             </div>
                             <div class="time_dropdown">
-                                <h6 class="notification_time">${formattedDate}</h6>
+                                <h6 class="notification_time">${notification.timestamp}</h6>
                             </div>
                         </div>
                     </a>
@@ -640,7 +640,7 @@
   }
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
-      setInterval(fetchNotifications, 30000);
+      setInterval(fetchNotifications, 3000);
   });
 </script>
 <script>

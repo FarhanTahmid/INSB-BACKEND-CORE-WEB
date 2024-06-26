@@ -19,17 +19,11 @@ def send_push_notification(title,body,token):
 def save_token(member,token):
 
     '''This function saves the token for each user,regardless of what browser they use'''
-
-    member_token = PushNotification.objects.filter(member = member)
-    found = False
-    for mbm_tkn in member_token:
-        if mbm_tkn.fcm_token == token:
-            found = True
-            print("token exists")
-            print(token)
-            break
-    if not found:
-        new_token = PushNotification.objects.create(member = member,fcm_token = token)
-        new_token.save()
-        print("token saved")
+    try:
+        member_token = PushNotification.objects.get(member = member)
+        member_token.fcm_token = token
+        member_token.save()
+    except:
+        member_token = PushNotification.objects.create(member = member,fcm_token = token)
+        member_token.save()
     return True
