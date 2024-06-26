@@ -111,6 +111,10 @@ class NotificationHandler:
         for member in member_notifications:
             member.is_read = False
             member.save()
+            tokens = PushNotification.objects.filter(member=member.member)
+            #sending to all the tokens
+            for token in tokens:
+                push_notification.send_push_notification(member.notification.general_message,member.notification.general_message,token.fcm_token)
 
     def has_notification(notification_of, notification_type):
 
@@ -138,9 +142,10 @@ class NotificationHandler:
         '''This functions marks a notification as unread
                 -`member_notification_id`: The id of the member_notification object        
         '''
-        
+        timestamp=datetime.now()
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         member_notification.is_read = False
+        member_notification.notification.timestamp = timestamp
         member_notification.save()
 
     def delete_member_notification(request,member_notification_id):
