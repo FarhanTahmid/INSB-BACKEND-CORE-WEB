@@ -104,8 +104,14 @@ class ReceiveTokenAjax(View):
             member = Members.objects.get(ieee_id=request.user.username)
             member_notifications_count = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp').count()
             # Send the push notification
+            if push_notification.save_token(member,token):
+                print("returned from token function")
+
+            ##sending a push notification once user lands on page (optional)
             if member_notifications_count > 0:
-                response = push_notification.send_push_notification(member_notifications_count,token)   
+                title = "IEEE NSU SB PORTAL"
+                body = f"You have {str(member_notifications_count)} new notifications!"
+                response = push_notification.send_push_notification(title,body,token)   
                 return JsonResponse('Message sent!',response)  
             else:
                 return JsonResponse('No message to send!',safe=False)

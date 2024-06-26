@@ -25,3 +25,6 @@ def main_website_update_view(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
+def restriction(request):
+    return render(request,"notification_restriction_page.html")

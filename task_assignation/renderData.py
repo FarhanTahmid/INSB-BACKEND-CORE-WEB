@@ -161,7 +161,6 @@ class Task_Assignation:
                 general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{new_task.title}'. Click to see the details.",
                 inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list,notification_of=new_task
             )
-                  
             return True
         
         #Else if task_type is Individuals

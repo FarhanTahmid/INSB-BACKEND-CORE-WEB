@@ -4,6 +4,8 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 import traceback
 from task_assignation.models import Task
+from . import push_notification
+from .models import *
 class NotificationHandler:
     
     logger=logging.getLogger(__name__)
@@ -65,6 +67,10 @@ class NotificationHandler:
                 # save the new instance of notification from every reciever
                 new_notification_for_reciever.save()
                 # Push notifications to user device and email from here
+                tokens = PushNotification.objects.filter(member=reciever)
+                #sending to all the tokens
+                for token in tokens:
+                    push_notification.send_push_notification(general_message,general_message,token.fcm_token)
             return True
         
         except Exception as e:

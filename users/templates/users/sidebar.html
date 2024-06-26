@@ -1,6 +1,38 @@
 {% load static %}
 
 {% block sidebar %}
+<script>
+  function checkNotificationPermission() {
+    if (Notification.permission === "granted") {
+        console.log("Notifications are enabled.");
+    } else if (Notification.permission === "denied") {
+
+        console.log("Notifications are denied.");
+        restrictAccess();
+    } else {
+        console.log("Notifications are not yet requested.");
+        requestNotificationPermission();
+    }
+}
+
+function requestNotificationPermission() {
+    Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+            console.log("Notifications are enabled.");
+        } else {
+            console.log("Notifications are denied.");
+            restrictAccess();
+        }
+    });
+}
+
+function restrictAccess() {
+    window.location.href = "{% url 'system_administration:restriction' %}";  
+}
+
+
+document.addEventListener("DOMContentLoaded", checkNotificationPermission);
+</script>
 <style>
   @media screen and (max-width:991px) {
     .left.navside.dark.dk{

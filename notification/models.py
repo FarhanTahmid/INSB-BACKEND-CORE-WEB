@@ -60,3 +60,15 @@ class MemberNotifications(models.Model):
         verbose_name="Member Notifications"
     def __str__(self) -> str:
         return str(self.pk)
+    
+class PushNotification(models.Model):
+
+    '''This model will hold all the fcm token of users'''
+
+    member=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
+    fcm_token=models.CharField(null=False,blank=False,max_length=1000)
+
+    class Meta:
+        verbose_name="Push Notification Tokens"
+    def __str__(self) -> str:
+        return str(self.pk)
