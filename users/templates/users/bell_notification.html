@@ -553,7 +553,7 @@
               if (notifications.length > 0) {
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
-                updateNotificationCount(newNotificationCount);
+                updateNotificationCount(newNotifications.length);
                 playNotificationSound();
               }
           },
@@ -597,7 +597,7 @@
                                 </div>
                             </div>
                             <div class="time_dropdown">
-                                <h6 class="notification_time">${notification.timestamp}</h6>
+                                <h6 class="notification_time">${new Date(notification.timestamp).toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</h6>
                             </div>
                         </div>
                     </a>
