@@ -569,7 +569,7 @@
     const msgBox = document.querySelector('.msg-box');
     
     notifications.forEach(notification => {
-      console.log(lastNotificationtTimeStamp,notification.id);
+      console.log(notification.id);
       if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
             newNotificationCount += 1;
