@@ -542,7 +542,7 @@
   });
 </script>
 <script>
-  let latestNotificationId = {{user_data.latest_id.pk}};  
+  let latestNotificationId = null;  
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.value());
   console.log("initial notification id ",latestNotificationId);
@@ -575,7 +575,7 @@
     notifications.forEach(notification => {
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
-      if (notification.id > latestNotificationId) {
+      if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
