@@ -569,7 +569,8 @@
     notifications.forEach(notification => {
         if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
-            newNotificationCount = newNotificationCount++;
+            newNotificationCount += 1;
+            console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
             const notificationElement = `
                 <div class="msg-info-div new-notification">
