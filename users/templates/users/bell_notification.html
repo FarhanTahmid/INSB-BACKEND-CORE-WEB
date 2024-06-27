@@ -576,7 +576,11 @@
     notifications.forEach(notification => {
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
-      if (!latestNotificationId || notification.id > latestNotificationId) {
+      if (latestNotificationId === null)
+      {
+        latestNotificationId = notification.id;
+      }
+      if (notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
