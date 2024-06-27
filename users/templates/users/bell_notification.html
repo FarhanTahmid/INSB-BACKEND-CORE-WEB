@@ -542,7 +542,10 @@
   });
 </script>
 <script>
-  let latestNotificationId = null;  
+  let latestNotificationId = {{user_data.unread_notification_count}};  
+  if (latestNotificationId === 0){
+    latestNotificationId = null;
+  }
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
   console.log("initial notification id ",latestNotificationId);
