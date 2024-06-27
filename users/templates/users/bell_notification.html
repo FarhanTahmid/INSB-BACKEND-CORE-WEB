@@ -545,6 +545,9 @@
   let latestNotificationId = null;  
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.value);
+  if (isNaN(newNotificationCount)){
+    newNotificationCount = 0;
+  }
   console.log(newNotificationCount);
   function fetchNotifications() {
       $.ajax({
