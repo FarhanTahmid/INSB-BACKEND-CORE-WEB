@@ -270,7 +270,7 @@
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
     <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
-    <span class="label label-sm up warn" id="nftn_lbl" value={{user_data.unread_notification_count}}></span>
+    <span class="label label-sm up warn" id="nftn_lbl" value="{{user_data.unread_notification_count}}"></span>
   </a>
   <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
 </li>
@@ -544,7 +544,8 @@
 <script>
   let latestNotificationId = {{user_data.latest_id.pk}};  
   let notificationLabel = document.getElementById('nftn_lbl');
-  let newNotificationCount = parseInt(notificationLabel.value);
+  let newNotificationCount = parseInt(notificationLabel.textContent);
+  console.log("initial notification value ",newNotificationCount);
   if (isNaN(newNotificationCount)){
     newNotificationCount = 0;
   }
