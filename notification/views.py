@@ -122,7 +122,7 @@ class ReceiveTokenAjax(View):
 def fetch_notifications(request):
     try:
         member = Members.objects.get(ieee_id=request.user.username)
-        member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')[:1]
+        member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')
     except:
         member_notifications = None
     notifications = []

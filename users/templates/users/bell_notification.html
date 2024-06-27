@@ -549,6 +549,7 @@
 </script>
 <script>
   let latestNotificationId = null;
+  let newNotificationCount = 0;
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
@@ -558,8 +559,8 @@
               if (notifications.length > 0) {
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
-                updateNotificationCount(notifications.length);
-                playNotificationSound();
+                updateNotificationCount();
+                //playNotificationSound();
               }
           },
           error: function(xhr, status, error) {
@@ -570,12 +571,12 @@
 
   function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
-    let newNotificationCount = 0;
-
+    
     notifications.forEach(notification => {
         if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
-            newNotificationCount++;
+            newNotificationCount += 1;
+            console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
             const notificationElement = `
                 <div class="msg-info-div new-notification">
@@ -602,7 +603,7 @@
                                 </div>
                             </div>
                             <div class="time_dropdown">
-                                <h6 class="notification_time">${notification.timestamp}</h6>
+                                <h6 class="notification_time">${new Date(notification.timestamp).toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</h6>
                             </div>
                         </div>
                     </a>
@@ -635,18 +636,18 @@
         });
     });
   }
-  function updateNotificationCount(count) {
+  function updateNotificationCount() {
     const notificationLabel = document.getElementById('nftn_lbl');
-    notificationLabel.textContent = count;
+    notificationLabel.textContent = newNotificationCount;
   }
-  function playNotificationSound() {
+  {% comment %} function playNotificationSound() {
     // Replace with your sound file path
     const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
     sound.play();
-  }
+  } {% endcomment %}
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
-      setInterval(fetchNotifications, 30000);
+      setInterval(fetchNotifications, 2000);
   });
 </script>
 <script>
