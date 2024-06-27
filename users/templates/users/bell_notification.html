@@ -543,6 +543,7 @@
 </script>
 <script>
   let latestNotificationId = null;
+  let newNotificationCount = 0;
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
@@ -564,8 +565,7 @@
 
   function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
-    let newNotificationCount = 0;
-
+    
     notifications.forEach(notification => {
         if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
