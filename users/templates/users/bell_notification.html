@@ -542,7 +542,7 @@
   });
 </script>
 <script>
-  let latestNotificationId = {{user_data.unread_notification_count}};  
+  let latestNotificationId = {{user_data.latest_notification_id.pk}};  
   if (latestNotificationId === 0){
     latestNotificationId = null;
   }
