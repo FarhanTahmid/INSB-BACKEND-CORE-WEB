@@ -46,6 +46,7 @@ class LoggedinUser:
                 latest_notification_id = member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
             except:
                 member_notifications = None
+                latest_notification_id = None
             return {
             'is_admin_user': False,
             'name':get_Member_details.name,
