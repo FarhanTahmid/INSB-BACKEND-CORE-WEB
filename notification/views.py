@@ -123,11 +123,14 @@ def fetch_notifications(request):
     try:
         member = Members.objects.get(ieee_id=request.user.username)
         member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')
+        loaded_three = MemberNotifications.objects.filter(member=member).order_by('-notification__timestamp')[:3]   
     except:
         member_notifications = None
     notifications = []
+    loaded= []
     if member_notifications == None:
         notifications = []
+        loaded= []
     else:
         for member_notification in member_notifications:
             
@@ -148,6 +151,15 @@ def fetch_notifications(request):
             }
        
             notifications.append(dic)
+
+        for member_notification in loaded_three:
+            
+            dic = {
+                'id': member_notification.pk,
+            }
+       
+            loaded.append(dic)
     
-    return JsonResponse({'notifications': notifications})
+    return JsonResponse({'notifications': notifications,
+                        'loaded':loaded})
 
