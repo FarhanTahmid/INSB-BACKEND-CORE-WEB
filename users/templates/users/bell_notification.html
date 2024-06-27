@@ -542,6 +542,8 @@
   });
 </script>
 <script>
+  let notificationIds = [];
+  window.addEventListener('DOMContentLoaded', collectNotificationIds);
   let latestNotificationId = null;  
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
@@ -569,7 +571,10 @@
           }
       });
   }
-  
+  function collectNotificationIds() {
+    const notificationElements = document.querySelectorAll('.msg-info-div');
+    notificationIds = Array.from(notificationElements).map(elem => elem.dataset.notificationId);
+  }
 
   function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
@@ -578,12 +583,7 @@
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
       if (!latestNotificationId || notification.id > latestNotificationId) {
-            
-            if (!latestNotificationId)
-            {
-              latestNotificationId = notification.id-1;
-              return;
-            }
+          if (!notificationIds.includes(notification.id)) {
             latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
@@ -629,6 +629,7 @@
                 </div>
             `;
             msgBox.insertAdjacentHTML('afterbegin', notificationElement);
+            notificationIds.push(notification.id);}
         }
     });
 
