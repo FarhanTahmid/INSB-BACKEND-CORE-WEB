@@ -582,7 +582,7 @@
             if (!latestNotificationId)
             {
               latestNotificationId = notification.id;
-              continue;
+              return;
             }
             latestNotificationId = notification.id;
             newNotificationCount += 1;
