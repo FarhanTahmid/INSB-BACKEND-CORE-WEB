@@ -543,11 +543,12 @@
 </script>
 <script>
   let latestNotificationId = {{user_data.latest_notification_id.pk}};  
-  if (latestNotificationId === 0){
-    latestNotificationId = null;
-  }
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
+  if (newNotificationCount === 0){
+    latestNotificationId = null;
+  }
+  
   console.log("initial notification id ",latestNotificationId);
   if (isNaN(newNotificationCount)){
     newNotificationCount = 0;
