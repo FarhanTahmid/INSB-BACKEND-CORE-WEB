@@ -270,7 +270,7 @@
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
     <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
-    <span class="label label-sm up warn" id="nftn_lbl" value="4"></span>
+    <span class="label label-sm up warn" id="nftn_lbl" value={{user_data.unread_notification_count}}></span>
   </a>
   <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
 </li>
@@ -544,7 +544,7 @@
 <script>
   let latestNotificationId = null;
   let notificationLabel = document.getElementById('nftn_lbl');
-  let notificationCount = parseInt(notificationLabel.textContent);
+  let notificationCount = parseInt(notificationLabel.value);
   let newNotificationCount = notifcationCount;
   function fetchNotifications() {
       $.ajax({
