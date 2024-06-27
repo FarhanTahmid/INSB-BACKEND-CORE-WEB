@@ -1,5 +1,8 @@
 {% block bell_notification %}
 {% load static %}
+<script>
+let newNotificationCount = 0;
+</script>
 <style>
   #notification {
     max-height: 450px;
@@ -543,7 +546,6 @@
 </script>
 <script>
   let latestNotificationId = null;
-  let newNotificationCount = 0;
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
