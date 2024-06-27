@@ -43,6 +43,7 @@ class LoggedinUser:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
             try:
                 member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:3]
+                latest_notification_id = member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
             except:
                 member_notifications = None
             return {
@@ -65,7 +66,8 @@ class LoggedinUser:
             'facebook_url':get_Member_details.facebook_url,
             'linkedin_url':get_Member_details.linkedin_url,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
-            'notifications':member_notifications
+            'notifications':member_notifications,
+            'latest_id':latest_notification_id,
         }
         except Members.DoesNotExist:
             try:

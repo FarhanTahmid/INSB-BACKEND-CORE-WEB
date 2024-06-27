@@ -542,7 +542,7 @@
   });
 </script>
 <script>
-  let latestNotificationId = null;
+  let latestNotificationId = {{user_data.latest_id}};
   let newNotificationCount = 0;
   function fetchNotifications() {
       $.ajax({
