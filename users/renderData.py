@@ -44,9 +44,11 @@ class LoggedinUser:
             try:
                 member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:3]
                 latest_notification_id = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
+                unread_notification_count = MemberNotifications.objects.filter(member=get_Member_details,is_read = False).order_by('-notification__timestamp').count()
             except:
                 member_notifications = None
                 latest_notification_id = None
+                unread_notification_count = 0
             return {
             'is_admin_user': False,
             'name':get_Member_details.name,
@@ -69,6 +71,7 @@ class LoggedinUser:
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
             'notifications':member_notifications,
             'latest_id':latest_notification_id,
+            'unread_notification_count':unread_notification_count,
         }
         except Members.DoesNotExist:
             try:

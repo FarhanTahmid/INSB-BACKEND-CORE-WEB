@@ -543,7 +543,7 @@
 </script>
 <script>
   let latestNotificationId = {{user_data.latest_id}};
-  let newNotificationCount = 0;
+  let newNotificationCount = {{user_data.unread_notification_count}};
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
@@ -554,7 +554,7 @@
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
                 updateNotificationCount();
-                //playNotificationSound();
+                playNotificationSound();
               }
           },
           error: function(xhr, status, error) {
@@ -634,11 +634,11 @@
     const notificationLabel = document.getElementById('nftn_lbl');
     notificationLabel.textContent = newNotificationCount;
   }
-  {% comment %} function playNotificationSound() {
+  function playNotificationSound() {
     // Replace with your sound file path
     const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
     sound.play();
-  } {% endcomment %}
+  }
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
       setInterval(fetchNotifications, 2000);
