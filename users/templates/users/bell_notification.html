@@ -568,7 +568,7 @@
     
     notifications.forEach(notification => {
       console.log(latestNotificationId,notification.id);
-        if (!latestNotificationId || notification.id > latestNotificationId) {
+        if (!latestNotificationId || notification.id >= latestNotificationId) {
             latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
