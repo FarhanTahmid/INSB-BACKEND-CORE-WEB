@@ -4,6 +4,8 @@ from system_administration.system_error_handling import ErrorHandling
 import logging
 import traceback
 from task_assignation.models import Task
+from . import push_notification
+from .models import *
 class NotificationHandler:
     
     logger=logging.getLogger(__name__)
@@ -65,6 +67,10 @@ class NotificationHandler:
                 # save the new instance of notification from every reciever
                 new_notification_for_reciever.save()
                 # Push notifications to user device and email from here
+                tokens = PushNotification.objects.filter(member=reciever)
+                #sending to all the tokens
+                for token in tokens:
+                    push_notification.send_push_notification(general_message,general_message,token.fcm_token)
             return True
         
         except Exception as e:
@@ -105,6 +111,10 @@ class NotificationHandler:
         for member in member_notifications:
             member.is_read = False
             member.save()
+            tokens = PushNotification.objects.filter(member=member.member)
+            #sending to all the tokens
+            for token in tokens:
+                push_notification.send_push_notification(member.notification.general_message,member.notification.general_message,token.fcm_token)
 
     def has_notification(notification_of, notification_type):
 
@@ -132,9 +142,10 @@ class NotificationHandler:
         '''This functions marks a notification as unread
                 -`member_notification_id`: The id of the member_notification object        
         '''
-        
+        timestamp=datetime.now()
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         member_notification.is_read = False
+        member_notification.notification.timestamp = timestamp
         member_notification.save()
 
     def delete_member_notification(request,member_notification_id):
@@ -147,7 +158,7 @@ class NotificationHandler:
         if object_type.name == "Task":
             object_id = member_notification.notification.object_id
             task = Task.objects.get(pk = object_id)
-            if task.is_task_completed:
+            if task.is_task_completed and member_notification.member in task.members.all():
                 member_notification.delete()
                 return True
             else:
