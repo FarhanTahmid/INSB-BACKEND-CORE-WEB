@@ -542,7 +542,7 @@
   });
 </script>
 <script>
-  let lastNotificationtTimeStamp = {{user_data.latest_id.timestamp}};
+  let lastNotificationtTimeStamp = {{user_data.latest_id.notification.timestamp}};
   console.log(lastNotificationtTimeStamp);
   let notificationLabel = document.getElementById('nftn_lbl');
   let notificationCount = parseInt(notificationLabel.value);
