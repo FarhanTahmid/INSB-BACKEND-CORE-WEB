@@ -553,7 +553,7 @@
               if (notifications.length > 0) {
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
-                updateNotificationCount(newNotifications.length);
+                updateNotificationCount(newNotifications);
                 playNotificationSound();
               }
           },
@@ -631,8 +631,9 @@
     });
   }
   function updateNotificationCount(count) {
+    const unreadCount = notifications.filter(notification => !notification.is_read).length;
     const notificationLabel = document.getElementById('nftn_lbl');
-    notificationLabel.textContent = count;
+    notificationLabel.textContent = unreadCount;
   }
   function playNotificationSound() {
     // Replace with your sound file path
@@ -641,7 +642,7 @@
   }
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
-      setInterval(fetchNotifications, 5000);
+      setInterval(fetchNotifications, 2000);
   });
 </script>
 <script>
