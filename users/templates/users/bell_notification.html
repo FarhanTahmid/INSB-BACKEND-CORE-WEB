@@ -554,7 +554,7 @@
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
                 updateNotificationCount();
-                playNotificationSound();
+                //playNotificationSound();
               }
           },
           error: function(xhr, status, error) {
@@ -634,11 +634,11 @@
     const notificationLabel = document.getElementById('nftn_lbl');
     notificationLabel.textContent = newNotificationCount;
   }
-  function playNotificationSound() {
+  /*function playNotificationSound() {
     // Replace with your sound file path
     const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
     sound.play();
-  }
+  }*/
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
       setInterval(fetchNotifications, 2000);
