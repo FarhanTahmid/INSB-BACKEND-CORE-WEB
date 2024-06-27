@@ -557,10 +557,9 @@
           method: "GET",
           success: function(data) {
               const notifications = data.notifications;
-              const loaded = data.loaded;
               if (notifications.length > 0) {
                 console.log('New notifications:', notifications);
-                updateNotifications(notifications,loaded);
+                updateNotifications(notifications);
                 updateNotificationCount();
                 //playNotificationSound();
               }
@@ -570,25 +569,16 @@
           }
       });
   }
+  
 
-  function isNotificationIn(notification,loaded){
-    let x_in = true;
-    loaded.forEach(i =>{
-      if(i.id === notification.id){
-        x_in = false;
-      }
-      }
-      return x_in;
-    });
-  }
-
-  function updateNotifications(notifications,loaded) {
+  function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
     
     notifications.forEach(notification => {
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
-      if (isNotificationIn(notification,loaded)) {
+      if (!latestNotificationId || notification.id > latestNotificationId) {
+            latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
