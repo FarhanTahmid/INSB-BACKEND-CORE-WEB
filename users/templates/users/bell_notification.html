@@ -631,9 +631,10 @@
     });
   }
   function updateNotificationCount(count) {
-    const unreadCount = notifications.filter(notification => !notification.is_read).length;
+    let unreadCount = notifications.filter(notification => !notification.is_read).length;
+    newNotificationCount = newNotificationCount + unreadCount;
     const notificationLabel = document.getElementById('nftn_lbl');
-    notificationLabel.textContent = unreadCount;
+    notificationLabel.textContent = newNotificationCount;
   }
   {% comment %} function playNotificationSound() {
     // Replace with your sound file path
