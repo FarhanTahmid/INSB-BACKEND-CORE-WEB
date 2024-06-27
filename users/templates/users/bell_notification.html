@@ -630,7 +630,7 @@
         });
     });
   }
-  function updateNotificationCount(count) {
+  function updateNotificationCount(notifications) {
     let unreadCount = notifications.filter(notification => !notification.is_read).length;
     newNotificationCount = newNotificationCount + unreadCount;
     const notificationLabel = document.getElementById('nftn_lbl');
