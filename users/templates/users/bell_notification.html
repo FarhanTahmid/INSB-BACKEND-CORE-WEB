@@ -545,7 +545,7 @@
   let latestNotificationId = {{user_data.latest_id.pk}};  
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
-  console.log("initial notification value ",newNotificationCount);
+  console.log("initial notification id ",latestNotificationId);
   if (isNaN(newNotificationCount)){
     newNotificationCount = 0;
   }
