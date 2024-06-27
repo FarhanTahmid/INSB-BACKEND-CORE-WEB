@@ -43,7 +43,7 @@ class LoggedinUser:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
             try:
                 member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:3]
-                latest_notification_id = member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
+                latest_notification_id = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
             except:
                 member_notifications = None
                 latest_notification_id = None
