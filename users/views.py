@@ -3,6 +3,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from central_events.google_calendar_handler import CalendarHandler
 from insb_port import settings
 from system_administration.models import SystemErrors, adminUsers
 from task_assignation.models import Member_Task_Point
@@ -188,7 +189,6 @@ def dashboard(request):
     try:
 
         #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-    
         is_eb_or_admin = renderData.is_eb_or_admin(request.user)
         #getting year list for the last 5 years event chart
         years = renderData.getEventNumberStatYear()

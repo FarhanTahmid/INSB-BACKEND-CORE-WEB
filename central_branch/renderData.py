@@ -1,6 +1,8 @@
 import os
 from bs4 import BeautifulSoup
 from django.http import Http404
+from django.urls import reverse
+from central_events.google_calendar_handler import CalendarHandler
 from insb_port import settings
 from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
@@ -460,7 +462,7 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
                              flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
             ''' Update event details and save to database '''
 
@@ -569,6 +571,16 @@ class Branch:
                     intrabranchcollaborations.update(collaboration_with=intra_branch_collaboration)
                 else:
                     IntraBranchCollaborations.objects.create(event_id=event, collaboration_with=intra_branch_collaboration)
+            
+            event = Events.objects.get(pk=event_id)
+
+            if(not event.google_calendar_event_id and event.publish_in_main_web == True):
+                event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
+                event.save()
+            elif(event.google_calendar_event_id and event.publish_in_main_web == False):
+                CalendarHandler.delete_event_in_calendar(event.google_calendar_event_id)
+                event.google_calendar_event_id = ""
+                event.save()
 
             return True
         
