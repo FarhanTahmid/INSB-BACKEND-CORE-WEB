@@ -542,8 +542,10 @@
   });
 </script>
 <script>
-  let latestNotificationId = {{user_data.latest_id}};
-  let newNotificationCount = {{user_data.unread_notification_count}};
+  let latestNotificationId = null;
+  let notificationLabel = document.getElementById('nftn_lbl');
+  let notificationCount = parseInt(notificationLabel.textContent);
+  let newNotificationCount = notifcationCount;
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
@@ -568,7 +570,7 @@
     
     notifications.forEach(notification => {
       console.log(latestNotificationId,notification.id);
-        if (!latestNotificationId || notification.id >= latestNotificationId) {
+        if (!latestNotificationId || notification.id > latestNotificationId) {
             latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
