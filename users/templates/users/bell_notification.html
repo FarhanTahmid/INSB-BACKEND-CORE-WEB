@@ -39,11 +39,17 @@
     color: black;
     font-weight: bold;
     font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    transition: all 0.3s ease-in-out;
   }
 
   .notification_time {
     color: gray;
-    font-size: 12px;
+    font-size: 9px;
     position: relative;
     top: 3px;
   }
@@ -150,7 +156,7 @@
     font-weight: bold;
     font-size: 19px;
     position: relative;
-    bottom: 19px;
+    bottom: 12px;
     left: 314px;
     cursor: pointer;
     border-radius: 50%;
