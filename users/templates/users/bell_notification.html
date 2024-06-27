@@ -578,12 +578,13 @@
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
       if (!latestNotificationId || notification.id > latestNotificationId) {
-            latestNotificationId = notification.id;
-            if (latestNotificationId === null )
+            
+            if (!latestNotificationId)
             {
+              latestNotificationId = notification.id;
               continue;
             }
-            
+            latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
