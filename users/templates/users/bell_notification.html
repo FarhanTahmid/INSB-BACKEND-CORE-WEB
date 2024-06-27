@@ -542,7 +542,7 @@
   });
 </script>
 <script>
-  let latestNotificationId = null;  
+  let latestNotificationId = {{user_data.latest_id.pk}};  
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.value);
   if (isNaN(newNotificationCount)){
