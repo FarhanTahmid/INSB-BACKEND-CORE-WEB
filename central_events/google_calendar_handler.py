@@ -1,5 +1,6 @@
 import datetime
 from django.contrib import messages
+from django.shortcuts import redirect
 from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -9,6 +10,7 @@ from googleapiclient.errors import HttpError
 from insb_port import settings
 from system_administration.models import adminUsers
 from users.models import Members
+from google_auth_oauthlib.flow import Flow
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
@@ -28,70 +30,18 @@ request_body = {
 
 class CalendarHandler:
 
-    def create_service(request, api_name, api_version, *scopes, prefix=''):
-        API_SERVICE_NAME = api_name
-        API_VERSION = api_version
-        SCOPES = [scope for scope in scopes[0]]
-        
-        creds = None
-
-        if settings.GOOGLE_CLOUD_TOKEN:
-            creds = Credentials.from_authorized_user_info({
-                'token':settings.GOOGLE_CLOUD_TOKEN,
-                'refresh_token':settings.GOOGLE_CLOUD_REFRESH_TOKEN,
-                'token_uri':settings.GOOGLE_CLOUD_TOKEN_URI,
-                'client_id':settings.GOOGLE_CLOUD_CLIENT_ID,
-                'client_secret':settings.GOOGLE_CLOUD_CLIENT_SECRET,
-                'expiry':settings.GOOGLE_CLOUD_EXPIRY
-            },scopes=settings.SCOPES)
-
-        if not creds or not creds.valid:
-            user = request.user.username
-            try:
-                member = Members.objects.get(ieee_id = user)
-            except:
-                member = adminUsers.objects.get(username = user)
-            
-            if(type(member) == Members):
-                messages.info(request, "Google Calendar Authorization Required! Please contact Web Team")
-                return None
-            
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                client_config = {
-                'web': {
-                    'client_id': settings.GOOGLE_CLOUD_CLIENT_ID,
-                    'project_id': settings.GOOGLE_CLOUD_PROJECT_ID,
-                    'auth_uri': settings.GOOGLE_CLOUD_AUTH_URI,
-                    'token_uri': settings.GOOGLE_CLOUD_TOKEN_URI,
-                    'auth_provider_x509_cert_url': settings.GOOGLE_CLOUD_AUTH_PROVIDER_x509_cert_url,
-                    'client_secret': settings.GOOGLE_CLOUD_CLIENT_SECRET,
-                    }
-                }
-                flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
-                creds = flow.run_local_server(port=8080)
-
-            set_key('.env', 'GOOGLE_CLOUD_TOKEN', creds.token)
-            settings.GOOGLE_CLOUD_TOKEN = creds.token
-            if(creds.refresh_token):
-                set_key('.env', 'GOOGLE_CLOUD_REFRESH_TOKEN', creds.refresh_token)
-                settings.GOOGLE_CLOUD_REFRESH_TOKEN = creds.refresh_token
-            if(creds.expiry):
-                set_key('.env', 'GOOGLE_CLOUD_EXPIRY', creds.expiry.isoformat())
-                settings.GOOGLE_CLOUD_EXPIRY = creds.expiry.isoformat()
-
+    def authorize(request):
+        credentials = CalendarHandler.get_credentials(request)
+        if not credentials:
+            return None
         try:
-            service = build(API_SERVICE_NAME, API_VERSION, credentials=creds, static_discovery=False)
-            print(API_SERVICE_NAME, API_VERSION, 'service created successfully')
+            service = build(API_NAME, API_VERSION, credentials=credentials, static_discovery=False)
+            print(API_NAME, API_VERSION, 'service created successfully')
             return service
         except Exception as e:
             print(e)
-            print(f'Failed to create service instance for {API_SERVICE_NAME}')
+            print(f'Failed to create service instance for {API_NAME}')
             return None
-
-    def authorize(request):
-        return CalendarHandler.create_service(request, API_NAME, API_VERSION, SCOPES)
 
     def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link):
         event = {
@@ -189,3 +139,62 @@ class CalendarHandler:
             return False
 
 # service = CalendarHandler.create_service(API_NAME, API_VERSION, SCOPES)
+
+    def get_credentials(request):
+    
+        creds = None
+        if settings.GOOGLE_CLOUD_TOKEN:
+            creds = Credentials.from_authorized_user_info({
+                'token':settings.GOOGLE_CLOUD_TOKEN,
+                'refresh_token':settings.GOOGLE_CLOUD_REFRESH_TOKEN,
+                'token_uri':settings.GOOGLE_CLOUD_TOKEN_URI,
+                'client_id':settings.GOOGLE_CLOUD_CLIENT_ID,
+                'client_secret':settings.GOOGLE_CLOUD_CLIENT_SECRET,
+                'expiry':settings.GOOGLE_CLOUD_EXPIRY
+            },scopes=settings.SCOPES)
+
+        if not creds or not creds.valid:
+            user = request.user.username
+            try:
+                member = Members.objects.get(ieee_id = user)
+            except:
+                member = adminUsers.objects.get(username = user)
+            
+            if(type(member) == Members):
+                messages.info(request, "Google Calendar Authorization Required! Please contact Web Team")
+                return None
+            
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+                CalendarHandler.save_credentials(creds)
+            
+            return creds
+
+        return creds
+
+    def get_google_auth_flow():
+        client_config = {
+            'web': {
+                'client_id': settings.GOOGLE_CLOUD_CLIENT_ID,
+                'project_id': settings.GOOGLE_CLOUD_PROJECT_ID,
+                'auth_uri': settings.GOOGLE_CLOUD_AUTH_URI,
+                'token_uri': settings.GOOGLE_CLOUD_TOKEN_URI,
+                'auth_provider_x509_cert_url': settings.GOOGLE_CLOUD_AUTH_PROVIDER_x509_cert_url,
+                'client_secret': settings.GOOGLE_CLOUD_CLIENT_SECRET,
+            }
+        }
+        return Flow.from_client_config(
+            client_config,
+            settings.SCOPES,
+            redirect_uri="http://localhost:8000/portal/central_branch/oauth2callback"
+        )
+
+    def save_credentials(credentials):
+        set_key('.env', 'GOOGLE_CLOUD_TOKEN', credentials.token)
+        settings.GOOGLE_CLOUD_TOKEN = credentials.token
+        if(credentials.refresh_token):
+            set_key('.env', 'GOOGLE_CLOUD_REFRESH_TOKEN', credentials.refresh_token)
+            settings.GOOGLE_CLOUD_REFRESH_TOKEN = credentials.refresh_token
+        if(credentials.expiry):
+            set_key('.env', 'GOOGLE_CLOUD_EXPIRY', credentials.expiry.isoformat())
+            settings.GOOGLE_CLOUD_EXPIRY = credentials.expiry.isoformat()

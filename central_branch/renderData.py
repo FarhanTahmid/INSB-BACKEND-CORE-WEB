@@ -583,8 +583,13 @@ class Branch:
                 if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                     event.google_calendar_event_id = ""
                     event.save()
+                else:
+                    messages.warning(request, "Could not delete event from calendar")
             else:
-                CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)
+                if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
+                    messages.success(request, "Event updated in calendar")
+                else:
+                    messages.warning(request, "Could not update event in calendar")
 
 
             return True

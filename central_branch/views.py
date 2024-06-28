@@ -2594,9 +2594,9 @@ def event_control_homepage(request):
 
         if(request.method=="POST"):
             if request.POST.get('authorise'):
-                CalendarHandler.authorize(request)
+                # CalendarHandler.authorize(request)
+                return redirect('central_branch:authorize')
                 messages.success(request, "Authorised!")
-                return redirect('central_branch:event_control')
             
             #Creating new event type for Group 1 
             elif request.POST.get('add_event_type'):
@@ -5377,3 +5377,23 @@ def task_leaderboard(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
+    
+        
+def authorize(request):
+    credentials = CalendarHandler.get_credentials(request)
+    if credentials:
+        print(credentials)
+        flow = CalendarHandler.get_google_auth_flow()
+        authorization_url, state = flow.authorization_url(
+            access_type='offline',
+            include_granted_scopes='true'
+        )
+        return redirect(authorization_url)
+
+def oauth2callback(request):
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    flow = CalendarHandler.get_google_auth_flow()
+    flow.fetch_token(authorization_response=request.build_absolute_uri())
+    credentials = flow.credentials
+    CalendarHandler.save_credentials(credentials)
+    return redirect('central_branch:event_control')
