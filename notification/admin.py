@@ -16,3 +16,7 @@ class Notifications(admin.ModelAdmin):
 @admin.register(MemberNotifications)
 class MemberNotifications(admin.ModelAdmin):
     list_display=['notification','member','is_read']
+
+@admin.register(PushNotification)
+class PushNotification(admin.ModelAdmin):
+    list_display = ['member','fcm_token']

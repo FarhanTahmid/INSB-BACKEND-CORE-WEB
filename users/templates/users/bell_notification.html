@@ -261,11 +261,16 @@
     left: 30px;
     bottom: -7px;
 }
+.new-notification {
+  background-color: lightblue;
+  transition: background-color 0.5s ease-out;
+}
+
 </style>
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
     <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
-    <span class="label label-sm up warn" id="nftn_lbl" value="4"></span>
+    <span class="label label-sm up warn" id="nftn_lbl" value="{{user_data.unread_notification_count}}"></span>
   </a>
   <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
 </li>
@@ -471,6 +476,191 @@
     }
   }
 </script>
+<!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyDj1YviC5nz_96MX1wqCZuir67QNsyWunY",
+    authDomain: "ieee-nsu-sb-portal.firebaseapp.com",
+    projectId: "ieee-nsu-sb-portal",
+    storageBucket: "ieee-nsu-sb-portal.appspot.com",
+    messagingSenderId: "608760512807",
+    appId: "1:608760512807:web:8730f4f3588840636aa902",
+    measurementId: "G-4G0H22SDX5"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('{% static 'firebase/firebase.js' %}')
+    .then(function(registration) {
+      console.log('Service Worker registered with scope:', registration.scope);
+      messaging.useServiceWorker(registration);
+
+      // Request permission and get token
+      messaging.requestPermission()
+      .then(function() {
+        return messaging.getToken();
+      })
+      .then(function(token) {
+        console.log("FCM Token:", token);
+        $.ajax({
+          url: "{% url 'notification:receive_token' %}",
+          type: "GET",
+          data: {'token': token},
+          success: function (response) {
+            console.log("Success:", response);
+          },
+          error: function (error) {
+              console.log("Error:", error);
+          }
+        });
+      })
+      .catch(function(err) {
+        console.error("Error getting FCM token:", err);
+      });
+    })
+    .catch(function(err) {
+      console.error('Service Worker registration failed:', err);
+    });
+  }
+
+  messaging.onMessage(function(payload) {
+    console.log("Message received. ", payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+    };
+
+    if (Notification.permission === 'granted') {
+      var notification = new Notification(notificationTitle, notificationOptions);
+    }
+  });
+</script>
+<script>
+  let notificationIds = [];
+  window.addEventListener('DOMContentLoaded', collectNotificationIds);
+  let latestNotificationId = null;  
+  let notificationLabel = document.getElementById('nftn_lbl');
+  let newNotificationCount = parseInt(notificationLabel.textContent);
+  if (isNaN(newNotificationCount)){
+    newNotificationCount = 0;
+  }
+  console.log("initial notification id ",latestNotificationId);
+  
+  console.log(newNotificationCount);
+  function fetchNotifications() {
+      $.ajax({
+          url: "{% url 'notification:fetch_notifications' %}",
+          method: "GET",
+          success: function(data) {
+              const notifications = data.notifications;
+              if (notifications.length > 0) {
+                console.log('New notifications:', notifications);
+                updateNotifications(notifications);
+                updateNotificationCount();
+                //playNotificationSound();
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error('Error fetching notifications:', error);
+          }
+      });
+  }
+  function collectNotificationIds() {
+    const notificationElements = document.querySelectorAll('.msg-info-div');
+    notificationIds = Array.from(notificationElements).map(elem => elem.dataset.notificationId);
+  }
+
+  function updateNotifications(notifications) {
+    const msgBox = document.querySelector('.msg-box');
+    
+    notifications.forEach(notification => {
+      console.log("latestnotifcationID",latestNotificationId);
+      console.log("notification id",notification.id);
+      if (!latestNotificationId || notification.id > latestNotificationId) {
+          if (!notificationIds.includes(notification.id)) {
+            latestNotificationId = notification.id;
+            newNotificationCount += 1;
+            console.log(`printing newNotificationCount, ${newNotificationCount}`);
+         
+            const notificationElement = `
+                <div class="msg-info-div new-notification">
+                    <a href="//${notification.inside_link}" target="_blank">
+                        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+                            <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
+                            <div class="sender_content">
+                                <div class="sender_frame">
+                                    <img src="/media_files/${notification.created_by.profile_picture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                </div>
+                                <div class="bell_friend_svg">
+                                    <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe); border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <circle cx="29.22" cy="16.28" r="11.14"></circle>
+                                            <path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <div class="notification_content">
+                                    <h6 class="sender_title">${notification.general_message}</h6>
+                                    <h6 class="notification_msg">${notification.general_message}</h6>
+                                </div>
+                            </div>
+                            <div class="time_dropdown">
+                                <h6 class="notification_time">${new Date(notification.timestamp).toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</h6>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
+                        <div class="burger" id="burger">
+                            <span style="position: relative; top: -4px">...</span>
+                        </div>
+                        <div class="dropdown-content" id="dropdownContent">
+                            <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">${notification.is_read ? 'Mark as unread' : 'Mark as read'}</a>
+                            <input type="hidden" id="member_notification_id" name="member_notification_id" value="${notification.id}"/>
+                        </div>
+                    </div>
+                </div>
+            `;
+            msgBox.insertAdjacentHTML('afterbegin', notificationElement);
+           }
+        }
+    });
+
+
+    // Attach event listeners for new notifications
+    document.querySelectorAll('.msg').forEach(msg => {
+        msg.addEventListener('click', function() {
+            msg_read(this);
+        });
+    });
+
+    document.querySelectorAll('.three_dots').forEach(dot => {
+        dot.addEventListener('click', function(event) {
+            toggleDropdown(event);
+        });
+    });
+  }
+  function updateNotificationCount() {
+    const notificationLabel = document.getElementById('nftn_lbl');
+    notificationLabel.textContent = newNotificationCount;
+  }
+  /*function playNotificationSound() {
+    // Replace with your sound file path
+    const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
+    sound.play();
+  }*/
+  $(document).ready(function() {
+      // Poll for new notifications every 3 seconds
+      setInterval(fetchNotifications, 2000);
+  });
+</script>
 <script>
   //change dropdown text and notification color based on click
   function markAsRead_markAsUnread(element) {
@@ -537,4 +727,5 @@
     }
   }
 </script>
+
 {% endblock bell_notification %}
