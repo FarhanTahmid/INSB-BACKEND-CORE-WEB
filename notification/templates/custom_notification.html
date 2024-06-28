@@ -53,7 +53,8 @@
     }
 
     .custom_notification_btn>.history_btn {
-        border-radius: 6px;
+        border-radius: 14px;
+        font-size: 12px;
         background-color: white;
         border: 1px solid #ffc549;
         color: #ffc549;
@@ -69,8 +70,7 @@
         color: white;
     }
 
-    .custom_notification_box>.box,
-    .notification_history_box>.box {
+    .custom_notification_box>.box{
         width: 100%;
         border: 1px solid white;
         border-radius: 4px;
@@ -82,6 +82,17 @@
         color: #484848;
     }
 
+    .history_box{
+        width: 100%;
+        border: 1px solid white;
+        /* border-radius: 4px; */
+        /* padding: 5px 10px; */
+        /* box-shadow: 2px 2px 7px 0px #d6d6d6; */
+        margin: 0;
+        margin-bottom: 6px;
+        transition: all ease-in-out .2s;
+        color: #484848;
+    }
     .custom_notification_box>.box:focus {
         box-shadow: 2px 2px 7px 0px #bababa;
     }
@@ -263,10 +274,49 @@
         font-weight: bold;
     }
     .notification_history{
-        display: block;
-    }
-    .custom_notification_box{
         display: none;
+    }
+    /*.custom_notification_box{
+        display: none;
+    } */
+    .sent_to_whom_and_date{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    .sent_to_whom_and_date > h5{
+        font-style: italic;
+        font-size: 13px;
+        margin-left: 4px;
+    }
+    .sent_to_whom_and_date > h6{
+        font-size: 10px;
+        font-weight: bold;
+        background: antiquewhite;
+        padding: 5px 10px;
+        text-align: center;
+        border-radius: 4px;
+    }
+    .notification_history_box{
+        width: 100%;
+        border: 1px solid white;
+        border-radius: 4px;
+        padding: 10px;
+        box-shadow: 2px 2px 7px 0px #d6d6d6;
+        margin: 0;
+        margin-bottom: 13px;
+        transition: all ease-in-out .2s;
+        color: #484848;
+        height: 44px;
+        overflow-y: hidden;
+    }
+    .notification_history_box.active{
+        height: auto;
+    }
+    @media screen and (max-width:876px){
+        .form-wrapper{
+            margin:0 4%;
+        }
     }
 </style>
 
@@ -366,14 +416,26 @@
 
                 <!--notification history-->
                 <div class="notification_history">
-                    <div class="notification_history_box">
+                    <div class="notification_history_box" onclick="toggleHeight(this)">
                         <!--notification title-->
-                        <input type="text" class="box" name="title" placeholder="Title" required>
+                        <input type="text" class="history_box" name="title" placeholder="Title" required>
+                    </div>
+                    <div class="notification_history_box" onclick="toggleHeight(this)">
+                        <!--notification title-->
+                        <input type="text" class="history_box" name="title" placeholder="Title" required>
                         <!--notification url-->
-                        <input type="url" class="box" name="link" placeholder="Link">
+                        <input type="url" class="history_box" name="link" placeholder="Link">
                         <!--notification description-->
-                        <textarea class="box" name="description" placeholder="Description"
+                        <textarea class="history_box" name="description" placeholder="Description"
                         style="min-height: 100px; max-height: 180px;" maxlength="500" required></textarea>
+                        <div class="sent_to_whom_and_date">
+                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
+                            <h6>June 27, 2024, 3:43 PM</h6>
+                        </div>
+                    </div>
+                    <div class="notification_history_box" onclick="toggleHeight(this)">
+                    <!--notification title-->
+                    <input type="text" class="history_box" name="title" placeholder="Title" required>
                     </div>
             </div>
         </div>
@@ -579,6 +641,15 @@
 
         }
     })
+</script>
+<script>
+        function toggleHeight(element) {
+            if (element.style.height === '44px' || element.style.height === '') {
+                element.style.height = element.scrollHeight + 'px';
+            } else {
+                element.style.height = '44px';
+            }
+        }
 </script>
 
 </html>
