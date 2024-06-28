@@ -584,15 +584,15 @@
       const notification = notifications[i];
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
-      if (!latestNotificationId || notification.id > latestNotificationId) {
+      if (!latestNotificationId || new Date(notification.timestamp) > new Date(latestNotificationId)) {
 
             if(!latestNotificationId)
             {
-              latestNotificationId = notification.id;
+              latestNotificationId = notification.timestamp;
               continue;
             }
 
-            latestNotificationId = notification.id;
+            latestNotificationId = notification.timestamp;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
