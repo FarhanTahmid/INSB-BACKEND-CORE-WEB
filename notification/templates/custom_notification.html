@@ -1,12 +1,584 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Notification</title>
+    <meta charset="utf-8" />
+    <title>Custom Notifications | IEEE NSU Student Branch</title>
+    <link rel="icon" href="{% static 'logos/logo.gif' %}" />
+
+    <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
+
+
+    <!--common CSS-->
+    {% block common_css %}
+    {% include "common_css.html" %}
+    {% endblock common_css %}
+
 </head>
+<style>
+    body,
+    html {
+        margin: 0;
+        align-items: center;
+        justify-content: center;
+        background: white;
+    }
+
+    .form-wrapper {
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        max-width: 850px;
+        margin: 40px auto;
+    }
+
+    .custom_notification_title {
+        text-align: center;
+        margin-bottom: 35px;
+        /* margin-top: 30px; */
+        font-weight: bold;
+    }
+
+    .custom_notification_btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .custom_notification_btn>h5 {
+        /* font-weight: bold; */
+        font-size: 1rem;
+    }
+
+    .custom_notification_btn>.history_btn {
+        border-radius: 6px;
+        background-color: white;
+        border: 1px solid #ffc549;
+        color: #ffc549;
+        padding: 4px 25px;
+        transition: all ease-in-out .3s;
+    }
+
+    .custom_notification_btn>.history_btn:hover,
+    .history_btn.active
+    {
+        background-color: #ffc549;
+        border: 1px solid #ffc549;
+        color: white;
+    }
+
+    .custom_notification_box>.box,
+    .notification_history_box>.box {
+        width: 100%;
+        border: 1px solid white;
+        border-radius: 4px;
+        padding: 5px 10px;
+        box-shadow: 2px 2px 7px 0px #d6d6d6;
+        margin: 0;
+        margin-bottom: 13px;
+        transition: all ease-in-out .2s;
+        color: #484848;
+    }
+
+    .custom_notification_box>.box:focus {
+        box-shadow: 2px 2px 7px 0px #bababa;
+    }
+
+    .send_notification_btn {
+        padding: 4px 25px;
+        border: 1px solid green;
+        background-color: green;
+        color: white;
+        border-radius: 4px;
+        transition: all .3s ease-in-out;
+        margin: auto;
+        display: flex;
+        margin-bottom: 15px;
+    }
+
+    .send_notification_btn:hover {
+        border: 1px solid green;
+        background-color: white;
+        color: green;
+    }
+
+    .send_notification_txt {
+        font-style: italic;
+        border-bottom: 2px solid #484848;
+        color: #484848;
+    }
+
+    .title-box {
+        padding: 6px 10px;
+        border-radius: 3px;
+        border: 2px solid #d3d3d3;
+        color: black;
+        transition: .4s;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 2px solid white;
+        cursor: pointer;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .title-box option {
+        cursor: pointer;
+    }
+
+    .title-box:focus {
+        border: 2px solid white;
+        box-shadow: 2px 2px 5px 0px #808080b1;
+    }
+
+    .individuals-table {
+        border-radius: 4px;
+        min-height: 400px;
+        max-height: 500px;
+        margin-bottom: 15px;
+    }
+
+    input[type=checkbox] {
+        height: 20px;
+        width: 20px;
+    }
+
+    .custom_select {
+        width: 100%;
+        position: relative;
+    }
+
+    .select_box {
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 5px 5px 0px 5px;
+        border-radius: 3px;
+        border: 2px solid #d3d3d3;
+        color: black;
+        transition: all .4s ease-in-out;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 2px solid white;
+        width: 100%;
+        margin-bottom: 20px;
+        max-height: 116px;
+        min-height: 33px;
+        overflow-y: auto;
+    }
+
+    .tag {
+        padding: 5px 15px;
+        background: #e9e9e9;
+        margin-right: 5px;
+        border-radius: 4px;
+        display: inline-table;
+        margin-bottom: 5px;
+        cursor: pointer;
+    }
+
+    .options {
+        display: none;
+        position: absolute;
+        width: 100%;
+        box-shadow: 2px 2px 7px 0px #d6d6d6;
+        overflow-y: auto;
+        z-index: 1;
+        background: white;
+        max-height: 200px;
+    }
+
+    .options::-webkit-scrollbar,
+    .select_box::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .options::-webkit-scrollbar-thumb,
+    .select_box::-webkit-scrollbar-thumb{
+        background-color: #e7eeef;
+        transition: all .4s ease-in-out;
+        border-radius: 4px;
+    }
+
+    .options::-webkit-scrollbar-thumb:hover,
+    .select_box::-webkit-scrollbar-thumb:hover {
+        background-color: rgb(169, 170, 170);
+    }
+
+    .open .options {
+        display: block;
+    }
+
+    .option_search_tags {
+        padding: 6px
+    }
+
+    .option_search_tags>.clear {
+        position: absolute;
+        top: 11px;
+        right: 15px;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    .option {
+        padding: 12px;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+    }
+
+    .option:hover {
+        background-color: #e9e9e9;
+    }
+
+    .grid_container {
+        display: grid;
+        grid-template-columns: .5fr 1fr 1fr .5fr;
+    }
+
+    .search_tags {
+        padding: 6px 10px;
+        border-radius: 3px;
+        border: 2px solid #d3d3d3;
+        color: black;
+        transition: .4s;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        border: 2px solid white;
+        cursor: pointer;
+        width: 100%;
+    }
+    .tag_error_msg{
+        display: none;
+        color: red;
+    }
+    .placeholder{
+        color: #9e9e9c;
+        padding: 5px;
+    }
+    .remove_tag{
+        margin-left: 8px;
+        font-weight: bold;
+    }
+    .notification_history{
+        display: block;
+    }
+    .custom_notification_box{
+        display: none;
+    }
+</style>
+
 <body>
-    
+    <!--LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+            {% block sidebar %}
+            {% include 'users/sidebar.html' %}
+            {% endblock %}
+        </div>
+
+
+        <div id="content" class="app-content" role="main">
+            {% block navbar %}
+            {% include 'navbar.html' %}
+            {% endblock navbar %}
+        </div>
+
+
+        <!--PAGE START-->
+        <div ui-view class="app-body" id="view">
+            <div class="form-wrapper">
+                <div class="send_notification">
+                    <!--title-->
+                    <h4 class="custom_notification_title">Custom Notifications</h4>
+
+                    <div class="custom_notification_btn">
+                        <!--title-->
+                        <h5 class="send_notification_txt">Send a Notification</h5>
+                        <!--history btn-->
+                        <h5 class="history_btn">History</h5>
+                    </div>
+
+                    <!--form-->
+                    <form method="get" class="custom_notification_box">
+                        {% csrf_token %}
+                        <!--notification title-->
+                        <input type="text" class="box" name="title" placeholder="Title" required>
+                        <!--notification url-->
+                        <input type="url" class="box" name="link" placeholder="Link">
+                        <!--notification description-->
+                        <textarea class="box" name="description" placeholder="Description"
+                        style="min-height: 100px; max-height: 180px;" maxlength="500" required></textarea>
+                        
+                        <!--selecting individuals to send notification-->
+                        <div class="custom_select">
+                            <div class="select_box">
+                                <input type="text" class="tags_input" name="tags" hidden required>
+                                <div class="selected_options">
+                                    <span class="placeholder">Select people to notify</span>
+                                </div>
+                                <div class="arrow_icon">
+                                    <i class="fa fa-chevron-down"></i>
+                                </div>
+                            </div>
+                            <!--dropdown-->
+                            <div class="options">
+                                <!--search bar-->
+                                <div class="option_search_tags">
+                                    <input type="text" class="search_tags" placeholder="Search...">
+                                    <button type="button" class="clear"><i class="fa fa-close"></i></button>
+                                </div>
+                                <!--select all members-->
+                                <div class="option all_tags" data-value="All">Select All</div>
+                                <!--selecting members-->
+                                <div class="option grid_container" data-value="Junayed">
+                                    <div>5489451632</div>
+                                    <div class="name">Md.Shakib Shahariar Junayed</div>
+                                    <div>Website Development Team</div>
+                                    <div>Co-Ordinator</div>
+                                </div>
+                                <div class="option grid_container" data-value="Rahiq">
+                                    <div>5489451632</div>
+                                    <div class="name">Rahiq Rahman</div>
+                                    <div>Website Development Team</div>
+                                    <div>Co-Ordinator</div>
+                                </div>
+                                <div class="option grid_container" data-value="Sami">
+                                    <div>5489451632</div>
+                                    <div class="name">Sami Uddin</div>
+                                    <div>Website Development Team</div>
+                                    <div>Webmaster</div>
+                                </div>
+                                <!--in case member is not available msg-->
+                                <div class="option no-result-message" style="display: none; color: red;">Member doesn't exist</div>
+                            </div>
+                            <!--required msg-->
+                            <span class="tag_error_msg"></span>
+                        </div>
+                        <!--send btn-->
+                        <button class="send_notification_btn submit_btn" onclick="confirmationModal()" type="submit">Send</button>
+                    </form>
+                </div>
+
+                <!--notification history-->
+                <div class="notification_history">
+                    <div class="notification_history_box">
+                        <!--notification title-->
+                        <input type="text" class="box" name="title" placeholder="Title" required>
+                        <!--notification url-->
+                        <input type="url" class="box" name="link" placeholder="Link">
+                        <!--notification description-->
+                        <textarea class="box" name="description" placeholder="Description"
+                        style="min-height: 100px; max-height: 180px;" maxlength="500" required></textarea>
+                    </div>
+            </div>
+        </div>
+        <!-- app end-->
+
+        {% block common_js %}
+        {% include "common_js.html" %}
+        {% endblock common_js %}
+
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const customSelects = document.querySelectorAll('.custom_select');
+
+        //updates the selected members
+        function updateSelectedOptions(customSelect) {
+            const selectedOptions = Array.from(customSelect.querySelectorAll(".option.active")).filter(option => option !== customSelect.querySelector(".option.all_tags")).map(function(option) {
+                return {
+                    value: option.getAttribute("data-value"),
+                    text: option.querySelector(".name").textContent.trim()
+                };
+            });
+
+            const selectedValues = selectedOptions.map(function(option){
+                return option.value;
+            });
+
+            customSelect.querySelector(".tags_input").value = selectedValues.join(", ");
+
+            let tagsHTML = "";
+            console.log(selectedOptions.length)
+            if (selectedOptions.length === 0) {
+                tagsHTML = '<span class="placeholder">Select people to notify</span>';
+            } else {
+                const maxTagsToShow = 1000;
+
+                selectedOptions.forEach(function(option,index){
+                    if(index < maxTagsToShow){
+                        tagsHTML += '<span class="tag">' + option.text + '<span class="remove_tag" data-value="' + option.value+'">&times;</span></span>';
+                    }
+                })
+            }
+            	
+            customSelect.querySelector(".selected_options").innerHTML = tagsHTML;
+
+        }
+
+        customSelects.forEach(function(customSelect) {
+            const searchInput = customSelect.querySelector(".search_tags");
+            const optionsContainer = customSelect.querySelector(".options");
+            const noResultMessage = customSelect.querySelector(".no-result-message");
+            const options = customSelect.querySelectorAll(".option");
+            const allTagsOption = customSelect.querySelector(".option.all_tags");
+            const clearButton = customSelect.querySelector(".clear");
+
+            //if select all is clicked
+            allTagsOption.addEventListener("click", function () {
+                const isActive = allTagsOption.classList.contains("active");
+                options.forEach(function(option) {
+                    if (option !== allTagsOption && option !== noResultMessage) {
+                        option.classList.toggle("active", !isActive);
+                        console.log(option)
+                    }
+                });
+
+                updateSelectedOptions(customSelect);
+            });
+
+            //clears the search bar
+            clearButton.addEventListener("click", function() {
+                searchInput.value = "";
+                options.forEach(function (option) {
+                    option.style.display = 'grid';
+                });
+                noResultMessage.style.display = 'none';
+            });
+
+            //filters the members
+            searchInput.addEventListener("input", function () {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                options.forEach(function(option) {
+                    const optionText = option.textContent.trim().toLowerCase();
+                    const shouldShow = optionText.includes(searchTerm);
+                    option.style.display = shouldShow ? "grid" : "none";
+                });
+
+                const anyOptionsMatch = Array.from(options).some(option => option.style.display === "grid");
+                noResultMessage.style.display = anyOptionsMatch ? "none" : "block";
+
+                if (searchTerm) {
+                    optionsContainer.classList.add("option-search-active");
+                } else {
+                    optionsContainer.classList.remove("option-search-active");
+                }
+            });
+
+        });
+
+        //function for when a member is clicked
+        customSelects.forEach(function (customSelect) {
+            const options = customSelect.querySelectorAll(".option");
+            options.forEach(function (option) {
+                option.addEventListener("click", function () {
+                    option.classList.toggle("active");
+                    updateSelectedOptions(customSelect);
+                });
+            });
+        });
+
+        //function to remove tag
+        document.addEventListener("click", function (event) {
+            const removeTag = event.target.closest(".remove_tag");
+            if (removeTag) {
+                const customSelect = removeTag.closest(".custom_select");
+                const valueToRemove = removeTag.getAttribute("data-value");
+                const optionToRemove = customSelect.querySelector(".option[data-value='" + valueToRemove + "']");
+                optionToRemove.classList.remove("active");
+                const otherSelectedOptions = customSelect.querySelectorAll(".option.active:not(.all_tags)");
+                const allTagsOption = customSelect.querySelector(".option.all_tags");
+                if (otherSelectedOptions.length === 0) {
+                    allTagsOption.classList.remove("active");
+                }
+                updateSelectedOptions(customSelect);
+            }
+        });
+
+        //function for dropdown
+        const selectBoxes = document.querySelectorAll('.select_box');
+        selectBoxes.forEach(function(selectBox){
+            selectBox.addEventListener("click",function(event){
+                if(!event.target.closest(".tag")){
+                    selectBox.parentNode.classList.toggle('open');
+                }
+            });
+        });
+        document.addEventListener("click",function(event){
+            if(!event.target.closest(".custom_select") && !event.target.classList.contains("remove_tag")){
+                customSelects.forEach(function(customSelect){
+                    customSelect.classList.remove("open");
+                })
+            }
+
+        // function resetCustomSelects(){
+        //     customSelects.forEach(function(customSelect){
+        //         customSelect.querySelectorAll(".option.active").forEach(function(option){
+        //             option.classList.remove("active");
+        //         });
+        //         customSelect.querySelector(".option.all_tags").classList.remove("active");
+        //         updateSelectedOptions(customSelect);
+        //         });
+        //         updateSelectedOptions(customSelect[0]);
+        // }
+
+        //function for submitting without selecting any members
+        const submitButton = document.querySelector(".submit_btn");
+        submitButton.addEventListener("click",function(){
+            let valid = true;
+
+            customSelects.forEach(function(customSelect){
+                const selectedOptions = customSelect.querySelectorAll(".option.active");
+                console.log(selectedOptions)
+                if(selectedOptions.length === 0){
+                    const tagErrorMsg = customSelect.querySelector(".tag_error_msg");
+                    tagErrorMsg.textContent = "This field is required";
+                    tagErrorMsg.style.display = "block";
+                    valid = false;
+                }else{
+                    const tagErrorMsg = customSelect.querySelector(".tag_error_msg");
+                    tagErrorMsg.textContent = "";
+                    tagErrorMsg.style.display = "none";
+                }
+            });
+
+            // if(valid){
+            //     let tags = document.querySelector(".tags_input").value;
+            //     resetCustomSelects();
+            //     return;
+            // }
+        })
+    });
+    });
+
+</script>
+<script>
+    const historyBtn = document.querySelector(".history_btn");
+    const notificationHistory = document.querySelector(".notification_history");
+    const customNotificationBox = document.querySelector(".custom_notification_box");
+    const sendNotificationTxt = document.querySelector(".send_notification_txt");
+
+    //shows history notification based on selection
+    historyBtn.addEventListener("click",function(){
+        historyBtn.classList.toggle("active");
+
+        if(historyBtn.classList.contains("active")){
+            notificationHistory.style.display = "block";
+            customNotificationBox.style.display = "none";
+            sendNotificationTxt.style.opacity = "0";
+        }else{
+            notificationHistory.style.display = "none";
+            customNotificationBox.style.display = "block";
+            sendNotificationTxt.style.opacity = "1";
+
+        }
+    })
+</script>
+
 </html>
