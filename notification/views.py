@@ -141,7 +141,7 @@ def fetch_notifications(request):
                 'general_message': member_notification.notification.general_message,
                 'timestamp': member_notification.notification.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
                 'created_by': {
-                    'profile_picture': profile_picture
+                    # 'profile_picture': profile_picture
                                         
                 },
                 'is_read': member_notification.is_read,

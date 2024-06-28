@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from central_events.google_calendar_handler import CalendarHandler
 from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
@@ -2592,8 +2593,10 @@ def event_control_homepage(request):
         }
 
         if(request.method=="POST"):
-            if request.POST.get('create_new_event'):
-                print("Create")
+            if request.POST.get('authorise'):
+                CalendarHandler.authorize(request)
+                messages.success(request, "Authorised!")
+                return redirect('central_branch:event_control')
             
             #Creating new event type for Group 1 
             elif request.POST.get('add_event_type'):
@@ -3101,7 +3104,7 @@ def event_edit_form(request, event_id):
                     
                 if request.POST.get('delete_event'):
                     ''' To delete event from databse '''
-                    if(Branch.delete_event(event_id=event_id)):
+                    if(Branch.delete_event(request=request, event_id=event_id)):
                         messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
                         return redirect('central_branch:event_control')
                     else:

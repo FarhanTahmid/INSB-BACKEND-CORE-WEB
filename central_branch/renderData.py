@@ -575,12 +575,17 @@ class Branch:
             event = Events.objects.get(pk=event_id)
 
             if(not event.google_calendar_event_id and event.publish_in_main_web == True):
-                event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
+                event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
+                if(not event.google_calendar_event_id):
+                    event.publish_in_main_web = False
                 event.save()
             elif(event.google_calendar_event_id and event.publish_in_main_web == False):
-                CalendarHandler.delete_event_in_calendar(event.google_calendar_event_id)
-                event.google_calendar_event_id = ""
-                event.save()
+                if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
+                    event.google_calendar_event_id = ""
+                    event.save()
+            else:
+                CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)
+
 
             return True
         
@@ -1092,13 +1097,13 @@ class Branch:
         return Events.objects.filter(event_organiser=5).order_by('-start_date','-event_date')
     
 
-    def delete_event(event_id):
+    def delete_event(request, event_id):
         ''' This function deletes event from database '''
         try:
             #Getting the event instance
             event = Events.objects.get(id = event_id)
 
-            CalendarHandler.delete_event_in_calendar(event.google_calendar_event_id)
+            CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)
 
             try:
                 #getting banner image of the image and deleting it from if exists

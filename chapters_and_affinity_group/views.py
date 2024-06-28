@@ -1422,7 +1422,7 @@ def event_edit_form(request, primary, event_id):
                 
                 if('delete_event' in request.POST):
                     ''' To delete event from databse '''
-                    if(Branch.delete_event(event_id=event_id)):
+                    if(Branch.delete_event(request=request, event_id=event_id)):
                         messages.info(request,f"Event with EVENT ID {event_id} was Removed successfully")
                         return redirect('chapters_and_affinity_group:event_control_homepage',primary)
                     else:

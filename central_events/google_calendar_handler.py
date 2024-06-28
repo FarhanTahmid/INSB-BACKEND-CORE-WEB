@@ -1,12 +1,14 @@
 import datetime
-import os.path
-
+from django.contrib import messages
+from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from insb_port import settings
+from system_administration.models import adminUsers
+from users.models import Members
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
@@ -26,51 +28,34 @@ request_body = {
 
 class CalendarHandler:
 
-    def start_test():
-        response = service.calendarList().list().execute()
-        found = False
-        for entry in response['items']:
-            if(entry['summary'] == "IEEE NSU SB Events"):
-                found = True
-                break
-        
-        if(not found):
-            response = service.calendars().insert(body=request_body).execute()
-            print(response)
-            return
-        else:
-            print("calendar exists")
-
-
-    def create_service(api_name, api_version, *scopes, prefix=''):
+    def create_service(request, api_name, api_version, *scopes, prefix=''):
         API_SERVICE_NAME = api_name
         API_VERSION = api_version
         SCOPES = [scope for scope in scopes[0]]
         
         creds = None
-        working_dir = os.getcwd()
-        token_dir = 'token_files'
-        token_file = f'token_{API_SERVICE_NAME}_{API_VERSION}{prefix}.json'
 
-        ### Check if token dir exists first, if not, create the folder
-        if not os.path.exists(os.path.join(working_dir, token_dir)):
-            os.mkdir(os.path.join(working_dir, token_dir))
-
-        if os.path.exists(os.path.join(working_dir, token_dir, token_file)):
-            # info = {
-            #     'token': settings.GOOGLE_CLOUD_TOKEN,
-            #     'refresh_token': settings.GOOGLE_CLOUD_REFRESH_TOKEN,
-            #     'token_uri': settings.GOOGLE_CLOUD_TOKEN_URI,
-            #     'client_id': settings.GOOGLE_CLOUD_CLIENT_ID,
-            #     'client_secret': settings.GOOGLE_CLOUD_CLIENT_SECRET,
-            #     'expiry': settings.GOOGLE_CLOUD_EXPIRY
-            # }
-
-            creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, token_file), SCOPES)
-            # with open(os.path.join(working_dir, token_dir, token_file), 'rb') as token:
-            #   cred = pickle.load(token)
+        if settings.GOOGLE_CLOUD_TOKEN:
+            creds = Credentials.from_authorized_user_info({
+                'token':settings.GOOGLE_CLOUD_TOKEN,
+                'refresh_token':settings.GOOGLE_CLOUD_REFRESH_TOKEN,
+                'token_uri':settings.GOOGLE_CLOUD_TOKEN_URI,
+                'client_id':settings.GOOGLE_CLOUD_CLIENT_ID,
+                'client_secret':settings.GOOGLE_CLOUD_CLIENT_SECRET,
+                'expiry':settings.GOOGLE_CLOUD_EXPIRY
+            },scopes=settings.SCOPES)
 
         if not creds or not creds.valid:
+            user = request.user.username
+            try:
+                member = Members.objects.get(ieee_id = user)
+            except:
+                member = adminUsers.objects.get(username = user)
+            
+            if(type(member) == Members):
+                messages.info(request, "Google Calendar Authorization Required! Please contact Web Team")
+                return None
+            
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
@@ -87,8 +72,14 @@ class CalendarHandler:
                 flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
                 creds = flow.run_local_server(port=8080)
 
-            with open(os.path.join(working_dir, token_dir, token_file), 'w') as token:
-                token.write(creds.to_json())
+            set_key('.env', 'GOOGLE_CLOUD_TOKEN', creds.token)
+            settings.GOOGLE_CLOUD_TOKEN = creds.token
+            if(creds.refresh_token):
+                set_key('.env', 'GOOGLE_CLOUD_REFRESH_TOKEN', creds.refresh_token)
+                settings.GOOGLE_CLOUD_REFRESH_TOKEN = creds.refresh_token
+            if(creds.expiry):
+                set_key('.env', 'GOOGLE_CLOUD_EXPIRY', creds.expiry.isoformat())
+                settings.GOOGLE_CLOUD_EXPIRY = creds.expiry.isoformat()
 
         try:
             service = build(API_SERVICE_NAME, API_VERSION, credentials=creds, static_discovery=False)
@@ -97,13 +88,12 @@ class CalendarHandler:
         except Exception as e:
             print(e)
             print(f'Failed to create service instance for {API_SERVICE_NAME}')
-            os.remove(os.path.join(working_dir, token_dir, token_file))
             return None
 
-    def authorize():
-        return CalendarHandler.create_service(API_NAME, API_VERSION, SCOPES)
+    def authorize(request):
+        return CalendarHandler.create_service(request, API_NAME, API_VERSION, SCOPES)
 
-    def create_event_in_calendar(title, description, location, start_time, end_time, event_link):
+    def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link):
         event = {
             'summary': title,
             'description': description,
@@ -137,23 +127,53 @@ class CalendarHandler:
             ]
         }
 
-        service = CalendarHandler.authorize()
-
-        response = service.events().insert(calendarId=CALENDAR_ID, body=event, sendUpdates='all').execute()
-        print('Event created: %s' % (response.get('htmlLink')))
-        return response.get('id')
-
-    def delete_event_in_calendar(event_id):
-        if(event_id == None):
-            return
-        global service
-        service = CalendarHandler.authorize()
-
-        if(CalendarHandler.has_event_in_calendar(event_id)):
-            response = service.events().delete(calendarId=CALENDAR_ID, eventId=event_id).execute()
-            print('Event deleted')
+        service = CalendarHandler.authorize(request)
+        if service:
+            response = service.events().insert(calendarId=CALENDAR_ID, body=event, sendUpdates='all').execute()
+            print('Event created: %s' % (response.get('htmlLink')))
+            return response.get('id')
         else:
-            print('Event does not exist')
+            return None
+        
+    def update_event_in_calendar(request, event_id, title, description, start_time, end_time):
+        if(event_id == None):
+            return None
+        service = CalendarHandler.authorize(request)
+        if service:
+            response = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
+
+            response['summary'] = title
+            response['description'] = description
+            response['start'] = {
+                'dateTime':convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
+                'timeZone': 'Asia/Dhaka',
+            }
+            response['end'] = {
+                'dateTime':convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
+                'timeZone': 'Asia/Dhaka',
+            }
+
+            service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response).execute()
+            return "Updated"
+        else:
+            return None
+
+    def delete_event_in_calendar(request, event_id):
+        if(event_id == None):
+            return None
+        global service
+        service = CalendarHandler.authorize(request)
+        if service:
+            if(CalendarHandler.has_event_in_calendar(event_id)):
+                response = service.events().delete(calendarId=CALENDAR_ID, eventId=event_id).execute()
+                print('Event deleted')
+            else:
+                print('Event does not exist')
+            
+            return "Deleted"
+        else:
+            return None
+
 
     def has_event_in_calendar(event_id):
         # service = CalendarHandler.authorize()

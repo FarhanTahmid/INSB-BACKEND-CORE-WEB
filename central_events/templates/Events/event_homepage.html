@@ -203,6 +203,10 @@
                   {% endif %}
                   {% if is_branch %}
                   {% if common_access %}
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="submit" name="authorise" class="btn btn-outline b-success text-success has-value" value="Authorise Google Calendar">
+                  </form>
                   <div>
                     <button class="btn btn-outline b-success text-success  dropdown-toggle" data-toggle="dropdown">Generate an Excel Sheet for Yearly Events</button>
                     <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
