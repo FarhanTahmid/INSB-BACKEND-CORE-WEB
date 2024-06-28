@@ -544,7 +544,7 @@
 <script>
   let notificationIds = [];
   window.addEventListener('DOMContentLoaded', collectNotificationIds);
-  let latestNotificationId = null;  
+  let latestNotificationId = {{user_date.latest_notification_id.notification.timestamp}};  
   let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
   if (isNaN(newNotificationCount)){
@@ -584,13 +584,8 @@
       const notification = notifications[i];
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
-      if (!latestNotificationId || new Date(notification.timestamp) > new Date(latestNotificationId)) {
+      if (new Date(notification.timestamp) > new Date(latestNotificationId)) {
 
-            if(!latestNotificationId)
-            {
-              latestNotificationId = notification.timestamp;
-              continue;
-            }
 
             latestNotificationId = notification.timestamp;
             newNotificationCount += 1;
