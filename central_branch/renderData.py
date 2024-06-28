@@ -1097,6 +1097,9 @@ class Branch:
         try:
             #Getting the event instance
             event = Events.objects.get(id = event_id)
+
+            CalendarHandler.delete_event_in_calendar(event.google_calendar_event_id)
+
             try:
                 #getting banner image of the image and deleting it from if exists
                 graphics_image = Graphics_Banner_Image.objects.get(event_id = event)

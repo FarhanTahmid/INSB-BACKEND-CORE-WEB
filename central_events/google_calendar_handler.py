@@ -57,14 +57,14 @@ class CalendarHandler:
             os.mkdir(os.path.join(working_dir, token_dir))
 
         if os.path.exists(os.path.join(working_dir, token_dir, token_file)):
-            info = {
-                'token': settings.GOOGLE_CLOUD_TOKEN,
-                'refresh_token': settings.GOOGLE_CLOUD_REFRESH_TOKEN,
-                'token_uri': settings.GOOGLE_CLOUD_TOKEN_URI,
-                'client_id': settings.GOOGLE_CLOUD_CLIENT_ID,
-                'client_secret': settings.GOOGLE_CLOUD_CLIENT_SECRET,
-                'expiry': settings.GOOGLE_CLOUD_EXPIRY
-            }
+            # info = {
+            #     'token': settings.GOOGLE_CLOUD_TOKEN,
+            #     'refresh_token': settings.GOOGLE_CLOUD_REFRESH_TOKEN,
+            #     'token_uri': settings.GOOGLE_CLOUD_TOKEN_URI,
+            #     'client_id': settings.GOOGLE_CLOUD_CLIENT_ID,
+            #     'client_secret': settings.GOOGLE_CLOUD_CLIENT_SECRET,
+            #     'expiry': settings.GOOGLE_CLOUD_EXPIRY
+            # }
 
             creds = Credentials.from_authorized_user_file(os.path.join(working_dir, token_dir, token_file), SCOPES)
             # with open(os.path.join(working_dir, token_dir, token_file), 'rb') as token:
@@ -143,18 +143,28 @@ class CalendarHandler:
         print('Event created: %s' % (response.get('htmlLink')))
         return response.get('id')
 
-    def delete_event_in_calendar(calender_id):
+    def delete_event_in_calendar(event_id):
+        if(event_id == None):
+            return
+        global service
         service = CalendarHandler.authorize()
 
-        response = service.events().delete(calendarId=CALENDAR_ID, eventId=calender_id).execute()
-        print('Event deleted')
+        if(CalendarHandler.has_event_in_calendar(event_id)):
+            response = service.events().delete(calendarId=CALENDAR_ID, eventId=event_id).execute()
+            print('Event deleted')
+        else:
+            print('Event does not exist')
 
     def has_event_in_calendar(event_id):
-        service = CalendarHandler.authorize()
+        # service = CalendarHandler.authorize()
 
         response = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
+
         if(response):
-            return True
+            if(response.get('status') == 'cancelled'):
+                return False
+            else:
+                return True
         else:
             return False
 
