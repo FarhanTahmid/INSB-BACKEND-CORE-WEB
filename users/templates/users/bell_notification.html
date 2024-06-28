@@ -542,17 +542,16 @@
   });
 </script>
 <script>
-  let notificationIds = [];
-  window.addEventListener('DOMContentLoaded', collectNotificationIds);
-  let latestNotificationId = null;  
-  let notificationLabel = document.getElementById('nftn_lbl');
+
+  let loadedNotificationTimeStamp = {{user_date.latest_id.notification,timestamp}};  
+  {% comment %} let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
   if (isNaN(newNotificationCount)){
     newNotificationCount = 0;
   }
   console.log("initial notification id ",latestNotificationId);
   
-  console.log(newNotificationCount);
+  console.log(newNotificationCount); {% endcomment %}
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
@@ -562,7 +561,8 @@
               if (notifications.length > 0) {
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
-                updateNotificationCount();
+                notification_count();
+                //updateNotificationCount();
                 //playNotificationSound();
               }
           },
@@ -580,13 +580,13 @@
     const msgBox = document.querySelector('.msg-box');
     
     notifications.forEach(notification => {
-      console.log("latestnotifcationID",latestNotificationId);
-      console.log("notification id",notification.id);
-      if (!latestNotificationId || notification.id > latestNotificationId) {
-          if (!notificationIds.includes(notification.id)) {
-            latestNotificationId = notification.id;
-            newNotificationCount += 1;
-            console.log(`printing newNotificationCount, ${newNotificationCount}`);
+      //console.log("latestnotifcationID",latestNotificationId);
+      //console.log("notification id",notification.id);
+      if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
+
+            //latestNotificationId = notification.id;
+            //newNotificationCount += 1;
+            //console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
             const notificationElement = `
                 <div class="msg-info-div new-notification">
@@ -629,7 +629,7 @@
                 </div>
             `;
             msgBox.insertAdjacentHTML('afterbegin', notificationElement);
-           }
+           
         }
     });
 
