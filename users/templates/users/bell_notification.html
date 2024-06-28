@@ -579,11 +579,18 @@
   function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
     
-    notifications.forEach(notification => {
+    for (let i = 0; i < notifications.length; i++){
+      const notification = notifications[i];
       console.log("latestnotifcationID",latestNotificationId);
       console.log("notification id",notification.id);
       if (!latestNotificationId || notification.id > latestNotificationId) {
-          if (!notificationIds.includes(notification.id)) {
+
+            if(!latestNotificationId)
+            {
+              latestNotificationId = notification.id;
+              continue;
+            }
+
             latestNotificationId = notification.id;
             newNotificationCount += 1;
             console.log(`printing newNotificationCount, ${newNotificationCount}`);
@@ -629,9 +636,9 @@
                 </div>
             `;
             msgBox.insertAdjacentHTML('afterbegin', notificationElement);
-           }
+           
         }
-    });
+    }
 
 
     // Attach event listeners for new notifications
