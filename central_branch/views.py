@@ -5396,4 +5396,5 @@ def oauth2callback(request):
     flow.fetch_token(authorization_response=request.build_absolute_uri())
     credentials = flow.credentials
     CalendarHandler.save_credentials(credentials)
+    messages.success(request, "Authorized")
     return redirect('central_branch:event_control')

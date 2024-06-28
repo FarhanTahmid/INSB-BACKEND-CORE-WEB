@@ -578,14 +578,19 @@ class Branch:
                 event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
                 if(not event.google_calendar_event_id):
                     event.publish_in_main_web = False
+                    messages.warning(request, "Could not publish event in calendar")
+                else:
+                    messages.success(request, "Event published in calendar")
+
                 event.save()
             elif(event.google_calendar_event_id and event.publish_in_main_web == False):
                 if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                     event.google_calendar_event_id = ""
                     event.save()
+                    messages.success(request, "Event deleted from calendar")
                 else:
                     messages.warning(request, "Could not delete event from calendar")
-            else:
+            elif(event.google_calendar_event_id):
                 if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
                     messages.success(request, "Event updated in calendar")
                 else:
