@@ -24,6 +24,7 @@ import traceback
 from central_branch import views as cv
 from . import push_notification
 from users.renderData import LoggedinUser
+from django.utils.dateformat import format
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -120,12 +121,15 @@ class ReceiveTokenAjax(View):
 
 @login_required
 def fetch_notifications(request):
+    print("in fetch function")
     try:
         member = Members.objects.get(ieee_id=request.user.username)
-        member_notifications = MemberNotifications.objects.filter(member=member,is_read = False,notification__timestamp__gte = datetime.now()).order_by('-notification__timestamp')
+        member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')
     except:
         member_notifications = None
     notifications = []
+    print("member notifications here")
+    print(member_notifications)
     if member_notifications == None:
         notifications = []
     else:
@@ -139,7 +143,7 @@ def fetch_notifications(request):
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
                 'general_message': member_notification.notification.general_message,
-                'timestamp': member_notification.notification.timestamp,#.strftime('%Y-%m-%d %H:%M:%S'),
+                'timestamp': format(member_notification.notification.timestamp, 'Y-m-d\\TH:i:s'),#.strftime('%Y-%m-%d %H:%M:%S'),
                 'created_by': {
                     'profile_picture': profile_picture
                                         
