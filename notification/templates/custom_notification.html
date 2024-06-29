@@ -104,9 +104,8 @@
         color: white;
         border-radius: 4px;
         transition: all .3s ease-in-out;
-        margin: auto;
+        margin: 15px auto;
         display: flex;
-        margin-bottom: 15px;
     }
 
     .send_notification_btn:hover {
@@ -191,7 +190,7 @@
 
     .options {
         display: none;
-        position: absolute;
+        position: relative;
         width: 100%;
         box-shadow: 2px 2px 7px 0px #d6d6d6;
         overflow-y: auto;
@@ -200,6 +199,10 @@
         max-height: 200px;
     }
 
+    html::-webkit-scrollbar{
+        width: 0;
+        height: 0;
+    }
     .options::-webkit-scrollbar,
     .select_box::-webkit-scrollbar {
         width: 6px;
@@ -248,6 +251,8 @@
     .grid_container {
         display: grid;
         grid-template-columns: .5fr 1fr 1fr .5fr;
+        gap: 10px;
+        align-items: center;
     }
 
     .search_tags {
@@ -281,6 +286,7 @@
     } */
     .sent_to_whom_and_date{
         display: flex;
+        flex-direction: column-reverse;
         justify-content: space-between;
         align-items: flex-start;
     }
@@ -316,6 +322,14 @@
     @media screen and (max-width:876px){
         .form-wrapper{
             margin:0 4%;
+        }
+        .custom_notification_title{
+            margin-top: 30px;
+        }
+    }
+    @media screen and (max-width:600px){
+        .grid_container{
+            grid-template-columns: 1fr 1fr 1fr 1fr;
         }
     }
 </style>
@@ -643,6 +657,7 @@
     })
 </script>
 <script>
+        //changes the height based on click
         function toggleHeight(element) {
             if (element.style.height === '44px' || element.style.height === '') {
                 element.style.height = element.scrollHeight + 'px';
