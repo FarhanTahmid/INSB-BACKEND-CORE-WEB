@@ -30,6 +30,7 @@ from port.renderData import PortData
 from functools import wraps
 from django.contrib.auth.models import User,auth
 from django.shortcuts import render,redirect
+from django.utils.dateformat import format
 
 class LoggedinUser:
     
@@ -43,7 +44,9 @@ class LoggedinUser:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
             try:
                 member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:3]
-                latest_notification_id = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
+                latest_notification_timestamp = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
+                latest_notification_timestamp = latest_notification_timestamp.notification.timestamp
+                latest_notification_timestamp = format(latest_notification_timestamp, 'Y-m-d\\TH:i:s')
                 unread_notification_count = MemberNotifications.objects.filter(member=get_Member_details,is_read = False).order_by('-notification__timestamp').count()
             except:
                 member_notifications = None
@@ -70,7 +73,7 @@ class LoggedinUser:
             'linkedin_url':get_Member_details.linkedin_url,
             'profile_picture':'/media_files/'+str(get_Member_details.user_profile_picture),
             'notifications':member_notifications,
-            'latest_id':latest_notification_id,
+            'latest_timestamp':latest_notification_timestamp,
             'unread_notification_count':unread_notification_count,
         }
         except Members.DoesNotExist:
