@@ -121,15 +121,14 @@ class ReceiveTokenAjax(View):
 
 @login_required
 def fetch_notifications(request):
-    print("in fetch function")
+
     try:
         member = Members.objects.get(ieee_id=request.user.username)
         member_notifications = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp')
     except:
         member_notifications = None
     notifications = []
-    print("member notifications here")
-    print(member_notifications)
+
     if member_notifications == None:
         notifications = []
     else:
