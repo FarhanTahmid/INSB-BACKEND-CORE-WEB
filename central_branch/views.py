@@ -1,6 +1,6 @@
 import logging
 import traceback
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
@@ -5381,17 +5381,24 @@ def task_leaderboard(request):
         
 def authorize(request):
     credentials = CalendarHandler.get_credentials(request)
-    if credentials:
-        print(credentials)
+    if not credentials:
         flow = CalendarHandler.get_google_auth_flow()
         authorization_url, state = flow.authorization_url(
             access_type='offline',
             include_granted_scopes='true'
         )
+        request.session['state'] = state
         return redirect(authorization_url)
+
+    messages.success(request, "Already authorized!")    
+    return redirect('central_branch:event_control')
 
 def oauth2callback(request):
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    state = request.GET.get('state')
+    if state != request.session.pop('state', None):
+        return HttpResponseBadRequest('Invalid state parameter')
+    
     flow = CalendarHandler.get_google_auth_flow()
     flow.fetch_token(authorization_response=request.build_absolute_uri())
     credentials = flow.credentials
