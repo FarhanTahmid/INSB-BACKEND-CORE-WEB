@@ -115,9 +115,9 @@
     transition: all .1s ease-in;
   }
 
-  .bell-icon:hover {
-    scale: 1.1;
-  }
+  /* .bell-icon:hover {
+    transform: translateX(10px);
+  } */
 
   .msg-box::-webkit-scrollbar {
     width: 6px;
@@ -275,12 +275,85 @@
   background-color: lightblue;
   transition: background-color 0.5s ease-out;
 }
+.nftn_lbl{
+  background-color: #00629b;
+  color: #fff;
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 4px;
+  min-height: 4px;
+  display: inline-block;
+  font-size: 9px;
+}
+.wobble-hor-top {
+	-webkit-animation: wobble-hor-top 0.8s both;
+	        animation: wobble-hor-top 0.8s both;
+}
+@-webkit-keyframes wobble-hor-top {
+  0%,
+  100% {
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%);
+    -webkit-transform-origin: 20% 20%;
+            transform-origin: 20% 20%;
+  }
+  15% {
+    -webkit-transform: translateX(-10px) rotate(4deg);
+            transform: translateX(-10px) rotate(4deg);
+  }
+  30% {
+    -webkit-transform: translateX(5px) rotate(-4deg);
+            transform: translateX(5px) rotate(-4deg);
+  }
+  45% {
+    -webkit-transform: translateX(-5px) rotate(3.6deg);
+            transform: translateX(-5px) rotate(3.6deg);
+  }
+  60% {
+    -webkit-transform: translateX(6px) rotate(-2.4deg);
+            transform: translateX(6px) rotate(-2.4deg);
+  }
+  75% {
+    -webkit-transform: translateX(-2px) rotate(1.2deg);
+            transform: translateX(-2px) rotate(1.2deg);
+  }
+}
+  @keyframes wobble-hor-top {
+    0%,
+    100% {
+      -webkit-transform: translateX(0%);
+              transform: translateX(0%);
+      -webkit-transform-origin: 20% 20%;
+              transform-origin: 20% 20%;
+    }
+    15% {
+      -webkit-transform: translateX(-10px) rotate(4deg);
+              transform: translateX(-10px) rotate(4deg);
+    }
+    30% {
+      -webkit-transform: translateX(5px) rotate(-4deg);
+              transform: translateX(5px) rotate(-4deg);
+    }
+    45% {
+      -webkit-transform: translateX(-5px) rotate(3.6deg);
+              transform: translateX(-5px) rotate(3.6deg);
+    }
+    60% {
+      -webkit-transform: translateX(6px) rotate(-2.4deg);
+              transform: translateX(6px) rotate(-2.4deg);
+    }
+    75% {
+      -webkit-transform: translateX(-2px) rotate(1.2deg);
+              transform: translateX(-2px) rotate(1.2deg);
+    }
+  }
 
 </style>
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
     <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
-    <span class="label label-sm up warn" id="nftn_lbl" value="4"></span>
+    <span class="label label-sm nftn_lbl" id="nftn_lbl" value="4"></span>
   </a>
   <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
 </li>
@@ -336,11 +409,11 @@
     var icon = document.querySelector(".bell-icon");
     const ntfn_content = document.getElementById("notification");
     if (ntfn_content.style.display === "block") {
+      icon.classList.remove("wobble-hor-top");
       ntfn_content.style.display = "none";
-      icon.style.color = "#000000";
     } else {
+      icon.classList.add("wobble-hor-top");
       ntfn_content.style.display = "block";
-      icon.style.color = "#002855";
     }
   }
 
