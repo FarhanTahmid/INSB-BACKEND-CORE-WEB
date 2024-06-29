@@ -80,6 +80,7 @@
         margin-bottom: 13px;
         transition: all ease-in-out .2s;
         color: #484848;
+        cursor:pointer;
     }
 
     .history_box{
@@ -91,7 +92,7 @@
         margin: 0;
         margin-bottom: 6px;
         transition: all ease-in-out .2s;
-        color: #484848;
+        color: #807f7f;
     }
     .custom_notification_box>.box:focus {
         box-shadow: 2px 2px 7px 0px #bababa;
@@ -294,6 +295,7 @@
         font-style: italic;
         font-size: 13px;
         margin-left: 4px;
+        color: #525252;
     }
     .sent_to_whom_and_date > h6{
         font-size: 10px;
@@ -432,24 +434,39 @@
                 <div class="notification_history">
                     <div class="notification_history_box" onclick="toggleHeight(this)">
                         <!--notification title-->
-                        <input type="text" class="history_box" name="title" placeholder="Title" required>
-                    </div>
-                    <div class="notification_history_box" onclick="toggleHeight(this)">
-                        <!--notification title-->
-                        <input type="text" class="history_box" name="title" placeholder="Title" required>
+                        <p class="history_box">Title:</p>
                         <!--notification url-->
-                        <input type="url" class="history_box" name="link" placeholder="Link">
+                        <p class="history_box">Link:</p>
                         <!--notification description-->
-                        <textarea class="history_box" name="description" placeholder="Description"
-                        style="min-height: 100px; max-height: 180px;" maxlength="500" required></textarea>
+                        <p class="history_box">Title:</p>
                         <div class="sent_to_whom_and_date">
                             <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
                             <h6>June 27, 2024, 3:43 PM</h6>
                         </div>
                     </div>
                     <div class="notification_history_box" onclick="toggleHeight(this)">
-                    <!--notification title-->
-                    <input type="text" class="history_box" name="title" placeholder="Title" required>
+                        <!--notification title-->
+                        <p class="history_box">Title:</p>
+                        <!--notification url-->
+                        <p class="history_box">Link:</p>
+                        <!--notification description-->
+                        <p class="history_box">Title:</p>
+                        <div class="sent_to_whom_and_date">
+                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
+                            <h6>June 27, 2024, 3:43 PM</h6>
+                        </div>
+                    </div>
+                    <div class="notification_history_box" onclick="toggleHeight(this)">
+                        <!--notification title-->
+                        <p class="history_box">Title:</p>
+                        <!--notification url-->
+                        <p class="history_box">Link:</p>
+                        <!--notification description-->
+                        <p class="history_box">Title:</p>
+                        <div class="sent_to_whom_and_date">
+                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
+                            <h6>June 27, 2024, 3:43 PM</h6>
+                        </div>
                     </div>
             </div>
         </div>
@@ -645,10 +662,12 @@
         historyBtn.classList.toggle("active");
 
         if(historyBtn.classList.contains("active")){
+            historyBtn.innerHTML = "Create New";
             notificationHistory.style.display = "block";
             customNotificationBox.style.display = "none";
             sendNotificationTxt.style.opacity = "0";
         }else{
+            historyBtn.innerHTML = "History";
             notificationHistory.style.display = "none";
             customNotificationBox.style.display = "block";
             sendNotificationTxt.style.opacity = "1";
