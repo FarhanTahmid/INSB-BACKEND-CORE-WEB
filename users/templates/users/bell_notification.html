@@ -353,7 +353,7 @@
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
     <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
-    <span class="label label-sm nftn_lbl" id="nftn_lbl" value="4"></span>
+    <span class="label label-sm nftn_lbl" id="nftn_lbl" value="{{user_data.unread_notification_count}}"></span>
   </a>
   <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
 </li>
@@ -625,8 +625,17 @@
   });
 </script>
 <script>
-  let latestNotificationId = null;
-  let newNotificationCount = 0;
+  let notification_array = [];
+  let loadedNotificationTimeStamp = new Date('{{user_data.latest_timestamp}}'); 
+  console.log(loadedNotificationTimeStamp); 
+  {% comment %} let notificationLabel = document.getElementById('nftn_lbl');
+  let newNotificationCount = parseInt(notificationLabel.textContent);
+  if (isNaN(newNotificationCount)){
+    newNotificationCount = 0;
+  }
+  console.log("initial notification id ",latestNotificationId);
+  
+  console.log(newNotificationCount); {% endcomment %}
   function fetchNotifications() {
       $.ajax({
           url: "{% url 'notification:fetch_notifications' %}",
@@ -636,7 +645,8 @@
               if (notifications.length > 0) {
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
-                updateNotificationCount();
+                notification_count();
+                //updateNotificationCount();
                 //playNotificationSound();
               }
           },
@@ -645,15 +655,34 @@
           }
       });
   }
+  function collectNotificationIds() {
+    const notificationElements = document.querySelectorAll('.msg-info-div');
+    notificationIds = Array.from(notificationElements).map(elem => elem.dataset.notificationId);
+  }
+
+  function isIn(notification){
+    let isin = false;
+    for (let i=0;i<notification_array.length;i++){
+      if (notification_array[i] == notification){
+        isin = true;
+      }
+    }
+    return isin;
+  }
 
   function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
     
     notifications.forEach(notification => {
-        if (!latestNotificationId || notification.id > latestNotificationId) {
-            latestNotificationId = notification.id;
-            newNotificationCount += 1;
-            console.log(`printing newNotificationCount, ${newNotificationCount}`);
+      //console.log("latestnotifcationID",latestNotificationId);
+      //console.log("notification id",notification.id);
+      console.log(new Date(notification.timestamp));
+      console.log(new Date(loadedNotificationTimeStamp));
+      if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
+            loadedNotificationTimeStamp = notification.timestamp;
+            //latestNotificationId = notification.id;
+            //newNotificationCount += 1;
+            //console.log(`printing newNotificationCount, ${newNotificationCount}`);
          
             const notificationElement = `
                 <div class="msg-info-div new-notification">
@@ -696,6 +725,7 @@
                 </div>
             `;
             msgBox.insertAdjacentHTML('afterbegin', notificationElement);
+           
         }
     });
 
@@ -717,11 +747,11 @@
     const notificationLabel = document.getElementById('nftn_lbl');
     notificationLabel.textContent = newNotificationCount;
   }
-  {% comment %} function playNotificationSound() {
+  /*function playNotificationSound() {
     // Replace with your sound file path
     const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
     sound.play();
-  } {% endcomment %}
+  }*/
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
       setInterval(fetchNotifications, 2000);
