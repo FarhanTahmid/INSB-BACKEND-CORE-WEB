@@ -21,11 +21,6 @@ def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
     dt = datetime.datetime(year, month, day, hour, minute, 0).isoformat() + 'Z'
     return dt
 
-request_body = {
-    'summary' : 'IEEE NSU SB Events',
-    'timeZone': 'Asia/Dhaka'
-}
-
 class CalendarHandler:
 
     def authorize(request):
@@ -66,7 +61,7 @@ class CalendarHandler:
             },
             'organizer' : {
                 'displayName' : 'IEEE NSU SB',
-                'email' : 'armanmokammel@gmail.com'
+                'email' : 'ieeensusb.portal@gmail.com'
             },
             'source' : {
                 'title' : 'IEEE NSU SB',
@@ -207,7 +202,8 @@ class CalendarHandler:
         return Flow.from_client_config(
             client_config,
             settings.SCOPES,
-            redirect_uri="http://localhost:8000/portal/oauth2callback"
+            redirect_uri="http://ieeensusb.org/portal/oauth2callback"
+            # redirect_uri="http://localhost:8000/portal/oauth2callback"
         )
 
     def save_credentials(credentials):
