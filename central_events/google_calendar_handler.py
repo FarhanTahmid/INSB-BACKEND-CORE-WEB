@@ -1,13 +1,11 @@
 import datetime
 from django.contrib import messages
-from django.shortcuts import redirect
 from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from insb_port import settings
+from membership_development_team.renderData import MDT_DATA
 from system_administration.models import adminUsers
 from users.models import Members
 from google_auth_oauthlib.flow import Flow
@@ -44,6 +42,16 @@ class CalendarHandler:
             return None
 
     def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link):
+
+        # get general member emails
+        to_attendee_final_list = []
+        general_members=CalendarHandler.load_all_active_general_members_of_branch()
+        for member in general_members:
+            to_attendee_final_list.append({
+                'displayName':member.name,
+                'email':member.email_nsu,
+            }) 
+
         event = {
             'summary': title,
             'description': description,
@@ -68,12 +76,27 @@ class CalendarHandler:
             'transparency' : 'opaque',
             'guestsCanSeeOtherGuests' : False,
             'attendees' : [
+                # to_attendee_final_list
                 {
-                    'email' : 'armanmokammel@gmail.com'
+                    'displayName':"Arman M (Personal)",
+                    'email':'armanmokammel@gmail.com'
                 },
                 {
-                    'email' : 'andromobol17@gmail.com'
-                }
+                    'displayName':"Arman M (IEEE)",
+                    'email':'arman.mokammel@ieee.org'
+                },
+                {
+                    'displayName':"Arman M (NSU)",
+                    'email':'arman.mokammel@northsouth.edu'
+                },
+                {
+                    'displayName':"Sakib Sami (NSU)",
+                    'email':'sakib.sami@northsouth.edu'
+                },
+                {
+                    'displayName':"Sakib Sami (Personal)",
+                    'email':'sahamimsak@gmail.com'
+                },
             ]
         }
 
@@ -138,8 +161,6 @@ class CalendarHandler:
         else:
             return False
 
-# service = CalendarHandler.create_service(API_NAME, API_VERSION, SCOPES)
-
     def get_credentials(request):
     
         creds = None
@@ -186,7 +207,7 @@ class CalendarHandler:
         return Flow.from_client_config(
             client_config,
             settings.SCOPES,
-            redirect_uri="http://localhost:8000/portal/central_branch/oauth2callback"
+            redirect_uri="http://localhost:8000/portal/oauth2callback"
         )
 
     def save_credentials(credentials):
@@ -198,3 +219,18 @@ class CalendarHandler:
         if(credentials.expiry):
             set_key('.env', 'GOOGLE_CLOUD_EXPIRY', credentials.expiry.isoformat())
             settings.GOOGLE_CLOUD_EXPIRY = credentials.expiry.isoformat()
+
+    def load_all_active_general_members_of_branch():
+        '''This function loads all the general members from the branch whose memberships are active
+        '''
+        members=Members.objects.all()
+        general_members=[]
+        
+        for member in members:
+           
+            if (MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)):
+                
+                if(member.position.id==13):
+                    
+                    general_members.append(member)
+        return general_members

@@ -141,8 +141,4 @@ urlpatterns = [
     path('task_history/team/<int:team_primary>',views.team_task_history,name="team_task_history"),
     ##
     path('task_leaderboard/',views.task_leaderboard,name="task_leaderboard"),
-    
-
-    path('authorize/', views.authorize, name='authorize'),
-    path('oauth2callback/', views.oauth2callback, name='oauth2callback'),
 ]

@@ -1,12 +1,11 @@
 import logging
 import traceback
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.google_calendar_handler import CalendarHandler
 from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
@@ -2594,9 +2593,7 @@ def event_control_homepage(request):
 
         if(request.method=="POST"):
             if request.POST.get('authorise'):
-                # CalendarHandler.authorize(request)
-                return redirect('central_branch:authorize')
-                messages.success(request, "Authorised!")
+                return redirect('port:authorize')
             
             #Creating new event type for Group 1 
             elif request.POST.get('add_event_type'):
@@ -5377,31 +5374,3 @@ def task_leaderboard(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
-    
-        
-def authorize(request):
-    credentials = CalendarHandler.get_credentials(request)
-    if not credentials:
-        flow = CalendarHandler.get_google_auth_flow()
-        authorization_url, state = flow.authorization_url(
-            access_type='offline',
-            include_granted_scopes='true'
-        )
-        request.session['state'] = state
-        return redirect(authorization_url)
-
-    messages.success(request, "Already authorized!")    
-    return redirect('central_branch:event_control')
-
-def oauth2callback(request):
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    state = request.GET.get('state')
-    if state != request.session.pop('state', None):
-        return HttpResponseBadRequest('Invalid state parameter')
-    
-    flow = CalendarHandler.get_google_auth_flow()
-    flow.fetch_token(authorization_response=request.build_absolute_uri())
-    credentials = flow.credentials
-    CalendarHandler.save_credentials(credentials)
-    messages.success(request, "Authorized")
-    return redirect('central_branch:event_control')
