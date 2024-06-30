@@ -43,7 +43,7 @@ class LoggedinUser:
         try:
             get_Member_details=Members.objects.get(ieee_id=ieee_id)
             try:
-                member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:3]
+                member_notifications = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp')[:7]
                 latest_notification_timestamp = MemberNotifications.objects.filter(member=get_Member_details).order_by('-notification__timestamp').first()
                 latest_notification_timestamp = latest_notification_timestamp.notification.timestamp
                 latest_notification_timestamp = format(latest_notification_timestamp, 'Y-m-d\\TH:i:s')
@@ -75,6 +75,7 @@ class LoggedinUser:
             'notifications':member_notifications,
             'latest_timestamp':latest_notification_timestamp,
             'unread_notification_count':unread_notification_count,
+            'media_url':settings.MEDIA_URL,
         }
         except Members.DoesNotExist:
             try:
