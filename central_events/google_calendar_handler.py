@@ -202,7 +202,7 @@ class CalendarHandler:
         return Flow.from_client_config(
             client_config,
             settings.SCOPES,
-            redirect_uri="http://ieeensusb.org/portal/oauth2callback"
+            redirect_uri="https://ieeensusb.org/portal/oauth2callback"
             # redirect_uri="http://localhost:8000/portal/oauth2callback"
         )
 
