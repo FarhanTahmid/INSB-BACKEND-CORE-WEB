@@ -164,6 +164,30 @@ class NotificationHandler:
             else:
                 return False
     
+    def notification_to_a_member(request,notification_of,message,inside_link,task_type,member):
+
+        '''This function will send the notification to the specified member only'''
+
+        general_message=message
+        if NotificationHandler.has_notification(notification_of, task_type):
+            NotificationHandler.update_notification(notification_of, task_type, {'general_message':general_message})
+        else:
+            try:
+                notification_created_by=Members.objects.get(ieee_id=request.user.username)
+            except:
+                notification_created_by=None
+
+            # this shows an admin if the task was created by an admin, otherwise shows the member name
+            receiver_list = []
+            receiver_list.append(member.ieee_id)
+            notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            NotificationHandler.create_notifications(notification_type=task_type.pk,
+                                                    general_message=general_message,
+                                                    inside_link=inside_link,
+                                                    created_by=notification_created_by_name,
+                                                    reciever_list=receiver_list,
+                                                    notification_of=notification_of)
+            
     def delete_notification():
         pass
 

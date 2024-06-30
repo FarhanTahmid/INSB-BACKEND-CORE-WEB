@@ -25,10 +25,12 @@ class Task_Assignation:
         task_creation_notification_type=NotificationTypes.objects.get(type="Task Creation")
         task_update_notification_type=NotificationTypes.objects.get(type="Task Update")
         task_completion_notification_type=NotificationTypes.objects.get(type="Task Completion")
+        task_comment = NotificationTypes.objects.get(type="Task Comment")
     except:
         task_creation_notification_type=None
         task_update_notification_type=None
         task_completion_notification_type=None
+        task_comment = None
 
     def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
@@ -1469,6 +1471,9 @@ This is an automated message. Do not reply
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
             Task_Assignation.save_task_logs(task,task_log_message)
+            #sending the notification to the task assignee
+            notification_message = f"Your Assigned Task, {task.title} has been commented, Check back on task!"
+            NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}/upload_task",Task_Assignation.task_comment,member)
 
             return True
         except:
@@ -1552,6 +1557,9 @@ This is an automated message. Do not reply
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.name}({logged_in_user.ieee_id}) and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
+            #sending the notification to the task creator
+            notification_message = f"Assigned Task, {task.title} has been completed by {logged_in_user.name}, Check back on task!"
+            NotificationHandler.notification_to_a_member(request,task,notification_message,f"{url}",Task_Assignation.task_comment,member)
 
             return True
         except:
