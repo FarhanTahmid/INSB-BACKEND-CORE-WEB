@@ -68,7 +68,7 @@ class Events(models.Model):
     is_featured = models.BooleanField(null=False,blank=False,default=False,verbose_name="Feature this event")
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
-    google_calendar_event_id = models.CharField(null=True,blank=True)
+    google_calendar_event_id = models.CharField(null=True,blank=True,max_length=100)
 
 
     class Meta:
