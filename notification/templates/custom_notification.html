@@ -114,6 +114,21 @@
         background-color: white;
         color: green;
     }
+    .confirm_send_notification_btn {
+        padding: 4px 25px;
+        border: 1px solid green;
+        background-color: green;
+        color: white;
+        border-radius: 4px;
+        transition: all .3s ease-in-out;
+        margin: 15px auto;
+    }
+
+    .confirm_send_notification_btn:hover {
+        border: 1px solid green;
+        background-color: white;
+        color: green;
+    }
 
     .send_notification_txt {
         font-style: italic;
@@ -321,6 +336,85 @@
     .notification_history_box.active{
         height: auto;
     }
+    .modal-1-content::-webkit-scrollbar{
+        width: 6px;
+        height: 6px;
+    }
+    .modal-1-content::-webkit-scrollbar-thumb{
+        background-color: #e7eeef;
+        transition: all .4s ease-in-out;
+        border-radius: 4px;
+    }
+    .modal-1-content::-webkit-scrollbar-thumb:hover{
+        background-color: rgb(169, 170, 170);
+    }
+    .send_confirm_modal{
+        opacity: 0;
+        position: fixed;
+        z-index: -1;
+        padding-top: 50px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 120%;
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
+        transition: all .3s ease-in-out;
+        transform: translateY(-20px);
+        overflow: auto;
+    }
+    .modal-1-content{
+        background-color: #fefefe;
+        margin: auto;
+        border: 1px solid rgb(136, 136, 136);
+        max-width: 850px;
+        max-height: 70vh;
+        overflow-y: scroll;
+        border-radius: 6px;
+        box-shadow: 2px 2px 5px 0px #80808054;
+        position: relative;
+        left: 100px;
+    }
+
+    .close1{
+        color: #000;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .close1:hover,
+    .close1:focus{
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .cancel_btn{
+        color: #8a8a8a;
+        background-color: #75d48200;
+        display: inline;
+        padding: 6px 25px;
+        margin: 3px;
+        border: 1px;
+        border-style: solid;
+        border-color: #8a8a8a;
+        border-radius: 4px;
+        transition-duration: 500ms;
+        position: relative;
+        top: 1px;
+    }
+    .cancel_btn:hover{
+        color: #ffffff;
+        background-color: #8a8a8a;
+        transition-duration: 500ms;
+        cursor: pointer;
+    }
+    @media screen and (max-width: 1024px) {
+        .modal-1-content {
+            left: 0px;
+            margin: 10%;
+        }
+    }
     @media screen and (max-width:876px){
         .form-wrapper{
             margin:0 4%;
@@ -332,6 +426,11 @@
     @media screen and (max-width:600px){
         .grid_container{
             grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+    }
+    @media screen and (max-width: 500px) {
+        .modal-1-content{
+            margin: 5%;
         }
     }
 </style>
@@ -426,7 +525,27 @@
                             <span class="tag_error_msg"></span>
                         </div>
                         <!--send btn-->
-                        <button class="send_notification_btn submit_btn" onclick="confirmationModal()" type="submit">Send</button>
+                        <button class="send_notification_btn submit_btn" type="button">Send</button>
+
+                        <div id="modal1" class="send_confirm_modal">
+                            <!-- Modal content -->
+                            <div class="modal-1-content">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
+                                    <h5 style="position: relative;
+                                    top: 9px">Confirm?</h5>
+                                    <span class="close1">&times;</span>
+                                </div>
+                                <p style="margin: 10px 20px;">You are sending the notification to-</p>
+                                    <ol style="font-size: 14px; margin: 15px">
+                                        <li>Rahiq Rahman</li>
+                                        <li>Rahiq Rahman</li>
+                                    </ol>
+                                    <div style="margin: 0px 12px; text-align: right;">
+                                        <input class="confirm_send_notification_btn" type="submit" name="submit" value="Confirm">
+                                        <h6 class="cancel_btn">Cancel</h6>
+                                    </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
 
@@ -685,5 +804,46 @@
             }
         }
 </script>
+<script>
+    // Get the modal
+    var modal1 = document.getElementById("modal1");
+    
+    // Get the button that opens the modal
+    var btn1 = document.querySelector(".send_notification_btn");
+    var cancel1 = document.querySelector(".cancel_btn");
+    
+    // Get the <span> element that closes the modal
+    var span1 = document.getElementsByClassName("close1")[0];
+    
+    // When the user clicks the button, open the modal 
+    btn1.onclick = function() {
+    modal1.style.transform = 'translateY(0px)';
+    modal1.style.zIndex = '103100';
+    modal1.style.opacity = '1';
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span1.onclick = function() {
+    modal1.style.transform = 'translateY(-50px)';
+    modal1.style.zIndex = '-100';
+    modal1.style.opacity = '0';
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    cancel1.onclick = function() {
+    modal1.style.transform = 'translateY(-50px)';
+    modal1.style.zIndex = '-100';
+    modal1.style.opacity = '0';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+     if (event.target == modal1) {
+        modal1.style.transform = 'translateY(-50px)';
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
+      }
+    }
+    </script>
 
 </html>
