@@ -411,10 +411,10 @@
     var icon = document.querySelector(".bell-icon");
     const ntfn_content = document.getElementById("notification");
     if (ntfn_content.style.display === "block") {
-      icon.classList.remove("wobble-hor-top");
+      // icon.classList.remove("wobble-hor-top");
       ntfn_content.style.display = "none";
     } else {
-      icon.classList.add("wobble-hor-top");
+      // icon.classList.add("wobble-hor-top");
       ntfn_content.style.display = "block";
     }
   }
@@ -465,6 +465,15 @@
     //updating the unread notification count
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
+
+    //shake bell when notification count is updated
+    var icon = document.querySelector(".bell-icon");
+    if(icon.classList.contains("wobble-hor-top")) {
+      icon.classList.remove("wobble-hor-top");
+    }
+
+    icon.classList.add("wobble-hor-top");
+    
   }
 
   //loading which msg is read/unread based on load nd updating the bell icon count
