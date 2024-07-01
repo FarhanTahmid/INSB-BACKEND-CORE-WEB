@@ -161,6 +161,10 @@ class NotificationHandler:
             if task.is_task_completed and member_notification.member in task.members.all():
                 member_notification.delete()
                 return True
+            #if member not in the or is removed task, allowing to delete
+            elif member_notification.member not in task.members.all():
+                member_notification.delete()
+                return True
             else:
                 return False
     
