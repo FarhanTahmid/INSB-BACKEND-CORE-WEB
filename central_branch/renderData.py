@@ -5,6 +5,8 @@ from django.urls import reverse
 from central_events.google_calendar_handler import CalendarHandler
 from insb_port import settings
 from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
+from notification.models import NotificationTypes
+from notification.notifications import NotificationHandler
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -584,6 +586,19 @@ class Branch:
                     messages.success(request, "Event published in calendar")
 
                 event.save()
+
+                notificationType = NotificationTypes.objects.get(type="Event")
+                inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
+                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} : {event.event_name}"
+                # receiver_list=Branch.load_all_active_general_members_of_branch()
+                receiver_list=[98955436,97952937]
+                NotificationHandler.create_notifications(notification_type=notificationType.pk,
+                                                         general_message=general_message,
+                                                         inside_link=inside_link,
+                                                         created_by="IEEE NSU SB",
+                                                         reciever_list=receiver_list,
+                                                         notification_of=event)
+
             elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
                 if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                     event.google_calendar_event_id = ""

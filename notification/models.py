@@ -23,7 +23,6 @@ class Notifications(models.Model):
             -`notification_of` It is used to link any model(for which the notification was triggered) with the notification.\n
             -`content_type` stores any model as notification_of's content_type(model) and is set automatically based on notification_of\n
             -`object_id` stores the foreign key value of notification_of and is set automatically. Is is used to search notifications\n
-            # -`distinction` It can store any value to distinct between notifications which has the same foreignkey value (can have multiple notifications for the same object). It is used to search notifications\n
             -`timestamp` of the notification created\n
             -`general_message` of the notification. (basically it will be passed as a parameter,and will show on top)\n
             -`inside_link` is the link user will be redirected to when clicked on a notification\n

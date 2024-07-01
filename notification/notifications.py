@@ -21,7 +21,8 @@ class NotificationHandler:
                 -`inside_link`: the link that the user will be redirected to upon clicking the notification.
                 -`timestamp`: the current timestamp of the server
                 -`created_by`: must return the user id (IEEE ID) of the user
-                -`reciever_list`: list of IEEE ID's to whom the notification will be assigned to.            
+                -`reciever_list`: list of IEEE ID's to whom the notification will be assigned to.
+                -`notification_of`: the object for which the notifictation is created for (Task/Event).          
         '''
         
         '''At the first step, the function will create a new Object of Notifications'''
@@ -167,6 +168,9 @@ class NotificationHandler:
                 return True
             else:
                 return False
+        else:
+            member_notification.delete()
+            return True
     
     def notification_to_a_member(request,notification_of,message,inside_link,task_type,member):
 
