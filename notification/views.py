@@ -148,6 +148,7 @@ def fetch_notifications(request):
                                         
                 },
                 'is_read': member_notification.is_read,
+                'notification_type_image':str(settings.MEDIA_URL)+str(member_notification.notification.type.type_icon),
             }
        
             notifications.append(dic)
