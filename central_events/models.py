@@ -63,6 +63,7 @@ class Events(models.Model):
     registration_fee_amount = models.TextField(blank=True, null=True,default = "Non-IEEE Member: 0 BDT\n\nIEEE Member: 0 BDT")
     flagship_event = models.BooleanField(null=False,blank=False,default=False)
     publish_in_main_web = models.BooleanField(null=False,blank=False,default=False)
+    publish_in_google_calendar = models.BooleanField(null=False,blank=False,default=False)
     more_info_link = models.URLField(null=True,blank=True,max_length=500)
     form_link = models.URLField(null=True,blank=True,max_length=500)
     is_featured = models.BooleanField(null=False,blank=False,default=False,verbose_name="Feature this event")

@@ -462,7 +462,7 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, publish_event_gc, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
                              flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
             ''' Update event details and save to database '''
 
@@ -510,6 +510,7 @@ class Branch:
             ######event publish/not publish trigger here####################
             ####################################################
             event.publish_in_main_web = publish_event
+            event.publish_in_google_calendar = publish_event_gc
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
@@ -574,16 +575,16 @@ class Branch:
             
             event = Events.objects.get(pk=event_id)
 
-            if(not event.google_calendar_event_id and event.publish_in_main_web == True):
+            if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
                 event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
                 if(not event.google_calendar_event_id):
-                    event.publish_in_main_web = False
+                    event.publish_in_google_calendar = False
                     messages.warning(request, "Could not publish event in calendar")
                 else:
                     messages.success(request, "Event published in calendar")
 
                 event.save()
-            elif(event.google_calendar_event_id and event.publish_in_main_web == False):
+            elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
                 if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                     event.google_calendar_event_id = ""
                     event.save()
@@ -1000,6 +1001,11 @@ class Branch:
         '''This function will return wheather the event is published or not'''
 
         return Events.objects.get(id = event_id).publish_in_main_web
+    
+    def load_event_published_gc(event_id):
+        '''This function will return wheather the event is published in google calendar or not'''
+
+        return Events.objects.get(id = event_id).publish_in_google_calendar
     
     def is_flagship_event(event_id):
 

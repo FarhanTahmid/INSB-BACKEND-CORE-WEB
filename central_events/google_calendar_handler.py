@@ -61,7 +61,8 @@ class CalendarHandler:
             },
             'organizer' : {
                 'displayName' : 'IEEE NSU SB',
-                'email' : 'ieeensusb.portal@gmail.com'
+                'email' : 'armanmokammel@gmail.com'
+                # 'email' : 'ieeensusb.portal@gmail.com'
             },
             'source' : {
                 'title' : 'IEEE NSU SB',
@@ -84,14 +85,14 @@ class CalendarHandler:
                     'displayName':"Arman M (NSU)",
                     'email':'arman.mokammel@northsouth.edu'
                 },
-                {
-                    'displayName':"Sakib Sami (NSU)",
-                    'email':'sakib.sami@northsouth.edu'
-                },
-                {
-                    'displayName':"Sakib Sami (Personal)",
-                    'email':'sahamimsak@gmail.com'
-                },
+                # {
+                #     'displayName':"Sakib Sami (NSU)",
+                #     'email':'sakib.sami@northsouth.edu'
+                # },
+                # {
+                #     'displayName':"Sakib Sami (Personal)",
+                #     'email':'sahamimsak@gmail.com'
+                # },
             ]
         }
 
@@ -203,8 +204,8 @@ class CalendarHandler:
             client_config,
             settings.SCOPES,
             # redirect_uri="https://ieeensusb.org/portal/oauth2callback"
-            redirect_uri="https://portal.ieeensusb.org/portal/oauth2callback"
-            # redirect_uri="http://localhost:8000/portal/oauth2callback"
+            # redirect_uri="https://portal.ieeensusb.org/portal/oauth2callback"
+            redirect_uri="http://localhost:8000/portal/oauth2callback"
         )
 
     def save_credentials(credentials):
