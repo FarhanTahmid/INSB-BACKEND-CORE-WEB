@@ -154,3 +154,6 @@ def fetch_notifications(request):
     
     return JsonResponse({'notifications': notifications})
 
+def custom_notification (request):
+            return render(request, 'custom_notification.html')
+

@@ -3,7 +3,7 @@
 <style>
   #notification {
     max-height: 450px;
-    width: 375px;
+    width: 413px;
     position: absolute;
     display: none;
     background-color: rgba(255, 255, 255);
@@ -16,7 +16,7 @@
 
   .msg-box {
     max-height: 420px;
-    width: 369px;
+    width: 412px;
     padding: 4px 0px 0px 5px;
     overflow-y: auto;
     overflow-x: clip;
@@ -38,19 +38,29 @@
   .sender_title {
     color: black;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    transition: all 0.3s ease-in-out;
   }
 
   .notification_time {
     color: gray;
-    font-size: 12px;
+    font-size: 9px;
     position: relative;
     top: 3px;
+    width: 58px;
   }
 
+  .time_dropdown > h6{
+    margin: 0;
+  }
   .notification_msg {
     top: 20px;
-    font-size: 14px;
+    font-size: 12px;
     margin-bottom: 0;
     color: #464646;
     overflow: hidden;
@@ -105,9 +115,9 @@
     transition: all .1s ease-in;
   }
 
-  .bell-icon:hover {
-    scale: 1.1;
-  }
+  /* .bell-icon:hover {
+    transform: translateX(10px);
+  } */
 
   .msg-box::-webkit-scrollbar {
     width: 6px;
@@ -150,8 +160,8 @@
     font-weight: bold;
     font-size: 19px;
     position: relative;
-    bottom: 19px;
-    left: 314px;
+    bottom: 12px;
+    left: 355px;
     cursor: pointer;
     border-radius: 50%;
   }
@@ -265,12 +275,85 @@
   background-color: lightblue;
   transition: background-color 0.5s ease-out;
 }
+.nftn_lbl{
+  background-color: #00629b;
+  color: #fff;
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 4px;
+  min-height: 4px;
+  display: inline-block;
+  font-size: 9px;
+}
+.wobble-hor-top {
+	-webkit-animation: wobble-hor-top 0.8s both;
+	        animation: wobble-hor-top 0.8s both;
+}
+@-webkit-keyframes wobble-hor-top {
+  0%,
+  100% {
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%);
+    -webkit-transform-origin: 0% 0%;
+            transform-origin: 0% 0%;
+  }
+  15% {
+    -webkit-transform: translateX(-1px) rotate(0.2deg);
+            transform: translateX(-1px) rotate(0.2deg);
+  }
+  30% {
+    -webkit-transform: translateX(1px) rotate(-0.2deg);
+            transform: translateX(1px) rotate(-0.2deg);
+  }
+  45% {
+    -webkit-transform: translateX(-1px) rotate(0.4deg);
+            transform: translateX(-1px) rotate(0.4deg);
+  }
+  60% {
+    -webkit-transform: translateX(1px) rotate(-0.4deg);
+            transform: translateX(1px) rotate(-0.4deg);
+  }
+  75% {
+    -webkit-transform: translateX(-1px) rotate(0.2deg);
+            transform: translateX(-1px) rotate(0.2deg);
+  }
+}
+  @keyframes wobble-hor-top {
+    0%,
+    100% {
+      -webkit-transform: translateX(0%);
+              transform: translateX(0%);
+      -webkit-transform-origin: 0% 0%;
+              transform-origin: 0% 0%;
+    }
+    15% {
+    -webkit-transform: translateX(-1px) rotate(0.2deg);
+            transform: translateX(-1px) rotate(0.2deg);
+    }
+    30% {
+      -webkit-transform: translateX(1px) rotate(-0.2deg);
+              transform: translateX(1px) rotate(-0.2deg);
+    }
+    45% {
+      -webkit-transform: translateX(-1px) rotate(0.4deg);
+              transform: translateX(-1px) rotate(0.4deg);
+    }
+    60% {
+      -webkit-transform: translateX(1px) rotate(-0.4deg);
+              transform: translateX(1px) rotate(-0.4deg);
+    }
+    75% {
+      -webkit-transform: translateX(-1px) rotate(0.8deg);
+              transform: translateX(-1px) rotate(0.8deg);
+    }
+  }
 
 </style>
 <li class="nav-item dropdown pos-stc-xs">
   <a class="nav-link mr-2" href data-toggle="dropdown">
     <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
-    <span class="label label-sm up warn" id="nftn_lbl" value="{{user_data.unread_notification_count}}"></span>
+    <span class="label label-sm nftn_lbl" id="nftn_lbl" value="{{user_data.unread_notification_count}}"></span>
   </a>
   <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
 </li>
@@ -288,8 +371,7 @@
                 <img src="/media_files/{{notification.notification.created_by.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
               </div>
               <div class="bell_friend_svg" >
-                  <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
-                  border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
+                <img src='data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogbGluZWFyLWdyYWRpZW50KDQ1ZGVnLCAjMDAyODU1LCAjN2JkNWZlKTsNCiAgICAgICAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDUwJTsiIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9Ii0xNSAwIDg3IDcwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0cm9rZS13aWR0aD0iMyIgIGZpbGw9IndoaXRlIj48ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCI+PC9nPjxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9nPjxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj48Y2lyY2xlIGN4PSIyOS4yMiIgY3k9IjE2LjI4IiByPSIxMS4xNCI+PC9jaXJjbGU+PHBhdGggZD0iTSA1Mi4zMiA1My42OSBoIDAgQSAyMi41NSAyMi41NSAwIDAgMCA2LjY3IDU1IGggNDUuOSI+PC9wYXRoPjwvZz48L3N2Zz4='/> 
               </div>
               <div class="notification_content">
                 <h6 class="sender_title">{{notification.notification.general_message}}</h6>
@@ -326,11 +408,11 @@
     var icon = document.querySelector(".bell-icon");
     const ntfn_content = document.getElementById("notification");
     if (ntfn_content.style.display === "block") {
+      icon.classList.remove("wobble-hor-top");
       ntfn_content.style.display = "none";
-      icon.style.color = "#000000";
     } else {
+      icon.classList.add("wobble-hor-top");
       ntfn_content.style.display = "block";
-      icon.style.color = "#002855";
     }
   }
 

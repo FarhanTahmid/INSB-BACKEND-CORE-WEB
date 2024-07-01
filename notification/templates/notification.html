@@ -343,6 +343,12 @@
             color: black;
             font-weight: bold;
             font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: all 0.3s ease-in-out;
         }
 
         .time_notification {
