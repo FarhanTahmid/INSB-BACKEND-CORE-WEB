@@ -26,11 +26,13 @@ class Task_Assignation:
         task_update_notification_type=NotificationTypes.objects.get(type="Task Update")
         task_completion_notification_type=NotificationTypes.objects.get(type="Task Completion")
         task_comment = NotificationTypes.objects.get(type="Task Comment")
+        task_member_remove = NotificationTypes.objects.get(type="Task Removed")
     except:
         task_creation_notification_type=None
         task_update_notification_type=None
         task_completion_notification_type=None
         task_comment = None
+        task_member_remove = None
 
     def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
@@ -269,7 +271,7 @@ class Task_Assignation:
         # try:
             #Get the task using the task_id
             task = Task.objects.get(id=task_id)
-            
+            site_domain = request.META['HTTP_HOST']
             #settings for notification
             try:
                 notification_created_by=Members.objects.get(ieee_id=request.user.username)
@@ -505,6 +507,9 @@ class Task_Assignation:
                         for member in task_members:
 
                             if member.team == team:
+                                #removing member and notifying them through notification
+                                notification_message = f"You were removed from the task, {task.title}"
+                                NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
                                 task.members.remove(member)
                         
                         #deleting this
@@ -608,7 +613,9 @@ class Task_Assignation:
                             media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
                             for media_file in media_files:
                                 Task_Assignation.delete_task_media(media_file)
-
+                        #notifying member
+                        notification_message = f"You were removed from the task, {task.title}"
+                        NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member.task_member)
                         member.delete()
 
                 #saving members task type as per needed
@@ -850,7 +857,9 @@ class Task_Assignation:
                             media_files = Task_Media.objects.filter(task=task, uploaded_by=member.task_member.ieee_id)
                             for media_file in media_files:
                                 Task_Assignation.delete_task_media(media_file)
-
+                        #notifying user
+                        notification_message = f"You were removed from the task, {task.title}"
+                        NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member.task_member)
                         member.delete()
 
                 #saving members task type as per needed
