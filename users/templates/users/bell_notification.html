@@ -271,6 +271,9 @@
     left: 30px;
     bottom: -7px;
 }
+  .bell_friend_svg > img{
+    border-radius:50%;
+  }
 .new-notification {
   background-color: lightblue;
   transition: background-color 0.5s ease-out;
@@ -299,12 +302,12 @@
             transform-origin: 0% 0%;
   }
   15% {
-    -webkit-transform: translateX(-1px) rotate(0.2deg);
-            transform: translateX(-1px) rotate(0.2deg);
+    -webkit-transform: translateX(-3px) rotate(0.2deg);
+            transform: translateX(-3px) rotate(0.2deg);
   }
   30% {
-    -webkit-transform: translateX(1px) rotate(-0.2deg);
-            transform: translateX(1px) rotate(-0.2deg);
+    -webkit-transform: translateX(2px) rotate(-0.2deg);
+            transform: translateX(2px) rotate(-0.2deg);
   }
   45% {
     -webkit-transform: translateX(-1px) rotate(0.4deg);
@@ -328,12 +331,12 @@
               transform-origin: 0% 0%;
     }
     15% {
-    -webkit-transform: translateX(-1px) rotate(0.2deg);
-            transform: translateX(-1px) rotate(0.2deg);
+    -webkit-transform: translateX(-3px) rotate(0.2deg);
+            transform: translateX(-3px) rotate(0.2deg);
     }
     30% {
-      -webkit-transform: translateX(1px) rotate(-0.2deg);
-              transform: translateX(1px) rotate(-0.2deg);
+      -webkit-transform: translateX(2px) rotate(-0.2deg);
+              transform: translateX(2px) rotate(-0.2deg);
     }
     45% {
       -webkit-transform: translateX(-1px) rotate(0.4deg);
@@ -693,14 +696,7 @@
                                     <img src="/media_files/${notification.created_by.profile_picture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                                 </div>
                                 <div class="bell_friend_svg">
-                                    <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe); border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <circle cx="29.22" cy="16.28" r="11.14"></circle>
-                                            <path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path>
-                                        </g>
-                                    </svg>
+                                      <img src='data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogbGluZWFyLWdyYWRpZW50KDQ1ZGVnLCAjMDAyODU1LCAjN2JkNWZlKTsNCiAgICAgICAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDUwJTsiIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9Ii0xNSAwIDg3IDcwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0cm9rZS13aWR0aD0iMyIgIGZpbGw9IndoaXRlIj48ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCI+PC9nPjxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9nPjxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj48Y2lyY2xlIGN4PSIyOS4yMiIgY3k9IjE2LjI4IiByPSIxMS4xNCI+PC9jaXJjbGU+PHBhdGggZD0iTSA1Mi4zMiA1My42OSBoIDAgQSAyMi41NSAyMi41NSAwIDAgMCA2LjY3IDU1IGggNDUuOSI+PC9wYXRoPjwvZz48L3N2Zz4='/> 
                                 </div>
                                 <div class="notification_content">
                                     <h6 class="sender_title">${notification.general_message}</h6>
