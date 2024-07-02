@@ -35,6 +35,7 @@ class Notifications(models.Model):
     object_id = models.PositiveIntegerField(null=True,blank=True)
     notification_of=GenericForeignKey("content_type", "object_id")
     timestamp=models.DateTimeField(null=False,blank=False)
+    title = models.CharField(null=True,blank=True,max_length=300)
     general_message=models.CharField(null=True,blank=True,max_length=300)
     inside_link=models.URLField(null=False,blank=False)
     created_by=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)

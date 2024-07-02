@@ -10,10 +10,15 @@ class NotificationHandler:
     
     logger=logging.getLogger(__name__)
 
+    try:
+        custom_notification_type=NotificationTypes.objects.get(type="Custom Notification")
+    except:
+        custom_notification_type = None
+
     def create_notification_type(notification_type, image_icon=None):
         pass
     
-    def create_notifications(notification_type,general_message,inside_link,created_by,reciever_list,notification_of):
+    def create_notifications(notification_type,title,general_message,inside_link,created_by,reciever_list,notification_of):
         
         '''This function creates new notification instances, assigns new notifications to the users as well
                 -`notification_type`: must be a pk of an NotificationTypes object
@@ -36,7 +41,7 @@ class NotificationHandler:
             
             # create new object of Notifications
             new_notification = Notifications.objects.create(
-                type=notification_type,timestamp=timestamp,general_message=general_message,
+                type=notification_type,timestamp=timestamp,title=title,general_message=general_message,
                 inside_link=inside_link,created_by=created_by,notification_of=notification_of
             )
             # save the new instance of notification
@@ -47,7 +52,7 @@ class NotificationHandler:
             
             # create new object of Notifications without created_by option
             new_notification = Notifications.objects.create(
-                type=notification_type,timestamp=timestamp,general_message=general_message,
+                type=notification_type,timestamp=timestamp,title=title,general_message=general_message,
                 inside_link=inside_link,notification_of=notification_of
             )
             # save the new instance of notification
@@ -70,7 +75,7 @@ class NotificationHandler:
                 tokens = PushNotification.objects.filter(member=reciever)
                 #sending to all the tokens
                 for token in tokens:
-                    push_notification.send_push_notification(general_message,general_message,token.fcm_token)
+                    push_notification.send_push_notification(title,general_message,token.fcm_token)
             return True
         
         except Exception as e:
@@ -114,7 +119,7 @@ class NotificationHandler:
             tokens = PushNotification.objects.filter(member=member.member)
             #sending to all the tokens
             for token in tokens:
-                push_notification.send_push_notification(member.notification.general_message,member.notification.general_message,token.fcm_token)
+                push_notification.send_push_notification(member.notification.title,member.notification.general_message,token.fcm_token)
 
     def has_notification(notification_of, notification_type):
 
@@ -168,13 +173,13 @@ class NotificationHandler:
             else:
                 return False
     
-    def notification_to_a_member(request,notification_of,message,inside_link,task_type,member):
+    def notification_to_a_member(request,notification_of,title,message,inside_link,notification_type,member):
 
         '''This function will send the notification to the specified member only'''
 
         general_message=message
-        if NotificationHandler.has_notification(notification_of, task_type):
-            NotificationHandler.update_notification(notification_of, task_type, {'general_message':general_message})
+        if NotificationHandler.has_notification(notification_of, notification_type):
+            NotificationHandler.update_notification(notification_of, notification_type, {'general_message':general_message})
         else:
             try:
                 notification_created_by=Members.objects.get(ieee_id=request.user.username)
@@ -185,7 +190,8 @@ class NotificationHandler:
             receiver_list = []
             receiver_list.append(member.ieee_id)
             notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
-            NotificationHandler.create_notifications(notification_type=task_type.pk,
+            NotificationHandler.create_notifications(notification_type=notification_type.pk,
+                                                    title=title,
                                                     general_message=general_message,
                                                     inside_link=inside_link,
                                                     created_by=notification_created_by_name,

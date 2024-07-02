@@ -25,6 +25,8 @@ from central_branch import views as cv
 from . import push_notification
 from users.renderData import LoggedinUser
 from django.utils.dateformat import format
+from central_branch.renderData import Branch
+from notification.notifications import NotificationHandler
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -154,7 +156,53 @@ def fetch_notifications(request):
             notifications.append(dic)
     
     return JsonResponse({'notifications': notifications})
-
+@login_required
 def custom_notification (request):
-            return render(request, 'custom_notification.html')
+
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        #Checking user access
+        user=request.user
+        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
+        if True:
+
+            all_members = Branch.load_current_panel_members()
+            if request.method == 'POST':
+
+                if request.POST.get('send_notification'):
+                    notification_title = request.POST.get('notification_title')
+                    notification_link = request.POST.get('notification_link')
+                    notification_description = request.POST.get('notification_description')
+                    selected_member_ids = request.POST.getlist('selected_member_ids')
+                    print(selected_member_ids)
+                    for member in selected_member_ids:
+                        mem = Members.objects.get(ieee_id=member)
+                        NotificationHandler.notification_to_a_member(request,mem,notification_title
+                                                                    ,notification_description,notification_link,
+                                                                    NotificationHandler.custom_notification_type,Members.objects.get(ieee_id=member))
+                    messages.success(request,'Notifications Sent!')
+                    return redirect('notification:custom_notification')
+
+            context={
+                'all_sc_ag':sc_ag,
+                "user_data":user_data,
+
+
+                'media_url':settings.MEDIA_URL,
+                'all_members':all_members,
+            }
+
+            return render(request, 'custom_notification.html',context)
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return cv.custom_500(request)
+    
+    
 
