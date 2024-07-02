@@ -461,6 +461,16 @@
                     <!--title-->
                     <h4 class="custom_notification_title">Custom Notifications</h4>
 
+                    <!--Messages-->
+                    <div style="justify-content:center; text-align:center;">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <h4 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                            {% endfor %}
+                        <br>
+                        {% endif %}
+                    </div>
+
                     <div class="custom_notification_btn">
                         <!--title-->
                         <h5 class="send_notification_txt">Send a Notification</h5>
@@ -469,14 +479,14 @@
                     </div>
 
                     <!--form-->
-                    <form method="get" class="custom_notification_box">
+                    <form method="POST" class="custom_notification_box">
                         {% csrf_token %}
                         <!--notification title-->
-                        <input type="text" class="box" name="title" placeholder="Title" required>
+                        <input type="text" class="box" name="notification_title" placeholder="Title" required>
                         <!--notification url-->
-                        <input type="url" class="box" name="link" placeholder="Link">
+                        <input type="url" class="box" name="notification_link" placeholder="Link">
                         <!--notification description-->
-                        <textarea class="box" name="description" placeholder="Description"
+                        <textarea class="box" name="notification_description" placeholder="Description"
                         style="min-height: 100px; max-height: 180px;" maxlength="500" required></textarea>
                         
                         <!--selecting individuals to send notification-->
@@ -498,32 +508,23 @@
                                     <button type="button" class="clear"><i class="fa fa-close"></i></button>
                                 </div>
                                 <!--select all members-->
-                                <div class="option all_tags" data-value="All">Select All</div>
+                                <div class="option all_tags" data-value="All" onclick="selectAllMembers()">Select All</div>
                                 <!--selecting members-->
-                                <div class="option grid_container" data-value="Junayed">
-                                    <div>5489451632</div>
-                                    <div class="name">Md.Shakib Shahariar Junayed</div>
-                                    <div>Website Development Team</div>
-                                    <div>Co-Ordinator</div>
+                                {% for member in all_members %}
+                                <div class="option grid_container" data-value="{{member.member.ieee_id}}" onclick="selectMember('{{member.member.name}}','{{member.member.ieee_id}}')">
+                                    <div class="ID">{{member.member.ieee_id}}</div>
+                                    <div class="name">{{member.member.name}}</div>
+                                    <div>{{member.member.team.team_name}}</div>
+                                    <div>{{member.member.postion.role}}</div>
                                 </div>
-                                <div class="option grid_container" data-value="Rahiq">
-                                    <div>5489451632</div>
-                                    <div class="name">Rahiq Rahman</div>
-                                    <div>Website Development Team</div>
-                                    <div>Co-Ordinator</div>
-                                </div>
-                                <div class="option grid_container" data-value="Sami">
-                                    <div>5489451632</div>
-                                    <div class="name">Sami Uddin</div>
-                                    <div>Website Development Team</div>
-                                    <div>Webmaster</div>
-                                </div>
+                                {% endfor %}
                                 <!--in case member is not available msg-->
                                 <div class="option no-result-message" style="display: none; color: red;">Member doesn't exist</div>
                             </div>
                             <!--required msg-->
                             <span class="tag_error_msg"></span>
                         </div>
+                        <div id="hiddenInputsContainer"></div>
                         <!--send btn-->
                         <button class="send_notification_btn submit_btn" type="button">Send</button>
 
@@ -536,12 +537,9 @@
                                     <span class="close1">&times;</span>
                                 </div>
                                 <p style="margin: 10px 20px;">You are sending the notification to-</p>
-                                    <ol style="font-size: 14px; margin: 15px">
-                                        <li>Rahiq Rahman</li>
-                                        <li>Rahiq Rahman</li>
-                                    </ol>
+                                <ol id="confirmationList" style="font-size: 14px; margin: 15px"></ol>
                                     <div style="margin: 0px 12px; text-align: right;">
-                                        <input class="confirm_send_notification_btn" type="submit" name="submit" value="Confirm">
+                                        <input class="confirm_send_notification_btn" type="submit" name="send_notification" value="Confirm">
                                         <h6 class="cancel_btn">Cancel</h6>
                                     </div>
                             </div>
@@ -769,6 +767,45 @@
     });
     });
 
+</script>
+<script>
+    let selectedMembers = [];
+    function selectMember(memberName,memberID) {
+        addHiddenInput(memberID);
+        addMemberToList(memberName);
+    }
+    
+    function addHiddenInput(memberID) {
+        const container = document.getElementById('hiddenInputsContainer');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'selected_member_ids';
+        input.value = memberID;
+        container.appendChild(input);
+    }
+    
+    function selectAllMembers() {
+        const options = document.querySelectorAll('.grid_container');
+        options.forEach(option => {
+            const memberName = option.querySelector('.name').innerText;
+            const memberID = option.querySelector('.ID').innerText;
+            addHiddenInput(memberID);
+            addMemberToList(memberName);
+        });
+    }
+    function addMemberToList(memberName) {
+        selectedMembers.push(memberName);
+        updateConfirmationList();
+    }
+    function updateConfirmationList() {
+        const confirmationList = document.getElementById('confirmationList');
+        confirmationList.innerHTML = '';
+        selectedMembers.forEach(member => {
+            const li = document.createElement('li');
+            li.innerText = member;
+            confirmationList.appendChild(li);
+        });
+    }
 </script>
 <script>
     const historyBtn = document.querySelector(".history_btn");

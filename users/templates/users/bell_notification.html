@@ -272,7 +272,7 @@
     bottom: -7px;
     width: 30px;
     height: 30px;
-    overflow: hidden
+    overflow: hidden;
 }
   .bell_friend_svg > img{
     border-radius:50%;
@@ -444,6 +444,7 @@
               msg_div.firstElementChild.value = "2";
           
               notification_count();
+              shakeBell()
 
               // Change the background color of the tr
               msg_div.style.backgroundColor = "white";
@@ -473,13 +474,7 @@
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
 
-    //shake bell when notification count is updated
-    var icon = document.querySelector(".bell-icon");
-    if(icon.classList.contains("wobble-hor-top")) {
-      icon.classList.remove("wobble-hor-top");
-    }
 
-    icon.classList.add("wobble-hor-top");
     
   }
 
@@ -664,6 +659,7 @@
                 console.log('New notifications:', notifications);
                 updateNotifications(notifications);
                 notification_count();
+                shakeBell()
                 //updateNotificationCount();
                 //playNotificationSound();
               }
@@ -803,6 +799,7 @@
                 
                 //updating the bell icon count
                 notification_count();
+                shakeBell()
             },
             error: function (error) {
                 console.log("Error:", error);
@@ -826,6 +823,7 @@
 
               //updating the bell icon count
               notification_count();
+              shakeBell()
           },
           error: function (error) {
               console.log("Error:", error);
@@ -833,6 +831,16 @@
       });
     }
   }
+
+  function shakeBell(){
+      //shake bell when notification count is updated
+      var icon = document.querySelector(".bell-icon");
+      if(icon.classList.contains("wobble-hor-top")) {
+        icon.classList.remove("wobble-hor-top");
+      }
+  
+      icon.classList.add("wobble-hor-top");
+    }
 </script>
 
 {% endblock bell_notification %}

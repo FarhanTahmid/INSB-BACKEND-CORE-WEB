@@ -161,7 +161,7 @@ class Task_Assignation:
                 reciever_list.append(member.ieee_id)
                         
             NotificationHandler.create_notifications(
-                notification_type=Task_Assignation.task_creation_notification_type.pk,
+                notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
                 general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{new_task.title}'. Click to see the details.",
                 inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list,notification_of=new_task
             )
@@ -255,7 +255,7 @@ class Task_Assignation:
                 reciever_list.append(member.ieee_id)
 
             NotificationHandler.create_notifications(
-                notification_type=Task_Assignation.task_creation_notification_type.pk,
+                notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
                 general_message=f"{notification_created_by_name} has just assigned you a new task titled -'{new_task.title}'. Click to see the details.",
                 inside_link=inside_link,created_by=notification_created_by,reciever_list=reciever_list,notification_of=new_task
             )
@@ -307,7 +307,7 @@ class Task_Assignation:
                         member.completed_task_points += member_points.completion_points
                         member.save()
                         Task_Assignation.task_completion_email(member,task,member_points.completion_points)
-                    Task_Assignation.task_notification_details_update(request,task,f"Assigned Task {task.title}, marked completed",f"{request.META['HTTP_HOST']}/portal/users/my_tasks/",Task_Assignation.task_completion_notification_type)
+                    Task_Assignation.task_notification_details_update(request,task,"Task Updated",f"Assigned Task {task.title}, marked completed",f"{request.META['HTTP_HOST']}/portal/users/my_tasks/",Task_Assignation.task_completion_notification_type)
                     
                     if task.task_type == "Team":
 
@@ -324,7 +324,7 @@ class Task_Assignation:
                                 mem.completion_date = datetime.now()
                                 mem.save()
                                 Task_Assignation.task_completion_email(member,task,mem.completion_points)
-                        Task_Assignation.task_notification_details_update(request,task,f"Assigned Task {task.title}, marked completed",f"{request.META['HTTP_HOST']}/portal/users/my_tasks/",Task_Assignation.task_completion_notification_type)
+                        Task_Assignation.task_notification_details_update(request,task,"Task Updated",f"Assigned Task {task.title}, marked completed",f"{request.META['HTTP_HOST']}/portal/users/my_tasks/",Task_Assignation.task_completion_notification_type)
                         #team points updating
                         team_points = Team_Task_Point.objects.filter(task = task)
                         for team in team_points:
@@ -445,20 +445,20 @@ class Task_Assignation:
                 #updating task log
                 Task_Assignation.save_task_logs(task,task_log_message)
                 #updating notification
-                Task_Assignation.task_notification_details_update(request,task,'Task Title has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
+                Task_Assignation.task_notification_details_update(request,task,"Task Updated",'Task Title has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
             if description_without_tags != prev_description:
                 task_log_message = f"Task Description changed from {prev_description} to {description_without_tags} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
-                Task_Assignation.task_notification_details_update(request,task,'Task Description has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
+                Task_Assignation.task_notification_details_update(request,task,"Task Updated",'Task Description has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
             if new_task_category != prev_task_category:
                 task_log_message = f"Task Category changed from {prev_task_category.name} to {task_category} by {user_name}"
                 Task_Assignation.save_task_logs(task,task_log_message)
-                Task_Assignation.task_notification_details_update(request,task,'Task Category has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
+                Task_Assignation.task_notification_details_update(request,task,"Task Updated",'Task Category has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
                 task_category_changed = True
             #deadline saving not correct
             if prev_deadline != str(deadline):
                 task_log_message = f"Task Deadline changed from {prev_deadline} to {deadline} by {user_name}"
-                Task_Assignation.task_notification_details_update(request,task,'Task Deadline has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
+                Task_Assignation.task_notification_details_update(request,task,"Task Updated",'Task Deadline has been updated. Check back on the task!',f"{request.META['HTTP_HOST']}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type)
                 for member in task.members.all():
                     Task_Assignation.task_deadline_change_email(request,member,task)
                 Task_Assignation.save_task_logs(task,task_log_message)
@@ -509,7 +509,7 @@ class Task_Assignation:
                             if member.team == team:
                                 #removing member and notifying them through notification
                                 notification_message = f"You were removed from the task, {task.title}"
-                                NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
+                                NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
                                 task.members.remove(member)
                         
                         #deleting this
@@ -581,7 +581,7 @@ class Task_Assignation:
                         receiver_list = []
                         receiver_list.append(volunteer.ieee_id)
                         NotificationHandler.create_notifications(
-                            notification_type=Task_Assignation.task_creation_notification_type.pk,
+                            notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
                             general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
                             inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
                         )
@@ -615,7 +615,7 @@ class Task_Assignation:
                                 Task_Assignation.delete_task_media(media_file)
                         #notifying member
                         notification_message = f"You were removed from the task, {task.title}"
-                        NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member.task_member)
+                        NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member.task_member)
                         member.delete()
 
                 #saving members task type as per needed
@@ -788,7 +788,7 @@ class Task_Assignation:
                         receiver_list.append(member.ieee_id)
                     #sending notifications
                     NotificationHandler.create_notifications(
-                        notification_type=Task_Assignation.task_creation_notification_type.pk,
+                        notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
                         general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
                         inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
                     )
@@ -825,7 +825,7 @@ class Task_Assignation:
                         receiver_list = []
                         receiver_list.append(volunteer.ieee_id)
                         NotificationHandler.create_notifications(
-                            notification_type=Task_Assignation.task_creation_notification_type.pk,
+                            notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
                             general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
                             inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
                         )
@@ -859,7 +859,7 @@ class Task_Assignation:
                                 Task_Assignation.delete_task_media(media_file)
                         #notifying user
                         notification_message = f"You were removed from the task, {task.title}"
-                        NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member.task_member)
+                        NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member.task_member)
                         member.delete()
 
                 #saving members task type as per needed
@@ -1482,7 +1482,7 @@ This is an automated message. Do not reply
             Task_Assignation.save_task_logs(task,task_log_message)
             #sending the notification to the task assignee
             notification_message = f"Your Assigned Task, {task.title} has been commented, Check back on task!"
-            NotificationHandler.notification_to_a_member(request,task,notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}/upload_task",Task_Assignation.task_comment,member)
+            NotificationHandler.notification_to_a_member(request,task,f"Task Commented",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}/upload_task",Task_Assignation.task_comment,member)
 
             return True
         except:
@@ -1568,7 +1568,7 @@ This is an automated message. Do not reply
             Task_Assignation.save_task_logs(task,task_log_message)
             #sending the notification to the task creator
             notification_message = f"Assigned Task, {task.title} has been completed by {logged_in_user.name}, Check back on task!"
-            NotificationHandler.notification_to_a_member(request,task,notification_message,f"{url}",Task_Assignation.task_comment,member)
+            NotificationHandler.notification_to_a_member(request,task,"Task Completed",notification_message,f"{url}",Task_Assignation.task_comment,member)
 
             return True
         except:
@@ -2482,7 +2482,7 @@ This is an automated message. Do not reply
 
         return member
 
-    def task_notification_details_update(request,task,message,inside_link,task_type):
+    def task_notification_details_update(request,task,title,message,inside_link,task_type):
 
         '''This function will update the task-related-notification'''
         
@@ -2501,6 +2501,7 @@ This is an automated message. Do not reply
                 receiver_list.append(member.ieee_id)
             notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
             NotificationHandler.create_notifications(notification_type=task_type.pk,
+                                                    title=title,
                                                     general_message=general_message,
                                                     inside_link=inside_link,
                                                     created_by=notification_created_by_name,
