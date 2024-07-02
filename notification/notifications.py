@@ -201,3 +201,18 @@ class NotificationHandler:
     def delete_notification():
         pass
 
+
+    def notification_history():
+
+        '''This function will return the details custom notification sent'''
+        
+        custom_notification_history=Notifications.objects.filter(type = NotificationHandler.custom_notification_type).order_by('-timestamp').distinct('timestamp','object_id','title','general_message')
+        notification_dict = {}
+        for notification in custom_notification_history:
+            mem_list = []
+            members = MemberNotifications.objects.filter(notification__type = notification.type)
+            for m in members:
+                mem_list.append(m.member)
+            notification_dict[notification] = mem_list
+        
+        return notification_dict

@@ -549,42 +549,23 @@
 
                 <!--notification history-->
                 <div class="notification_history">
+                    {% for notification,member in custom_notification_history.items %}
                     <div class="notification_history_box" onclick="toggleHeight(this)">
                         <!--notification title-->
-                        <p class="history_box">Title:</p>
+                        <p class="history_box">Title:{{notification.title}}</p>
                         <!--notification url-->
-                        <p class="history_box">Link:</p>
+                        <p class="history_box">Link:{{notification.inside_link}}</p>
                         <!--notification description-->
-                        <p class="history_box">Title:</p>
+                        <p class="history_box">General Message:{{notification.general_message}}</p>
                         <div class="sent_to_whom_and_date">
-                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
-                            <h6>June 27, 2024, 3:43 PM</h6>
+                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> {% for mem in member %}
+                            {{mem.name}}({{mem.ieee_id}}){% if forloop.last%}{% else %},{% endif %}
+                            {% endfor %}
+                            </h5>
+                            <h6>{{notification.notification.timestamp}}</h6>
                         </div>
                     </div>
-                    <div class="notification_history_box" onclick="toggleHeight(this)">
-                        <!--notification title-->
-                        <p class="history_box">Title:</p>
-                        <!--notification url-->
-                        <p class="history_box">Link:</p>
-                        <!--notification description-->
-                        <p class="history_box">Title:</p>
-                        <div class="sent_to_whom_and_date">
-                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
-                            <h6>June 27, 2024, 3:43 PM</h6>
-                        </div>
-                    </div>
-                    <div class="notification_history_box" onclick="toggleHeight(this)">
-                        <!--notification title-->
-                        <p class="history_box">Title:</p>
-                        <!--notification url-->
-                        <p class="history_box">Link:</p>
-                        <!--notification description-->
-                        <p class="history_box">Title:</p>
-                        <div class="sent_to_whom_and_date">
-                            <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,Rahiq Rahman,</h5>
-                            <h6>June 27, 2024, 3:43 PM</h6>
-                        </div>
-                    </div>
+                    {% endfor %}
             </div>
         </div>
         <!-- app end-->

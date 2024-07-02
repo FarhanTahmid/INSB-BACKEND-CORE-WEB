@@ -27,6 +27,7 @@ from users.renderData import LoggedinUser
 from django.utils.dateformat import format
 from central_branch.renderData import Branch
 from notification.notifications import NotificationHandler
+from notification.models import Notifications,MemberNotifications
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -170,6 +171,8 @@ def custom_notification (request):
         if True:
 
             all_members = Branch.load_current_panel_members()
+
+            custom_notification_history = NotificationHandler.notification_history()
             if request.method == 'POST':
 
                 if request.POST.get('send_notification'):
@@ -179,10 +182,12 @@ def custom_notification (request):
                     selected_member_ids = request.POST.getlist('selected_member_ids')
                     print(selected_member_ids)
                     for member in selected_member_ids:
-                        mem = Members.objects.get(ieee_id=member)
-                        NotificationHandler.notification_to_a_member(request,mem,notification_title
-                                                                    ,notification_description,notification_link,
-                                                                    NotificationHandler.custom_notification_type,Members.objects.get(ieee_id=member))
+                        l_list = []
+                        l_list.append(member)
+                        mem = Members.objects.get(ieee_id = member)
+                        NotificationHandler.create_notifications(NotificationHandler.custom_notification_type.pk,notification_title,
+                                                                 notification_description,notification_link,
+                                                                 request.user.username,l_list,mem)
                     messages.success(request,'Notifications Sent!')
                     return redirect('notification:custom_notification')
 
@@ -193,6 +198,7 @@ def custom_notification (request):
 
                 'media_url':settings.MEDIA_URL,
                 'all_members':all_members,
+                'custom_notification_history':custom_notification_history,
             }
 
             return render(request, 'custom_notification.html',context)
