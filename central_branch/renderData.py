@@ -511,6 +511,11 @@ class Branch:
             ####################################################
             ######event publish/not publish trigger here####################
             ####################################################
+            create_notification = False
+            if(publish_event and not event.publish_in_main_web):
+                create_notification = True
+            else:
+                create_notification = False
             event.publish_in_main_web = publish_event
             event.publish_in_google_calendar = publish_event_gc
             event.flagship_event = flagship_event
@@ -577,6 +582,21 @@ class Branch:
             
             event = Events.objects.get(pk=event_id)
 
+            if(create_notification):
+                notificationType = NotificationTypes.objects.get(type="Event")
+                inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
+                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
+                # receiver_list=Branch.load_all_active_general_members_of_branch()
+                receiver_list=[98955436,97952937]
+                if(NotificationHandler.create_notifications(notification_type=notificationType.pk,
+                                                            title="New Event has been published!",
+                                                            general_message=general_message,
+                                                            inside_link=inside_link,
+                                                            created_by="IEEE NSU SB",
+                                                            reciever_list=receiver_list,
+                                                            notification_of=event)):
+                    messages.success(request, "Notifications Created!")
+
             if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
                 event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
                 if(not event.google_calendar_event_id):
@@ -586,19 +606,6 @@ class Branch:
                     messages.success(request, "Event published in calendar")
 
                 event.save()
-
-                notificationType = NotificationTypes.objects.get(type="Event")
-                inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
-                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} : {event.event_name}"
-                # receiver_list=Branch.load_all_active_general_members_of_branch()
-                receiver_list=[98955436,97952937]
-                NotificationHandler.create_notifications(notification_type=notificationType.pk,
-                                                         general_message=general_message,
-                                                         inside_link=inside_link,
-                                                         created_by="IEEE NSU SB",
-                                                         reciever_list=receiver_list,
-                                                         notification_of=event)
-
             elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
                 if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                     event.google_calendar_event_id = ""

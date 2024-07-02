@@ -477,7 +477,7 @@
                                     onmouseout="hoverOutRow(this)" style="background-color: {% if notification.is_read %}white{% endif %}">
                                     <td style="color: #00629b">
                                         <!--link here-->
-                                        <a href={% if notification.notification.inside_link %}"{{notification.notification.inside_link}}"{% else %}"{% url 'notification:all_notifications' %}"{% endif %} onclick="removeUnread(this)">
+                                        <a href={% if notification.notification.inside_link %}"//{{notification.notification.inside_link}}"{% else %}"{% url 'notification:all_notifications' %}"{% endif %} onclick="removeUnread(this)">
                                             <div class="sender_content_row">
                                                 <div class="sender_inner_div">
                                                     <div class="sender_frame"><img src="{{media_url}}{{notification.notification.created_by.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></div>
@@ -489,8 +489,8 @@
                                                                 border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
                                                             </div> -->
                                                     <div class="notification_content_row">
-                                                        <h6 class='sender_title_row'>{{notification.notification.general_message}}</h6>
-                                                        <h6 class='notification_msg_row'>{{notification.notification.general_message}}</h6>
+                                                        <h6 class='sender_title_row'>{{notification.notification.title|safe}}</h6>
+                                                        <h6 class='notification_msg_row'>{{notification.notification.general_message|safe}}</h6>
                                                     </div>
                                                 </div>
                                                 <h6 class='time_notification'>{{notification.notification.timestamp}}</h6>

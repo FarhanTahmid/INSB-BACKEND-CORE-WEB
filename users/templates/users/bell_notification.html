@@ -372,7 +372,7 @@
     {% for notification in user_data.notifications %}
       <!--redirect link-->
       <div class="msg-info-div">
-        <a href={% if notification.notification.inside_link %}"{{notification.notification.inside_link}}" target="_blank"{% else %}"{% url 'notification:all_notifications' %}"{% endif %}>
+        <a href={% if notification.notification.inside_link %}"//{{notification.notification.inside_link}}" target="_blank"{% else %}"{% url 'notification:all_notifications' %}"{% endif %}>
           <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
             <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
@@ -384,9 +384,9 @@
                 <!-- <img src='data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogbGluZWFyLWdyYWRpZW50KDQ1ZGVnLCAjMDAyODU1LCAjN2JkNWZlKTsNCiAgICAgICAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDUwJTsiIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9Ii0xNSAwIDg3IDcwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0cm9rZS13aWR0aD0iMyIgIGZpbGw9IndoaXRlIj48ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCI+PC9nPjxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9nPjxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj48Y2lyY2xlIGN4PSIyOS4yMiIgY3k9IjE2LjI4IiByPSIxMS4xNCI+PC9jaXJjbGU+PHBhdGggZD0iTSA1Mi4zMiA1My42OSBoIDAgQSAyMi41NSAyMi41NSAwIDAgMCA2LjY3IDU1IGggNDUuOSI+PC9wYXRoPjwvZz48L3N2Zz4='/>  -->
               </div>
               <div class="notification_content">
-                <h6 class="sender_title">{{notification.notification.general_message}}</h6>
+                <h6 class="sender_title">{{notification.notification.title|safe}}</h6>
                 <h6 class="notification_msg">
-                  {{notification.notification.general_message}}
+                  {{notification.notification.general_message|safe}}
                 </h6>
               </div>
             </div>
@@ -688,8 +688,6 @@
     const msgBox = document.querySelector('.msg-box');
     
     notifications.forEach(notification => {
-      //console.log("latestnotifcationID",latestNotificationId);
-      //console.log("notification id",notification.id);
       console.log(new Date(notification.timestamp));
       console.log(new Date(loadedNotificationTimeStamp));
       if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
@@ -700,7 +698,7 @@
          
             const notificationElement = `
                 <div class="msg-info-div new-notification">
-                    <a href="${notification.inside_link}" target="_blank">
+                    <a href="//${notification.inside_link}" target="_blank">
                         <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
                             <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
                             <div class="sender_content">
@@ -711,7 +709,7 @@
                                   <img src=${notification.notification_type_image}/> 
                                 </div>
                                 <div class="notification_content">
-                                    <h6 class="sender_title">${notification.general_message}</h6>
+                                    <h6 class="sender_title">${notification.title}</h6>
                                     <h6 class="notification_msg">${notification.general_message}</h6>
                                 </div>
                             </div>
