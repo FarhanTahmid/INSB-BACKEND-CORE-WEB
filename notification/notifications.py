@@ -201,16 +201,40 @@ class NotificationHandler:
     def delete_notification():
         pass
 
+    def send_custom_notification(request,notification_title,notification_link,notification_description,selected_member_ids):
 
+        '''This function sends the custom notifications'''
+        try:
+            created_by = Members.objects.get(ieee_id = request.user.username)
+            notification = Notifications.objects.create(type = NotificationHandler.custom_notification_type,
+                                                    notification_of = None,timestamp = datetime.now(),title = notification_title,
+                                                    general_message = notification_description,inside_link = notification_link,
+                                                    created_by = created_by)
+        except:
+            notification = Notifications.objects.create(type = NotificationHandler.custom_notification_type,
+                                                    notification_of = None,timestamp = datetime.now(),title = notification_title,
+                                                    general_message = notification_description,inside_link = notification_link)
+        
+        notification.save()
+        for member_id in selected_member_ids:
+            member = Members.objects.get(ieee_id = member_id)
+            member_notification = MemberNotifications.objects.create(notification = notification,member = member,is_read = False)
+            member_notification.save()
+            tokens = PushNotification.objects.filter(member=member)
+            for token in tokens:
+                push_notification.send_push_notification(member_notification.notification.title,member_notification.notification.general_message,token.fcm_token)
+
+        return True
+        
     def notification_history():
 
         '''This function will return the details custom notification sent'''
         
-        custom_notification_history=Notifications.objects.filter(type = NotificationHandler.custom_notification_type).order_by('-timestamp').distinct('timestamp','object_id','title','general_message')
+        custom_notification_history=Notifications.objects.filter(type = NotificationHandler.custom_notification_type).order_by('-timestamp')
         notification_dict = {}
         for notification in custom_notification_history:
             mem_list = []
-            members = MemberNotifications.objects.filter(notification__type = notification.type)
+            members = MemberNotifications.objects.filter(notification = notification)
             for m in members:
                 mem_list.append(m.member)
             notification_dict[notification] = mem_list

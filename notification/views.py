@@ -123,6 +123,7 @@ class ReceiveTokenAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
 
 @login_required
+@member_login_permission
 def fetch_notifications(request):
 
     try:
@@ -138,17 +139,16 @@ def fetch_notifications(request):
         for member_notification in member_notifications:
             
             try:
-                profile_picture = member_notification.notification.created_by.user_profile_picture
+                profile_picture = str(settings.MEDIA_URL) + str(member_notification.notification.created_by.user_profile_picture)
             except:
-                profile_picture = 'default_profile_picture.png'
+                profile_picture = None
             dic = {
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
                 'general_message': member_notification.notification.general_message,
                 'timestamp': format(member_notification.notification.timestamp, 'Y-m-d\\TH:i:s'),#.strftime('%Y-%m-%d %H:%M:%S'),
                 'created_by': {
-                    # 'profile_picture': profile_picture
-                                        
+                    'profile_picture':profile_picture,                           
                 },
                 'is_read': member_notification.is_read,
                 'notification_type_image':str(settings.MEDIA_URL)+str(member_notification.notification.type.type_icon),
@@ -158,6 +158,7 @@ def fetch_notifications(request):
     
     return JsonResponse({'notifications': notifications})
 @login_required
+@member_login_permission
 def custom_notification (request):
 
     try:
@@ -180,16 +181,12 @@ def custom_notification (request):
                     notification_link = request.POST.get('notification_link')
                     notification_description = request.POST.get('notification_description')
                     selected_member_ids = request.POST.getlist('selected_member_ids')
-                    print(selected_member_ids)
-                    for member in selected_member_ids:
-                        l_list = []
-                        l_list.append(member)
-                        mem = Members.objects.get(ieee_id = member)
-                        NotificationHandler.create_notifications(NotificationHandler.custom_notification_type.pk,notification_title,
-                                                                 notification_description,notification_link,
-                                                                 request.user.username,l_list,mem)
-                    messages.success(request,'Notifications Sent!')
-                    return redirect('notification:custom_notification')
+                    
+                    if NotificationHandler.send_custom_notification(request,notification_title,notification_link,
+                                                                    notification_description,selected_member_ids):
+                        
+                        messages.success(request,'Notifications Sent!')
+                        return redirect('notification:custom_notification')
 
             context={
                 'all_sc_ag':sc_ag,
