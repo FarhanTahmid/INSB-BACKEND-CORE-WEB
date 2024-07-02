@@ -372,7 +372,7 @@
     {% for notification in user_data.notifications %}
       <!--redirect link-->
       <div class="msg-info-div">
-        <a href="//{{notification.notification.inside_link}}" target="_blank">
+        <a href={% if notification.notification.inside_link %}"{{notification.notification.inside_link}}" target="_blank"{% else %}"{% url 'notification:all_notifications' %}"{% endif %}>
           <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
             <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
@@ -700,12 +700,12 @@
          
             const notificationElement = `
                 <div class="msg-info-div new-notification">
-                    <a href="//${notification.inside_link}" target="_blank">
+                    <a href="${notification.inside_link}" target="_blank">
                         <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
                             <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
                             <div class="sender_content">
                                 <div class="sender_frame">
-                                    <img src="/media_files/${notification.created_by.profile_picture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                    <img src="${notification.created_by.profile_picture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                                 </div>
                                 <div class="bell_friend_svg">
                                   <img src=${notification.notification_type_image}/> 
@@ -716,7 +716,7 @@
                                 </div>
                             </div>
                             <div class="time_dropdown">
-                                <h6 class="notification_time">${new Date(notification.timestamp).toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true})}</h6>
+                                <h6 class="notification_time">${new Date(notification.timestamp).toLocaleString('en-US', {timeZone: 'Asia/Dhaka',month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true})}</h6>
                             </div>
                         </div>
                     </a>

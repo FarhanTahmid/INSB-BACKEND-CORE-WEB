@@ -27,6 +27,7 @@ from users.renderData import LoggedinUser
 from django.utils.dateformat import format
 from central_branch.renderData import Branch
 from notification.notifications import NotificationHandler
+from notification.models import Notifications,MemberNotifications
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -122,6 +123,7 @@ class ReceiveTokenAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
 
 @login_required
+@member_login_permission
 def fetch_notifications(request):
 
     try:
@@ -137,17 +139,16 @@ def fetch_notifications(request):
         for member_notification in member_notifications:
             
             try:
-                profile_picture = member_notification.notification.created_by.user_profile_picture
+                profile_picture = str(settings.MEDIA_URL) + str(member_notification.notification.created_by.user_profile_picture)
             except:
-                profile_picture = 'default_profile_picture.png'
+                profile_picture = None
             dic = {
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
                 'general_message': member_notification.notification.general_message,
                 'timestamp': format(member_notification.notification.timestamp, 'Y-m-d\\TH:i:s'),#.strftime('%Y-%m-%d %H:%M:%S'),
                 'created_by': {
-                    # 'profile_picture': profile_picture
-                                        
+                    'profile_picture':profile_picture,                           
                 },
                 'is_read': member_notification.is_read,
                 'notification_type_image':str(settings.MEDIA_URL)+str(member_notification.notification.type.type_icon),
@@ -157,6 +158,7 @@ def fetch_notifications(request):
     
     return JsonResponse({'notifications': notifications})
 @login_required
+@member_login_permission
 def custom_notification (request):
 
     try:
@@ -170,6 +172,8 @@ def custom_notification (request):
         if True:
 
             all_members = Branch.load_current_panel_members()
+
+            custom_notification_history = NotificationHandler.notification_history()
             if request.method == 'POST':
 
                 if request.POST.get('send_notification'):
@@ -177,14 +181,12 @@ def custom_notification (request):
                     notification_link = request.POST.get('notification_link')
                     notification_description = request.POST.get('notification_description')
                     selected_member_ids = request.POST.getlist('selected_member_ids')
-                    print(selected_member_ids)
-                    for member in selected_member_ids:
-                        mem = Members.objects.get(ieee_id=member)
-                        NotificationHandler.notification_to_a_member(request,mem,notification_title
-                                                                    ,notification_description,notification_link,
-                                                                    NotificationHandler.custom_notification_type,Members.objects.get(ieee_id=member))
-                    messages.success(request,'Notifications Sent!')
-                    return redirect('notification:custom_notification')
+                    
+                    if NotificationHandler.send_custom_notification(request,notification_title,notification_link,
+                                                                    notification_description,selected_member_ids):
+                        
+                        messages.success(request,'Notifications Sent!')
+                        return redirect('notification:custom_notification')
 
             context={
                 'all_sc_ag':sc_ag,
@@ -193,6 +195,7 @@ def custom_notification (request):
 
                 'media_url':settings.MEDIA_URL,
                 'all_members':all_members,
+                'custom_notification_history':custom_notification_history,
             }
 
             return render(request, 'custom_notification.html',context)
