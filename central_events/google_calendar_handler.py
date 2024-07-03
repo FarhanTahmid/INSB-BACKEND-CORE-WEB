@@ -200,10 +200,15 @@ class CalendarHandler:
                 'client_secret': settings.GOOGLE_CLOUD_CLIENT_SECRET,
             }
         }
+        if(request.META['HTTP_HOST'] == "127.0.0.1:8000" or request.META['HTTP_HOST'] == "localhost:8000"):
+            redirect_uri=f"http://{request.META['HTTP_HOST']}/portal/oauth2callback"
+        else:
+            redirect_uri=f"https://{request.META['HTTP_HOST']}/portal/oauth2callback"
+
         return Flow.from_client_config(
             client_config,
             settings.SCOPES,
-            redirect_uri=f"http://{request.META['HTTP_HOST']}/portal/oauth2callback"
+            redirect_uri=redirect_uri
         )
 
     def save_credentials(credentials):
