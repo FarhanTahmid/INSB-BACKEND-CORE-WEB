@@ -26,6 +26,7 @@ from . import push_notification
 from users.renderData import LoggedinUser
 from django.utils.dateformat import format
 from central_branch.renderData import Branch
+from central_branch.view_access import Branch_View_Access
 from notification.notifications import NotificationHandler
 from notification.models import Notifications,MemberNotifications
 
@@ -169,8 +170,8 @@ def custom_notification (request):
 
         #Checking user access
         user=request.user
-        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
-        if True:
+        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username) or Branch_View_Access.get_manage_custom_notification_access(request))
+        if has_access:
 
             all_members = Branch.load_current_panel_members()
 

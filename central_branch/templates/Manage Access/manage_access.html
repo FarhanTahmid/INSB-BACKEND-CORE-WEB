@@ -231,6 +231,14 @@
                                         <label for="manage_web_access">Manage Web Access</label><br>
                                     {% endif %}
 
+                                    {% if member.manage_custom_notification_access %}
+                                        <input type="checkbox" checked="True" class="checkbox" value="manage_custom_notification_access" name="manage_custom_notification_access">
+                                        <label for="manage_custom_notification_access">Manage Custom Notification</label><br>
+                                    {% else %}
+                                        <input type="checkbox" class="checkbox" value="manage_custom_notification_access" name="manage_custom_notification_access">
+                                        <label for="manage_custom_notification_access">Manage Custom Notification</label><br>
+                                    {% endif %}
+
                             </td>
                             <td style="border:1px solid #ccc;text-align:center;">
                                     <br>

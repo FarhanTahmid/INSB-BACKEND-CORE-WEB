@@ -2504,6 +2504,7 @@ def manage_view_access(request):
                     team_details_page=False
                     manage_web_access=False
                     manage_award_access=False
+                    manage_custom_notification_access = False
 
                     # Getting values from check box
                     
@@ -2525,6 +2526,8 @@ def manage_view_access(request):
                         manage_web_access=True
                     if(request.POST.get('manage_award_access')):
                         manage_award_access=True
+                    if(request.POST.get('manage_custom_notification_access')):
+                        manage_custom_notification_access=True
                     
                     # ****The passed keys must match the field name in the models. otherwise it wont update access
                     if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
@@ -2532,7 +2535,8 @@ def manage_view_access(request):
                                                             'create_individual_task_access':create_individual_task_access,
                                                             'create_team_task_access':create_team_task_access,
                                                             'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
-                                                            'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access})):
+                                                            'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access,
+                                                            'manage_custom_notification_access':manage_custom_notification_access})):
                         return redirect('central_branch:manage_access')
                     
                 if(request.POST.get('add_member_to_access')):
