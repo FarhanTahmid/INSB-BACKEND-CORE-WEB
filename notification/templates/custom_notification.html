@@ -595,7 +595,7 @@
             customSelect.querySelector(".tags_input").value = selectedValues.join(", ");
 
             let tagsHTML = "";
-            console.log(selectedOptions.length)
+            // console.log(selectedOptions.length)
             if (selectedOptions.length === 0) {
                 tagsHTML = '<span class="placeholder">Select people to notify</span>';
             } else {
@@ -603,7 +603,7 @@
 
                 selectedOptions.forEach(function(option,index){
                     if(index < maxTagsToShow){
-                        tagsHTML += '<span class="tag">' + option.text + '<span class="remove_tag" data-value="' + option.value+'">&times;</span></span>';
+                        tagsHTML += '<span class="tag">' + option.text + '<span class="remove_tag" onclick="removeMember(this)" data-value="' + option.value+'">&times;</span></span>';
                     }
                 })
             }
@@ -769,13 +769,32 @@
         const options = document.querySelectorAll('.grid_container');
         options.forEach(option => {
             const memberName = option.querySelector('.name').innerText;
+            memberName = memberName.trim();
             const memberID = option.querySelector('.ID').innerText;
             addHiddenInput(memberID);
             addMemberToList(memberName);
         });
     }
     function addMemberToList(memberName) {
-        selectedMembers.push(memberName);
+
+        let objStr = JSON.stringify([...memberName]);
+  
+        // Check if the object already exists in the array
+        let exists = selectedMembers.some(item => JSON.stringify([...item]) === objStr);
+        
+        // If it doesn't exist, push the object into the array
+        if (!exists) {
+            selectedMembers.push(memberName);
+        } else{
+            let indexToRemove = selectedMembers.indexOf(memberName);
+            console.log(indexToRemove)
+
+            // If the element exists in the array, remove it using splice
+            if (indexToRemove !== -1) {
+            selectedMembers.splice(indexToRemove, 1);
+            }
+        }
+        
         updateConfirmationList();
     }
     function updateConfirmationList() {
@@ -786,6 +805,22 @@
             li.innerText = member;
             confirmationList.appendChild(li);
         });
+        console.log(selectedMembers);
+    }
+    function removeMember(event){
+        const str = event.parentNode.childNodes[0].textContent.trim();
+        console.log(str);
+        
+        let indexToRemove = selectedMembers.indexOf(str);
+        // console.log(selectedMembers);
+        console.log(indexToRemove)
+
+        // If the element exists in the array, remove it using splice
+        if (indexToRemove !== -1) {
+        selectedMembers.splice(indexToRemove, 1);
+        }
+        updateConfirmationList();
+
     }
 </script>
 <script>
