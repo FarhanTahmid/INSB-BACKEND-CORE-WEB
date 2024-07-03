@@ -57,7 +57,7 @@ def developed_by(request):
 def authorize(request):
     credentials = CalendarHandler.get_credentials(request)
     if not credentials:
-        flow = CalendarHandler.get_google_auth_flow()
+        flow = CalendarHandler.get_google_auth_flow(request)
         authorization_url, state = flow.authorization_url(
             access_type='offline',
             include_granted_scopes='true'
@@ -69,12 +69,13 @@ def authorize(request):
     return redirect('central_branch:event_control')
 
 def oauth2callback(request):
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    if(request.META['HTTP_HOST'] == "127.0.0.1:8000" or request.META['HTTP_HOST'] == "localhost:8000"):
+        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
     state = request.GET.get('state')
     if state != request.session.pop('state', None):
         return HttpResponseBadRequest('Invalid state parameter')
     
-    flow = CalendarHandler.get_google_auth_flow()
+    flow = CalendarHandler.get_google_auth_flow(request)
     flow.fetch_token(authorization_response=request.build_absolute_uri())
     credentials = flow.credentials
     CalendarHandler.save_credentials(credentials)

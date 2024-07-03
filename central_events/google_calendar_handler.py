@@ -189,7 +189,7 @@ class CalendarHandler:
 
         return creds
 
-    def get_google_auth_flow():
+    def get_google_auth_flow(request):
         client_config = {
             'web': {
                 'client_id': settings.GOOGLE_CLOUD_CLIENT_ID,
@@ -203,9 +203,7 @@ class CalendarHandler:
         return Flow.from_client_config(
             client_config,
             settings.SCOPES,
-            # redirect_uri="https://ieeensusb.org/portal/oauth2callback"
-            # redirect_uri="https://portal.ieeensusb.org/portal/oauth2callback"
-            redirect_uri="http://localhost:8000/portal/oauth2callback"
+            redirect_uri=f"http://{request.META['HTTP_HOST']}/portal/oauth2callback"
         )
 
     def save_credentials(credentials):
