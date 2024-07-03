@@ -273,7 +273,7 @@
     width: 30px;
     height: 30px;
     overflow: hidden;
-    border-radius: 50%;
+    /* border-radius: 50%; */
     scale: .7;
 }
   .bell_friend_svg > img{
@@ -382,7 +382,6 @@
               </div>
               <div class="bell_friend_svg" >
                 <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
-                <!-- <img src='data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogbGluZWFyLWdyYWRpZW50KDQ1ZGVnLCAjMDAyODU1LCAjN2JkNWZlKTsNCiAgICAgICAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDUwJTsiIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9Ii0xNSAwIDg3IDcwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0cm9rZS13aWR0aD0iMyIgIGZpbGw9IndoaXRlIj48ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCI+PC9nPjxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9nPjxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj48Y2lyY2xlIGN4PSIyOS4yMiIgY3k9IjE2LjI4IiByPSIxMS4xNCI+PC9jaXJjbGU+PHBhdGggZD0iTSA1Mi4zMiA1My42OSBoIDAgQSAyMi41NSAyMi41NSAwIDAgMCA2LjY3IDU1IGggNDUuOSI+PC9wYXRoPjwvZz48L3N2Zz4='/>  -->
               </div>
               <div class="notification_content">
                 <h6 class="sender_title">{{notification.notification.general_message}}</h6>
@@ -469,7 +468,6 @@
         val++;
       }
     });
-    console.log(val);
 
     //updating the unread notification count
     var lbl = document.getElementById("nftn_lbl");
@@ -595,7 +593,7 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('{% static 'firebase/firebase.js' %}')
     .then(function(registration) {
-      console.log('Service Worker registered with scope:', registration.scope);
+      // console.log('Service Worker registered with scope:', registration.scope);
       messaging.useServiceWorker(registration);
 
       // Request permission and get token
@@ -604,16 +602,16 @@
         return messaging.getToken();
       })
       .then(function(token) {
-        console.log("FCM Token:", token);
+        // console.log("FCM Token:", token);
         $.ajax({
           url: "{% url 'notification:receive_token' %}",
           type: "GET",
           data: {'token': token},
           success: function (response) {
-            console.log("Success:", response);
+            // console.log("Success:", response);
           },
           error: function (error) {
-              console.log("Error:", error);
+              // console.log("Error:", error);
           }
         });
       })
@@ -627,7 +625,7 @@
   }
 
   messaging.onMessage(function(payload) {
-    console.log("Message received. ", payload);
+    // console.log("Message received. ", payload);
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
       body: payload.notification.body,
@@ -641,13 +639,13 @@
 <script>
   let notification_array = [];
   let loadedNotificationTimeStamp = new Date('{{user_data.latest_timestamp}}'); 
-  console.log(loadedNotificationTimeStamp); 
+  // console.log(loadedNotificationTimeStamp); 
   {% comment %} let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
   if (isNaN(newNotificationCount)){
     newNotificationCount = 0;
   }
-  console.log("initial notification id ",latestNotificationId);
+  // console.log("initial notification id ",latestNotificationId);
   
   console.log(newNotificationCount); {% endcomment %}
   function fetchNotifications() {
@@ -657,10 +655,10 @@
           success: function(data) {
               const notifications = data.notifications;
               if (notifications.length > 0) {
-                console.log('New notifications:', notifications);
+                // console.log('New notifications:', notifications);
                 updateNotifications(notifications);
                 notification_count();
-                shakeBell()
+                shakeBell();
                 //updateNotificationCount();
                 //playNotificationSound();
               }
@@ -691,8 +689,8 @@
     notifications.forEach(notification => {
       //console.log("latestnotifcationID",latestNotificationId);
       //console.log("notification id",notification.id);
-      console.log(new Date(notification.timestamp));
-      console.log(new Date(loadedNotificationTimeStamp));
+      // console.log(new Date(notification.timestamp));
+      // console.log(new Date(loadedNotificationTimeStamp));
       if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
             loadedNotificationTimeStamp = notification.timestamp;
             //latestNotificationId = notification.id;
@@ -808,7 +806,7 @@
                 shakeBell()
             },
             error: function (error) {
-                console.log("Error:", error);
+                // console.log("Error:", error);
             }
         });
     } else if (inputValue == "2") {
@@ -832,7 +830,7 @@
               shakeBell()
           },
           error: function (error) {
-              console.log("Error:", error);
+              // console.log("Error:", error);
           }
       });
     }
