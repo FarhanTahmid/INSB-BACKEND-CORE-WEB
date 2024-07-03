@@ -477,7 +477,7 @@
                                     onmouseout="hoverOutRow(this)" style="background-color: {% if notification.is_read %}white{% endif %}">
                                     <td style="color: #00629b">
                                         <!--link here-->
-                                        <a href={% if notification.notification.inside_link %}"{{notification.notification.inside_link}}"{% else %}"{% url 'notification:all_notifications' %}"{% endif %} onclick="removeUnread(this)">
+                                        <a href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" onclick="removeUnread(this)">
                                             <div class="sender_content_row">
                                                 <div class="sender_inner_div">
                                                     <div class="sender_frame"><img src="{{media_url}}{{notification.notification.created_by.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></div>
