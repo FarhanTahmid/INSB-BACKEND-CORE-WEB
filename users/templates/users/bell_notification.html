@@ -444,7 +444,7 @@
               msg_div.firstElementChild.value = "2";
           
               notification_count();
-              shakeBell()
+              // shakeBell()
 
               // Change the background color of the tr
               msg_div.style.backgroundColor = "white";
@@ -659,8 +659,8 @@
                 updateNotifications(notifications);
                 notification_count();
                 shakeBell();
+                // playNotificationSound();
                 //updateNotificationCount();
-                //playNotificationSound();
               }
           },
           error: function(xhr, status, error) {
@@ -758,11 +758,12 @@
     const notificationLabel = document.getElementById('nftn_lbl');
     notificationLabel.textContent = newNotificationCount;
   }
-  /*function playNotificationSound() {
-    // Replace with your sound file path
-    const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
-    sound.play();
-  }*/
+  function playNotificationSound() {
+    var audio = document.createElement("audio");
+    audio.src = "http://www.soundjay.com/misc/sounds/briefcase-lock-6.mp3";
+    audio.play();   
+    
+      }
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
       setInterval(fetchNotifications, 2000);
@@ -803,7 +804,7 @@
                 
                 //updating the bell icon count
                 notification_count();
-                shakeBell()
+                // shakeBell()
             },
             error: function (error) {
                 // console.log("Error:", error);
@@ -827,7 +828,7 @@
 
               //updating the bell icon count
               notification_count();
-              shakeBell()
+              // shakeBell()
           },
           error: function (error) {
               // console.log("Error:", error);
