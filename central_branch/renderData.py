@@ -1165,7 +1165,14 @@ class Branch:
             #Getting the event instance
             event = Events.objects.get(id = event_id)
 
-            CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)
+            if(event.google_calendar_event_id):
+                CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)
+
+            if(NotificationHandler.delete_notification(notification_type=Branch.event_notification_type, notification_of=event)):
+                messages.success(request, "Notifications of the event deleted successfully!")
+            else:
+                messages.warning(request, "Could not delete notifications of the event!")
+                return False
 
             try:
                 #getting banner image of the image and deleting it from if exists
