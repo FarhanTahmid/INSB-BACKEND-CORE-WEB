@@ -691,7 +691,7 @@
       // console.log(new Date(notification.timestamp));
       // console.log(new Date(loadedNotificationTimeStamp));
       if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
-            playNotificationSound();
+        playNotificationSound();
             loadedNotificationTimeStamp = notification.timestamp;
             //latestNotificationId = notification.id;
             //newNotificationCount += 1;
@@ -760,7 +760,7 @@
   }
   function playNotificationSound() {
     var audio = document.createElement("audio");
-    audio.src = "http://www.soundjay.com/misc/sounds/briefcase-lock-6.mp3";
+    audio.src = "{% static 'notification_sound.mp3' %}";
     audio.play();   
     
       }
