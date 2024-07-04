@@ -26,7 +26,8 @@ class NotificationHandler:
                 -`inside_link`: the link that the user will be redirected to upon clicking the notification.
                 -`timestamp`: the current timestamp of the server
                 -`created_by`: must return the user id (IEEE ID) of the user
-                -`reciever_list`: list of IEEE ID's to whom the notification will be assigned to.            
+                -`reciever_list`: list of IEEE ID's to whom the notification will be assigned to.
+                -`notification_of`: the object for which the notifictation is created for (Task/Event).          
         '''
         
         '''At the first step, the function will create a new Object of Notifications'''
@@ -92,34 +93,39 @@ class NotificationHandler:
                 -`contents`: a dict in which the keys must be of a field of Notifications that needs to update and the respective values to update with
         '''
 
-        notification=Notifications.objects.get(object_id=notification_of.pk, type=notification_type)
-        timestamp = datetime.now()
-        
-        #if there is contents then update each content
-        if contents:
-            for field, value in contents.items():
-                try:
-                    # Check if the field exists in the model
-                    Notifications._meta.get_field(field)
-                    # Set the value to the field
-                    setattr(notification, field, value)
-                except:
-                    print(f"Field '{field}' does not exist in {Notifications.__name__}")
-        
-        #update timestamp to show it at the top of the user's notifications list
-        notification.timestamp = timestamp
-        notification.save()
+        try:
+            notification=Notifications.objects.get(object_id=notification_of.pk, type=notification_type)
+            timestamp = datetime.now()
+            
+            #if there is contents then update each content
+            if contents:
+                for field, value in contents.items():
+                    try:
+                        # Check if the field exists in the model
+                        Notifications._meta.get_field(field)
+                        # Set the value to the field
+                        setattr(notification, field, value)
+                    except:
+                        print(f"Field '{field}' does not exist in {Notifications.__name__}")
+            
+            #update timestamp to show it at the top of the user's notifications list
+            notification.timestamp = timestamp
+            notification.save()
 
-        member_notifications = MemberNotifications.objects.filter(notification=notification)
+            member_notifications = MemberNotifications.objects.filter(notification=notification)
 
-        #Set all the member notifications to unread
-        for member in member_notifications:
-            member.is_read = False
-            member.save()
-            tokens = PushNotification.objects.filter(member=member.member)
-            #sending to all the tokens
-            for token in tokens:
-                push_notification.send_push_notification(member.notification.title,member.notification.general_message,token.fcm_token)
+            #Set all the member notifications to unread
+            for member in member_notifications:
+                member.is_read = False
+                member.save()
+                tokens = PushNotification.objects.filter(member=member.member)
+                #sending to all the tokens
+                for token in tokens:
+                    push_notification.send_push_notification(member.notification.title,member.notification.general_message,token.fcm_token)
+            
+            return True
+        except:
+            return False
 
     def has_notification(notification_of, notification_type):
 
@@ -172,6 +178,9 @@ class NotificationHandler:
                 return True
             else:
                 return False
+        else:
+            member_notification.delete()
+            return True
     
     def notification_to_a_member(request,notification_of,title,message,inside_link,notification_type,member):
 
@@ -198,8 +207,14 @@ class NotificationHandler:
                                                     reciever_list=receiver_list,
                                                     notification_of=notification_of)
             
-    def delete_notification():
-        pass
+    def delete_notification(notification_type, notification_of):
+        
+        try:
+            notification=Notifications.objects.get(object_id=notification_of.pk, type=notification_type)
+            notification.delete()
+            return True
+        except:
+            return False
 
     def send_custom_notification(request,notification_title,notification_link,notification_description,selected_member_ids):
 

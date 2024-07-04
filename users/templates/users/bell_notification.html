@@ -384,9 +384,9 @@
                 <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
               </div>
               <div class="notification_content">
-                <h6 class="sender_title">{{notification.notification.general_message}}</h6>
+                <h6 class="sender_title">{{notification.notification.title|safe}}</h6>
                 <h6 class="notification_msg">
-                  {{notification.notification.general_message}}
+                  {{notification.notification.general_message|safe}}
                 </h6>
               </div>
             </div>
@@ -715,7 +715,7 @@
                                   <img src=${notification.notification_type_image}/> 
                                 </div>
                                 <div class="notification_content">
-                                    <h6 class="sender_title">${notification.general_message}</h6>
+                                    <h6 class="sender_title">${notification.title}</h6>
                                     <h6 class="notification_msg">${notification.general_message}</h6>
                                 </div>
                             </div>

@@ -1365,6 +1365,7 @@ def event_edit_form(request, primary, event_id):
             is_branch = False
             is_flagship_event = Branch.is_flagship_event(event_id)
             is_event_published = Branch.load_event_published(event_id)
+            is_event_published_gc = Branch.load_event_published_gc(event_id)
             is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
             is_featured_event = Branch.is_featured_event(event_id)
             #Get event details from databse
@@ -1386,6 +1387,7 @@ def event_edit_form(request, primary, event_id):
                     form_link = request.POST.get('drive_link_of_event')
                     more_info_link = request.POST.get('more_info_link')
                     publish_event_status = request.POST.get('publish_event')
+                    google_calendar_publish_event_status = request.POST.get('publish_event_gc')
                     flagship_event_status = request.POST.get('flagship_event')
                     registration_event_status = request.POST.get('registration_fee')
                     event_name=request.POST['event_name']
@@ -1401,6 +1403,7 @@ def event_edit_form(request, primary, event_id):
 
                     #Checking to see of toggle button is on/True or off/False
                     publish_event = Branch.button_status(publish_event_status)
+                    publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
                     flagship_event = Branch.button_status(flagship_event_status)
                     registration_fee = Branch.button_status(registration_event_status)
                     is_featured = Branch.button_status(is_featured)
@@ -1412,7 +1415,7 @@ def event_edit_form(request, primary, event_id):
                         registration_fee_amount = event_details.registration_fee_amount
 
                     #Check if the update request is successful
-                    if(Branch.update_event_details(request=request, event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(request=request, event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, publish_event_gc=publish_event_gc, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                 flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event=is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('chapters_and_affinity_group:event_edit_form',primary, event_id) 
@@ -1470,6 +1473,7 @@ def event_edit_form(request, primary, event_id):
                 'hasCollaboration' : hasCollaboration,
                 'venues' : venues,
                 'is_event_published':is_event_published,
+                'is_event_published_gc':is_event_published_gc,
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,

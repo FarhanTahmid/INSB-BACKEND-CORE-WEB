@@ -146,6 +146,7 @@ def fetch_notifications(request):
             dic = {
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
+                'title':member_notification.notification.title,
                 'general_message': member_notification.notification.general_message,
                 'timestamp': format(member_notification.notification.timestamp, 'Y-m-d\\TH:i:s'),#.strftime('%Y-%m-%d %H:%M:%S'),
                 'created_by': {

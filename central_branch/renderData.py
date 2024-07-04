@@ -5,6 +5,8 @@ from django.urls import reverse
 from central_events.google_calendar_handler import CalendarHandler
 from insb_port import settings
 from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
+from notification.models import NotificationTypes
+from notification.notifications import NotificationHandler
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
@@ -31,6 +33,11 @@ from content_writing_and_publications_team.models import Content_Team_Document
 class Branch:
 
     logger=logging.getLogger(__name__)
+    try:
+        event_notification_type = NotificationTypes.objects.get(type="Event")
+    except:
+        event_notification_type = None
+
     
     def getBranchID():
         '''This Method returns the object of Branch from Society chapters and AG Table'''
@@ -462,13 +469,25 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, publish_event_gc, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
                              flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
             ''' Update event details and save to database '''
 
         
             #Get the selected event details from database
             event = Events.objects.get(pk=event_id)
+
+            create_notification = False
+            delete_notification = False
+            update_notification = False
+            dt = datetime.strptime(event_start_date, '%Y-%m-%dT%H:%M')
+            if(publish_event and not event.publish_in_main_web):
+                create_notification = True
+            elif(not publish_event and event.publish_in_main_web):
+                delete_notification = True
+            elif((event_name != event.event_name or str(dt) != str(event.start_date.astimezone(dt.tzinfo))[:-6]) and event.publish_in_main_web):
+                update_notification = True
+
             if event_end_date == "":
                 event_end_date = None
             #Check if super id is null
@@ -510,6 +529,7 @@ class Branch:
             ######event publish/not publish trigger here####################
             ####################################################
             event.publish_in_main_web = publish_event
+            event.publish_in_google_calendar = publish_event_gc
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
@@ -574,16 +594,43 @@ class Branch:
             
             event = Events.objects.get(pk=event_id)
 
-            if(not event.google_calendar_event_id and event.publish_in_main_web == True):
+            if(create_notification):
+                inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
+                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
+                # receiver_list=Branch.load_all_active_general_members_of_branch()
+                receiver_list=[98955436,97952937]
+                if(NotificationHandler.create_notifications(notification_type=Branch.event_notification_type.pk,
+                                                            title="New Event has been published!",
+                                                            general_message=general_message,
+                                                            inside_link=inside_link,
+                                                            created_by="IEEE NSU SB",
+                                                            reciever_list=receiver_list,
+                                                            notification_of=event)):
+                    messages.success(request, "Notifications created and sent to members!")
+                else:
+                    messages.warning(request, "Could not create notifications or notify members!")
+            elif(update_notification):
+                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
+                if(NotificationHandler.update_notification(notification_type=Branch.event_notification_type, notification_of=event, contents={'general_message':general_message})):
+                    messages.success(request, "Notifications updated successfully!")
+                else:
+                    messages.warning(request, "Could not update notifications!")
+            elif(delete_notification):
+                if(NotificationHandler.delete_notification(notification_type=Branch.event_notification_type,notification_of=event)):
+                    messages.success(request, "Notifications deleted successfully!")
+                else:
+                    messages.warning(request, "Could not delete notifications!")
+
+            if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
                 event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
                 if(not event.google_calendar_event_id):
-                    event.publish_in_main_web = False
+                    event.publish_in_google_calendar = False
                     messages.warning(request, "Could not publish event in calendar")
                 else:
                     messages.success(request, "Event published in calendar")
 
                 event.save()
-            elif(event.google_calendar_event_id and event.publish_in_main_web == False):
+            elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
                 if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                     event.google_calendar_event_id = ""
                     event.save()
@@ -1001,6 +1048,11 @@ class Branch:
 
         return Events.objects.get(id = event_id).publish_in_main_web
     
+    def load_event_published_gc(event_id):
+        '''This function will return wheather the event is published in google calendar or not'''
+
+        return Events.objects.get(id = event_id).publish_in_google_calendar
+    
     def is_flagship_event(event_id):
 
         '''This function will return wheather the event is flagship or not'''
@@ -1113,7 +1165,14 @@ class Branch:
             #Getting the event instance
             event = Events.objects.get(id = event_id)
 
-            CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)
+            if(event.google_calendar_event_id):
+                CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)
+
+            if(NotificationHandler.delete_notification(notification_type=Branch.event_notification_type, notification_of=event)):
+                messages.success(request, "Notifications of the event deleted successfully!")
+            else:
+                messages.warning(request, "Could not delete notifications of the event!")
+                return False
 
             try:
                 #getting banner image of the image and deleting it from if exists
