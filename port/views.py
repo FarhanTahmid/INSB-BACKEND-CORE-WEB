@@ -37,8 +37,6 @@ def developed_by(request):
         #load leads and the developers of the project
         project_leads=Project_leads.objects.all()
         project_developers=Project_Developers.objects.all().order_by('-reputation_point')
-        print(settings.MEDIA_URL)
-        print(project_developers[0].developers_picture)
         
         context={
             'project_leads':project_leads,

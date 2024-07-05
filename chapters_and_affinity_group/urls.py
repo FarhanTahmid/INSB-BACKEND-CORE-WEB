@@ -49,6 +49,8 @@ urlpatterns = [
     path('<str:primary>/manage_main_website/preview',views.manage_main_website_preview,name="manage_main_website_preview"), 
     #Feed Back
     path('<str:primary>/feedbacks',views.feedbacks,name="feedbacks"),
+    #Event Google Calendar
+    path('<str:primary>/event_details/<int:event_id>/google_calendar/',views.event_google_calendar,name="google_calendar"),
     #Mega Event Creation Form
     path('<str:primary>/events/create_mega_event/',views.mega_event_creation,name="mega_event_creation"), 
     #Mega Events homepage
