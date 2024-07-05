@@ -657,17 +657,19 @@ class Branch:
                 #     'displayName':"Sakib Sami (NSU)",
                 #     'email':'sakib.sami@northsouth.edu'
                 # },
-                # {
-                #     'displayName':"Sakib Sami (Personal)",
-                #     'email':'sahamimsak@gmail.com'
-                # },
             )
             to_attendee_final_list.append(
                 {
                     'displayName':"Arman M (IEEE)",
                     'email':'arman.mokammel@ieee.org'
                 }
-            ) 
+            )
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Sakib Sami (Personal)",
+                    'email':'sahamimsak@gmail.com'
+                },
+            )  
 
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
             event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list)
