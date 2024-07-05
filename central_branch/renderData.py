@@ -667,7 +667,7 @@ class Branch:
             to_attendee_final_list.append(
                 {
                     'displayName':"Sakib Sami (Personal)",
-                    'email':'sahamimsak@gmail.com'
+                    'email':'skmdsakib2186@gmail.com'
                 },
             )  
 
