@@ -36,16 +36,16 @@ class CalendarHandler:
             print(f'Failed to create service instance for {API_NAME}')
             return None
 
-    def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link):
+    def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link, attendeeList):
 
         # get general member emails
-        to_attendee_final_list = []
-        general_members=CalendarHandler.load_all_active_general_members_of_branch()
-        for member in general_members:
-            to_attendee_final_list.append({
-                'displayName':member.name,
-                'email':member.email_nsu,
-            }) 
+        # to_attendee_final_list = []
+        # general_members=CalendarHandler.load_all_active_general_members_of_branch()
+        # for member in general_members:
+        #     to_attendee_final_list.append({
+        #         'displayName':member.name,
+        #         'email':member.email_nsu,
+        #     }) 
 
         event = {
             'summary': title,
@@ -71,30 +71,9 @@ class CalendarHandler:
             'status' : 'confirmed',
             'transparency' : 'opaque',
             'guestsCanSeeOtherGuests' : False,
-            'attendees' : [
-                # to_attendee_final_list
-                {
-                    'displayName':"Arman M (Personal)",
-                    'email':'armanmokammel@gmail.com'
-                },
-                {
-                    'displayName':"Arman M (IEEE)",
-                    'email':'arman.mokammel@ieee.org'
-                },
-                {
-                    'displayName':"Arman M (NSU)",
-                    'email':'arman.mokammel@northsouth.edu'
-                },
-                # {
-                #     'displayName':"Sakib Sami (NSU)",
-                #     'email':'sakib.sami@northsouth.edu'
-                # },
-                # {
-                #     'displayName':"Sakib Sami (Personal)",
-                #     'email':'sahamimsak@gmail.com'
-                # },
-            ]
+            'attendees' : attendeeList
         }
+        print(attendeeList)
 
         service = CalendarHandler.authorize(request)
         if service:

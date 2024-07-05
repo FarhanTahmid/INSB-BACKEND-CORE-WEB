@@ -106,6 +106,10 @@ urlpatterns = [
     path('event_details/<int:event_id>/preview/',views.event_preview,name='event_preview'),
     #Event Feedback
     path('event_details/<int:event_id>/feedbacks/',views.event_feedback,name="event_feedback"),  
+
+    #Event Google Calendar
+    path('event_details/<int:event_id>/google_calendar/',views.event_google_calendar,name="google_calendar"),  
+
     #Members list
     path('members/',views.insb_members_list,name="members_list"),
     #Members details list

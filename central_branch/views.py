@@ -3047,7 +3047,6 @@ def event_edit_form(request, event_id):
         if has_access:
             is_branch = True
             is_event_published = Branch.load_event_published(event_id)
-            is_event_published_gc = Branch.load_event_published_gc(event_id)
             is_flagship_event = Branch.is_flagship_event(event_id)
             is_registraion_fee_true = Branch.is_registration_fee_required(event_id)
             is_featured_event = Branch.is_featured_event(event_id)
@@ -3071,7 +3070,6 @@ def event_edit_form(request, event_id):
                     form_link = request.POST.get('drive_link_of_event')
                     more_info_link = request.POST.get('more_info_link')
                     publish_event_status = request.POST.get('publish_event')
-                    google_calendar_publish_event_status = request.POST.get('publish_event_gc')
                     flagship_event_status = request.POST.get('flagship_event')
                     registration_event_status = request.POST.get('registration_fee')
                     event_name=request.POST['event_name']
@@ -3087,7 +3085,6 @@ def event_edit_form(request, event_id):
                     
                     #Checking to see of toggle button is on/True or off/False
                     publish_event = Branch.button_status(publish_event_status)
-                    publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
                     flagship_event = Branch.button_status(flagship_event_status)
                     registration_fee = Branch.button_status(registration_event_status)
                     is_featured = Branch.button_status(is_featured)
@@ -3098,7 +3095,7 @@ def event_edit_form(request, event_id):
                     else:
                         registration_fee_amount=event_details.registration_fee_amount
                     #Check if the update request is successful
-                    if(Branch.update_event_details(request=request, event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, publish_event_gc=publish_event_gc, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(request=request, event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                             flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 
@@ -3153,7 +3150,6 @@ def event_edit_form(request, event_id):
                 'hasCollaboration' : hasCollaboration,
                 'venues' : venues,
                 'is_event_published':is_event_published,
-                'is_event_published_gc':is_event_published_gc,
                 'is_flagship_event':is_flagship_event,
                 'is_registration_fee_required':is_registraion_fee_true,
                 'selected_venues':selected_venues,
@@ -3626,7 +3622,6 @@ def event_feedback(request, event_id):
 
         has_access = Branch_View_Access.get_event_edit_access(request)
         if has_access:
-            event = Events.objects.get(id=event_id)
             event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
             context = {
@@ -3645,6 +3640,38 @@ def event_feedback(request, event_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
+
+@login_required
+@member_login_permission
+def event_google_calendar(request, event_id):
+
+    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+    user_data=current_user.getUserData() #getting user data as dictionary file
+    sc_ag=PortData.get_all_sc_ag(request=request)
+
+    if(request.method == "POST"):
+        if('update_event_gc' in request.POST):
+            google_calendar_publish_event_status = request.POST.get('publish_event_gc')
+            attendeeOption = request.POST.get('attendeeList')
+
+            publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
+            Branch.update_event_google_calendar(request=request, event_id=event_id, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption)
+
+    event = Events.objects.get(id=event_id)
+    is_event_published_gc = event.publish_in_google_calendar
+
+
+
+    context = {
+        'is_branch':True,
+        'user_data':user_data,
+        'all_sc_ag':sc_ag,
+        'event':event,
+        'is_event_published_gc':is_event_published_gc,
+        'event_id':event_id,
+    }
+
+    return render(request, 'Events/event_edit_google_calendar.html', context)
 
 @login_required
 @member_login_permission

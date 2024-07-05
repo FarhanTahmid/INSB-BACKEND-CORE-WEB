@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    {% if is_branch %}
+    <title>Update Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Update Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+
+
+    <style>
+
+        body, html {
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .btn-container {
+            text-align: center;
+        }
+        
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%; /* Make the button full width on smaller screens */
+            }
+        }
+
+        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+            max-width: 80%; 
+            height: 90%; 
+            z-index: 1500;
+        }
+        @media screen and (max-width:700px){
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width:100%;
+            }
+        }
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
+
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
+        .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Banner styles */
+        .banner {
+            background-color: #b4252b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    
+        .banner p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .lock-icon {
+            margin-right: 10px;
+        }
+
+        .circle-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 45px; /* Set minimum width */
+            height: 45px; /* Set minimum height */
+            background-color: transparent; /* Set to transparent or any other color for the inside */
+            border: 2px solid #78BE20; /* Border color is green */
+            border-radius: 50%;
+            color: #78BE20; /* Text color is green */
+            font-size: 24px; /* Adjust the font size as needed */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+        }
+    
+        .circle-btn:hover {
+            background-color: #78BE20; /* Hover background color is green */
+            color: #fff; /* Hover text color is white */
+        }
+    
+        .plus-sign::before {
+            content: '+';
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% if is_branch %}
+              {% block navbar %}
+                  {% include 'navbar.html' %}
+              {% endblock navbar %}
+            {% else %}
+              {% block sc_ag_navbar %}
+                {% include 'sc_ag_navbar.html' %}
+              {% endblock sc_ag_navbar %}
+            {% endif %}
+          </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" id="view">
+            
+            <div class="container">
+                <br>
+                <br>
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                    style="color:#00629B;">{{event_details.event_name}}</b></span></h2>
+                
+            
+                <h6>Note:</h6>
+                <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
+                        <li>If you don't want to submit a form link, then just erase the value None from the text field if it appears</li>
+                </ol></b>
+
+                <br>
+
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                {% endfor %}
+
+                <br>
+            </div>
+            <!--Back Arrow-->
+
+            <div class="tooltip-container">
+                {% if is_branch %}
+                <a href="{% url 'central_branch:event_control' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                {% else %}
+                <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                {% endif %}
+                <span class="tooltip-text">Go back to Events</span>
+            </div>
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
+            <br>
+
+
+            <br><br>  
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block event_edit_tab %}
+                {% include "Events/event_edit_tabs.html" %}
+            {% endblock event_edit_tab %}
+            <!--Tab view end-->
+            <br>
+            
+            <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+
+<style>
+    .publish-switch {
+        display: flex;
+        justify-content: flex-end; /* Align to the right end */
+        align-items: center;
+        position: relative;
+    }
+
+    .registration-fee-switch, .flagship-event-switch{
+        display: flex;
+        justify-content: flex-start; /* Align to the right end */
+        align-items: center;
+        position: relative;
+    }
+
+    .ui-switch{
+        /* Add shadow to the icon */
+        box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+
+        /* You can customize the shadow properties */
+    }
+    .form-control-label.slider-checkbox {
+        display: inline-block;
+        margin-right: 10px; /* Add margin for spacing between elements */
+    }
+
+    .registration-hidden-field{
+        opacity: 0; 
+        height: 0; 
+        overflow: hidden; 
+        visibility: hidden; 
+        transition: all 0.5s 
+        ease-in-out;
+    }
+    .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
+                        
+<div class="container">
+    <div class="box">
+        
+        <br>
+        <div class="box-header" style="text-align:center;">
+            <h1>Update Event Details</h1>
+        </div>
+        
+        <form id="myForm" method = "POST">
+        {% csrf_token %}
+            <div class="box-body">
+                <div class="publish-switch">
+                    <label class="form-control-label slider-checkbox">Publish Event to Google Calendar</label>
+                    <span>                                            
+                        <label class="ui-switch m-t-xs m-r">
+                            <input name="publish_event_gc" type="checkbox" {% if is_event_published_gc %} checked {% endif %}>
+                                <i></i>
+                        </label>                
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label>Event Name: {{event.event_name}}</label>                       
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <label>Select Attendee List:</label>
+                      <select multiple class="form-control" name="attendeeList">
+                        {% comment %} <option selected value="">--------------------</option> {% endcomment %}
+                        <option selected value="general_members">All Registered General Members of IEEE NSU SB</option>
+                        <option value="all_officers">All Officers of IEEE NSU SB</option>
+                        <option value="eb_panel">Executive Panel (Branch Only)</option>
+                        <option value="excom_branch">Branch Ex-Com Members</option>
+                        <option value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
+                        {% for session in recruitment_sessions %}
+                          <option value="recruits_{{session.id}}">Recruits of - {{session.session}} </option>
+                        {% endfor %}
+                        
+                      </select>
+                  </div>
+
+                  <div class="form-group row align-items-center">
+                    <label for="captions" class="col-sm-3 form-control-label">Add Attendee:</label>
+                    <div class="col-sm-7">
+                        <!-- Add input field for captions here if needed -->
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddCaptionModal"></button>
+                    </div>
+                </div>
+                
+                <hr>
+                <div id="attendees-container">
+                    <label>Other Attendees:</label> 
+                    {% comment %} <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                        <div class="col-sm-11">
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.pk}}">{{note.title}}</a>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{note.pk}}')">✖</button>
+                        </div>
+                    </div> {% endcomment %}
+                </div>
+
+                
+                <br>
+           
+                
+                <div class="form-group">
+                    <label class="form-control-label"> Event Form Link:</label>
+                    <span>
+                        <input
+                        placeholder="Provide Form Link"
+                        class="form-control"
+                        type="url"
+                        autocomplete="off"
+                        id="#field1"
+                        value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
+                        name="drive_link_of_event"
+                        />
+                        <a href="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
+                    </span>
+                </div>
+                
+                <br>
+                <div style="text-align: center;">
+                    
+                    {% if is_branch %}
+                    <input type="submit" name="update_event_gc" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <input type="submit" name="update_event_gc" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        {% endif %}
+                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% endif %}
+                </div>
+                <br> 
+
+            </div>
+        </form>
+    </div>
+</div>
+
+   <!-- Updated Modal for adding captions -->
+   <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCaptionModalLabel">Add Attendee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">  
+                <form id="AddCaptionModalForm">               
+                    <div class="form-group">
+                        <label>Attendee Name:</label> 
+                            <input
+                                placeholder="Attendee"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                id="attendeeName"
+                            />
+                            <br>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Attendee Email:</label> 
+                            <input
+                                placeholder="Email"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                id="attendeeEmail"
+                            />
+                            <br>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Change the button label and name attribute -->
+                <input type="submit" class="btn btn-outline-success txt-success buttons" id="addAttendee" value="Add" data-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- New modal for editing captions -->
+<div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Display existing caption in a textarea for editing -->
+                <form method="POST">
+                    {% csrf_token %}
+                    <input id="update_note_{{note.pk}}" name="update_note" value="{{note.pk}}" type="hidden">
+                    <div class="form-group">
+                        <label>Attendee Name: </label> 
+                            <input
+                                placeholder="Attendee"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                id="attendee_Name"
+                            />
+                        <br>
+                            
+                    </div>
+                    <div class="form-group">
+                        <label>Attendee Email: </label> 
+                            <input
+                                placeholder="Email"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                ID="attendee_Email"
+                            />
+                        <br>
+                            
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="update" class="btn btn-outline-primary txt-primary" value="Update"></button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Confirmation modal for delete -->
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-top" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST">
+                {% csrf_token %}
+            <p><input id="remove_note" name= "remove_note" type="hidden"></p>
+            Are you sure you want to delete the attendee?
+        </div>
+        <div class="modal-footer">
+            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+
+                    
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          CKEDITOR.replace('registration_fee_amount');
+          var form = document.getElementById('myForm');
+          var isFormDirty = false;
+        
+          // Listen for changes in the form fields
+          form.addEventListener('input', function () {
+            isFormDirty = true;
+          });
+        
+          // Handle form submission
+          form.addEventListener('submit', function () {
+            // Set isFormDirty to false when the form is submitted
+            isFormDirty = false;
+          });
+        
+          // Warn the user before leaving the page if the form is dirty
+          window.addEventListener('beforeunload', function (event) {
+            if (isFormDirty) {
+              event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+          });
+        });
+        
+      </script>
+
+ 
+<script>
+
+    const container = document.getElementById('attendees-container');
+    document.getElementById('addAttendee').addEventListener('click', function() {
+        const container = document.getElementById('attendees-container');
+        const attendeeName = document.getElementById('attendeeName').value;
+        const attendeeEmail = document.getElementById('attendeeEmail').value;
+        const htmlString = `
+            <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                <div class="col-sm-11">
+                    <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal" onclick="openModal('${attendeeName}', '${attendeeEmail}')">${attendeeName}</a>
+                    <input type="hidden" name="attendee_name" value="${attendeeName}"/>
+                    <input type="hidden" name="attendee_email" value="${attendeeEmail}"/>
+                </div>
+                <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('${attendeeName}', '${attendeeEmail}')">✖</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', htmlString);
+        document.getElementById('AddCaptionModalForm').reset();
+    });
+
+    function openModal(attendeeName, attendeeEmail) {
+        // Set data in the modal
+        var inputElement = document.getElementById('attendee_Name');
+        console.log(inputElement);    
+        inputElement.value=attendeeName;
+        var inputElement2 = document.getElementById('attendee_Email');    
+        inputElement2.value=attendeeEmail;
+    }
+</script>
+
+        </div>
+        <!--PAGE END-->
+
+        
+        
+        
+
+        
+
+    
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <script src="{% static 'tab_view.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+
+    
+
+</body>
+</html>

@@ -469,7 +469,7 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, publish_event_gc, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
                              flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
             ''' Update event details and save to database '''
 
@@ -529,7 +529,6 @@ class Branch:
             ######event publish/not publish trigger here####################
             ####################################################
             event.publish_in_main_web = publish_event
-            event.publish_in_google_calendar = publish_event_gc
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
             event.registration_fee_amount = registration_fee_amount
@@ -621,30 +620,78 @@ class Branch:
                 else:
                     messages.warning(request, "Could not delete notifications!")
 
-            if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
-                event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]))
-                if(not event.google_calendar_event_id):
-                    event.publish_in_google_calendar = False
-                    messages.warning(request, "Could not publish event in calendar")
-                else:
-                    messages.success(request, "Event published in calendar")
-
-                event.save()
-            elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
-                if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
-                    event.google_calendar_event_id = ""
-                    event.save()
-                    messages.success(request, "Event deleted from calendar")
-                else:
-                    messages.warning(request, "Could not delete event from calendar")
-            elif(event.google_calendar_event_id):
+            if(event.google_calendar_event_id):
                 if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
                     messages.success(request, "Event updated in calendar")
                 else:
                     messages.warning(request, "Could not update event in calendar")
 
-
             return True
+    
+    def update_event_google_calendar(request, event_id, publish_event_gc, attendeeOption):
+
+        event = Events.objects.get(id=event_id)
+        event.publish_in_google_calendar = publish_event_gc
+
+        event.save()
+
+        to_attendee_final_list = []
+        if(attendeeOption == "general_members"):
+            general_members=CalendarHandler.load_all_active_general_members_of_branch()
+            for member in general_members:
+                to_attendee_final_list.append({
+                    'displayName':member.name,
+                    'email':member.email_nsu,
+                })
+        else:
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Arman M (Personal)",
+                    'email':'armanmokammel@gmail.com'
+                }
+                # {
+                #     'displayName':"Arman M (NSU)",
+                #     'email':'arman.mokammel@northsouth.edu'
+                # },
+                # {
+                #     'displayName':"Sakib Sami (NSU)",
+                #     'email':'sakib.sami@northsouth.edu'
+                # },
+            )
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Arman M (IEEE)",
+                    'email':'arman.mokammel@ieee.org'
+                }
+            )
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Sakib Sami (Personal)",
+                    'email':'sahamimsak@gmail.com'
+                },
+            )  
+
+        if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
+            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list)
+            if(not event.google_calendar_event_id):
+                event.publish_in_google_calendar = False
+                messages.warning(request, "Could not publish event in calendar")
+            else:
+                messages.success(request, "Event published in calendar")
+
+            event.save()
+        elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
+            if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
+                event.google_calendar_event_id = ""
+                event.save()
+                messages.success(request, "Event deleted from calendar")
+            else:
+                messages.warning(request, "Could not delete event from calendar")
+        elif(event.google_calendar_event_id):
+            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
+                messages.success(request, "Event updated in calendar")
+            else:
+                messages.warning(request, "Could not update event in calendar")
         
         
     def add_feedback(event_id, name, email, satisfaction, comment):
