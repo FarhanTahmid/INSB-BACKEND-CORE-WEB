@@ -691,7 +691,7 @@
       // console.log(new Date(notification.timestamp));
       // console.log(new Date(loadedNotificationTimeStamp));
       if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
-        playNotificationSound();
+            playNotificationSound();
             loadedNotificationTimeStamp = notification.timestamp;
             //latestNotificationId = notification.id;
             //newNotificationCount += 1;
