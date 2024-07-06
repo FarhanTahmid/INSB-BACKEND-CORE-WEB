@@ -395,9 +395,9 @@
             </div>
           </div>
         </a>
-        <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+        <div class="dropdown three_dots burger" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
           onmouseout="hoverOutDots(this)">
-          <div class="burger" id="burger">
+          <div class="" id="burger">
             <span style="position: relative; top: -4px">...</span>
           </div>
           <div class="dropdown-content" id="dropdownContent">
@@ -472,6 +472,13 @@
     //updating the unread notification count
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
+    console.log(lbl.textContent)
+    if(lbl.textContent != '0'){
+      lbl.style.opacity = "1";
+    }
+    else{
+      lbl.style.opacity = "0";
+    }
 
 
     
@@ -498,6 +505,13 @@
 
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
+
+    if(lbl.textContent != '0'){
+      lbl.style.opacity = "1";
+    }
+    else{
+      lbl.style.opacity = "0";
+    }
   };
 </script>
 <script>
@@ -724,8 +738,8 @@
                             </div>
                         </div>
                     </a>
-                    <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
-                        <div class="burger" id="burger">
+                    <div class="dropdown three_dots burger" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
+                        <div class="" id="burger">
                             <span style="position: relative; top: -4px">...</span>
                         </div>
                         <div class="dropdown-content" id="dropdownContent">
