@@ -626,7 +626,7 @@
                 options.forEach(function(option) {
                     if (option !== allTagsOption && option !== noResultMessage) {
                         option.classList.toggle("active", !isActive);
-                        console.log(option)
+                        // console.log(option)
                     }
                 });
 
@@ -726,7 +726,6 @@
 
             customSelects.forEach(function(customSelect){
                 const selectedOptions = customSelect.querySelectorAll(".option.active");
-                console.log(selectedOptions)
                 if(selectedOptions.length === 0){
                     const tagErrorMsg = customSelect.querySelector(".tag_error_msg");
                     tagErrorMsg.textContent = "This field is required";
@@ -769,11 +768,18 @@
         const options = document.querySelectorAll('.grid_container');
         options.forEach(option => {
             const memberName = option.querySelector('.name').innerText;
-            memberName = memberName.trim();
             const memberID = option.querySelector('.ID').innerText;
             addHiddenInput(memberID);
             addMemberToList(memberName);
         });
+
+        const selectAllTxt = document.querySelector(".option.all_tags");
+        console.log(selectAllTxt.textContent)
+        if(selectAllTxt.textContent == "Select All")
+            selectAllTxt.textContent = "Deselect All";
+        else
+            selectAllTxt.textContent = "Select All";
+
     }
     function addMemberToList(memberName) {
 
@@ -787,7 +793,7 @@
             selectedMembers.push(memberName);
         } else{
             let indexToRemove = selectedMembers.indexOf(memberName);
-            console.log(indexToRemove)
+            // console.log(indexToRemove)
 
             // If the element exists in the array, remove it using splice
             if (indexToRemove !== -1) {
@@ -805,15 +811,15 @@
             li.innerText = member;
             confirmationList.appendChild(li);
         });
-        console.log(selectedMembers);
+        // console.log(selectedMembers);
     }
     function removeMember(event){
         const str = event.parentNode.childNodes[0].textContent.trim();
-        console.log(str);
+        // console.log(str);
         
         let indexToRemove = selectedMembers.indexOf(str);
         // console.log(selectedMembers);
-        console.log(indexToRemove)
+        // console.log(indexToRemove)
 
         // If the element exists in the array, remove it using splice
         if (indexToRemove !== -1) {
