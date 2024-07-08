@@ -364,17 +364,19 @@
             font-size: 14px;
             margin-bottom: 0;
             color: #464646;
+            transition: all .3s ease-in-out;
+        }
+
+        .ellipsis{
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            transition: all .3s ease-in-out;
         }
-
         .sender_inner_div {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 19px;
             width: 88%;
         }
@@ -407,16 +409,17 @@
         .friend_svg {
             position: absolute;
             left: 30px;
-            bottom: -7px;
+            top: 27px;
             width: 30px;
             height: 30px;
             overflow: hidden;
         }
         .friend_svg > img{
-            border-radius:50%;
+            /* border-radius:50%; */
             width: 100%;
             height: 100%;
             object-fit: cover;
+            scale: .7;
         }
     </style>
 </head>
@@ -490,7 +493,7 @@
                                                             </div> -->
                                                     <div class="notification_content_row">
                                                         <h6 class='sender_title_row'>{{notification.notification.title|safe}}</h6>
-                                                        <h6 class='notification_msg_row'>{{notification.notification.general_message|safe}}</h6>
+                                                        <h6 class='notification_msg_row ellipsis'>{{notification.notification.general_message|safe}}</h6>
                                                     </div>
                                                 </div>
                                                 <h6 class='time_notification'>{{notification.notification.timestamp}}</h6>
@@ -504,7 +507,8 @@
                                             <div class="dropdown-content-row" id="dropdownContent">
                                                 <a id="notify_action" name="notify_action" href="#"
                                                     onclick="markAsRead_markAsUnread_table(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
-                                                <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
+                                                <a href="#" onclick="seeMore(this)">See More</a>
+                                                    <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                                 <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
                                             </div>
                                         </div>
@@ -806,6 +810,20 @@
             }
             else {
                 element.style.backgroundColor = 'white';
+            }
+        }
+
+        
+        function seeMore(element){
+            var showMore = element.parentElement.parentElement.parentElement.parentElement.querySelector('.notification_msg_row');
+            
+            if (showMore.classList.contains('ellipsis')){
+            showMore.classList.remove('ellipsis');
+            element.innerHTML = 'See Less'
+            }
+            else{
+            showMore.classList.add('ellipsis');
+            element.innerHTML = 'See More'
             }
         }
     </script>

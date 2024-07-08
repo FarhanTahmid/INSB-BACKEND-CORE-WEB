@@ -63,12 +63,15 @@
     font-size: 12px;
     margin-bottom: 0;
     color: #464646;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .ellipsis{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    transition: all 0.3s ease-in-out;
   }
 
   .sender_content {
@@ -76,7 +79,7 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .notification_content {
@@ -189,7 +192,8 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    right: 0;
+    right: 31px;
+    bottom: -11px;
   }
 
   .dropdown-content a {
@@ -269,7 +273,7 @@
   .bell_friend_svg {
     position: absolute;
     left: 30px;
-    bottom: -7px;
+    top: 27px;
     width: 30px;
     height: 30px;
     overflow: hidden;
@@ -385,7 +389,7 @@
               </div>
               <div class="notification_content">
                 <h6 class="sender_title">{{notification.notification.title|safe}}</h6>
-                <h6 class="notification_msg">
+                <h6 class="notification_msg ellipsis">
                   {{notification.notification.general_message|safe}}
                 </h6>
               </div>
@@ -403,6 +407,7 @@
           <div class="dropdown-content" id="dropdownContent">
             <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
             <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
+            <a href="#" onclick="seeMore(this)">See More</a>
           </div>
         </div>
       </div>
@@ -581,7 +586,7 @@
     // If the clicked dropdown was not already open, open it
     if (!isOpen) {
       dropdownContent.style.display = "block";
-      burger.classList.add("open");
+      // burger.classList.add("open");
     }
   }
 </script>
@@ -730,7 +735,7 @@
                                 </div>
                                 <div class="notification_content">
                                     <h6 class="sender_title">${notification.title}</h6>
-                                    <h6 class="notification_msg">${notification.general_message}</h6>
+                                    <h6 class="notification_msg ellipsis">${notification.general_message}</h6>
                                 </div>
                             </div>
                             <div class="time_dropdown">
@@ -745,6 +750,7 @@
                         <div class="dropdown-content" id="dropdownContent">
                             <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">${notification.is_read ? 'Mark as unread' : 'Mark as read'}</a>
                             <input type="hidden" id="member_notification_id" name="member_notification_id" value="${notification.id}"/>
+                            <a href="#" onclick="seeMore(this)">See More</a>
                         </div>
                     </div>
                 </div>
@@ -860,6 +866,19 @@
   
       icon.classList.add("wobble-hor-top");
     }
+
+  function seeMore(element){
+    var showMore = element.parentElement.parentElement.parentElement.querySelector('.notification_msg');
+    
+    if (showMore.classList.contains('ellipsis')){
+      showMore.classList.remove('ellipsis');
+      element.innerHTML = 'See Less'
+    }
+    else{
+      showMore.classList.add('ellipsis');
+      element.innerHTML = 'See More'
+    }
+  }
 </script>
 
 {% endblock bell_notification %}
