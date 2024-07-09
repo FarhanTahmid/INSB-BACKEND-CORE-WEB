@@ -39,6 +39,9 @@
     color: black;
     font-weight: bold;
     font-size: 12px;
+  }
+
+  .sender_title_ellipsis{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -388,7 +391,7 @@
                 <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
               </div>
               <div class="notification_content">
-                <h6 class="sender_title">{{notification.notification.title|safe}}</h6>
+                <h6 class="sender_title sender_title_ellipsis">{{notification.notification.title|safe}}</h6>
                 <h6 class="notification_msg ellipsis">
                   {{notification.notification.general_message|safe}}
                 </h6>
@@ -734,7 +737,7 @@
                                   <img src=${notification.notification_type_image}/> 
                                 </div>
                                 <div class="notification_content">
-                                    <h6 class="sender_title">${notification.title}</h6>
+                                    <h6 class="sender_title sender_title_ellipsis">${notification.title}</h6>
                                     <h6 class="notification_msg ellipsis">${notification.general_message}</h6>
                                 </div>
                             </div>
@@ -869,13 +872,17 @@
 
   function seeMore(element){
     var showMore = element.parentElement.parentElement.parentElement.querySelector('.notification_msg');
+    var showMore2 = element.parentElement.parentElement.parentElement.querySelector('.sender_title');
+    
     
     if (showMore.classList.contains('ellipsis')){
       showMore.classList.remove('ellipsis');
+      showMore2.classList.remove('sender_title_ellipsis');
       element.innerHTML = 'See Less'
     }
     else{
       showMore.classList.add('ellipsis');
+      showMore2.classList.add('sender_title_ellipsis');
       element.innerHTML = 'See More'
     }
   }
