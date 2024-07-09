@@ -92,14 +92,17 @@ class MarkNotificationAsUnReadAjax(View):
 class DeleteNotifcationUserAjax(View):
     def get(self,request, *args, **kwargs):
         member_notification_id = request.GET.get('member_notification_id')
+        print(member_notification_id)
         try:
+            print("HERE!")
             if NotificationHandler.delete_member_notification(request,member_notification_id):
-                message = "Notifcation deleted!"
+                message = "Notification deleted!"
                 return JsonResponse({'message': message,'deleted':True}, status=200)
             else:
                 message = "Task not yet completed, you can't delete this notification!"
                 return JsonResponse({'message': message,'deleted':False}, status=200)     
         except:
+            print("HERE22")
             return JsonResponse('Something went wrong!',safe=False)
 
 class ReceiveTokenAjax(View):
@@ -184,6 +187,10 @@ def custom_notification (request):
                     notification_link = request.POST.get('notification_link')
                     notification_description = request.POST.get('notification_description')
                     selected_member_ids = request.POST.getlist('selected_member_ids')
+
+                    if len(selected_member_ids) == 0:
+                        messages.error(request,'Please Select People To Notify')
+                        return redirect('notification:custom_notification')
                     
                     if NotificationHandler.send_custom_notification(request,notification_title,notification_link,
                                                                     notification_description,selected_member_ids):

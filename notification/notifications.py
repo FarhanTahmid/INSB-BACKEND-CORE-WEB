@@ -165,20 +165,23 @@ class NotificationHandler:
         
         member_notification = MemberNotifications.objects.get(id = member_notification_id)
         object_type = member_notification.notification.content_type
-
-        if object_type.name == "Task":
-            object_id = member_notification.notification.object_id
-            task = Task.objects.get(pk = object_id)
-            if task.is_task_completed and member_notification.member in task.members.all():
-                member_notification.delete()
-                return True
-            #if member not in the or is removed task, allowing to delete
-            elif member_notification.member not in task.members.all():
-                member_notification.delete()
-                return True
+        try:
+            if object_type.name == "Task":
+                object_id = member_notification.notification.object_id
+                task = Task.objects.get(pk = object_id)
+                if task.is_task_completed and member_notification.member in task.members.all():
+                    member_notification.delete()
+                    return True
+                #if member not in the or is removed task, allowing to delete
+                elif member_notification.member not in task.members.all():
+                    member_notification.delete()
+                    return True
+                else:
+                    return False
             else:
-                return False
-        else:
+                member_notification.delete()
+                return True
+        except:
             member_notification.delete()
             return True
     
