@@ -406,7 +406,7 @@
 
                 <!--upload doc-->
                 <div class="form-group">
-                    <label for="documents">Upload Documents:</label>
+                    <label for="documents">Upload Attachments:</label>
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
                         <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
@@ -417,6 +417,20 @@
                     <div id="content-selected-docs-container"></div>
                     <input type="hidden" name="selected_documents" id="content-selected-documents">
                     <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                </div>
+
+                <div flex-direction="column" justify-content="flex-end">
+                    <label>Attachments:</label>
+                    {% for attachment in event_gc_attachments %}
+                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                        <div class="col-sm-11 text-left">
+                            <a href="{{attachment.file_url}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{attachment.file_name}}</a>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{attachment.pk}}')">✖</button>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
 
                 <br>

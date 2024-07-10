@@ -176,3 +176,14 @@ class Event_Feedback(models.Model):
         verbose_name="Event Feedback"
     def __str__(self) -> str:
         return str(self.pk)
+    
+class Google_Calendar_Attachments(models.Model):
+    event_id = models.ForeignKey(Events,null=False,blank=False,on_delete=models.DO_NOTHING)
+    file_id = models.CharField(null=False,blank=False,max_length=50)
+    file_name = models.CharField(null=False,blank=False,max_length=100)
+    file_url = models.CharField(null=False,blank=False,max_length=100)
+
+    class Meta:
+        verbose_name="Google Calendar Attachments"
+    def __str__(self) -> str:
+        return str(self.pk)

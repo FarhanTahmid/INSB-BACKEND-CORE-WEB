@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
+from central_events.models import Events, Google_Calendar_Attachments, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -3658,6 +3658,7 @@ def event_google_calendar(request, event_id):
             Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
 
     event = Events.objects.get(id=event_id)
+    event_gc_attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
     form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
     is_event_published_gc = event.publish_in_google_calendar
 
@@ -3670,6 +3671,7 @@ def event_google_calendar(request, event_id):
         'is_event_published_gc':is_event_published_gc,
         'event_id':event_id,
         'form':form,
+        'event_gc_attachments':event_gc_attachments,
     }
 
     return render(request, 'Events/event_edit_google_calendar.html', context)

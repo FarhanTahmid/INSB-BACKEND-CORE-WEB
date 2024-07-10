@@ -6,6 +6,7 @@ from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from central_events.models import Google_Calendar_Attachments
 from insb_port import settings
 from system_administration.models import adminUsers
 from users.models import Members
@@ -39,7 +40,7 @@ class CalendarHandler:
             print(f'Failed to create service instance for {API_NAME}')
             return None
 
-    def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
+    def create_event_in_calendar(request, event_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
 
         # get general member emails
         # to_attendee_final_list = []
@@ -85,6 +86,7 @@ class CalendarHandler:
                     "title": file['name'],
                     "iconLink": file['iconLink']
                 })
+                Google_Calendar_Attachments.objects.create(event_id=event_id, file_id=file['id'] , file_name=file['name'] , file_url=file['webViewLink'])
             if(not file):
                 return None
             event.update({'attachments': files})
@@ -243,7 +245,7 @@ class CalendarHandler:
             file = service.files().create(
                 body=file_metadata,
                 media_body=media,
-                fields='id,webContentLink,name,iconLink'
+                fields='id,webContentLink,name,iconLink,webViewLink'
             ).execute()
 
             # Set the file permission to "anyone with the link can view"

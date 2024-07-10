@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event_Category,SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images,Event_Venue,Event_Permission,Event_Feedback
+from .models import Event_Category, Google_Calendar_Attachments,SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Media_Links,Media_Selected_Images,Event_Venue,Event_Permission,Event_Feedback
 # Register your models here.
 
 @admin.register(Event_Category)
@@ -45,3 +45,7 @@ class Event_Venue(admin.ModelAdmin):
 @admin.register(Event_Permission)
 class Event_Permission(admin.ModelAdmin):
     list_display=['event_id','permission_id','permission_status']
+
+@admin.register(Google_Calendar_Attachments)
+class Google_Calendar_Attachments(admin.ModelAdmin):
+    list_display=['event_id', 'file_id', 'file_name', 'file_url']
