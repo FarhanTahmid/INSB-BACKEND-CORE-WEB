@@ -338,7 +338,7 @@
             <h1>Update Event Details</h1>
         </div>
         
-        <form id="myForm" method = "POST">
+        <form id="myForm" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
             <div class="box-body">
                 <div class="publish-switch">
@@ -360,9 +360,9 @@
                     <label>Select Attendee List:</label>
                       <select multiple class="form-control" name="attendeeList">
                         {% comment %} <option selected value="">--------------------</option> {% endcomment %}
-                        <option selected value="general_members">All Registered General Members of IEEE NSU SB</option>
+                        <option value="general_members">All Registered General Members of IEEE NSU SB</option>
                         <option value="all_officers">All Officers of IEEE NSU SB</option>
-                        <option value="eb_panel">Executive Panel (Branch Only)</option>
+                        <option selected value="eb_panel">Executive Panel (Branch Only)</option>
                         <option value="excom_branch">Branch Ex-Com Members</option>
                         <option value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
                         {% for session in recruitment_sessions %}
@@ -395,18 +395,34 @@
                     </div> {% endcomment %}
                 </div>
 
+                <br>
+
+                <!--upload doc-->
+                <div class="form-group">
+                    <label for="documents">Upload Documents:</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                        <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
+                    </div>
+                    
+                    <br>
                 
+                    <div id="content-selected-docs-container"></div>
+                    <input type="hidden" name="selected_documents" id="content-selected-documents">
+                    <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                </div>
+
                 <br>
            
                 
                 <div class="form-group">
-                    <label class="form-control-label"> Event Form Link:</label>
+                    <label class="form-control-label"> Google Calendar Event Share Link:</label>
                     <span>
                         <input
-                        placeholder="Provide Form Link"
                         class="form-control"
                         type="url"
                         autocomplete="off"
+                        readonly="true"
                         id="#field1"
                         value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
                         name="drive_link_of_event"
@@ -562,7 +578,35 @@
 </div>
 
                     
-
+<script>
+    // Function to update the selected documents container
+    function updateSelectedDocuments() {
+        var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');
+        var selectedDocumentsInput = document.getElementById('content-selected-documents');
+        var inputFiles = document.getElementById('content-doc-input').files;
+  
+        // Clear the container
+        selectedDocumentsContainer.innerHTML = '';
+  
+        // Update the container with selected document links
+        for (var i = 0; i < inputFiles.length; i++) {
+            var documentLink = document.createElement('a');
+            //documentLink.href = '#'; // Set the link href accordingly
+            documentLink.className = 'btn btn-link btn-block';
+            documentLink.textContent = inputFiles[i].name;
+            selectedDocumentsContainer.appendChild(documentLink);
+  
+            // Add a line break after each link
+            selectedDocumentsContainer.appendChild(document.createElement('br'));
+  
+            // Update the hidden input with selected document names
+            selectedDocumentsInput.value += inputFiles[i].name + ',';
+        }
+    }
+  
+    // Attach the updateSelectedDocuments function to the file input change event
+    document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
+  </script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {

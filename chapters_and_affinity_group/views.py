@@ -1500,9 +1500,12 @@ def event_google_calendar(request, primary, event_id):
         if('update_event_gc' in request.POST):
             google_calendar_publish_event_status = request.POST.get('publish_event_gc')
             attendeeOption = request.POST.get('attendeeList')
+            documents = None
+            if request.FILES.get('document'):
+                documents = request.FILES.getlist('document')
 
             publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
-            Branch.update_event_google_calendar(request=request, event_id=event_id, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption)
+            Branch.update_event_google_calendar(request=request, event_id=event_id, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
 
     event = Events.objects.get(id=event_id)
     is_event_published_gc = event.publish_in_google_calendar

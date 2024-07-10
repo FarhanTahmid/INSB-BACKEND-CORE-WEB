@@ -1,14 +1,17 @@
 import datetime
+import mimetypes
+import tempfile
 from django.contrib import messages
 from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from insb_port import settings
-from membership_development_team.renderData import MDT_DATA
 from system_administration.models import adminUsers
 from users.models import Members
 from google_auth_oauthlib.flow import Flow
+from googleapiclient.http import MediaFileUpload
+
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
@@ -36,7 +39,7 @@ class CalendarHandler:
             print(f'Failed to create service instance for {API_NAME}')
             return None
 
-    def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link, attendeeList):
+    def create_event_in_calendar(request, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
 
         # get general member emails
         # to_attendee_final_list = []
@@ -71,13 +74,24 @@ class CalendarHandler:
             'status' : 'confirmed',
             'transparency' : 'opaque',
             'guestsCanSeeOtherGuests' : False,
-            'attendees' : attendeeList
+            'attendees' : attendeeList,
         }
-        print(attendeeList)
+        if attachments:
+            files = []
+            for attachment in attachments:
+                file = CalendarHandler.google_drive_upload_files(request, attachment)
+                files.append({
+                    "fileUrl": file['webContentLink'],
+                    "title": file['name'],
+                    "iconLink": file['iconLink']
+                })
+            if(not file):
+                return None
+            event.update({'attachments': files})
 
         service = CalendarHandler.authorize(request)
         if service:
-            response = service.events().insert(calendarId=CALENDAR_ID, body=event, sendUpdates='all').execute()
+            response = service.events().insert(calendarId=CALENDAR_ID, body=event, sendUpdates='all', supportsAttachments=True).execute()
             print('Event created: %s' % (response.get('htmlLink')))
             return response.get('id')
         else:
@@ -89,6 +103,7 @@ class CalendarHandler:
         service = CalendarHandler.authorize(request)
         if service:
             response = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
+            # print(response)
 
             response['summary'] = title
             response['description'] = description
@@ -200,17 +215,46 @@ class CalendarHandler:
             set_key('.env', 'GOOGLE_CLOUD_EXPIRY', credentials.expiry.isoformat())
             settings.GOOGLE_CLOUD_EXPIRY = credentials.expiry.isoformat()
 
-    def load_all_active_general_members_of_branch():
-        '''This function loads all the general members from the branch whose memberships are active
-        '''
-        members=Members.objects.all()
-        general_members=[]
-        
-        for member in members:
-           
-            if (MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)):
-                
-                if(member.position.id==13):
-                    
-                    general_members.append(member)
-        return general_members
+    def google_drive_upload_files(request, file_path):
+
+        credentials = CalendarHandler.get_credentials(request)
+        if not credentials:
+            return None
+        try:
+            service = build('drive', 'v3', credentials=credentials)
+            print('drive', 'v3', 'service created successfully')
+
+            file_name = file_path.name
+            
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                for chunk in file_path.chunks():
+                    temp_file.write(chunk)
+                temp_file_path = temp_file.name
+            
+            mime_type, _ = mimetypes.guess_type(file_name)
+            media = MediaFileUpload(temp_file_path, mimetype=mime_type)
+
+            file_metadata = {
+                'name': file_name,
+            }
+
+            file = service.files().create(
+                body=file_metadata,
+                media_body=media,
+                fields='id,webContentLink,name,iconLink'
+            ).execute()
+
+            # Set the file permission to "anyone with the link can view"
+            permission = {
+                'type': 'anyone',
+                'role': 'reader',
+            }
+            service.permissions().create(
+                fileId=file['id'],
+                body=permission,
+            ).execute()
+            return file
+        except Exception as e:
+            print(e)
+            print(f'Failed to create service instance for drive')
+            return None
