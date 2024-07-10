@@ -41,7 +41,7 @@ from users.renderData import Alumnis
 import logging
 import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
-from central_events.forms import EventForm
+from central_events.forms import EventForm, EventFormGC
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -3649,14 +3649,16 @@ def event_google_calendar(request, event_id):
         if('update_event_gc' in request.POST):
             google_calendar_publish_event_status = request.POST.get('publish_event_gc')
             attendeeOption = request.POST.get('attendeeList')
+            event_description_for_gc = request.POST.get('event_description_for_gc')
             documents = None
             if request.FILES.get('document'):
                 documents = request.FILES.getlist('document')
 
             publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
-            Branch.update_event_google_calendar(request=request, event_id=event_id, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
+            Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
 
     event = Events.objects.get(id=event_id)
+    form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
     is_event_published_gc = event.publish_in_google_calendar
 
 
@@ -3667,6 +3669,7 @@ def event_google_calendar(request, event_id):
         'event':event,
         'is_event_published_gc':is_event_published_gc,
         'event_id':event_id,
+        'form':form,
     }
 
     return render(request, 'Events/event_edit_google_calendar.html', context)

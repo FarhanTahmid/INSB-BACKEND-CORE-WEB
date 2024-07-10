@@ -105,16 +105,18 @@ class CalendarHandler:
             response = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
             # print(response)
 
-            response['summary'] = title
-            response['description'] = description
-            response['start'] = {
-                'dateTime':convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
-                'timeZone': 'Asia/Dhaka',
-            }
-            response['end'] = {
-                'dateTime':convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
-                'timeZone': 'Asia/Dhaka',
-            }
+            if title:
+                response['summary'] = title
+                response['start'] = {
+                    'dateTime':convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
+                    'timeZone': 'Asia/Dhaka',
+                }
+                response['end'] = {
+                    'dateTime':convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
+                    'timeZone': 'Asia/Dhaka',
+                }
+            if description:
+                response['description'] = description
 
             service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response).execute()
             return "Updated"

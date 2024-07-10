@@ -621,17 +621,18 @@ class Branch:
                     messages.warning(request, "Could not delete notifications!")
 
             if(event.google_calendar_event_id):
-                if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
+                if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, None, event.start_date, event.end_date)):
                     messages.success(request, "Event updated in calendar")
                 else:
                     messages.warning(request, "Could not update event in calendar")
 
             return True
     
-    def update_event_google_calendar(request, event_id, publish_event_gc, attendeeOption, documents):
+    def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, documents):
 
         event = Events.objects.get(id=event_id)
         event.publish_in_google_calendar = publish_event_gc
+        event.event_description_for_gc = description
 
         event.save()
 
@@ -688,7 +689,7 @@ class Branch:
             else:
                 messages.warning(request, "Could not delete event from calendar")
         elif(event.google_calendar_event_id):
-            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
+            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None)):
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
