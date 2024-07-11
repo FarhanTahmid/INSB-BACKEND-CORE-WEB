@@ -65,8 +65,8 @@ class CalendarHandler:
             },
             'organizer' : {
                 'displayName' : 'IEEE NSU SB',
-                'email' : 'armanmokammel@gmail.com'
-                # 'email' : 'ieeensusb.portal@gmail.com'
+                # 'email' : 'armanmokammel@gmail.com'
+                'email' : 'ieeensusb.portal@gmail.com'
             },
             'source' : {
                 'title' : 'IEEE NSU SB',

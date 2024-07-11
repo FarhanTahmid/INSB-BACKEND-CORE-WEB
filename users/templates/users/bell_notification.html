@@ -39,6 +39,9 @@
     color: black;
     font-weight: bold;
     font-size: 12px;
+  }
+
+  .sender_title_ellipsis{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -63,12 +66,15 @@
     font-size: 12px;
     margin-bottom: 0;
     color: #464646;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .ellipsis{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
-    transition: all 0.3s ease-in-out;
   }
 
   .sender_content {
@@ -76,7 +82,7 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .notification_content {
@@ -189,7 +195,8 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    right: 0;
+    right: 31px;
+    bottom: -11px;
   }
 
   .dropdown-content a {
@@ -269,13 +276,14 @@
   .bell_friend_svg {
     position: absolute;
     left: 30px;
-    bottom: -7px;
+    top: 27px;
     width: 30px;
     height: 30px;
     overflow: hidden;
+    /* border-radius: 50%; */
+    scale: .7;
 }
   .bell_friend_svg > img{
-    border-radius:50%;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -372,7 +380,7 @@
     {% for notification in user_data.notifications %}
       <!--redirect link-->
       <div class="msg-info-div">
-        <a href={% if notification.notification.inside_link %}"//{{notification.notification.inside_link}}" target="_blank"{% else %}"{% url 'notification:all_notifications' %}"{% endif %}>
+        <a href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" target="_blank">
           <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
             <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
@@ -381,11 +389,10 @@
               </div>
               <div class="bell_friend_svg" >
                 <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
-                <!-- <img src='data:image/svg+xml;base64,PHN2ZyBzdHlsZT0iYmFja2dyb3VuZC1pbWFnZTogbGluZWFyLWdyYWRpZW50KDQ1ZGVnLCAjMDAyODU1LCAjN2JkNWZlKTsNCiAgICAgICAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDUwJTsiIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9Ii0xNSAwIDg3IDcwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0cm9rZS13aWR0aD0iMyIgIGZpbGw9IndoaXRlIj48ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCI+PC9nPjxnIGlkPSJTVkdSZXBvX3RyYWNlckNhcnJpZXIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PC9nPjxnIGlkPSJTVkdSZXBvX2ljb25DYXJyaWVyIj48Y2lyY2xlIGN4PSIyOS4yMiIgY3k9IjE2LjI4IiByPSIxMS4xNCI+PC9jaXJjbGU+PHBhdGggZD0iTSA1Mi4zMiA1My42OSBoIDAgQSAyMi41NSAyMi41NSAwIDAgMCA2LjY3IDU1IGggNDUuOSI+PC9wYXRoPjwvZz48L3N2Zz4='/>  -->
               </div>
               <div class="notification_content">
-                <h6 class="sender_title">{{notification.notification.title|safe}}</h6>
-                <h6 class="notification_msg">
+                <h6 class="sender_title sender_title_ellipsis">{{notification.notification.title|safe}}</h6>
+                <h6 class="notification_msg ellipsis">
                   {{notification.notification.general_message|safe}}
                 </h6>
               </div>
@@ -395,14 +402,15 @@
             </div>
           </div>
         </a>
-        <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+        <div class="dropdown three_dots burger" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
           onmouseout="hoverOutDots(this)">
-          <div class="burger" id="burger">
+          <div class="" id="burger">
             <span style="position: relative; top: -4px">...</span>
           </div>
           <div class="dropdown-content" id="dropdownContent">
             <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
             <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
+            <a href="#" onclick="seeMore(this)">See More</a>
           </div>
         </div>
       </div>
@@ -444,7 +452,7 @@
               msg_div.firstElementChild.value = "2";
           
               notification_count();
-              shakeBell()
+              // shakeBell()
 
               // Change the background color of the tr
               msg_div.style.backgroundColor = "white";
@@ -468,11 +476,17 @@
         val++;
       }
     });
-    console.log(val);
 
     //updating the unread notification count
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
+    console.log(lbl.textContent)
+    if(lbl.textContent != '0'){
+      lbl.style.opacity = "1";
+    }
+    else{
+      lbl.style.opacity = "0";
+    }
 
 
     
@@ -499,6 +513,13 @@
 
     var lbl = document.getElementById("nftn_lbl");
     lbl.textContent = val;
+
+    if(lbl.textContent != '0'){
+      lbl.style.opacity = "1";
+    }
+    else{
+      lbl.style.opacity = "0";
+    }
   };
 </script>
 <script>
@@ -568,7 +589,7 @@
     // If the clicked dropdown was not already open, open it
     if (!isOpen) {
       dropdownContent.style.display = "block";
-      burger.classList.add("open");
+      // burger.classList.add("open");
     }
   }
 </script>
@@ -594,7 +615,7 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('{% static 'firebase/firebase.js' %}')
     .then(function(registration) {
-      console.log('Service Worker registered with scope:', registration.scope);
+      // console.log('Service Worker registered with scope:', registration.scope);
       messaging.useServiceWorker(registration);
 
       // Request permission and get token
@@ -603,16 +624,16 @@
         return messaging.getToken();
       })
       .then(function(token) {
-        console.log("FCM Token:", token);
+        // console.log("FCM Token:", token);
         $.ajax({
           url: "{% url 'notification:receive_token' %}",
           type: "GET",
           data: {'token': token},
           success: function (response) {
-            console.log("Success:", response);
+            // console.log("Success:", response);
           },
           error: function (error) {
-              console.log("Error:", error);
+              // console.log("Error:", error);
           }
         });
       })
@@ -626,7 +647,7 @@
   }
 
   messaging.onMessage(function(payload) {
-    console.log("Message received. ", payload);
+    // console.log("Message received. ", payload);
     const notificationTitle = payload.notification.title;
     const notificationOptions = {
       body: payload.notification.body,
@@ -640,13 +661,13 @@
 <script>
   let notification_array = [];
   let loadedNotificationTimeStamp = new Date('{{user_data.latest_timestamp}}'); 
-  console.log(loadedNotificationTimeStamp); 
+  // console.log(loadedNotificationTimeStamp); 
   {% comment %} let notificationLabel = document.getElementById('nftn_lbl');
   let newNotificationCount = parseInt(notificationLabel.textContent);
   if (isNaN(newNotificationCount)){
     newNotificationCount = 0;
   }
-  console.log("initial notification id ",latestNotificationId);
+  // console.log("initial notification id ",latestNotificationId);
   
   console.log(newNotificationCount); {% endcomment %}
   function fetchNotifications() {
@@ -656,12 +677,11 @@
           success: function(data) {
               const notifications = data.notifications;
               if (notifications.length > 0) {
-                console.log('New notifications:', notifications);
+                // console.log('New notifications:', notifications);
                 updateNotifications(notifications);
                 notification_count();
-                shakeBell()
+                shakeBell();
                 //updateNotificationCount();
-                //playNotificationSound();
               }
           },
           error: function(xhr, status, error) {
@@ -688,17 +708,25 @@
     const msgBox = document.querySelector('.msg-box');
     
     notifications.forEach(notification => {
-      console.log(new Date(notification.timestamp));
-      console.log(new Date(loadedNotificationTimeStamp));
+      //console.log("latestnotifcationID",latestNotificationId);
+      //console.log("notification id",notification.id);
+      // console.log(new Date(notification.timestamp));
+      // console.log(new Date(loadedNotificationTimeStamp));
       if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
+            playNotificationSound();
             loadedNotificationTimeStamp = notification.timestamp;
             //latestNotificationId = notification.id;
             //newNotificationCount += 1;
             //console.log(`printing newNotificationCount, ${newNotificationCount}`);
-         
+            let notificationLink;
+            if (notification.notification_type === "Custom Notification"){
+              notificationLink = notification.inside_link;
+            }else{
+              notificationLink = '//' + notification.inside_link;
+            }
             const notificationElement = `
                 <div class="msg-info-div new-notification">
-                    <a href="//${notification.inside_link}" target="_blank">
+                    <a href="${notificationLink}" target="_blank">
                         <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
                             <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
                             <div class="sender_content">
@@ -709,8 +737,8 @@
                                   <img src=${notification.notification_type_image}/> 
                                 </div>
                                 <div class="notification_content">
-                                    <h6 class="sender_title">${notification.title}</h6>
-                                    <h6 class="notification_msg">${notification.general_message}</h6>
+                                    <h6 class="sender_title sender_title_ellipsis">${notification.title}</h6>
+                                    <h6 class="notification_msg ellipsis">${notification.general_message}</h6>
                                 </div>
                             </div>
                             <div class="time_dropdown">
@@ -718,13 +746,14 @@
                             </div>
                         </div>
                     </a>
-                    <div class="dropdown three_dots" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
-                        <div class="burger" id="burger">
+                    <div class="dropdown three_dots burger" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
+                        <div class="" id="burger">
                             <span style="position: relative; top: -4px">...</span>
                         </div>
                         <div class="dropdown-content" id="dropdownContent">
                             <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">${notification.is_read ? 'Mark as unread' : 'Mark as read'}</a>
                             <input type="hidden" id="member_notification_id" name="member_notification_id" value="${notification.id}"/>
+                            <a href="#" onclick="seeMore(this)">See More</a>
                         </div>
                     </div>
                 </div>
@@ -752,11 +781,12 @@
     const notificationLabel = document.getElementById('nftn_lbl');
     notificationLabel.textContent = newNotificationCount;
   }
-  /*function playNotificationSound() {
-    // Replace with your sound file path
-    const sound = new Audio("{% static 'notification_music/notification_sound.mp3' %}");
-    sound.play();
-  }*/
+  function playNotificationSound() {
+    var audio = document.createElement("audio");
+    audio.src = "{% static 'notification_sound.mp3' %}";
+    audio.play();   
+    
+      }
   $(document).ready(function() {
       // Poll for new notifications every 3 seconds
       setInterval(fetchNotifications, 2000);
@@ -797,10 +827,10 @@
                 
                 //updating the bell icon count
                 notification_count();
-                shakeBell()
+                // shakeBell()
             },
             error: function (error) {
-                console.log("Error:", error);
+                // console.log("Error:", error);
             }
         });
     } else if (inputValue == "2") {
@@ -821,10 +851,10 @@
 
               //updating the bell icon count
               notification_count();
-              shakeBell()
+              // shakeBell()
           },
           error: function (error) {
-              console.log("Error:", error);
+              // console.log("Error:", error);
           }
       });
     }
@@ -839,6 +869,23 @@
   
       icon.classList.add("wobble-hor-top");
     }
+
+  function seeMore(element){
+    var showMore = element.parentElement.parentElement.parentElement.querySelector('.notification_msg');
+    var showMore2 = element.parentElement.parentElement.parentElement.querySelector('.sender_title');
+    
+    
+    if (showMore.classList.contains('ellipsis')){
+      showMore.classList.remove('ellipsis');
+      showMore2.classList.remove('sender_title_ellipsis');
+      element.innerHTML = 'See Less'
+    }
+    else{
+      showMore.classList.add('ellipsis');
+      showMore2.classList.add('sender_title_ellipsis');
+      element.innerHTML = 'See More'
+    }
+  }
 </script>
 
 {% endblock bell_notification %}

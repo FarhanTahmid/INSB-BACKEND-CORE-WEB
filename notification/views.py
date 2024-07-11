@@ -26,6 +26,7 @@ from . import push_notification
 from users.renderData import LoggedinUser
 from django.utils.dateformat import format
 from central_branch.renderData import Branch
+from central_branch.view_access import Branch_View_Access
 from notification.notifications import NotificationHandler
 from notification.models import Notifications,MemberNotifications
 
@@ -91,14 +92,17 @@ class MarkNotificationAsUnReadAjax(View):
 class DeleteNotifcationUserAjax(View):
     def get(self,request, *args, **kwargs):
         member_notification_id = request.GET.get('member_notification_id')
+        print(member_notification_id)
         try:
+            print("HERE!")
             if NotificationHandler.delete_member_notification(request,member_notification_id):
-                message = "Notifcation deleted!"
+                message = "Notification deleted!"
                 return JsonResponse({'message': message,'deleted':True}, status=200)
             else:
                 message = "Task not yet completed, you can't delete this notification!"
                 return JsonResponse({'message': message,'deleted':False}, status=200)     
         except:
+            print("HERE22")
             return JsonResponse('Something went wrong!',safe=False)
 
 class ReceiveTokenAjax(View):
@@ -153,6 +157,7 @@ def fetch_notifications(request):
                 },
                 'is_read': member_notification.is_read,
                 'notification_type_image':str(settings.MEDIA_URL)+str(member_notification.notification.type.type_icon),
+                'notification_type':member_notification.notification.type.type,
             }
        
             notifications.append(dic)
@@ -169,8 +174,8 @@ def custom_notification (request):
 
         #Checking user access
         user=request.user
-        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
-        if True:
+        has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username) or Branch_View_Access.get_manage_custom_notification_access(request))
+        if has_access:
 
             all_members = Branch.load_current_panel_members()
 
@@ -182,6 +187,10 @@ def custom_notification (request):
                     notification_link = request.POST.get('notification_link')
                     notification_description = request.POST.get('notification_description')
                     selected_member_ids = request.POST.getlist('selected_member_ids')
+
+                    if len(selected_member_ids) == 0:
+                        messages.error(request,'Please Select People To Notify')
+                        return redirect('notification:custom_notification')
                     
                     if NotificationHandler.send_custom_notification(request,notification_title,notification_link,
                                                                     notification_description,selected_member_ids):

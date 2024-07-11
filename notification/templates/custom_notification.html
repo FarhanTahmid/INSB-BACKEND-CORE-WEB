@@ -53,20 +53,21 @@
     }
 
     .custom_notification_btn>.history_btn {
-        border-radius: 14px;
-        font-size: 12px;
+        border-radius: 7px;
+        font-size: 14px;
         background-color: white;
-        border: 1px solid #ffc549;
-        color: #ffc549;
+        border: 1px solid #457b9d;
+        color: #457b9d;
         padding: 4px 25px;
         transition: all ease-in-out .3s;
+        cursor: pointer;
     }
 
     .custom_notification_btn>.history_btn:hover,
     .history_btn.active
     {
-        background-color: #ffc549;
-        border: 1px solid #ffc549;
+        background-color: #457b9d;
+        border: 1px solid #457b9d;
         color: white;
     }
 
@@ -80,7 +81,6 @@
         margin-bottom: 13px;
         transition: all ease-in-out .2s;
         color: #484848;
-        cursor:pointer;
     }
 
     .history_box{
@@ -465,7 +465,7 @@
                     <div style="justify-content:center; text-align:center;">
                         {% if messages %}
                             {% for message in messages %}
-                                <h4 {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h4>
+                                <h4 {% if message.tags == "success" %} style="background-color:green;" {% elif message.tag == "error" %} style="background-color:red;"{% endif %}>{{ message }}</h4>
                             {% endfor %}
                         <br>
                         {% endif %}
@@ -595,7 +595,7 @@
             customSelect.querySelector(".tags_input").value = selectedValues.join(", ");
 
             let tagsHTML = "";
-            console.log(selectedOptions.length)
+            // console.log(selectedOptions.length)
             if (selectedOptions.length === 0) {
                 tagsHTML = '<span class="placeholder">Select people to notify</span>';
             } else {
@@ -603,7 +603,7 @@
 
                 selectedOptions.forEach(function(option,index){
                     if(index < maxTagsToShow){
-                        tagsHTML += '<span class="tag">' + option.text + '<span class="remove_tag" data-value="' + option.value+'">&times;</span></span>';
+                        tagsHTML += '<span class="tag">' + option.text + '<span class="remove_tag" onclick="removeMember(this)" data-value="' + option.value+'">&times;</span></span>';
                     }
                 })
             }
@@ -626,7 +626,7 @@
                 options.forEach(function(option) {
                     if (option !== allTagsOption && option !== noResultMessage) {
                         option.classList.toggle("active", !isActive);
-                        console.log(option)
+                        // console.log(option)
                     }
                 });
 
@@ -726,7 +726,6 @@
 
             customSelects.forEach(function(customSelect){
                 const selectedOptions = customSelect.querySelectorAll(".option.active");
-                console.log(selectedOptions)
                 if(selectedOptions.length === 0){
                     const tagErrorMsg = customSelect.querySelector(".tag_error_msg");
                     tagErrorMsg.textContent = "This field is required";
@@ -773,9 +772,35 @@
             addHiddenInput(memberID);
             addMemberToList(memberName);
         });
+
+        const selectAllTxt = document.querySelector(".option.all_tags");
+        console.log(selectAllTxt.textContent)
+        if(selectAllTxt.textContent == "Select All")
+            selectAllTxt.textContent = "Deselect All";
+        else
+            selectAllTxt.textContent = "Select All";
+
     }
     function addMemberToList(memberName) {
-        selectedMembers.push(memberName);
+
+        let objStr = JSON.stringify([...memberName]);
+  
+        // Check if the object already exists in the array
+        let exists = selectedMembers.some(item => JSON.stringify([...item]) === objStr);
+        
+        // If it doesn't exist, push the object into the array
+        if (!exists) {
+            selectedMembers.push(memberName);
+        } else{
+            let indexToRemove = selectedMembers.indexOf(memberName);
+            // console.log(indexToRemove)
+
+            // If the element exists in the array, remove it using splice
+            if (indexToRemove !== -1) {
+            selectedMembers.splice(indexToRemove, 1);
+            }
+        }
+        
         updateConfirmationList();
     }
     function updateConfirmationList() {
@@ -786,6 +811,22 @@
             li.innerText = member;
             confirmationList.appendChild(li);
         });
+        // console.log(selectedMembers);
+    }
+    function removeMember(event){
+        const str = event.parentNode.childNodes[0].textContent.trim();
+        // console.log(str);
+        
+        let indexToRemove = selectedMembers.indexOf(str);
+        // console.log(selectedMembers);
+        // console.log(indexToRemove)
+
+        // If the element exists in the array, remove it using splice
+        if (indexToRemove !== -1) {
+        selectedMembers.splice(indexToRemove, 1);
+        }
+        updateConfirmationList();
+
     }
 </script>
 <script>

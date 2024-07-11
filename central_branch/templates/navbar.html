@@ -98,16 +98,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link" href="{% url 'central_branch:manage_access' %}">
-                <i class="fa fa-lock"></i>
-                <span>Manage View Access</span>
+                <a class="nav-link" href="{% url 'notification:custom_notification' %}">
+                <i class="fa fa-bell"></i>
+                <span>Notify</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link" href="{% url 'notification:custom_notification' %}">
-                <i class="fa fa-bell"></i>
-                <span>Notify</span>
+                <a class="nav-link" href="{% url 'central_branch:manage_access' %}">
+                <i class="fa fa-lock"></i>
+                <span>Manage View Access</span>
                 </a>
                 <div ui-include="'../views/blocks/dropdown.new.html'"></div>
             </li>

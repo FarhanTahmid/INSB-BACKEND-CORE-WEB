@@ -5,17 +5,17 @@
   function checkNotificationPermission() {
     if (Notification.permission === "granted") {
         // User has granted permission for notifications
-        console.log("Notifications are enabled.");
+        // console.log("Notifications are enabled.");
         // Allow access to the site by removing any blur effect and message
         removeBlurAndMessage();
     } else if (Notification.permission === "denied") {
         // User has denied permission for notifications
-        console.log("Notifications are denied.");
+        // console.log("Notifications are denied.");
         // Restrict access to the site
         restrictAccess();
     } else {
         // User hasn't been asked for notification permission yet
-        console.log("Notifications are not yet requested.");
+        // console.log("Notifications are not yet requested.");
         // Ask for permission
         requestNotificationPermission();
     }
@@ -24,11 +24,11 @@
 function requestNotificationPermission() {
     Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
-            console.log("Notifications are enabled.");
+            // console.log("Notifications are enabled.");
             // Allow access to the site by removing any blur effect and message
             removeBlurAndMessage();
         } else {
-            console.log("Notifications are denied.");
+            // console.log("Notifications are denied.");
             // Restrict access to the site
             restrictAccess();
         }
@@ -166,13 +166,13 @@ document.addEventListener("DOMContentLoaded", checkNotificationPermission);
                       </a>
                     </li>
                     <li>
-                      <a href={% url 'central_branch:manage_access' %}>
-                        <span class="nav-text">Manage View Access</span>
+                      <a href={% url 'notification:custom_notification' %}>
+                        <span class="nav-text">Notify</span>
                       </a>
                     </li>
                     <li>
-                      <a href={% url 'notification:custom_notification' %}>
-                        <span class="nav-text">Notify</span>
+                      <a href={% url 'central_branch:manage_access' %}>
+                        <span class="nav-text">Manage View Access</span>
                       </a>
                     </li>
                   </ul>

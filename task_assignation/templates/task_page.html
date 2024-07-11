@@ -16,7 +16,7 @@
     {% endblock common_css %}
 
     <!-- CKEditor CDN -->
-    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 
     <style>
         body{
@@ -1060,8 +1060,9 @@
                                 display: flex;
                                 justify-content: space-between;
                                 align-items: flex-start;
-                                padding: 8px;">
-                                    <ul style="margin: 0%; list-style: none; padding-left: 25px;">
+                                padding: 8px;
+                                overflow-y: hidden;">
+                                    <ul style="margin: 0%; list-style: none; padding-left: 25px; width: 10px;">
                                         <li>
                                             <a href={{media_url}}{{file.document}} target="_blank"><div>{{forloop.counter}}. {{file.filename}}</div></a>
                                         </li>
@@ -1088,8 +1089,9 @@
                                     <div class="row container-fluid bg-light mt-3" style="margin: auto;
                                     display: flex;
                                     justify-content: space-between;
-                                    align-items: center;">
-                                        <ol style="margin: 0%; list-style: none; padding: 0;">
+                                    align-items: center;
+                                    overflow-y: hidden;">
+                                        <ol style="margin: 0%; list-style: none; padding: 0; width: 10px;">
                                             <li>
                                         <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
                                             </li>
