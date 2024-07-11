@@ -11,7 +11,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from central_events.models import Event_Feedback, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
+from central_events.models import Event_Feedback, Google_Calendar_Attachments, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
@@ -636,6 +636,14 @@ class Branch:
 
         event.save()
 
+        if documents:
+            for doc in documents:
+                file = CalendarHandler.google_drive_upload_files(request, doc)
+                if file:
+                    Google_Calendar_Attachments.objects.create(event_id=event, file_id=file['id'] , file_name=file['name'] , file_url=file['webViewLink'])
+
+        documents = Google_Calendar_Attachments.objects.filter(event_id=event_id)
+
         to_attendee_final_list = []
         if(attendeeOption == "general_members"):
             general_members=Branch.load_all_active_general_members_of_branch()
@@ -1244,6 +1252,10 @@ class Branch:
                 doc_path = settings.MEDIA_ROOT + str(file.document)
                 if os.path.exists(doc_path):
                     os.remove(doc_path)
+
+            attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
+            for attachment in attachments:
+                Branch.delete_attachment(request, attachment.pk)
             #deleting the event along with its  related data from DB
             event.delete()
             return True
@@ -2001,4 +2013,12 @@ class Branch:
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_attachment(request, attachment_id):
+        file = Google_Calendar_Attachments.objects.get(pk=attachment_id)
+        if(CalendarHandler.google_drive_delete_file(request, file.file_id) == ""):
+            file.delete()
+            return True
+        else:
             return False

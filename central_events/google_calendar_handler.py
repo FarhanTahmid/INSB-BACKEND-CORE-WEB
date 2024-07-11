@@ -80,15 +80,12 @@ class CalendarHandler:
         if attachments:
             files = []
             for attachment in attachments:
-                file = CalendarHandler.google_drive_upload_files(request, attachment)
+                file = CalendarHandler.google_drive_get_file(request, attachment.file_id)
                 files.append({
                     "fileUrl": file['webContentLink'],
                     "title": file['name'],
                     "iconLink": file['iconLink']
                 })
-                Google_Calendar_Attachments.objects.create(event_id=event_id, file_id=file['id'] , file_name=file['name'] , file_url=file['webViewLink'])
-            if(not file):
-                return None
             event.update({'attachments': files})
 
         service = CalendarHandler.authorize(request)
@@ -258,6 +255,43 @@ class CalendarHandler:
                 body=permission,
             ).execute()
             return file
+        except Exception as e:
+            print(e)
+            print(f'Failed to create service instance for drive')
+            return None
+        
+    def google_drive_get_file(request, file_id):
+        credentials = CalendarHandler.get_credentials(request)
+        if not credentials:
+            return None
+        try:
+            service = build('drive', 'v3', credentials=credentials)
+            print('drive', 'v3', 'service created successfully')
+
+            file = service.files().get(
+                fileId=file_id,
+                fields='id,webContentLink,name,iconLink,webViewLink'
+            ).execute()
+
+            return file
+        except Exception as e:
+            print(e)
+            print(f'Failed to create service instance for drive')
+            return None
+        
+    def google_drive_delete_file(request, file_id):
+        credentials = CalendarHandler.get_credentials(request)
+        if not credentials:
+            return None
+        try:
+            service = build('drive', 'v3', credentials=credentials)
+            print('drive', 'v3', 'service created successfully')
+
+            response = service.files().delete(
+                fileId=file_id,
+            ).execute()
+
+            return response
         except Exception as e:
             print(e)
             print(f'Failed to create service instance for drive')
