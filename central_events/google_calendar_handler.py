@@ -6,7 +6,7 @@ from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from central_events.models import Google_Calendar_Attachments
+from central_events.models import Events, Google_Calendar_Attachments
 from insb_port import settings
 from system_administration.models import adminUsers
 from users.models import Members

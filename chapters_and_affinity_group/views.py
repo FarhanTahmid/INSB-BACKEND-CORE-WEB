@@ -1507,11 +1507,13 @@ def event_google_calendar(request, primary, event_id):
 
             publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
             Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
+        if('remove_attachment') in request.POST:
+            attachment_id = request.POST.get('remove_attachment')
+            Branch.delete_attachment(request, attachment_id)
 
     event = Events.objects.get(id=event_id)
     form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
     is_event_published_gc = event.publish_in_google_calendar
-
 
 
     context = {

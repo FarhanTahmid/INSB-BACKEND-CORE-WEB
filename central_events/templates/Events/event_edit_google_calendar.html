@@ -433,27 +433,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                
+                <br><br>
 
-                <br>
-           
-                
-                <div class="form-group">
-                    <label class="form-control-label"> Google Calendar Event Share Link:</label>
-                    <span>
-                        <input
-                        class="form-control"
-                        type="url"
-                        autocomplete="off"
-                        readonly="true"
-                        id="#field1"
-                        value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
-                        name="drive_link_of_event"
-                        />
-                        <a href="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
-                    </span>
-                </div>
-                
-                <br>
                 <div style="text-align: center;">
                     
                     {% if is_branch %}
