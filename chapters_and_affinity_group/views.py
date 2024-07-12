@@ -28,7 +28,7 @@ from membership_development_team.models import Renewal_Sessions,Renewal_requests
 from central_branch.view_access import Branch_View_Access
 from django.contrib import messages
 from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
-from central_events.forms import EventForm
+from central_events.forms import EventForm, EventFormGC
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
 from users.models import Alumni_Members
@@ -1500,13 +1500,20 @@ def event_google_calendar(request, primary, event_id):
         if('update_event_gc' in request.POST):
             google_calendar_publish_event_status = request.POST.get('publish_event_gc')
             attendeeOption = request.POST.get('attendeeList')
+            event_description_for_gc = request.POST.get('event_description_for_gc')
+            documents = None
+            if request.FILES.get('document'):
+                documents = request.FILES.getlist('document')
 
             publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
-            Branch.update_event_google_calendar(request=request, event_id=event_id, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption)
+            Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
+        if('remove_attachment') in request.POST:
+            attachment_id = request.POST.get('remove_attachment')
+            Branch.delete_attachment(request, attachment_id)
 
     event = Events.objects.get(id=event_id)
+    form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
     is_event_published_gc = event.publish_in_google_calendar
-
 
 
     context = {
@@ -1519,6 +1526,7 @@ def event_google_calendar(request, primary, event_id):
         'has_access_for_sc_ag_updates':True,
         'is_event_published_gc':is_event_published_gc,
         'event_id':event_id,
+        'form':form,
     }
 
     return render(request, 'Events/event_edit_google_calendar.html', context)

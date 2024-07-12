@@ -11,7 +11,7 @@ from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_G
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from central_events.models import Event_Feedback, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
+from central_events.models import Event_Feedback, Google_Calendar_Attachments, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
@@ -621,23 +621,32 @@ class Branch:
                     messages.warning(request, "Could not delete notifications!")
 
             if(event.google_calendar_event_id):
-                if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
+                if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, None, event.start_date, event.end_date)):
                     messages.success(request, "Event updated in calendar")
                 else:
                     messages.warning(request, "Could not update event in calendar")
 
             return True
     
-    def update_event_google_calendar(request, event_id, publish_event_gc, attendeeOption):
+    def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, documents):
 
         event = Events.objects.get(id=event_id)
         event.publish_in_google_calendar = publish_event_gc
+        event.event_description_for_gc = description
 
         event.save()
 
+        if documents:
+            for doc in documents:
+                file = CalendarHandler.google_drive_upload_files(request, doc)
+                if file:
+                    Google_Calendar_Attachments.objects.create(event_id=event, file_id=file['id'] , file_name=file['name'] , file_url=file['webViewLink'])
+
+        documents = Google_Calendar_Attachments.objects.filter(event_id=event_id)
+
         to_attendee_final_list = []
         if(attendeeOption == "general_members"):
-            general_members=CalendarHandler.load_all_active_general_members_of_branch()
+            general_members=Branch.load_all_active_general_members_of_branch()
             for member in general_members:
                 to_attendee_final_list.append({
                     'displayName':member.name,
@@ -645,14 +654,14 @@ class Branch:
                 })
         else:
             to_attendee_final_list.append(
-                {
-                    'displayName':"Arman M (Personal)",
-                    'email':'armanmokammel@gmail.com'
-                }
                 # {
-                #     'displayName':"Arman M (NSU)",
-                #     'email':'arman.mokammel@northsouth.edu'
-                # },
+                #     'displayName':"Arman M (Personal)",
+                #     'email':'armanmokammel@gmail.com'
+                # }
+                {
+                    'displayName':"Arman M (NSU)",
+                    'email':'arman.mokammel@northsouth.edu'
+                },
                 # {
                 #     'displayName':"Sakib Sami (NSU)",
                 #     'email':'sakib.sami@northsouth.edu'
@@ -664,15 +673,15 @@ class Branch:
                     'email':'arman.mokammel@ieee.org'
                 }
             )
-            to_attendee_final_list.append(
-                {
-                    'displayName':"Sakib Sami (Personal)",
-                    'email':'skmdsakib2186@gmail.com'
-                },
-            )  
+            # to_attendee_final_list.append(
+            #     {
+            #         'displayName':"Sakib Sami (NSU)",
+            #         'email':'sakib.sami@northsouth.edu'
+            #     },
+            # )  
 
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
-            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request, title=event.event_name, description=event.event_description, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list)
+            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
             if(not event.google_calendar_event_id):
                 event.publish_in_google_calendar = False
                 messages.warning(request, "Could not publish event in calendar")
@@ -688,7 +697,7 @@ class Branch:
             else:
                 messages.warning(request, "Could not delete event from calendar")
         elif(event.google_calendar_event_id):
-            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, event.event_description, event.start_date, event.end_date)):
+            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None)):
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
@@ -1243,6 +1252,10 @@ class Branch:
                 doc_path = settings.MEDIA_ROOT + str(file.document)
                 if os.path.exists(doc_path):
                     os.remove(doc_path)
+
+            attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
+            for attachment in attachments:
+                Branch.delete_attachment(request, attachment.pk)
             #deleting the event along with its  related data from DB
             event.delete()
             return True
@@ -2000,4 +2013,12 @@ class Branch:
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_attachment(request, attachment_id):
+        file = Google_Calendar_Attachments.objects.get(pk=attachment_id)
+        if(CalendarHandler.google_drive_delete_file(request, file.file_id) == ""):
+            file.delete()
+            return True
+        else:
             return False

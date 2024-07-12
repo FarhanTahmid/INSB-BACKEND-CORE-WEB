@@ -338,7 +338,7 @@
             <h1>Update Event Details</h1>
         </div>
         
-        <form id="myForm" method = "POST">
+        <form id="myForm" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
             <div class="box-body">
                 <div class="publish-switch">
@@ -354,15 +354,21 @@
                 <div class="form-group">
                     <label>Event Name: {{event.event_name}}</label>                       
                 </div>
+
+                <div class="form-group">
+                    {{form.media}}
+                    {{form.as_p}}
+                </div>
+
                 <br>
 
                 <div class="form-group">
                     <label>Select Attendee List:</label>
                       <select multiple class="form-control" name="attendeeList">
                         {% comment %} <option selected value="">--------------------</option> {% endcomment %}
-                        <option selected value="general_members">All Registered General Members of IEEE NSU SB</option>
+                        <option value="general_members">All Registered General Members of IEEE NSU SB</option>
                         <option value="all_officers">All Officers of IEEE NSU SB</option>
-                        <option value="eb_panel">Executive Panel (Branch Only)</option>
+                        <option selected value="eb_panel">Executive Panel (Branch Only)</option>
                         <option value="excom_branch">Branch Ex-Com Members</option>
                         <option value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
                         {% for session in recruitment_sessions %}
@@ -395,27 +401,41 @@
                     </div> {% endcomment %}
                 </div>
 
-                
                 <br>
-           
-                
-                <div class="form-group">
-                    <label class="form-control-label"> Event Form Link:</label>
-                    <span>
-                        <input
-                        placeholder="Provide Form Link"
-                        class="form-control"
-                        type="url"
-                        autocomplete="off"
-                        id="#field1"
-                        value="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}"
-                        name="drive_link_of_event"
-                        />
-                        <a href="{% if event_details.form_link %}{{event_details.form_link}}{% endif %}" class="icon_position"><i class="fa fa-external-link" aria-hidden="true"></i></i></a>
-                    </span>
+
+                {% if not is_event_published_gc %}
+                    <!--upload doc-->
+                    <div class="form-group">
+                        <label for="documents">Upload Attachments:</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                            <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
+                        </div>
+                        
+                        <br>
+                    
+                        <div id="content-selected-docs-container"></div>
+                        <input type="hidden" name="selected_documents" id="content-selected-documents">
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    </div>
+                {% endif %}
+
+                <div flex-direction="column" justify-content="flex-end">
+                    <label>Attachments:</label>
+                    {% for attachment in event_gc_attachments %}
+                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                        <div class="col-sm-11 text-left">
+                            <a href="{{attachment.file_url}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{attachment.file_name}}</a>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#AttachmentConfirmDeleteModal" onclick="openAttachmentDeleteModal('{{attachment.pk}}')">✖</button>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 
-                <br>
+                <br><br>
+
                 <div style="text-align: center;">
                     
                     {% if is_branch %}
@@ -435,7 +455,7 @@
     </div>
 </div>
 
-   <!-- Updated Modal for adding captions -->
+   <!-- modal for adding new attendees -->
    <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -457,7 +477,6 @@
                                 required
                                 id="attendeeName"
                             />
-                            <br>
                     </div>
 
                     <div class="form-group">
@@ -470,7 +489,6 @@
                                 required
                                 id="attendeeEmail"
                             />
-                            <br>
                     </div>
                 </form>
             </div>
@@ -484,7 +502,7 @@
 </div>
 
 
-<!-- New modal for editing captions -->
+<!-- modal for editing attendees -->
 <div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -495,7 +513,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Display existing caption in a textarea for editing -->
                 <form method="POST">
                     {% csrf_token %}
                     <input id="update_note_{{note.pk}}" name="update_note" value="{{note.pk}}" type="hidden">
@@ -561,8 +578,62 @@
 </div>
 </div>
 
-                    
 
+<!-- Confirmation modal for delete attachment -->
+<div class="modal fade" id="AttachmentConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="AttachmentConfirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attachmentconfirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                <input id="remove_attachment" name= "remove_attachment" type="hidden">
+                <p>Are you sure you want to delete the attachment?</p>
+                <p class="text-danger">Warning: This will only delete the file in server. The invitation email will not be updated!</p>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+                    
+<script>
+    // Function to update the selected documents container
+    function updateSelectedDocuments() {
+        var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');
+        var selectedDocumentsInput = document.getElementById('content-selected-documents');
+        var inputFiles = document.getElementById('content-doc-input').files;
+  
+        // Clear the container
+        selectedDocumentsContainer.innerHTML = '';
+  
+        // Update the container with selected document links
+        for (var i = 0; i < inputFiles.length; i++) {
+            var documentLink = document.createElement('a');
+            //documentLink.href = '#'; // Set the link href accordingly
+            documentLink.className = 'btn btn-link btn-block';
+            documentLink.textContent = inputFiles[i].name;
+            selectedDocumentsContainer.appendChild(documentLink);
+  
+            // Add a line break after each link
+            selectedDocumentsContainer.appendChild(document.createElement('br'));
+  
+            // Update the hidden input with selected document names
+            selectedDocumentsInput.value += inputFiles[i].name + ',';
+        }
+    }
+  
+    // Attach the updateSelectedDocuments function to the file input change event
+    document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
+  </script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -622,6 +693,12 @@
         inputElement.value=attendeeName;
         var inputElement2 = document.getElementById('attendee_Email');    
         inputElement2.value=attendeeEmail;
+    }
+
+    function openAttachmentDeleteModal(attachment_id)
+    {
+        var inputElement = document.getElementById('remove_attachment');
+        inputElement.value = attachment_id;
     }
 </script>
 

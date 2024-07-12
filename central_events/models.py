@@ -56,6 +56,7 @@ class Events(models.Model):
     event_type=models.ManyToManyField(Event_Category,blank=True)
     super_event_id=models.ForeignKey(SuperEvents,null=True,blank=True,on_delete=models.CASCADE)
     event_description=RichTextField(null=True,blank=True)
+    event_description_for_gc=RichTextField(null=True,blank=True)
     event_organiser=models.ForeignKey(Chapters_Society_and_Affinity_Groups,null=False,blank=False,on_delete=models.CASCADE,default=5)#Default is set to 5 to keep branch as default organizer of events, If a new database is created change this number according to the id of the branch
     event_date=models.DateField(null=True,blank=True,default = None)
     event_time=models.CharField(null=True,blank=True,max_length=100,default = None)
@@ -70,7 +71,6 @@ class Events(models.Model):
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
     google_calendar_event_id = models.CharField(null=True,blank=True,max_length=100)
-
 
     class Meta:
         verbose_name="Registered Event"
@@ -173,5 +173,16 @@ class Event_Feedback(models.Model):
 
     class Meta:
         verbose_name="Event Feedback"
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+class Google_Calendar_Attachments(models.Model):
+    event_id = models.ForeignKey(Events,null=False,blank=False,on_delete=models.DO_NOTHING)
+    file_id = models.CharField(null=False,blank=False,max_length=50)
+    file_name = models.CharField(null=False,blank=False,max_length=100)
+    file_url = models.CharField(null=False,blank=False,max_length=200)
+
+    class Meta:
+        verbose_name="Google Calendar Attachments"
     def __str__(self) -> str:
         return str(self.pk)
