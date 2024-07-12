@@ -48,10 +48,12 @@ class LoggedinUser:
                 latest_notification_timestamp = latest_notification_timestamp.notification.timestamp
                 latest_notification_timestamp = format(latest_notification_timestamp, 'Y-m-d\\TH:i:s')
                 unread_notification_count = MemberNotifications.objects.filter(member=get_Member_details,is_read = False).order_by('-notification__timestamp').count()
+                admin = adminUsers.objects.get(username = "insbdevs")
             except:
                 member_notifications = None
                 latest_notification_id = None
                 unread_notification_count = 0
+                admin = None
             return {
             'is_admin_user': False,
             'name':get_Member_details.name,
@@ -76,6 +78,7 @@ class LoggedinUser:
             'latest_timestamp':latest_notification_timestamp,
             'unread_notification_count':unread_notification_count,
             'media_url':settings.MEDIA_URL,
+            'admin':admin,
         }
         except Members.DoesNotExist:
             try:

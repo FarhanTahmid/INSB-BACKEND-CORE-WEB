@@ -385,7 +385,7 @@
             <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
               <div class="sender_frame">
-                <img src="/media_files/{{notification.notification.created_by.user_profile_picture}}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                <img src="/media_files/{% if notification.notification.created_by != None %}{{notification.notification.created_by.user_profile_picture}}{% else %}{{user_data.admin.profile_picture}}{% endif %}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
               </div>
               <div class="bell_friend_svg" >
                 <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
@@ -724,6 +724,12 @@
             }else{
               notificationLink = '//' + notification.inside_link;
             }
+            let notificationCreatorPicture;
+            if (notification.created_by === ''){
+              notificationCreatorPicture = admin;
+            } else {
+              notificationCreatorPicture = notification.created_by.profile_picture;
+            }
             const notificationElement = `
                 <div class="msg-info-div new-notification">
                     <a href="${notificationLink}" target="_blank">
@@ -731,7 +737,7 @@
                             <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
                             <div class="sender_content">
                                 <div class="sender_frame">
-                                    <img src="${notification.created_by.profile_picture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                    <img src="${notificationCreatorPicture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
                                 </div>
                                 <div class="bell_friend_svg">
                                   <img src=${notification.notification_type_image}/> 

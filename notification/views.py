@@ -50,17 +50,23 @@ def notification(request):
         user=request.user
         has_access=(Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username))
         if True:
-            
+            #statically fixing the admin pic for notifications if admin creates a notification
+            try:
+                admin = adminUsers.objects.get(username = "insbdevs")
+            except:
+                admin = None
+
             try:
                 member_notifications = MemberNotifications.objects.filter(member=Members.objects.get(ieee_id=request.user.username)).order_by('-notification__timestamp')
             except:
-                member_notifications = None
+                member_notifications = None  
             
             context={
                 'all_sc_ag':sc_ag,
                 "user_data":user_data,
                 'member_notifications':member_notifications,
-                'media_url':settings.MEDIA_URL
+                'media_url':settings.MEDIA_URL,
+                'admin':admin
             }
 
             return render(request, 'notification.html', context)
@@ -141,13 +147,17 @@ def fetch_notifications(request):
     if member_notifications == None:
         notifications = []
     else:
+        try:
+            admin = adminUsers.objects.get(username = "insbdevs")
+        except:
+            admin = None
+
         for member_notification in member_notifications:
             
             try:
                 profile_picture = str(settings.MEDIA_URL) + str(member_notification.notification.created_by.user_profile_picture)
             except:
-                admin = adminUsers.objects.get(username = request.user.username)
-                profile_picture = str(settings.MEDIA_URL) + str(admin.profile_picture)
+                profile_picture = None
             dic = {
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
@@ -160,6 +170,7 @@ def fetch_notifications(request):
                 'is_read': member_notification.is_read,
                 'notification_type_image':str(settings.MEDIA_URL)+str(member_notification.notification.type.type_icon),
                 'notification_type':member_notification.notification.type.type,
+                'admin':str(settings.MEDIA_URL)+str(admin.profile_picture),
             }
        
             notifications.append(dic)
