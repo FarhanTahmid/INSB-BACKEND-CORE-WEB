@@ -71,6 +71,7 @@ class Events(models.Model):
     start_date = models.DateTimeField(null=True,blank=True)
     end_date = models.DateTimeField(null=True,blank=True)
     google_calendar_event_id = models.CharField(null=True,blank=True,max_length=100)
+    additional_attendees = models.JSONField(null=True,blank=True,default=dict)
 
     class Meta:
         verbose_name="Registered Event"

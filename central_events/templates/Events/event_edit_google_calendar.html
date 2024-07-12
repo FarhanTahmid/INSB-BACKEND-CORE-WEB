@@ -390,15 +390,19 @@
                 
                 <hr>
                 <div id="attendees-container">
-                    <label>Other Attendees:</label> 
-                    {% comment %} <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                    <label>Other Attendees:</label>
+                    {% for attendee,values in additional_attendees.items %}
+                    <div id="attendee_{{attendee}}" class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
-                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal_{{note.pk}}">{{note.title}}</a>
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal" onclick="openModal('{{values.displayName}}', '{{values.email}}')">{{values.displayName}}</a>
+                            <input type="hidden" id="attendee_name" name="attendee_name" value="{{values.displayName}}"/>
+                            <input type="hidden" id="attendee_email" name="attendee_email" value="{{values.email}}"/>
                         </div>
                         <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('{{note.pk}}')">✖</button>
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openAttendeeDeleteModal({{attendee}}, '{{values.displayName}}', '{{values.email}}')">✖</button>
                         </div>
-                    </div> {% endcomment %}
+                    </div>
+                    {% endfor %}
                 </div>
 
                 <br>
@@ -494,7 +498,7 @@
             </div>
             <div class="modal-footer">
                 <!-- Change the button label and name attribute -->
-                <input type="submit" class="btn btn-outline-success txt-success buttons" id="addAttendee" value="Add" data-dismiss="modal">
+                <button type="button" class="btn btn-outline-success txt-success buttons" id="addAttendee" data-dismiss="modal">Add</button>
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -507,15 +511,12 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCaptionModalLabel">Edit Caption</h5>
+                <h5 class="modal-title" id="editCaptionModalLabel">View Attendee</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    <input id="update_note_{{note.pk}}" name="update_note" value="{{note.pk}}" type="hidden">
                     <div class="form-group">
                         <label>Attendee Name: </label> 
                             <input
@@ -523,8 +524,8 @@
                                 class="form-control"
                                 type="text"
                                 autocomplete="off"
-                                required
                                 id="attendee_Name"
+                                disabled
                             />
                         <br>
                             
@@ -536,24 +537,19 @@
                                 class="form-control"
                                 type="text"
                                 autocomplete="off"
-                                required
                                 ID="attendee_Email"
+                                disabled
                             />
                         <br>
                             
                     </div>
             </div>
-            <div class="modal-footer">
-                <input type="submit" name="update" class="btn btn-outline-primary txt-primary" value="Update"></button>
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-            </form>
         </div>
     </div>
 </div>
 
 
-<!-- Confirmation modal for delete -->
+<!-- Confirmation modal for delete attendee -->
 <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-top" role="document">
     <div class="modal-content">
@@ -564,16 +560,15 @@
             </button>
         </div>
         <div class="modal-body">
-            <form method="POST">
-                {% csrf_token %}
-            <p><input id="remove_note" name= "remove_note" type="hidden"></p>
-            Are you sure you want to delete the attendee?
+            <input id="attendee_id" name= "attendee_id" type="hidden">
+            <p>Are you sure you want to delete the attendee?</p>
+            <p id="delete_attendee_Name">Name: </p>
+            <p id="delete_attendee_Email">Email: </p>
         </div>
         <div class="modal-footer">
-            <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+            <button type="button" id="removeAttendee" class="btn btn-outline-danger" data-dismiss="modal">Confirm</button>
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
         </div>
-        </form>
     </div>
 </div>
 </div>
@@ -634,10 +629,17 @@
     // Attach the updateSelectedDocuments function to the file input change event
     document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
   </script>
+
+  <script>
+    document.getElementById('removeAttendee').addEventListener('click', function() {
+        var val = document.getElementById('attendee_id').value;
+        var element = document.getElementById('attendee_'+val);
+        element.remove();
+    });
+  </script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-          CKEDITOR.replace('registration_fee_amount');
           var form = document.getElementById('myForm');
           var isFormDirty = false;
         
@@ -662,37 +664,48 @@
         
       </script>
 
- 
+
 <script>
 
     const container = document.getElementById('attendees-container');
+    var count = {{additional_attendees.items|length}};
     document.getElementById('addAttendee').addEventListener('click', function() {
         const container = document.getElementById('attendees-container');
         const attendeeName = document.getElementById('attendeeName').value;
         const attendeeEmail = document.getElementById('attendeeEmail').value;
         const htmlString = `
-            <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+            <div id="attendee_${count+1}" class="row container-fluid bg-light mt-3" style="margin:auto;">
                 <div class="col-sm-11">
                     <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal" onclick="openModal('${attendeeName}', '${attendeeEmail}')">${attendeeName}</a>
                     <input type="hidden" name="attendee_name" value="${attendeeName}"/>
                     <input type="hidden" name="attendee_email" value="${attendeeEmail}"/>
                 </div>
                 <div class="col-sm-1 d-flex align-items-center justify-content-center">
-                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openModal('${attendeeName}', '${attendeeEmail}')">✖</button>
+                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openAttendeeDeleteModal(${count+1}, '${attendeeName}', '${attendeeEmail}')">✖</button>
                 </div>
             </div>
         `;
         container.insertAdjacentHTML('beforeend', htmlString);
+        count = count + 1;
         document.getElementById('AddCaptionModalForm').reset();
     });
 
     function openModal(attendeeName, attendeeEmail) {
         // Set data in the modal
         var inputElement = document.getElementById('attendee_Name');
-        console.log(inputElement);    
         inputElement.value=attendeeName;
         var inputElement2 = document.getElementById('attendee_Email');    
         inputElement2.value=attendeeEmail;
+    }
+
+    function openAttendeeDeleteModal(attendee_id, attendeeName, attendeeEmail)
+    {
+        var inputElement = document.getElementById('delete_attendee_Name');    
+        inputElement.innerText="Name: "+attendeeName;
+        var inputElement2 = document.getElementById('delete_attendee_Email');    
+        inputElement2.innerText="Email: "+attendeeEmail;
+        var inputElement3 = document.getElementById('attendee_id');
+        inputElement3.value = attendee_id
     }
 
     function openAttachmentDeleteModal(attachment_id)

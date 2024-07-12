@@ -3654,12 +3654,15 @@ def event_google_calendar(request, event_id):
             google_calendar_publish_event_status = request.POST.get('publish_event_gc')
             attendeeOption = request.POST.get('attendeeList')
             event_description_for_gc = request.POST.get('event_description_for_gc')
+            add_attendee_names = request.POST.getlist('attendee_name')
+            add_attendee_emails = request.POST.getlist('attendee_email')
+
             documents = None
             if request.FILES.get('document'):
                 documents = request.FILES.getlist('document')
 
             publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
-            Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
+            Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, add_attendee_names=add_attendee_names, add_attendee_emails=add_attendee_emails, documents=documents)
         if('remove_attachment') in request.POST:
             attachment_id = request.POST.get('remove_attachment')
             Branch.delete_attachment(request, attachment_id)
@@ -3668,7 +3671,8 @@ def event_google_calendar(request, event_id):
     event_gc_attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
     form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
     is_event_published_gc = event.publish_in_google_calendar
-
+    additional_attendees = event.additional_attendees
+    
 
     context = {
         'is_branch':True,
@@ -3679,6 +3683,7 @@ def event_google_calendar(request, event_id):
         'event_id':event_id,
         'form':form,
         'event_gc_attachments':event_gc_attachments,
+        'additional_attendees':additional_attendees
     }
 
     return render(request, 'Events/event_edit_google_calendar.html', context)

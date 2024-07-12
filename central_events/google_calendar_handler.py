@@ -42,15 +42,6 @@ class CalendarHandler:
 
     def create_event_in_calendar(request, event_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
 
-        # get general member emails
-        # to_attendee_final_list = []
-        # general_members=CalendarHandler.load_all_active_general_members_of_branch()
-        # for member in general_members:
-        #     to_attendee_final_list.append({
-        #         'displayName':member.name,
-        #         'email':member.email_nsu,
-        #     }) 
-
         event = {
             'summary': title,
             'description': description,
@@ -96,7 +87,7 @@ class CalendarHandler:
         else:
             return None
         
-    def update_event_in_calendar(request, event_id, title, description, start_time, end_time):
+    def update_event_in_calendar(request, event_id, title, description, start_time, end_time, attendees):
         if(event_id == None):
             return None
         service = CalendarHandler.authorize(request)
@@ -116,8 +107,11 @@ class CalendarHandler:
                 }
             if description:
                 response['description'] = description
+            if attendees:
+                response['attendees'] = attendees
 
-            service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response).execute()
+            service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response, sendUpdates='all').execute()
+
             return "Updated"
         else:
             return None

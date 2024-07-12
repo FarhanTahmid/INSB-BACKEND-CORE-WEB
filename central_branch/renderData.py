@@ -628,11 +628,19 @@ class Branch:
 
             return True
     
-    def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, documents):
+    def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, add_attendee_names, add_attendee_emails, documents):
 
         event = Events.objects.get(id=event_id)
         event.publish_in_google_calendar = publish_event_gc
         event.event_description_for_gc = description
+
+        event.additional_attendees = {}
+        for i in range(len(add_attendee_emails)):
+            additional_attendees = {
+                'displayName':add_attendee_names[i],
+                'email':add_attendee_emails[i]
+            }
+            event.additional_attendees[i] = additional_attendees
 
         event.save()
 
@@ -659,26 +667,34 @@ class Branch:
                 #     'email':'armanmokammel@gmail.com'
                 # }
                 {
-                    'displayName':"Arman M (NSU)",
-                    'email':'arman.mokammel@northsouth.edu'
+                    'displayName':"Arman M (IEEE)",
+                    'email':'arman.mokammel@ieee.org'
                 },
                 # {
                 #     'displayName':"Sakib Sami (NSU)",
                 #     'email':'sakib.sami@northsouth.edu'
                 # },
             )
-            to_attendee_final_list.append(
-                {
-                    'displayName':"Arman M (IEEE)",
-                    'email':'arman.mokammel@ieee.org'
-                }
-            )
+            # to_attendee_final_list.append(
+            #     {
+            #         'displayName':"Arman M (IEEE)",
+            #         'email':'arman.mokammel@ieee.org'
+            #     }
+            # )
             # to_attendee_final_list.append(
             #     {
             #         'displayName':"Sakib Sami (NSU)",
             #         'email':'sakib.sami@northsouth.edu'
             #     },
-            # )  
+            # ) 
+
+        for attendee,value in event.additional_attendees.items():
+            to_attendee_final_list.append(
+                {
+                    'displayName':value['displayName'],
+                    'email':value['email']
+                }
+            ) 
 
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
             event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
@@ -697,7 +713,7 @@ class Branch:
             else:
                 messages.warning(request, "Could not delete event from calendar")
         elif(event.google_calendar_event_id):
-            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None)):
+            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, to_attendee_final_list)):
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
