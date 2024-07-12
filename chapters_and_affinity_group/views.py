@@ -1501,12 +1501,15 @@ def event_google_calendar(request, primary, event_id):
             google_calendar_publish_event_status = request.POST.get('publish_event_gc')
             attendeeOption = request.POST.get('attendeeList')
             event_description_for_gc = request.POST.get('event_description_for_gc')
+            add_attendee_names = request.POST.getlist('attendee_name')
+            add_attendee_emails = request.POST.getlist('attendee_email')
+
             documents = None
             if request.FILES.get('document'):
                 documents = request.FILES.getlist('document')
 
             publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
-            Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, documents=documents)
+            Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, add_attendee_names=add_attendee_names, add_attendee_emails=add_attendee_emails, documents=documents)
         if('remove_attachment') in request.POST:
             attachment_id = request.POST.get('remove_attachment')
             Branch.delete_attachment(request, attachment_id)
