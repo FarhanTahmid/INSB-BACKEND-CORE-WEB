@@ -29,6 +29,7 @@ from central_branch.renderData import Branch
 from central_branch.view_access import Branch_View_Access
 from notification.notifications import NotificationHandler
 from notification.models import Notifications,MemberNotifications
+from system_administration.models import adminUsers
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -145,7 +146,8 @@ def fetch_notifications(request):
             try:
                 profile_picture = str(settings.MEDIA_URL) + str(member_notification.notification.created_by.user_profile_picture)
             except:
-                profile_picture = None
+                admin = adminUsers.objects.get(username = request.user.username)
+                profile_picture = str(settings.MEDIA_URL) + str(admin.profile_picture)
             dic = {
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
