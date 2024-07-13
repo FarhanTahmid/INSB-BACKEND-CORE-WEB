@@ -9,6 +9,7 @@ from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
 from port.renderData import PortData
+from public_relation_team.renderData import PRT_Data
 from users import renderData
 from users.renderData import Alumnis,PanelMembersData
 from django.utils.datastructures import MultiValueDictKeyError
@@ -1518,8 +1519,15 @@ def event_google_calendar(request, primary, event_id):
                     Branch.delete_attachment(request, attachment_id)
 
             event = Events.objects.get(id=event_id)
+            event_gc_attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
             form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
             is_event_published_gc = event.publish_in_google_calendar
+            additional_attendees = event.additional_attendees
+            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+            if event.selected_attendee_list:
+                selected_attendee_list = event.selected_attendee_list.split(',')
+            else:
+                selected_attendee_list = None
 
 
             context = {
@@ -1533,6 +1541,10 @@ def event_google_calendar(request, primary, event_id):
                 'is_event_published_gc':is_event_published_gc,
                 'event_id':event_id,
                 'form':form,
+                'event_gc_attachments':event_gc_attachments,
+                'additional_attendees':additional_attendees,
+                'recruitment_sessions':recruitment_sessions,
+                'selected_attendee_list':selected_attendee_list
             }
 
             return render(request, 'Events/event_edit_google_calendar.html', context)

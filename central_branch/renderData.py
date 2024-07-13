@@ -3,11 +3,13 @@ from bs4 import BeautifulSoup
 from django.http import Http404
 from django.urls import reverse
 from central_events.google_calendar_handler import CalendarHandler
+from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from insb_port import settings
 from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
 from notification.models import NotificationTypes
 from notification.notifications import NotificationHandler
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
+from port.renderData import PortData
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
@@ -597,7 +599,10 @@ class Branch:
                 inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
                 general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
                 # receiver_list=Branch.load_all_active_general_members_of_branch()
-                receiver_list=[98955436,97952937]
+                receiver_list=Branch.get_attendee_list_from_backend(event.selected_attendee_list)
+                if receiver_list == None or len(receiver_list) == 0:
+                    messages.warning(request, "The attendee list is empty! Could not create notifications or notify members")
+                    return True
                 if(NotificationHandler.create_notifications(notification_type=Branch.event_notification_type.pk,
                                                             title="New Event has been published!",
                                                             general_message=general_message,
@@ -628,11 +633,117 @@ class Branch:
 
             return True
     
+    def get_attendee_list_from_backend(request, attendeeOption):
+        to_attendee_final_list = []
+        for option in attendeeOption:
+            if(option == "general_members"):
+                general_members=Branch.load_all_active_members_of_branch()
+                for member in general_members:
+                    to_attendee_final_list.append({
+                        'displayName':member.name,
+                        'email':member.email_nsu,
+                    })
+            elif option=="all_officers":
+                # get all officers email
+                branch_officers=Branch.load_all_officers_of_branch()
+                for officer in branch_officers:
+                    to_attendee_final_list.append({
+                        'displayName':officer.name,
+                        'email':officer.email_nsu,
+                    })
+                    # to_attendee_final_list.append({
+                    #     'displayName':officer.name,
+                    #     'email':officer.email_ieee,
+                    # })
+                            
+            elif option=="eb_panel":
+                # get all eb panel email
+                eb_panel=Branch.load_branch_eb_panel()
+                for eb in eb_panel:
+                    #if is faculty then skip
+                    if not eb.position.is_faculty:
+                        to_attendee_final_list.append({
+                            'displayName':eb.name,
+                            'email':eb.email_nsu,
+                        })
+                        # to_attendee_final_list.append({
+                            # 'displayName':eb.name,
+                            # 'email':eb.email_ieee,
+                        # })
+            elif option=="excom_branch":
+                # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
+                eb_panel=Branch.load_branch_eb_panel()
+                branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
+                for eb in eb_panel:
+                    #If is faculty then skip
+                    if not eb.position.is_faculty:
+                        to_attendee_final_list.append({
+                            'displayName':eb.name,
+                            'email':eb.email_nsu,
+                        })
+                        # to_attendee_final_list.append({
+                        #     'displayName':eb.name,
+                        #     'email':eb.email_ieee,
+                        # })
+                for excom in branch_ex_com:
+                    to_attendee_final_list.append({
+                        'displayName':excom.member.name,
+                        'email':excom.member.email_nsu,
+                    })
+                    # to_attendee_final_list.append({
+                    #     'displayName':excom.member.name,
+                    #     'email':excom.member.email_ieee,
+                    # })
+                pass
+            elif option=="scag_eb":
+                # get all the society, chapters and AG EBS
+                for i in range(2,6):
+                    get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=i)
+                    if(get_current_panel_of_sc_ag.exists()):
+                        ex_com=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag[0].pk)
+                        for ex in ex_com:
+                            if ex.member is not None:
+                                #If is faculty then skip
+                                if not ex.member.position.is_faculty:
+                                    to_attendee_final_list.append({
+                                        'displayName':ex.member.name,
+                                        'email':ex.member.email_nsu,
+                                    })
+                                    # to_attendee_final_list.append({
+                                    #     'displayName':ex.member.name,
+                                    #     'email':ex.member.email_ieee,
+                                    # })
+                            else:
+                                to_attendee_final_list.append({
+                                    'displayName':ex.ex_member.name,
+                                    'email':ex.ex_member.email,
+                                })
+            else:
+                to_attendee_final_list.append(
+                    {
+                        'displayName':"Arman M (IEEE)",
+                        'email':'arman.mokammel@ieee.org'
+                    },
+                )
+                to_attendee_final_list.append(
+                    {
+                        'displayName':"Arman M (NSU)",
+                        'email':'arman.mokammel@northsouth.edu'
+                    },
+                )
+        
+        return to_attendee_final_list
+
+    
     def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, add_attendee_names, add_attendee_emails, documents):
 
         event = Events.objects.get(id=event_id)
         event.publish_in_google_calendar = publish_event_gc
         event.event_description_for_gc = description
+        event.selected_attendee_list = ""
+        for option in attendeeOption:
+            event.selected_attendee_list += option
+            event.selected_attendee_list += ','
 
         event.additional_attendees = {}
         for i in range(len(add_attendee_emails)):
@@ -641,7 +752,6 @@ class Branch:
                 'email':add_attendee_emails[i]
             }
             event.additional_attendees[i] = additional_attendees
-
         event.save()
 
         if documents:
@@ -653,48 +763,16 @@ class Branch:
         documents = Google_Calendar_Attachments.objects.filter(event_id=event_id)
 
         to_attendee_final_list = []
-        if(attendeeOption == "general_members"):
-            general_members=Branch.load_all_active_general_members_of_branch()
-            for member in general_members:
-                to_attendee_final_list.append({
-                    'displayName':member.name,
-                    'email':member.email_nsu,
-                })
-        else:
-            to_attendee_final_list.append(
-                # {
-                #     'displayName':"Arman M (Personal)",
-                #     'email':'armanmokammel@gmail.com'
-                # }
-                {
-                    'displayName':"Arman M (IEEE)",
-                    'email':'arman.mokammel@ieee.org'
-                },
-                # {
-                #     'displayName':"Sakib Sami (NSU)",
-                #     'email':'sakib.sami@northsouth.edu'
-                # },
-            )
-            # to_attendee_final_list.append(
-            #     {
-            #         'displayName':"Arman M (IEEE)",
-            #         'email':'arman.mokammel@ieee.org'
-            #     }
-            # )
-            # to_attendee_final_list.append(
-            #     {
-            #         'displayName':"Sakib Sami (NSU)",
-            #         'email':'sakib.sami@northsouth.edu'
-            #     },
-            # ) 
-
-        for attendee,value in event.additional_attendees.items():
-            to_attendee_final_list.append(
-                {
-                    'displayName':value['displayName'],
-                    'email':value['email']
-                }
-            ) 
+        if event.publish_in_google_calendar:
+            to_attendee_final_list = Branch.get_attendee_list_from_backend(request, attendeeOption)
+        
+            for attendee,value in event.additional_attendees.items():
+                to_attendee_final_list.append(
+                    {
+                        'displayName':value['displayName'],
+                        'email':value['email']
+                    }
+                ) 
 
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
             event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
@@ -718,7 +796,6 @@ class Branch:
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
-        
         
     def add_feedback(event_id, name, email, satisfaction, comment):
         try:
@@ -836,6 +913,19 @@ class Branch:
                     
                     general_members.append(member)
         return general_members
+    
+    def load_all_active_members_of_branch():
+        '''This function loads all the members from the branch whose memberships are active
+        '''
+        all_members=Members.objects.all()
+        members=[]
+        
+        for member in all_members:
+           
+            if (MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)):                
+                members.append(member)
+
+        return members
     
     def create_panel(request,tenure_year,current_check,panel_start_date,panel_end_date):
         '''This function creates a panel object. Collects parameter value from views '''

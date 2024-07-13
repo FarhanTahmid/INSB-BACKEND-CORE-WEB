@@ -15,6 +15,7 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from public_relation_team.renderData import PRT_Data
 from system_administration.models import adminUsers
 from system_administration.system_error_handling import ErrorHandling
 from task_assignation.models import Task, Task_Category
@@ -3655,7 +3656,7 @@ def event_google_calendar(request, event_id):
             if(request.method == "POST"):
                 if('update_event_gc' in request.POST):
                     google_calendar_publish_event_status = request.POST.get('publish_event_gc')
-                    attendeeOption = request.POST.get('attendeeList')
+                    attendeeOption = request.POST.getlist('attendeeList')
                     event_description_for_gc = request.POST.get('event_description_for_gc')
                     add_attendee_names = request.POST.getlist('attendee_name')
                     add_attendee_emails = request.POST.getlist('attendee_email')
@@ -3675,7 +3676,11 @@ def event_google_calendar(request, event_id):
             form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
             is_event_published_gc = event.publish_in_google_calendar
             additional_attendees = event.additional_attendees
-            
+            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+            if event.selected_attendee_list:
+                selected_attendee_list = event.selected_attendee_list.split(',')
+            else:
+                selected_attendee_list = None
 
             context = {
                 'is_branch':True,
@@ -3686,7 +3691,9 @@ def event_google_calendar(request, event_id):
                 'event_id':event_id,
                 'form':form,
                 'event_gc_attachments':event_gc_attachments,
-                'additional_attendees':additional_attendees
+                'additional_attendees':additional_attendees,
+                'recruitment_sessions':recruitment_sessions,
+                'selected_attendee_list':selected_attendee_list
             }
 
             return render(request, 'Events/event_edit_google_calendar.html', context)

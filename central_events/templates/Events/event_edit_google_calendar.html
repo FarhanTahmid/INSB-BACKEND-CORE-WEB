@@ -365,14 +365,13 @@
                 <div class="form-group">
                     <label>Select Attendee List:</label>
                       <select multiple class="form-control" name="attendeeList">
-                        {% comment %} <option selected value="">--------------------</option> {% endcomment %}
-                        <option value="general_members">All Registered General Members of IEEE NSU SB</option>
-                        <option value="all_officers">All Officers of IEEE NSU SB</option>
-                        <option selected value="eb_panel">Executive Panel (Branch Only)</option>
-                        <option value="excom_branch">Branch Ex-Com Members</option>
-                        <option value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
+                        <option {% if "general_members" in selected_attendee_list or event.selected_attendee_list == None %}selected{% endif %} value="general_members">All Registered Active Members of IEEE NSU SB</option>
+                        <option {% if "all_officers" in selected_attendee_list %}selected{% endif %} value="all_officers">All Officers of IEEE NSU SB</option>
+                        <option {% if "eb_panel" in selected_attendee_list %}selected{% endif %} value="eb_panel">Executive Panel (Branch Only)</option>
+                        <option {% if "excom_branch" in selected_attendee_list %}selected{% endif %} value="excom_branch">Branch Ex-Com Members</option>
+                        <option {% if "scag_eb" in selected_attendee_list %}selected{% endif %} value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
                         {% for session in recruitment_sessions %}
-                          <option value="recruits_{{session.id}}">Recruits of - {{session.session}} </option>
+                          <option {% if "recruits_"|add:session.id in selected_attendee_list %}selected{% endif %} value="recruits_{{session.id}}">Recruits of - {{session.session}} </option>
                         {% endfor %}
                         
                       </select>
@@ -390,7 +389,6 @@
                 
                 <hr>
                 <div id="attendees-container">
-                    <label>Other Attendees:</label>
                     {% for attendee,values in additional_attendees.items %}
                     <div id="attendee_{{attendee}}" class="row container-fluid bg-light mt-3" style="margin:auto;">
                         <div class="col-sm-11">
@@ -412,7 +410,7 @@
                     <div class="form-group">
                         <label for="documents">Upload Attachments:</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple>
+                            <input type="file" class="custom-file-input" id="content-doc-input" name="document" multiple>
                             <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
                         </div>
                         
