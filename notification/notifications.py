@@ -18,7 +18,7 @@ class NotificationHandler:
     def create_notification_type(notification_type, image_icon=None):
         pass
     
-    def create_notifications(notification_type,title,general_message,inside_link,created_by,reciever_list,notification_of):
+    def create_notifications(notification_type,title,general_message,inside_link,created_by,reciever_list,notification_of,event=None):
         
         '''This function creates new notification instances, assigns new notifications to the users as well
                 -`notification_type`: must be a pk of an NotificationTypes object
@@ -54,7 +54,7 @@ class NotificationHandler:
             # create new object of Notifications without created_by option
             new_notification = Notifications.objects.create(
                 type=notification_type,timestamp=timestamp,title=title,general_message=general_message,
-                inside_link=inside_link,notification_of=notification_of
+                inside_link=inside_link,notification_of=notification_of,event = event
             )
             # save the new instance of notification
             new_notification.save()

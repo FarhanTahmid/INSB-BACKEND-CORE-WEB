@@ -604,7 +604,8 @@ class Branch:
                                                             inside_link=inside_link,
                                                             created_by="IEEE NSU SB",
                                                             reciever_list=receiver_list,
-                                                            notification_of=event)):
+                                                            notification_of=event,
+                                                            event = event)):
                     messages.success(request, "Notifications created and sent to members!")
                 else:
                     messages.warning(request, "Could not create notifications or notify members!")

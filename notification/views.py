@@ -158,6 +158,12 @@ def fetch_notifications(request):
                 profile_picture = str(settings.MEDIA_URL) + str(member_notification.notification.created_by.user_profile_picture)
             except:
                 profile_picture = None
+            if member_notification.notification.event:
+                event = member_notification.notification.event.event_organiser.group_name
+                event_organiser = str(settings.MEDIA_URL)+str(member_notification.notification.event.event_organiser.logo)
+            else:
+                event = None
+                event_organiser = None
             dic = {
                 'id': member_notification.pk,
                 'inside_link': member_notification.notification.inside_link,
@@ -171,6 +177,8 @@ def fetch_notifications(request):
                 'notification_type_image':str(settings.MEDIA_URL)+str(member_notification.notification.type.type_icon),
                 'notification_type':member_notification.notification.type.type,
                 'admin':str(settings.MEDIA_URL)+str(admin.profile_picture),
+                'event':event,
+                'event_organiser':event_organiser,
             }
        
             notifications.append(dic)

@@ -2,6 +2,7 @@ from django.db import models
 from users.models import Members
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from central_events.models import Events
 
 # Create your models here.
 
@@ -38,6 +39,7 @@ class Notifications(models.Model):
     general_message=models.CharField(null=True,blank=True,max_length=3000)
     inside_link=models.URLField(null=False,blank=False)
     created_by=models.ForeignKey(Members,null=True,blank=True,on_delete=models.CASCADE)
+    event = models.ForeignKey(Events,null=True,blank=True,default=None,on_delete=models.CASCADE)
     
     class Meta:
         verbose_name="Notification"
