@@ -63,7 +63,8 @@ def authorize(request):
         request.session['state'] = state
         return redirect(authorization_url)
 
-    messages.success(request, "Already authorized!")    
+    if credentials != 'Invalid' and credentials != None:
+        messages.success(request, "Already authorized!")    
     return redirect('central_branch:event_control')
 
 def oauth2callback(request):

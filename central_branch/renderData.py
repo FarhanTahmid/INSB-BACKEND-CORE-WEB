@@ -708,10 +708,11 @@ class Branch:
         elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
             if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
                 event.google_calendar_event_id = ""
-                event.save()
                 messages.success(request, "Event deleted from calendar")
             else:
+                event.publish_in_google_calendar = True
                 messages.warning(request, "Could not delete event from calendar")
+            event.save()
         elif(event.google_calendar_event_id):
             if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, to_attendee_final_list)):
                 messages.success(request, "Event updated in calendar")

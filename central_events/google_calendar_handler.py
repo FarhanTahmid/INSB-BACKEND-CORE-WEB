@@ -168,11 +168,14 @@ class CalendarHandler:
             
             if(type(member) == Members):
                 messages.info(request, "Google Authorization Required! Please contact Web Team")
-                return None
+                return 'Invalid'
             
             if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-                CalendarHandler.save_credentials(creds)
+                try:
+                    creds.refresh(Request())
+                    CalendarHandler.save_credentials(creds)
+                except:
+                    return None
             
             return creds
 
