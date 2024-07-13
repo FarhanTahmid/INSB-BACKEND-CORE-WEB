@@ -28,7 +28,7 @@ from django.contrib.auth.decorators import login_required
 from membership_development_team.models import Renewal_Sessions,Renewal_requests
 from central_branch.view_access import Branch_View_Access
 from django.contrib import messages
-from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
+from central_events.models import Events, Google_Calendar_Attachments, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from central_events.forms import EventForm, EventFormGC
 from events_and_management_team.renderData import Events_And_Management_Team
 from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position
