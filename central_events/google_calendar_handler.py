@@ -56,7 +56,7 @@ class CalendarHandler:
             },
             'organizer' : {
                 'displayName' : 'IEEE NSU SB',
-                'email' : 'ieeensusb.portal@gmail.com'
+                'email' : 'portal@ieeensusb.org'
             },
             'source' : {
                 'title' : 'IEEE NSU SB',
