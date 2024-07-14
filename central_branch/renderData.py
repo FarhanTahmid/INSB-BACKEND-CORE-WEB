@@ -636,6 +636,21 @@ class Branch:
     
     def get_attendee_list_from_backend(request, attendeeOption):
         to_attendee_final_list = []
+        if (not attendeeOption):
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Arman M (IEEE)",
+                    'email':'arman.mokammel@ieee.org'
+                },
+            )
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Arman M (NSU)",
+                    'email':'arman.mokammel@northsouth.edu'
+                },
+            )
+            
+            return to_attendee_final_list
         for option in attendeeOption:
             if(option == "general_members"):
                 general_members=Branch.load_all_active_members_of_branch()
@@ -731,19 +746,7 @@ class Branch:
                     #     'displayName':mem.first_name,
                     #     'email'::mem.email_nsu,
                     # })
-            else:
-                to_attendee_final_list.append(
-                    {
-                        'displayName':"Arman M (IEEE)",
-                        'email':'arman.mokammel@ieee.org'
-                    },
-                )
-                to_attendee_final_list.append(
-                    {
-                        'displayName':"Arman M (NSU)",
-                        'email':'arman.mokammel@northsouth.edu'
-                    },
-                )
+                
         
         return to_attendee_final_list
 
