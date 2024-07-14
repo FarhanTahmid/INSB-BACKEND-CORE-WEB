@@ -6,7 +6,6 @@ from dotenv import set_key
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from central_events.models import Events, Google_Calendar_Attachments
 from insb_port import settings
 from system_administration.models import adminUsers
 from users.models import Members
@@ -21,11 +20,12 @@ SCOPES = settings.SCOPES
 
 service = None
 
-def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
-    dt = datetime.datetime(year, month, day, hour, minute, 0).isoformat() + 'Z'
-    return dt
 
 class CalendarHandler:
+
+    def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
+        dt = datetime.datetime(year, month, day, hour, minute, 0).isoformat() + 'Z'
+        return dt
 
     def authorize(request):
         credentials = CalendarHandler.get_credentials(request)
@@ -42,30 +42,20 @@ class CalendarHandler:
 
     def create_event_in_calendar(request, event_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
 
-        # get general member emails
-        # to_attendee_final_list = []
-        # general_members=CalendarHandler.load_all_active_general_members_of_branch()
-        # for member in general_members:
-        #     to_attendee_final_list.append({
-        #         'displayName':member.name,
-        #         'email':member.email_nsu,
-        #     }) 
-
         event = {
             'summary': title,
             'description': description,
             'location': location,
             'start': {
-                'dateTime': convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
+                'dateTime': CalendarHandler.convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
                 'timeZone': 'Asia/Dhaka',
             },
             'end': {
-                'dateTime': convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
+                'dateTime': CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
                 'timeZone': 'Asia/Dhaka',
             },
             'organizer' : {
                 'displayName' : 'IEEE NSU SB',
-                # 'email' : 'armanmokammel@gmail.com'
                 'email' : 'ieeensusb.portal@gmail.com'
             },
             'source' : {
@@ -96,7 +86,7 @@ class CalendarHandler:
         else:
             return None
         
-    def update_event_in_calendar(request, event_id, title, description, start_time, end_time):
+    def update_event_in_calendar(request, event_id, title, description, start_time, end_time, attendees):
         if(event_id == None):
             return None
         service = CalendarHandler.authorize(request)
@@ -107,17 +97,20 @@ class CalendarHandler:
             if title:
                 response['summary'] = title
                 response['start'] = {
-                    'dateTime':convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
+                    'dateTime':CalendarHandler.convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
                     'timeZone': 'Asia/Dhaka',
                 }
                 response['end'] = {
-                    'dateTime':convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
+                    'dateTime':CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
                     'timeZone': 'Asia/Dhaka',
                 }
             if description:
                 response['description'] = description
+            if attendees:
+                response['attendees'] = attendees
 
-            service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response).execute()
+            service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response, sendUpdates='all').execute()
+
             return "Updated"
         else:
             return None
@@ -173,12 +166,15 @@ class CalendarHandler:
                 member = adminUsers.objects.get(username = user)
             
             if(type(member) == Members):
-                messages.info(request, "Google Calendar Authorization Required! Please contact Web Team")
-                return None
+                messages.info(request, "Google Authorization Required! Please contact Web Team")
+                return 'Invalid'
             
             if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-                CalendarHandler.save_credentials(creds)
+                try:
+                    creds.refresh(Request())
+                    CalendarHandler.save_credentials(creds)
+                except:
+                    return None
             
             return creds
 
@@ -222,8 +218,8 @@ class CalendarHandler:
         if not credentials:
             return None
         try:
-            service = build('drive', 'v3', credentials=credentials)
-            print('drive', 'v3', 'service created successfully')
+            service = build(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, 'service created successfully')
 
             file_name = file_path.name
             
@@ -265,8 +261,8 @@ class CalendarHandler:
         if not credentials:
             return None
         try:
-            service = build('drive', 'v3', credentials=credentials)
-            print('drive', 'v3', 'service created successfully')
+            service = build(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, 'service created successfully')
 
             file = service.files().get(
                 fileId=file_id,
@@ -284,8 +280,8 @@ class CalendarHandler:
         if not credentials:
             return None
         try:
-            service = build('drive', 'v3', credentials=credentials)
-            print('drive', 'v3', 'service created successfully')
+            service = build(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, 'service created successfully')
 
             response = service.files().delete(
                 fileId=file_id,

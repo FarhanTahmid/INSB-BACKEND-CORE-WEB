@@ -234,6 +234,18 @@
                                 <input class="input" type="text" name="gender" placeholder="Male or Female" value="{{ user_data.gender }}" required><br>
                                 <label for="email_ieee">IEEE Mail</label>
                                 <input class="input" type="email" name="email_ieee" value="{{ user_data.email_ieee }}"><br>
+                                <label for="blood_group">Blood Group</label>
+                                <select class="input" name="blood_group" value="{{ user_data.blood_group }}">
+                                    <option disabled selected hidden>Select</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                </select><br>
                                 <label for="major">Major in NSU</label>
                                 <input class="input" type="text" name="major" value="{{ user_data.major }}" required><br>
                                 <label for="facebook_url">Facebook Profile Link</label>
