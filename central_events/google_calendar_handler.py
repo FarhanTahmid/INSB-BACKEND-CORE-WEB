@@ -86,7 +86,7 @@ class CalendarHandler:
         else:
             return None
         
-    def update_event_in_calendar(request, event_id, title, description, start_time, end_time, attendees):
+    def update_event_in_calendar(request, event_id, title, description, location, start_time, end_time, attendees):
         if(event_id == None):
             return None
         service = CalendarHandler.authorize(request)
@@ -106,6 +106,8 @@ class CalendarHandler:
                 }
             if description:
                 response['description'] = description
+            if location:
+                response['location']=location
             if attendees:
                 response['attendees'] = attendees
 

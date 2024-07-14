@@ -790,8 +790,13 @@ class Branch:
                     }
                 ) 
 
+        venue = Event_Venue.objects.filter(event_id=event)
+        if not venue:
+            venue = "North South University"
+        else:
+            venue = venue[0].venue_id.venue_name
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
-            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location="North South University", start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
+            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location=venue, start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
             if(not event.google_calendar_event_id):
                 event.publish_in_google_calendar = False
                 messages.warning(request, "Could not publish event in calendar")
@@ -808,7 +813,7 @@ class Branch:
                 messages.warning(request, "Could not delete event from calendar")
             event.save()
         elif(event.google_calendar_event_id):
-            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, to_attendee_final_list)):
+            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, venue, None, None, to_attendee_final_list)):
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
