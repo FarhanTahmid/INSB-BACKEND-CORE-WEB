@@ -30,7 +30,7 @@ from system_administration.system_error_handling import ErrorHandling
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from content_writing_and_publications_team.models import Content_Team_Document
-
+from recruitment.models import recruited_members
 
 class Branch:
 
@@ -719,6 +719,18 @@ class Branch:
                                     'displayName':ex.ex_member.name,
                                     'email':ex.ex_member.email,
                                 })
+            elif option[0:9] == "recruits_":
+                recruit_id = int(option[9:])
+                recruited_mem = recruited_members.objects.filter(session_id = recruit_id)
+                for mem in recruited_mem:
+                    to_attendee_final_list.append({
+                        'displayName':mem.first_name,
+                        'email':mem.email_nsu,
+                    })
+                    # to_attendee_final_list.append({
+                    #     'displayName':mem.first_name,
+                    #     'email'::mem.email_nsu,
+                    # })
             else:
                 to_attendee_final_list.append(
                     {
