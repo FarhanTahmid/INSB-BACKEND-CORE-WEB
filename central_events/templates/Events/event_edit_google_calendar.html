@@ -188,7 +188,20 @@
         .plus-sign::before {
             content: '+';
         }
-        
+        #spinner {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto; /* Center the spinner */
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -229,10 +242,11 @@
                     style="color:#00629B;">{{event_details.event_name}}</b></span></h2>
                 
             
-                <h6>Note:</h6>
+                <h6 style="color: #861F41; font-weight: 700;">Note:</h6>
                 <ol style="justify-content:center;margin-bottom:15px;"><b>
-                    <li>If you want to add new venues, <span><b>update</b></span> any changes made first or <b>add</b> the venues first to prevent data loss</li>
-                        <li>If you don't want to submit a form link, then just erase the value None from the text field if it appears</li>
+                    <li>To publish the event on Google Calendar click the toogle button along with "Publish Event to Google Calendar:" and then scroll down to click on "Update Changes".</li>
+                    <li>If you made any changes such as create Attendee, delete Attendee or add/delete the attachment and so on, then scroll down to click on "Update Changes".</li>
+                    <li style="color: red;">If you have any attachments then once you published it in Google Calendar, you won't be able to change it. To change it, you need to unpublish and then you can modify the attachments.</li>
                 </ol></b>
 
                 <br>
@@ -342,7 +356,7 @@
         {% csrf_token %}
             <div class="box-body">
                 <div class="publish-switch">
-                    <label class="form-control-label slider-checkbox">Publish Event to Google Calendar</label>
+                    <label class="form-control-label slider-checkbox">Publish Event to Google Calendar:</label>
                     <span>                                            
                         <label class="ui-switch m-t-xs m-r">
                             <input name="publish_event_gc" type="checkbox" {% if is_event_published_gc %} checked {% endif %}>
@@ -439,13 +453,13 @@
                 <br><br>
 
                 <div style="text-align: center;">
-                    
+                    <div id="spinner" style="display: none;"></div>
                     {% if is_branch %}
-                    <input type="submit" name="update_event_gc" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                    <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% else %}
                         {% if has_access_for_sc_ag_updates %}
-                        <input type="submit" name="update_event_gc" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                         {% endif %}
                     <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% endif %}
@@ -597,8 +611,12 @@
         </div>
     </div>
     </div>
-                    
-<script>
+    <script>
+        document.getElementById('updateButton').addEventListener('click', function() {
+            document.getElementById('spinner').style.display = 'block';
+        });
+    </script>       
+    <script>
     // Function to update the selected documents container
     function updateSelectedDocuments() {
         var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');

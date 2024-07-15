@@ -68,11 +68,11 @@
                 </div>
                 <div class="publish-switch">
                     {% if is_branch %}
-                    <a href="{% url 'central_branch:google_calendar' event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 5px; background-color: lightgreen; border: 1px solid black">
+                    <a href="{% url 'central_branch:google_calendar' event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 10px; background-color: #007377; border: 1px solid black; margin: 10px 0; color: #ddd;">
                     {% else %}
-                    <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 5px; background-color: lightgreen; border: 1px solid black">
+                    <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 10px; background-color: #007377; border: 1px solid black; margin: 10px 0; color: #ddd;">
                     {% endif %}
-                        Publish Event to Google Calendar
+                        Click to publish the event to Google Calendar
                     </a>
                 </div>
                 <div class="form-group">
