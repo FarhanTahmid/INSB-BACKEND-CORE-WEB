@@ -17,6 +17,7 @@ API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 CALENDAR_ID = settings.GOOGLE_CALENDAR_ID
 SCOPES = settings.SCOPES
+BATCH_SIZE = 150
 
 service = None
 
@@ -65,7 +66,6 @@ class CalendarHandler:
             'status' : 'confirmed',
             'transparency' : 'opaque',
             'guestsCanSeeOtherGuests' : False,
-            'attendees' : attendeeList,
         }
         if attachments:
             files = []
@@ -80,9 +80,19 @@ class CalendarHandler:
 
         service = CalendarHandler.authorize(request)
         if service:
-            response = service.events().insert(calendarId=CALENDAR_ID, body=event, sendUpdates='all', supportsAttachments=True).execute()
+            response = service.events().insert(calendarId=CALENDAR_ID, body=event, supportsAttachments=True).execute()
+            id = response.get('id')
             print('Event created: %s' % (response.get('htmlLink')))
-            return response.get('id')
+            for i in range(0, len(attendeeList), BATCH_SIZE):
+                batch = attendeeList[i:i + BATCH_SIZE]
+                event = service.events().get(calendarId=CALENDAR_ID, eventId=id).execute()
+                if 'attendees' in event:
+                    event['attendees'].extend(batch)
+                else:
+                    event['attendees'] = batch
+                updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=id, body=event, sendUpdates='all').execute()
+                print(f'Batch {i // BATCH_SIZE + 1} updated.')
+            return id
         else:
             return None
         

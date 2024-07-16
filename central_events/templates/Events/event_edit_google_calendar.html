@@ -188,7 +188,7 @@
         .plus-sign::before {
             content: '+';
         }
-        #spinner {
+        .spinner {
             border: 16px solid #f3f3f3; /* Light grey */
             border-top: 16px solid #3498db; /* Blue */
             border-radius: 50%;
@@ -453,7 +453,7 @@
                 <br><br>
 
                 <div style="text-align: center;">
-                    <div id="spinner" style="display: none;"></div>
+                    <div id="spinner1" class="spinner" style="display: none;"></div>
                     {% if is_branch %}
                     <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
                     <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
@@ -604,7 +604,8 @@
                 <p class="text-danger">Warning: This will only delete the file in server. The invitation email will not be updated!</p>
             </div>
             <div class="modal-footer">
-                <input type="submit" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                <div id="spinner2" class="spinner" style="display: none;"></div>
+                <input type="submit" id="removeAttachmentBtn" name="remove" class="btn btn-outline-danger" value="Confirm" >
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
             </div>
             </form>
@@ -613,7 +614,11 @@
     </div>
     <script>
         document.getElementById('updateButton').addEventListener('click', function() {
-            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('spinner1').style.display = 'block';
+        });
+        document.getElementById('removeAttachmentBtn').addEventListener('click', function() {
+            document.getElementById('spinner2').style.display = 'block';
+            document.getElementById('spinner2').style.margin = '0';
         });
     </script>       
     <script>
