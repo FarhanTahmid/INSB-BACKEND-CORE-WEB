@@ -1840,7 +1840,7 @@ This is an automated message. Do not reply
             else to the individuals team's incharges by the coordinator'''
         user = request.user.username
         all_task_members = task.members.all()
-
+        site_domain = request.META['HTTP_HOST']
 
         if team_primary == None or team_primary == "1":
             #getting all teams
@@ -1877,6 +1877,8 @@ This is an automated message. Do not reply
                     #setting message
                     Task_Assignation.save_task_logs(task,task_log_message)
                     Task_Assignation.task_creation_email(request,people,task)
+                    notification_message = f"You have been assigned a Task, {task.title}!"
+                    NotificationHandler.notification_to_a_member(request,task,f"Task Created",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_creation_notification_type,people)
 
                     task.save()
 
@@ -1905,8 +1907,7 @@ This is an automated message. Do not reply
                     if people.team == team:
                         if people.position.is_co_ordinator and people.position.is_officer:
                             task.members.remove(people)
-                            print("people removed")
-                            print(people)
+                            
                             task.save()
                             task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} removed. Marks obtained - 25% of task'
                             #points deduction
@@ -1929,6 +1930,8 @@ This is an automated message. Do not reply
                     #setting message
                     Task_Assignation.save_task_logs(task,task_log_message)
                     Task_Assignation.task_creation_email(request,people,task)
+                    notification_message = f"You have been assigned a Task, {task.title}!"
+                    NotificationHandler.notification_to_a_member(request,task,f"Task Created",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_creation_notification_type,people)
                     task.save()
 
                     upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
@@ -2008,6 +2011,7 @@ This is an automated message. Do not reply
 
         task = Task.objects.get(id=task_id)
         user_name = Task_Assignation.get_user(request)
+        site_domain = request.META['HTTP_HOST']
 
         # if Task_Assignation.is_task_forwarded_to_incharge(task,team_primary):
         #     return True
@@ -2140,6 +2144,8 @@ This is an automated message. Do not reply
                 else:
                     members_list.append(memb)
                     Task_Assignation.task_creation_email(request,memb,task)
+                    notification_message = f"You have been assigned a Task, {task.title}!"
+                    NotificationHandler.notification_to_a_member(request,task,f"Task Created",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_creation_notification_type,memb)
 
             task.members.add(*members_list)
             task.save()
@@ -2265,6 +2271,8 @@ This is an automated message. Do not reply
                 else:
                     members_list.append(memb)
                     Task_Assignation.task_creation_email(request,memb,task)
+                    notification_message = f"You have been assigned a Task, {task.title}!"
+                    NotificationHandler.notification_to_a_member(request,task,f"Task Created",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_creation_notification_type,memb)
 
             task.members.add(*members_list)
             task.save()
