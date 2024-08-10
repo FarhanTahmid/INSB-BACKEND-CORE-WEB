@@ -30,6 +30,7 @@ from central_branch.view_access import Branch_View_Access
 from notification.notifications import NotificationHandler
 from notification.models import Notifications,MemberNotifications
 from system_administration.models import adminUsers
+from urllib.parse import urlparse
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -109,13 +110,17 @@ class DeleteNotifcationUserAjax(View):
                 message = "Task not yet completed, you can't delete this notification!"
                 return JsonResponse({'message': message,'deleted':False}, status=200)     
         except:
-            print("HERE22")
+
             return JsonResponse('Something went wrong!',safe=False)
 
 class ReceiveTokenAjax(View):
     def get(self,request, *args, **kwargs):
         token = request.GET.get('token')
         try:
+            referer_url = request.META.get('HTTP_REFERER', '')
+            parsed_url = urlparse(referer_url)
+            previous_path = parsed_url.path
+   
             member = Members.objects.get(ieee_id=request.user.username)
             member_notifications_count = MemberNotifications.objects.filter(member=member,is_read = False).order_by('-notification__timestamp').count()
             # Send the push notification
@@ -123,7 +128,7 @@ class ReceiveTokenAjax(View):
                 print("returned from token function")
 
             ##sending a push notification once user lands on page (optional)
-            if member_notifications_count > 0:
+            if member_notifications_count > 0 and (previous_path == '/portal/users/dashboard' or previous_path == '/portal/notifications/'):
                 title = "IEEE NSU SB PORTAL"
                 body = f"You have {str(member_notifications_count)} new notifications!"
                 response = push_notification.send_push_notification(title,body,token)   
