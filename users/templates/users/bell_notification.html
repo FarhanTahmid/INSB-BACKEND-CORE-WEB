@@ -677,7 +677,7 @@
           success: function(data) {
               const notifications = data.notifications;
               if (notifications.length > 0) {
-                // console.log('New notifications:', notifications);
+                //console.log('New notifications:', notifications);
                 updateNotifications(notifications);
                 notification_count();
                 shakeBell();
@@ -706,7 +706,7 @@
 
   function updateNotifications(notifications) {
     const msgBox = document.querySelector('.msg-box');
-    
+    //let newNotificationCount;
     notifications.forEach(notification => {
       //console.log("latestnotifcationID",latestNotificationId);
       //console.log("notification id",notification.id);
@@ -729,11 +729,12 @@
               if (notification.event){
                 notificationCreatorPicture = notification.event_organiser;
               } else{
-                notificationCreatorPicture = admin;
+                notificationCreatorPicture = notification.admin;
               }
             } else {
               notificationCreatorPicture = notification.created_by.profile_picture;
             }
+            //console.log('here trying to append notification');
             const notificationElement = `
                 <div class="msg-info-div new-notification">
                     <a href="${notificationLink}" target="_blank">
