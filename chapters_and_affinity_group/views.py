@@ -39,6 +39,7 @@ from central_branch import views as cv
 from users.renderData import LoggedinUser,member_login_permission
 import xlwt
 from system_administration.render_access import Access_Render
+import re
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -1526,6 +1527,7 @@ def event_google_calendar(request, primary, event_id):
             recruitment_sessions=PRT_Data.getAllRecruitmentSessions()       
             if event.selected_attendee_list:
                 selected_attendee_list = event.selected_attendee_list.split(',')
+                selected_attendee_list = [re.findall(r'\d+', item)[0] for item in selected_attendee_list if re.findall(r'\d+', item)]
             else:
                 selected_attendee_list = None
 

@@ -385,7 +385,7 @@
                         <option {% if "excom_branch" in selected_attendee_list %}selected{% endif %} value="excom_branch">Branch Ex-Com Members</option>
                         <option {% if "scag_eb" in selected_attendee_list %}selected{% endif %} value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
                         {% for session in recruitment_sessions %}
-                          <option {% if "recruits_"|add:session.id in selected_attendee_list %}selected{% endif %} value="recruits_{{session.id}}">Recruits of - {{session.session}} </option>
+                            <option {% if session.id|stringformat:"s" in selected_attendee_list %}selected{% endif %} value="recruits_{{session.id}}">Recruits of - {{session.session}} </option>  
                         {% endfor %}
                         
                       </select>

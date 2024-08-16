@@ -54,6 +54,7 @@ from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
 from task_assignation.models import *
+import re
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -3679,10 +3680,10 @@ def event_google_calendar(request, event_id):
             recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
             if event.selected_attendee_list:
                 selected_attendee_list = event.selected_attendee_list.split(',')
+                selected_attendee_list = [re.findall(r'\d+', item)[0] for item in selected_attendee_list if re.findall(r'\d+', item)]
             else:
                 selected_attendee_list = None
-            print("printing attendee list that are selected")
-            print(selected_attendee_list)
+
             context = {
                 'is_branch':True,
                 'user_data':user_data,
