@@ -3680,9 +3680,10 @@ def event_google_calendar(request, event_id):
             recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
             if event.selected_attendee_list:
                 selected_attendee_list = event.selected_attendee_list.split(',')
-                selected_attendee_list = [re.findall(r'\d+', item)[0] for item in selected_attendee_list if re.findall(r'\d+', item)]
+                selected_attendee_list_for_recruits = [re.findall(r'\d+', item)[0] for item in selected_attendee_list if re.findall(r'\d+', item)]
             else:
                 selected_attendee_list = None
+                selected_attendee_list_for_recruits = None
 
             context = {
                 'is_branch':True,
@@ -3695,7 +3696,8 @@ def event_google_calendar(request, event_id):
                 'event_gc_attachments':event_gc_attachments,
                 'additional_attendees':additional_attendees,
                 'recruitment_sessions':recruitment_sessions,
-                'selected_attendee_list':selected_attendee_list
+                'selected_attendee_list':selected_attendee_list,
+                'selected_attendee_list_for_recruits':selected_attendee_list_for_recruits,
             }
 
             return render(request, 'Events/event_edit_google_calendar.html', context)
