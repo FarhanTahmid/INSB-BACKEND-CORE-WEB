@@ -3681,7 +3681,8 @@ def event_google_calendar(request, event_id):
                 selected_attendee_list = event.selected_attendee_list.split(',')
             else:
                 selected_attendee_list = None
-
+            print("printing attendee list that are selected")
+            print(selected_attendee_list)
             context = {
                 'is_branch':True,
                 'user_data':user_data,

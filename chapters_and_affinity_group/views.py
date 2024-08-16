@@ -1523,7 +1523,7 @@ def event_google_calendar(request, primary, event_id):
             form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
             is_event_published_gc = event.publish_in_google_calendar
             additional_attendees = event.additional_attendees
-            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()       
             if event.selected_attendee_list:
                 selected_attendee_list = event.selected_attendee_list.split(',')
             else:
