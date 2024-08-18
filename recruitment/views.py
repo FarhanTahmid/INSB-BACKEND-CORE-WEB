@@ -225,7 +225,8 @@ def recruitee_details(request,session_id,nsu_id):
                             'cash_payment_status': cash_payment_status,
                             'ieee_payment_status': ieee_payment_status,
                             'skill_set_list':skill_set_list,
-                            'comment':request.POST['comment']
+                            'comment':request.POST['comment'],
+                            'blood_group':request.POST['blood_group']
                         }
                         
 
@@ -315,7 +316,8 @@ def recruitee_details(request,session_id,nsu_id):
                                 date_of_birth=getMember[0].date_of_birth,
                                 gender=getMember[0].gender,
                                 facebook_url=getMember[0].facebook_url,
-                                session=recruitment_session.objects.get(id=getMember[0].session_id)
+                                session=recruitment_session.objects.get(id=getMember[0].session_id),
+                                blood_group=getMember[0].blood_group
                             )
                             newMember.save()
 
@@ -412,7 +414,8 @@ def recruit_member(request, session_id):
                                 recruitment_time=time,
                                 recruited_by=request.POST['recruited_by'],
                                 cash_payment_status=cash_payment_status,
-                                ieee_payment_status=ieee_payment_status
+                                ieee_payment_status=ieee_payment_status,
+                                blood_group=request.POST['blood_group']
                             )
                             unique_code=renderData.Recruitment.generateUniqueCode(nsu_id=recruited_member.nsu_id,session=recruited_member.session_id,request=request)
                             recruited_member.unique_code=unique_code
@@ -487,7 +490,7 @@ def generateExcelSheet(request, session_id):
             font_style.font.bold = True
 
             # Defining columns that will stay in the first row
-            columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth','Facebook Username', 'Facebook Url',
+            columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)','Blood Group', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth','Facebook Username', 'Facebook Url',
                     'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
 
             # Defining first column
@@ -500,7 +503,7 @@ def generateExcelSheet(request, session_id):
             # getting all the values of members as rows with same session
             rows = recruited_members.objects.filter(session_id=session_id).values_list('nsu_id',
                                                                                                         'first_name', 'middle_name', 'last_name',
-                                                                                                        'email_personal','email_nsu',
+                                                                                                        'email_personal','email_nsu', 'blood_group',
                                                                                                         'contact_no',
                                                                                                         'ieee_id',
                                                                                                         'gender',

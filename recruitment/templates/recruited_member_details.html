@@ -383,16 +383,16 @@
                   </div>
                   <div class="form-group w-50">
                     <label for="blood_group">Blood Group</label>
-                    <select class="form-control" name="blood_group" value="{{ user_data.blood_group }}">
-                        <option disabled selected hidden>Select</option>
-                        <option value="A+">A+</option>
-                        <option value="A-">A-</option>
-                        <option value="B+">B+</option>
-                        <option value="B-">B-</option>
-                        <option value="O+">O+</option>
-                        <option value="O-">O-</option>
-                        <option value="AB+">AB+</option>
-                        <option value="AB-">AB-</option>
+                    <select class="form-control" name="blood_group" value="{{ data.blood_group }}">
+                        <option value="None" {% if data.blood_group == "None" %}selected{% endif %}>-------------------</option>
+                        <option value="A+" {% if data.blood_group == "A+" %}selected{% endif %}>A+</option>
+                        <option value="A-" {% if data.blood_group == "A-" %}selected{% endif %}>A-</option>
+                        <option value="B+" {% if data.blood_group == "B+" %}selected{% endif %}>B+</option>
+                        <option value="B-" {% if data.blood_group == "B-" %}selected{% endif %}>B-</option>
+                        <option value="O+" {% if data.blood_group == "O+" %}selected{% endif %}>O+</option>
+                        <option value="O-" {% if data.blood_group == "O-" %}selected{% endif %}>O-</option>
+                        <option value="AB+" {% if data.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                        <option value="AB-" {% if data.blood_group == "AB-" %}selected{% endif %}>AB-</option>
                     </select>
                   </div>
                   <div class="form-group">

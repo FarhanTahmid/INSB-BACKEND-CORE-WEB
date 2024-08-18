@@ -438,6 +438,7 @@ def update_information(request):
                 major = request.POST['major']
                 facebook_url = request.POST['facebook_url']
                 linkedin_url = request.POST['linkedin_url']
+                blood_group = request.POST['blood_group']
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -454,7 +455,8 @@ def update_information(request):
                                             contact_no=contact_no,
                                             major=major,
                                             facebook_url=facebook_url,
-                                            linkedin_url=linkedin_url)):
+                                            linkedin_url=linkedin_url,
+                                            blood_group=blood_group)):
                     messages.success(request, "Profile updated successfully")
                 else:
                     messages.error(request, "Something went wrong while updating profile information")                          

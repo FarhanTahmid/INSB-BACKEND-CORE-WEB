@@ -79,6 +79,7 @@ class LoggedinUser:
             'unread_notification_count':unread_notification_count,
             'media_url':settings.MEDIA_URL,
             'admin':admin,
+            'blood_group':get_Member_details.blood_group
         }
         except Members.DoesNotExist:
             try:
@@ -195,7 +196,7 @@ class LoggedinUser:
             except adminUsers.DoesNotExist:
                 return False
     
-    def update_user_data(self, name, nsu_id, home_address, date_of_birth, email_personal, gender, email_nsu, email_ieee, contact_no, major, facebook_url, linkedin_url):
+    def update_user_data(self, name, nsu_id, home_address, date_of_birth, email_personal, gender, email_nsu, email_ieee, contact_no, major, facebook_url, linkedin_url,blood_group):
         ''' This function updates the user profile information. It takes name, nsu_id, home_address, date_of_birth, email_personal, gender, email_nsu, email_ieee, contact_no, major, facebook_url and linkedin_url '''
         try:
             #Get user details from database
@@ -212,7 +213,8 @@ class LoggedinUser:
                             contact_no=contact_no,
                             major=major,
                             facebook_url=facebook_url,
-                            linkedin_url=linkedin_url)           
+                            linkedin_url=linkedin_url,
+                            blood_group=blood_group)           
             return True
         except Members.DoesNotExist:
             return False

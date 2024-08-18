@@ -42,6 +42,7 @@ class recruited_members(models.Model):
     ieee_payment_status=models.BooleanField(null=False,blank=False,default=False)
     comment=models.CharField(null=True,blank=True,max_length=500,default="")
     unique_code=models.CharField(null=True,blank=True,max_length=40) #this attribute is to identify the member in the groups
+    blood_group=models.CharField(max_length=10,null=True,blank=True,default="None")
 
     class Meta:
         verbose_name="Recruited Members"

@@ -64,6 +64,7 @@ class Recruitment:
             member.cash_payment_status = values['cash_payment_status']
             member.ieee_payment_status = values['ieee_payment_status']
             member.comment=values['comment']
+            member.blood_group = values['blood_group']
             if member.ieee_payment_status and member.ieee_id == "":
                 return "no_ieee_id" #This is implied to enforce entering of ieee id upon completion of payment
             else:
