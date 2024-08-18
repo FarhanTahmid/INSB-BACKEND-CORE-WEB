@@ -300,8 +300,25 @@
                           type="date" placeholder="Date of Birth" name="date_of_birth" value="{{ dob }}"
                         />
                     </div>
+                    
                     <br>
                   </div>
+                  <div class="">
+                    <div class="">
+                      <label>Blood Group</label>
+                      <select class="form-control" name="blood_group" value="{{ member_data.blood_group }}">
+                        <option value="None" disabled {% if member_data.blood_group == "None" %}selected{% endif %}>-------------------</option>
+                        <option value="A+" {% if member_data.blood_group == "A+" %}selected{% endif %}>A+</option>
+                        <option value="A-" {% if member_data.blood_group == "A-" %}selected{% endif %}>A-</option>
+                        <option value="B+" {% if member_data.blood_group == "B+" %}selected{% endif %}>B+</option>
+                        <option value="B-" {% if member_data.blood_group == "B-" %}selected{% endif %}>B-</option>
+                        <option value="O+" {% if member_data.blood_group == "O+" %}selected{% endif %}>O+</option>
+                        <option value="O-" {% if member_data.blood_group == "O-" %}selected{% endif %}>O-</option>
+                        <option value="AB+" {% if member_data.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                        <option value="AB-" {% if member_data.blood_group == "AB-" %}selected{% endif %}>AB-</option>
+                    </select>                     
+                    </div>
+                  </div><br>
                   <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">

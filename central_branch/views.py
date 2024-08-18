@@ -3818,6 +3818,7 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
+                blood_group = request.POST['blood_group']
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -3848,7 +3849,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=None,
-                                                                last_renewal_session=None 
+                                                                last_renewal_session=None,
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -3872,7 +3874,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
-                                                                last_renewal_session=None 
+                                                                last_renewal_session=None,
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -3898,7 +3901,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=None,
-                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -3922,7 +3926,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
-                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
