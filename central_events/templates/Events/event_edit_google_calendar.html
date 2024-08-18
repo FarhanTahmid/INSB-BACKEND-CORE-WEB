@@ -656,7 +656,7 @@
   <script>
     const google_calendar_toggle_button = document.getElementById('google_calendar_toggle_button');
     google_calendar_toggle_button.addEventListener('click',()=>{
-        if (google_calendar_toggle_button.classList.toggle('active') === false){
+        if (google_calendar_toggle_button.classList.toggle('active') === true){
             swal("Warning!", "Event will be unpublished from Google Calendar after clicking 'Update Changes'! Sent email would not be deleted.", "warning");
         }
     });
