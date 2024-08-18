@@ -384,7 +384,7 @@
                   <div class="form-group w-50">
                     <label for="blood_group">Blood Group</label>
                     <select class="form-control" name="blood_group" value="{{ data.blood_group }}">
-                        <option value="None" {% if data.blood_group == "None" %}selected{% endif %}>-------------------</option>
+                        <option value="None" disabled {% if data.blood_group == "None" %}selected{% endif %}>-------------------</option>
                         <option value="A+" {% if data.blood_group == "A+" %}selected{% endif %}>A+</option>
                         <option value="A-" {% if data.blood_group == "A-" %}selected{% endif %}>A-</option>
                         <option value="B+" {% if data.blood_group == "B+" %}selected{% endif %}>B+</option>
