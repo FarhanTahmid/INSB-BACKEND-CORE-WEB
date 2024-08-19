@@ -343,9 +343,11 @@
 
       .item{
         position: relative;
+        cursor: pointer;
     }
-    .item:hover>.tooltip{
+    .item.active>.tooltip {
         opacity: 1;
+        z-index: 1;
     }
     .icon i{
         font-size: 20px;
@@ -366,6 +368,7 @@
         will-change: transform;
         opacity: 0;
         transition: all 0.4s;
+        z-index: -1;
     }
     .tooltip::after{
         content: "";
@@ -472,7 +475,8 @@
                                     <div class="tooltip">If you have any attachments, please upload them here. Be sure to click the "Publish Event to Google Calendar" button, and then click "Update Changes" to send the email with the attachments.</div>
                                     <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
                                 </div>
-                            </span></label>
+                            </span>
+                        </label>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="content-doc-input" name="document" multiple>
                             <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
@@ -666,6 +670,12 @@
     </div>
     </div>
     <script>
+        document.querySelectorAll('.item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                item.classList.toggle('active');
+            });
+        });
+        
         document.getElementById('updateButton').addEventListener('click', function() {
             document.getElementById('spinner1').style.display = 'block';
         });
