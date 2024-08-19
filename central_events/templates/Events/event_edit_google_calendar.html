@@ -340,6 +340,43 @@
         bottom: 30px;
         left: 95%;
       }
+
+      .item{
+        position: relative;
+    }
+    .item:hover>.tooltip{
+        opacity: 1;
+    }
+    .icon i{
+        font-size: 20px;
+        color: #000;
+        border-radius: 50%;
+        place-items: center;
+    }
+    .tooltip{
+        position: absolute;
+        background-color: rgba(59, 59, 59);
+        color: #fff;
+        padding: 10px;
+        left: 50%;
+        width: 200px;
+        text-align: center;
+        transform: translateX(-50%);
+        bottom: 100%;
+        will-change: transform;
+        opacity: 0;
+        transition: all 0.4s;
+    }
+    .tooltip::after{
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: rgba(59, 59, 59) transparent transparent transparent;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -392,7 +429,14 @@
                   </div>
 
                   <div class="form-group row align-items-center">
-                    <label for="captions" class="col-sm-3 form-control-label">Add Attendee:</label>
+                    <label for="captions" class="col-sm-3 form-control-label" style="display: flex;">Add Attendee: &nbsp;
+                        <span>
+                            <div class="item">
+                                <div class="tooltip">If you'd like to include an attendee who isn't on the Select Attendee List, please enter their email address here.</div>
+                                <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </span>
+                    </label>
                     <div class="col-sm-7">
                         <!-- Add input field for captions here if needed -->
                     </div>
@@ -422,7 +466,13 @@
                 {% if not is_event_published_gc %}
                     <!--upload doc-->
                     <div class="form-group">
-                        <label for="documents">Upload Attachments (if any):</label>
+                        <label for="documents" style="display: flex;">Upload Attachments (if any):  &nbsp;
+                            <span>
+                                <div class="item">
+                                    <div class="tooltip">If you have any attachments, please upload them here. Be sure to click the "Publish Event to Google Calendar" button, and then click "Update Changes" to send the email with the attachments.</div>
+                                    <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
+                                </div>
+                            </span></label>
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" id="content-doc-input" name="document" multiple>
                             <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
