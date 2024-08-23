@@ -1,16 +1,13 @@
 import datetime
 import mimetypes
+import os
 import tempfile
-from django.contrib import messages
-from dotenv import set_key
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from insb_port import settings
-from system_administration.models import adminUsers
-from users.models import Members
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.http import MediaFileUpload
+
+from system_administration.google_mail_handler import GmailHandler
 
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
@@ -29,7 +26,7 @@ class CalendarHandler:
         return dt
 
     def authorize(request):
-        credentials = CalendarHandler.get_credentials(request)
+        credentials = GmailHandler.get_credentials(request)
         if not credentials:
             return None
         try:
@@ -157,41 +154,6 @@ class CalendarHandler:
         else:
             return False
 
-    def get_credentials(request):
-    
-        creds = None
-        if settings.GOOGLE_CLOUD_TOKEN:
-            creds = Credentials.from_authorized_user_info({
-                'token':settings.GOOGLE_CLOUD_TOKEN,
-                'refresh_token':settings.GOOGLE_CLOUD_REFRESH_TOKEN,
-                'token_uri':settings.GOOGLE_CLOUD_TOKEN_URI,
-                'client_id':settings.GOOGLE_CLOUD_CLIENT_ID,
-                'client_secret':settings.GOOGLE_CLOUD_CLIENT_SECRET,
-                'expiry':settings.GOOGLE_CLOUD_EXPIRY
-            },scopes=settings.SCOPES)
-
-        if not creds or not creds.valid:
-            user = request.user.username
-            try:
-                member = Members.objects.get(ieee_id = user)
-            except:
-                member = adminUsers.objects.get(username = user)
-            
-            if(type(member) == Members):
-                messages.info(request, "Google Authorization Required! Please contact Web Team")
-                return 'Invalid'
-            
-            if creds and creds.expired and creds.refresh_token:
-                try:
-                    creds.refresh(Request())
-                    CalendarHandler.save_credentials(creds)
-                except:
-                    return None
-            
-            return creds
-
-        return creds
-
     def get_google_auth_flow(request):
         client_config = {
             'web': {
@@ -214,19 +176,9 @@ class CalendarHandler:
             redirect_uri=redirect_uri
         )
 
-    def save_credentials(credentials):
-        set_key('.env', 'GOOGLE_CLOUD_TOKEN', credentials.token)
-        settings.GOOGLE_CLOUD_TOKEN = credentials.token
-        if(credentials.refresh_token):
-            set_key('.env', 'GOOGLE_CLOUD_REFRESH_TOKEN', credentials.refresh_token)
-            settings.GOOGLE_CLOUD_REFRESH_TOKEN = credentials.refresh_token
-        if(credentials.expiry):
-            set_key('.env', 'GOOGLE_CLOUD_EXPIRY', credentials.expiry.isoformat())
-            settings.GOOGLE_CLOUD_EXPIRY = credentials.expiry.isoformat()
-
     def google_drive_upload_files(request, file_path):
 
-        credentials = CalendarHandler.get_credentials(request)
+        credentials = GmailHandler.get_credentials(request)
         if not credentials:
             return None
         try:
@@ -240,28 +192,33 @@ class CalendarHandler:
                     temp_file.write(chunk)
                 temp_file_path = temp_file.name
             
-            mime_type, _ = mimetypes.guess_type(file_name)
-            media = MediaFileUpload(temp_file_path, mimetype=mime_type)
+            try:
+                mime_type, _ = mimetypes.guess_type(file_name)
+                media = MediaFileUpload(temp_file_path, mimetype=mime_type)
 
-            file_metadata = {
-                'name': file_name,
-            }
+                file_metadata = {
+                    'name': file_name,
+                }
 
-            file = service.files().create(
-                body=file_metadata,
-                media_body=media,
-                fields='id,webContentLink,name,iconLink,webViewLink'
-            ).execute()
+                file = service.files().create(
+                    body=file_metadata,
+                    media_body=media,
+                    fields='id,webContentLink,name,iconLink,webViewLink'
+                ).execute()
 
-            # Set the file permission to "anyone with the link can view"
-            permission = {
-                'type': 'anyone',
-                'role': 'reader',
-            }
-            service.permissions().create(
-                fileId=file['id'],
-                body=permission,
-            ).execute()
+                # Set the file permission to "anyone with the link can view"
+                permission = {
+                    'type': 'anyone',
+                    'role': 'reader',
+                }
+                service.permissions().create(
+                    fileId=file['id'],
+                    body=permission,
+                ).execute()
+            finally:
+                # Ensure the temporary file is removed after processing
+                os.remove(temp_file_path)
+                
             return file
         except Exception as e:
             print(e)
@@ -269,7 +226,7 @@ class CalendarHandler:
             return None
         
     def google_drive_get_file(request, file_id):
-        credentials = CalendarHandler.get_credentials(request)
+        credentials = GmailHandler.get_credentials(request)
         if not credentials:
             return None
         try:
@@ -288,7 +245,7 @@ class CalendarHandler:
             return None
         
     def google_drive_delete_file(request, file_id):
-        credentials = CalendarHandler.get_credentials(request)
+        credentials = GmailHandler.get_credentials(request)
         if not credentials:
             return None
         try:
