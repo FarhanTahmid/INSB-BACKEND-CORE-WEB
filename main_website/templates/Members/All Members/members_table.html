@@ -70,9 +70,20 @@
     .table-responsive {
       overflow-x: auto;
       max-width: 100%;
-      padding: 15px;
+      /* padding: 15px; */
     }
 
+    @media screen and (max-width: 768px) {
+
+      .tb_search{
+        width: 100%;
+        margin-bottom: 15px;
+      }
+    }
+    .table-responsive thead th {
+        position: sticky;
+        top: 0;
+    }
 </style>
 <h3 style="color:#00629B;text-align:center;">All Registered Members of IEEE NSU Student Branch</h3>
 <div style="justify-content:center;text-align:center;">  
@@ -94,7 +105,7 @@
           </div>
         </div>
         <div class="tb_search">
-          <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search.." class="form-control">
+          <input type="text" id="search_input_all" onkeyup="FilterkeyWord_all_table()" placeholder="Search by id, mail, blood group" class="form-control">
         </div>
       </div>
       <div class="table-responsive">
