@@ -3,7 +3,6 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import re
 from central_branch.renderData import Branch
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
@@ -442,33 +441,87 @@ class PRT_Email_System:
         '''This funciton sends the schedules email on time '''
         try:
 
-            #formatting the time and date and assigning unique name to it to store it in database of celery beat
-            scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
-            unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
+
+            try:
+                #formatting the time and date and assigning unique name to it to store it in database of celery beat
+                scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
+                unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
+                credentials = GmailHandler.get_credentials()
+                if not credentials:
+                    print("NOT OKx")
+                    return None
+
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+                message=MIMEMultipart()
+
+                message["From"] = "ieeensusb.portal@gmail.com"
+                message["To"] = ','.join(to_email_list_final)
+                # message["Cc"] = ','.join(cc_email_list_final)
+                # message["Bcc"] = ','.join(bcc_email_list_final)
+                message["Subject"] = subject
+
+                # Attach the main message body
+                message.attach(MIMEText(mail_body, 'plain'))
+    
+                for attachment in attachment:
+                    content_file = ContentFile(attachment.read())
+                    content_file.name = attachment.name
+                    part = MIMEBase('application', 'octet-stream')
+                    part.set_payload(content_file.read())
+                    encoders.encode_base64(part)
+                    part.add_header(
+                        'Content-Disposition',
+                        f'attachment; filename={content_file.name}',
+                    )
+                    message.attach(part)
+
+                # encoded message
+                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+
+                create_message = {"message": {"raw": encoded_message}}
+
+                draft = (
+                    service.users()
+                    .drafts()
+                    .create(userId="me", body=create_message)
+                    .execute()
+                )
+
+                print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+                # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
+    
             
             
-            to_email_list_json = json.dumps(to_email_list_final)
-            cc_email_list_json = json.dumps(cc_email_list_final)
-            bcc_email_list_json = json.dumps(bcc_email_list_final)
-            unique_task_name_json = json.dumps(unique_task_name)
-            email_attachments = None
-            if attachment != None:
-                for i in attachment:
-                    email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
-                    email_attachments.save()
+            # to_email_list_json = json.dumps(to_email_list_final)
+            # cc_email_list_json = json.dumps(cc_email_list_final)
+            # bcc_email_list_json = json.dumps(bcc_email_list_final)
+                unique_task_name_json = json.dumps(unique_task_name)
+                dit = json.dumps(draft["id"])
+            # email_attachments = None
+            # if attachment != None:
+            #     for i in attachment:
+            #         email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
+            #         email_attachments.save()
                 
             
-            #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
-            #and clocked argument is foregined key with ClockedScheudle
-            
-            PeriodicTask.objects.create(
-                                clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
-                                name=unique_task_name ,
-                                task = "public_relation_team.tasks.send_scheduled_email",
-                                args =json.dumps([to_email_list_json,cc_email_list_json,bcc_email_list_json,subject,mail_body,unique_task_name_json]),
-                                one_off = True,
-                                enabled = True,
+                #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
+                #and clocked argument is foregined key with ClockedScheudle
+                
+                PeriodicTask.objects.create(
+                                    clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
+                                    name=unique_task_name ,
+                                    task = "public_relation_team.tasks.send_scheduled_email",
+                                    args =json.dumps([dit,unique_task_name_json]),
+                                    one_off = True,
+                                    enabled = True,
                             )
+                return True
+            except Exception as e:
+                print(e)
+                print(f'Failed to create service instance for gmail')
+                return None  
             return True
         except Exception as e:
             PRT_Email_System.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
