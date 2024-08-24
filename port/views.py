@@ -3,6 +3,7 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render,redirect
 from central_branch.view_access import Branch_View_Access
 from central_events.google_calendar_handler import CalendarHandler
+from system_administration.google_mail_handler import GmailHandler
 from system_administration.models import Project_leads,Project_Developers
 from django.conf import settings
 import traceback
@@ -56,13 +57,20 @@ def developed_by(request):
 def authorize(request):
 
     if(Branch_View_Access.get_event_edit_access(request)):
-        credentials = CalendarHandler.get_credentials(request)
+        credentials = GmailHandler.get_credentials(request)
         if not credentials:
             flow = CalendarHandler.get_google_auth_flow(request)
-            authorization_url, state = flow.authorization_url(
-                access_type='offline',
-                include_granted_scopes='true'
-            )
+            if(request.META['HTTP_HOST'] == "127.0.0.1:8000" or request.META['HTTP_HOST'] == "localhost:8000"):
+                authorization_url, state = flow.authorization_url(
+                    access_type='offline',
+                    include_granted_scopes='true',
+                )
+            else:
+                authorization_url, state = flow.authorization_url(
+                    access_type='offline',
+                    include_granted_scopes='true',
+                    login_hint='ieeensusb.portal@gmail.com'
+                )
             request.session['state'] = state
             return redirect(authorization_url)
 
@@ -74,15 +82,19 @@ def authorize(request):
         return redirect('central_branch:event_control')
 
 def oauth2callback(request):
-    if(request.META['HTTP_HOST'] == "127.0.0.1:8000" or request.META['HTTP_HOST'] == "localhost:8000"):
-        os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    state = request.GET.get('state')
-    if state != request.session.pop('state', None):
-        return HttpResponseBadRequest('Invalid state parameter')
-    
-    flow = CalendarHandler.get_google_auth_flow(request)
-    flow.fetch_token(authorization_response=request.build_absolute_uri())
-    credentials = flow.credentials
-    CalendarHandler.save_credentials(credentials)
-    messages.success(request, "Authorized")
-    return redirect('central_branch:event_control')
+    try:
+        if(request.META['HTTP_HOST'] == "127.0.0.1:8000" or request.META['HTTP_HOST'] == "localhost:8000"):
+            os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+        state = request.GET.get('state')
+        if state != request.session.pop('state', None):
+            return HttpResponseBadRequest('Invalid state parameter')
+        
+        flow = CalendarHandler.get_google_auth_flow(request)
+        flow.fetch_token(authorization_response=request.build_absolute_uri())
+        credentials = flow.credentials
+        GmailHandler.save_credentials(credentials)
+        messages.success(request, "Authorized")
+        return redirect('central_branch:event_control')
+    except:
+        messages.warning(request, "Access Denied!")
+        return redirect('central_branch:event_control')
