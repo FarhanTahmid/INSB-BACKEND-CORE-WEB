@@ -11,6 +11,7 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 from central_branch import views as cv
 from django.contrib import messages
+from central_events.google_calendar_handler import GmailHandler
 
 logger=logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ def developed_by(request):
 def authorize(request):
 
     if(Branch_View_Access.get_event_edit_access(request)):
-        credentials = CalendarHandler.get_credentials(request)
+        credentials = GmailHandler.get_credentials(request)
         if not credentials:
             flow = CalendarHandler.get_google_auth_flow(request)
             authorization_url, state = flow.authorization_url(
@@ -83,6 +84,6 @@ def oauth2callback(request):
     flow = CalendarHandler.get_google_auth_flow(request)
     flow.fetch_token(authorization_response=request.build_absolute_uri())
     credentials = flow.credentials
-    CalendarHandler.save_credentials(credentials)
+    GmailHandler.save_credentials(credentials)
     messages.success(request, "Authorized")
     return redirect('central_branch:event_control')
