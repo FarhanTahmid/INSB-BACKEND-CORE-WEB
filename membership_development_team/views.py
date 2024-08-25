@@ -182,6 +182,7 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 skill_sets=request.POST.getlist('skill_sets')
+                blood_group = request.POST['blood_group']
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -212,7 +213,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=None,
-                                                                last_renewal_session=None 
+                                                                last_renewal_session=None,
+                                                                blood_group = blood_group,
                                                                 )
                         if MemberSkillSets.objects.filter(member=ieee_id).exists():
                             member_skills = MemberSkillSets.objects.get(member=ieee_id)
@@ -243,7 +245,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
-                                                                last_renewal_session=None 
+                                                                last_renewal_session=None,
+                                                                blood_group = blood_group,
                                                                 )
                         if MemberSkillSets.objects.filter(member=ieee_id).exists():
                             member_skills = MemberSkillSets.objects.get(member=ieee_id)
@@ -275,7 +278,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=None,
-                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
+                                                                blood_group = blood_group,
                                                                 )
                         if MemberSkillSets.objects.filter(member=ieee_id).exists():
                             member_skills = MemberSkillSets.objects.get(member=ieee_id)
@@ -306,7 +310,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
-                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
+                                                                blood_group = blood_group,
                                                                 )
                         if MemberSkillSets.objects.filter(member=ieee_id).exists():
                             member_skills = MemberSkillSets.objects.get(member=ieee_id)

@@ -9,6 +9,9 @@ from chapters_and_affinity_group.models import SC_AG_Members
 import os
 from insb_port import settings
 from PIL import Image
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
 # Create your models here.
 
 # System Model
@@ -104,6 +107,7 @@ class Branch_Data_Access(models.Model):
     team_details_page=models.BooleanField(null=False,blank=False,default=False)
     manage_award_access=models.BooleanField(null=False,blank=False,default=False)
     manage_web_access=models.BooleanField(null=False,blank=False,default=False)
+    manage_custom_notification_access=models.BooleanField(null=False,blank=False,default=False)
 
     class Meta:
         verbose_name="Branch Data Access"
@@ -300,4 +304,18 @@ class SystemErrors(models.Model):
     class Meta:
         verbose_name="System Error"
     def __str__(self) -> str:
+        return str(self.pk)
+    
+class General_Log(models.Model):
+
+    content_type = models.ForeignKey(ContentType,null=True,blank=True, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField(null=True,blank=True)
+    log_of=GenericForeignKey("content_type", "object_id")
+    log_details = models.JSONField()
+    update_number = models.IntegerField(null=True,blank=True,default = 0)
+    
+    class Meta:
+        verbose_name = "General Log"
+
+    def __str__(self) ->str:
         return str(self.pk)

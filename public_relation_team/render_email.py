@@ -1,3 +1,8 @@
+import base64
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from central_branch.renderData import Branch
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
@@ -5,7 +10,10 @@ from django.core.files.base import ContentFile
 import json,os
 from datetime import datetime
 from insb_port import settings
+from system_administration.google_mail_handler import GmailHandler
 from .models import Email_Attachements
+from googleapiclient.discovery import build
+from django.template.loader import render_to_string
 import traceback
 import logging
 from django_celery_beat.models import ClockedSchedule,PeriodicTask
@@ -218,7 +226,7 @@ class PRT_Email_System:
         
         return to_email_final_list,cc_email_final_list,bcc_email_final_list
     
-    def send_email(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
+    def send_email(request, to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment=None):
         # print(len(to_email_list))
         # print(len(bcc_email_list))
         # print(len(cc_email_list))
@@ -229,6 +237,7 @@ class PRT_Email_System:
 
         '''If length of both the list is not 40 then the next two if condition will check for 
         individual list length'''
+
         
 
         if len(to_email_list)>=40 and len(bcc_email_list)>=40:
@@ -236,7 +245,7 @@ class PRT_Email_System:
                 # print(f"to_email_list >= {len(to_email_list)}  and bcc_email_list>={len(bcc_email_list)}")
                 # print(len(to_email_list))
                 # print(len(bcc_email_list))
-                if PRT_Email_System.send_email_confirmation(to_email_list[:40],cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
+                if PRT_Email_System.send_email_confirmation(request, to_email_list[:40],cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
                     to_email_list = to_email_list[40:]
                     bcc_email_list = bcc_email_list[40:]
                     # print(len(to_email_list))
@@ -248,7 +257,7 @@ class PRT_Email_System:
             while len(to_email_list)!=0:
                 # print(f"to_email_list only more than {len(to_email_list)}")
                 # print(len(to_email_list))
-                if PRT_Email_System.send_email_confirmation(to_email_list[:40],cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
+                if PRT_Email_System.send_email_confirmation(request, to_email_list[:40],cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                     to_email_list = to_email_list[40:]
                     # print(len(to_email_list))
                 else:
@@ -258,7 +267,7 @@ class PRT_Email_System:
             while len(bcc_email_list)!=0:
                 # print(f"bcc_email_list only more than {len(bcc_email_list)}")
                 # print(len(bcc_email_list))
-                if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
+                if PRT_Email_System.send_email_confirmation(request, to_email_list,cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
                     bcc_email_list = bcc_email_list[40:]
                     # print(len(bcc_email_list))
                 else:
@@ -271,7 +280,7 @@ class PRT_Email_System:
             # print(f"Outside, less than 40")
             # print(len(to_email_list))
             # print(len(bcc_email_list))
-            if PRT_Email_System.send_email_confirmation(to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
+            if PRT_Email_System.send_email_confirmation(request, to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                 return True
             else:
                 return False
@@ -279,26 +288,62 @@ class PRT_Email_System:
         if len(to_email_list)==0 and len(bcc_email_list)==0 and len(cc_email_list)>0:
             return True
 
-
-    def send_email_confirmation(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,is_scheduled,attachment):
+    def send_email_confirmation(request, to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,is_scheduled,attachment):
             email_from = settings.EMAIL_HOST_USER 
             # to_email_list_final=["skmdsakib2186@gmail.com"]
             # cc_email_list_final=[]
             # bcc_email_list_final=[]    
-            # print(to_email_list_final)
+            # print(cc_email_list_final)
             if attachment is None:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OKx")
+                    return False
                 try:
-                    email=EmailMultiAlternatives(subject,mail_body,
-                            email_from,
-                            to_email_list_final,
-                            bcc=bcc_email_list_final,
-                            cc=cc_email_list_final
-                            )
-                    email.send()
+                    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+
+                    message = MIMEText(mail_body, 'plain')
+
+                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message["To"] = ','.join(to_email_list_final)
+                    # message["Cc"] = ','.join(cc_email_list_final)
+                    # message["Bcc"] = ','.join(bcc_email_list_final)
+                    message["Subject"] = subject
+
+                    # encoded message
+                    encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+
+                    # create_message = {"message": {"raw": encoded_message}}
+
+                    # draft = (
+                    #     service.users()
+                    #     .drafts()
+                    #     .create(userId="me", body=create_message)
+                    #     .execute()
+                    # )
+
+                    # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+                    # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
+                    
+                    create_message = {"raw": encoded_message}
+
+                    send_message = (
+                        service.users()
+                        .messages()
+                        .send(userId="me", body=create_message)
+                        .execute()
+                    )
+
+                    print(f'Message Id: {send_message["id"]}')
+
                     return True
+
                 except Exception as e:
                     print(e)
-                    return False    
+                    print(f'Failed to create service instance for gmail')
+                    return None    
             else:
                 try:
                     if is_scheduled:
@@ -324,20 +369,68 @@ class PRT_Email_System:
                         return True
 
                     else:
-        
-                        email=EmailMultiAlternatives(subject,mail_body,
-                                email_from,
-                                to_email_list_final,
-                                bcc=bcc_email_list_final,
-                                cc=cc_email_list_final
-                                )
+                        try:
+                            credentials = GmailHandler.get_credentials(request)
+                            if not credentials:
+                                print("NOT OKx")
+                                return None
+
+                            service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                            print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
             
-                        for attachment in attachment:
-                            content_file = ContentFile(attachment.read())
-                            content_file.name = attachment.name
-                            email.attach(attachment.name, content_file.read(), attachment.content_type)
-                        email.send()
-                        return True
+                            message=MIMEMultipart()
+
+                            message["From"] = "ieeensusb.portal@gmail.com"
+                            message["To"] = ','.join(to_email_list_final)
+                            # message["Cc"] = ','.join(cc_email_list_final)
+                            # message["Bcc"] = ','.join(bcc_email_list_final)
+                            message["Subject"] = subject
+
+                            # Attach the main message body
+                            message.attach(MIMEText(mail_body, 'plain'))
+                
+                            for attachment in attachment:
+                                content_file = ContentFile(attachment.read())
+                                content_file.name = attachment.name
+                                part = MIMEBase('application', 'octet-stream')
+                                part.set_payload(content_file.read())
+                                encoders.encode_base64(part)
+                                part.add_header(
+                                    'Content-Disposition',
+                                    f'attachment; filename={content_file.name}',
+                                )
+                                message.attach(part)
+
+                            # encoded message
+                            encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+
+                            # create_message = {"message": {"raw": encoded_message}}
+
+                            # draft = (
+                            #     service.users()
+                            #     .drafts()
+                            #     .create(userId="me", body=create_message)
+                            #     .execute()
+                            # )
+
+                            # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+                            # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
+                            
+                            create_message = {"raw": encoded_message}
+
+                            send_message = (
+                                service.users()
+                                .messages()
+                                .send(userId="me", body=create_message)
+                                .execute()
+                            )
+
+                            print(f'Message Id: {send_message["id"]}')
+                            return True
+                        except Exception as e:
+                            print(e)
+                            print(f'Failed to create service instance for gmail')
+                            return None  
                     
                 except Exception as e:
                     print(e)
@@ -348,33 +441,87 @@ class PRT_Email_System:
         '''This funciton sends the schedules email on time '''
         try:
 
-            #formatting the time and date and assigning unique name to it to store it in database of celery beat
-            scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
-            unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
+
+            try:
+                #formatting the time and date and assigning unique name to it to store it in database of celery beat
+                scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
+                unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
+                credentials = GmailHandler.get_credentials()
+                if not credentials:
+                    print("NOT OKx")
+                    return None
+
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+                message=MIMEMultipart()
+
+                message["From"] = "ieeensusb.portal@gmail.com"
+                message["To"] = ','.join(to_email_list_final)
+                # message["Cc"] = ','.join(cc_email_list_final)
+                # message["Bcc"] = ','.join(bcc_email_list_final)
+                message["Subject"] = subject
+
+                # Attach the main message body
+                message.attach(MIMEText(mail_body, 'plain'))
+    
+                for attachment in attachment:
+                    content_file = ContentFile(attachment.read())
+                    content_file.name = attachment.name
+                    part = MIMEBase('application', 'octet-stream')
+                    part.set_payload(content_file.read())
+                    encoders.encode_base64(part)
+                    part.add_header(
+                        'Content-Disposition',
+                        f'attachment; filename={content_file.name}',
+                    )
+                    message.attach(part)
+
+                # encoded message
+                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+
+                create_message = {"message": {"raw": encoded_message}}
+
+                draft = (
+                    service.users()
+                    .drafts()
+                    .create(userId="me", body=create_message)
+                    .execute()
+                )
+
+                print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+                # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
+    
             
             
-            to_email_list_json = json.dumps(to_email_list_final)
-            cc_email_list_json = json.dumps(cc_email_list_final)
-            bcc_email_list_json = json.dumps(bcc_email_list_final)
-            unique_task_name_json = json.dumps(unique_task_name)
-            email_attachments = None
-            if attachment != None:
-                for i in attachment:
-                    email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
-                    email_attachments.save()
+            # to_email_list_json = json.dumps(to_email_list_final)
+            # cc_email_list_json = json.dumps(cc_email_list_final)
+            # bcc_email_list_json = json.dumps(bcc_email_list_final)
+                unique_task_name_json = json.dumps(unique_task_name)
+                dit = json.dumps(draft["id"])
+            # email_attachments = None
+            # if attachment != None:
+            #     for i in attachment:
+            #         email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
+            #         email_attachments.save()
                 
             
-            #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
-            #and clocked argument is foregined key with ClockedScheudle
-            
-            PeriodicTask.objects.create(
-                                clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
-                                name=unique_task_name ,
-                                task = "public_relation_team.tasks.send_scheduled_email",
-                                args =json.dumps([to_email_list_json,cc_email_list_json,bcc_email_list_json,subject,mail_body,unique_task_name_json]),
-                                one_off = True,
-                                enabled = True,
+                #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
+                #and clocked argument is foregined key with ClockedScheudle
+                
+                PeriodicTask.objects.create(
+                                    clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
+                                    name=unique_task_name ,
+                                    task = "public_relation_team.tasks.send_scheduled_email",
+                                    args =json.dumps([dit,unique_task_name_json]),
+                                    one_off = True,
+                                    enabled = True,
                             )
+                return True
+            except Exception as e:
+                print(e)
+                print(f'Failed to create service instance for gmail')
+                return None  
             return True
         except Exception as e:
             PRT_Email_System.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)

@@ -22,7 +22,6 @@ logger=logging.getLogger(__name__)
 def team_homepage(request):
 
     try:
-
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file

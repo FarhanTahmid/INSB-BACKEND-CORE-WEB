@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    {% if is_branch %}
+    <title>Update Event | IEEE NSU Student Branch</title>
+    {% else %}
+    <title>Update Event | {{sc_ag_info.group_name}}</title>
+    {% endif %}
+    <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+    
+    <link rel="stylesheet" href="{% static 'tab_view.css' %}" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    {% block common_css %}
+        {% include "common_css.html" %}
+    {% endblock common_css %}
+
+
+
+    <style>
+
+        body, html {
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .btn-container {
+            text-align: center;
+        }
+        
+        .btn {
+            max-width: 100%;
+            width: auto;
+            display: inline-block;
+            white-space: normal; /* Allow text to wrap within the button */
+            word-wrap: break-word; /* Break long words if necessary */
+            font-size: 16px; /* Adjust the font size as needed */
+        }
+        
+        /* Media query for smaller screens (adjust the breakpoint as needed) */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%; /* Make the button full width on smaller screens */
+            }
+        }
+
+        .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+            max-width: 80%; 
+            height: 90%; 
+            z-index: 1500;
+        }
+        @media screen and (max-width:700px){
+            .modal-dialog.modal-dialog-centered.modal-lg.preview_modal_box{
+                max-width:100%;
+            }
+        }
+
+        h1{
+            text-align:center;
+            font-size:30px;
+            font-weight:bold;
+        }
+    
+        label{
+            font-size:20px;
+        }
+
+        .app-body{
+            justify-content:center; 
+            margin-left:15%;
+            margin-right:15%;
+        }
+        
+        @media (max-width: 760px) {
+            .app-body {
+                margin-left: 5%;
+                margin-right: 5%;
+            }
+        }
+        .image-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        /* Add additional styling for image appearance, such as size and alignment */
+        .image-button img {
+            height:50px;
+            width: 50px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 5px; /* Add rounded corners if desired */
+        }
+        .btn-container {
+          text-align: center;
+        }
+        
+        .btn {
+          max-width: 100%;
+          width: auto;
+          display: inline-block;
+          white-space: normal; /* Allow text to wrap within the button */
+          word-wrap: break-word; /* Break long words if necessary */
+          font-size: 16px; /* Adjust the font size as needed */
+        }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip-container.right {
+        float: right; /* Float the container to the right */
+        margin-right: 0; /* Reset the margin for the right-aligned button */
+        }
+        
+        .image-button:hover + .tooltip-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(10px); /* Adjust the distance from the link */
+        }
+        
+        .tooltip-text {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Banner styles */
+        .banner {
+            background-color: #b4252b;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    
+        .banner p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .lock-icon {
+            margin-right: 10px;
+        }
+
+        .circle-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 45px; /* Set minimum width */
+            height: 45px; /* Set minimum height */
+            background-color: transparent; /* Set to transparent or any other color for the inside */
+            border: 2px solid #78BE20; /* Border color is green */
+            border-radius: 50%;
+            color: #78BE20; /* Text color is green */
+            font-size: 24px; /* Adjust the font size as needed */
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Add smooth transition effect */
+        }
+    
+        .circle-btn:hover {
+            background-color: #78BE20; /* Hover background color is green */
+            color: #fff; /* Hover text color is white */
+        }
+    
+        .plus-sign::before {
+            content: '+';
+        }
+        .spinner {
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto; /* Center the spinner */
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- ############ LAYOUT START-->
+    <div class="app" id="app">
+
+        <!-- aside -->
+        <div id="aside" class="app-aside modal nav-dropdown">
+  
+  	        {% block sidebar %}
+	            {% include 'users/sidebar.html' %}
+  	        {% endblock %}
+  
+        </div>
+        <!-- aside end -->
+  
+        <!-- navbar content -->
+        <div id="content" class="app-content box-shadow-z0" role="main">
+            {% if is_branch %}
+              {% block navbar %}
+                  {% include 'navbar.html' %}
+              {% endblock navbar %}
+            {% else %}
+              {% block sc_ag_navbar %}
+                {% include 'sc_ag_navbar.html' %}
+              {% endblock sc_ag_navbar %}
+            {% endif %}
+          </div>
+        <!--navbar content-->
+        
+        <!-- ############ PAGE START-->
+        <div ui-view class="app-body" id="view">
+            
+            <div class="container">
+                <br>
+                <br>
+                <h2 style="justify-content:center;text-align:center;margin-bottom:15px;"> <span
+                    style="color:#00629B;">{{event_details.event_name}}</b></span></h2>
+                
+            
+                <h6 style="color: #861F41; font-weight: 700;">Note:</h6>
+                <ol style="justify-content:center;margin-bottom:15px;"><b>
+                    <li>To publish the event on Google Calendar click the toogle button along with "Publish Event to Google Calendar:" and then scroll down to click on "Update Changes".</li>
+                    <li>If you made any changes such as create Attendee, delete Attendee or add the attachment and so on, then scroll down to click on "Update Changes".</li>
+                    <li style="color: red;">If you have any attachments then once you published it in Google Calendar, you won't be able to change it. To change it, you need to unpublish and then you can modify the attachments.</li>
+                </ol></b>
+
+                <br>
+
+                {% for message in messages  %}
+                    <p>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </p>
+                {% endfor %}
+
+                <br>
+            </div>
+            <!--Back Arrow-->
+
+            <div class="tooltip-container">
+                {% if is_branch %}
+                <a href="{% url 'central_branch:event_control' %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                {% else %}
+                <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="image-button">
+                    <img src="{% static 'back-arrow.png' %}" alt="Go back to session">
+                </a>
+                {% endif %}
+                <span class="tooltip-text">Go back to Events</span>
+            </div>
+            {% if show_restriction_banner %}
+            <div class="banner">
+                <p>
+                    <span class="lock-icon"><i class="fa fa-lock"></i></span>
+                    All updates to Society and Affinity groups have been locked by the administrator
+                </p>
+            </div>
+            {% endif %}
+            <br>
+
+
+            <br><br>  
+            <!--Tab view for Events-->
+            <!--Tab view Start-->
+            {% block event_edit_tab %}
+                {% include "Events/event_edit_tabs.html" %}
+            {% endblock event_edit_tab %}
+            <!--Tab view end-->
+            <br>
+            
+            <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+<style>
+    .publish-switch {
+        display: flex;
+        justify-content: flex-end; /* Align to the right end */
+        align-items: center;
+        position: relative;
+    }
+
+    .registration-fee-switch, .flagship-event-switch{
+        display: flex;
+        justify-content: flex-start; /* Align to the right end */
+        align-items: center;
+        position: relative;
+    }
+
+    .ui-switch{
+        /* Add shadow to the icon */
+        box-shadow: 4px 5px 4px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+
+        /* You can customize the shadow properties */
+    }
+    .form-control-label.slider-checkbox {
+        display: inline-block;
+        margin-right: 10px; /* Add margin for spacing between elements */
+    }
+
+    .registration-hidden-field{
+        opacity: 0; 
+        height: 0; 
+        overflow: hidden; 
+        visibility: hidden; 
+        transition: all 0.5s 
+        ease-in-out;
+    }
+    .icon_position{
+        position: relative;
+        bottom: 30px;
+        left: 95%;
+      }
+
+      .item{
+        position: relative;
+        cursor: pointer;
+    }
+    .item.active>.tooltip {
+        opacity: 1;
+        z-index: 1;
+    }
+    .icon i{
+        font-size: 20px;
+        color: #000;
+        border-radius: 50%;
+        place-items: center;
+    }
+    .tooltip{
+        position: absolute;
+        background-color: rgba(59, 59, 59);
+        color: #fff;
+        padding: 10px;
+        left: 50%;
+        width: 200px;
+        text-align: center;
+        transform: translateX(-50%);
+        bottom: 100%;
+        will-change: transform;
+        opacity: 0;
+        transition: all 0.4s;
+        z-index: -1;
+    }
+    .tooltip::after{
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: rgba(59, 59, 59) transparent transparent transparent;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
+                        
+<div class="container">
+    <div class="box">
+        
+        <br>
+        <div class="box-header" style="text-align:center;">
+            <h1>Update Event Details</h1>
+        </div>
+        
+        <form id="myForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="box-body">
+                <div class="publish-switch">
+                    <label class="form-control-label slider-checkbox">Publish Event to Google Calendar:</label>
+                    <span>                                            
+                        <label class="ui-switch m-t-xs m-r">
+                            <input id="google_calendar_toggle_button" name="publish_event_gc" type="checkbox" {% if is_event_published_gc %} checked {% endif %}>
+                                <i></i>
+                        </label>                
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label>Event Name: {{event.event_name}}</label>                       
+                </div>
+
+                <div class="form-group">
+                    {{form.media}}
+                    {{form.as_p}}
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <label>Select Attendee List:</label>
+                      <select multiple class="form-control" name="attendeeList">
+                        <option {% if "general_members" in selected_attendee_list or event.selected_attendee_list == None %}selected{% endif %} value="general_members">All Registered Active Members of IEEE NSU SB</option>
+                        <option {% if "all_officers" in selected_attendee_list %}selected{% endif %} value="all_officers">All Officers of IEEE NSU SB</option>
+                        <option {% if "eb_panel" in selected_attendee_list %}selected{% endif %} value="eb_panel">Executive Panel (Branch Only)</option>
+                        <option {% if "excom_branch" in selected_attendee_list %}selected{% endif %} value="excom_branch">Branch Ex-Com Members</option>
+                        <option {% if "scag_eb" in selected_attendee_list %}selected{% endif %} value="scag_eb">All Society, Chapters, Affinity Group Executive Body Members</option>
+                        {% for session in recruitment_sessions %}
+                            <option {% if session.id|stringformat:"s" in selected_attendee_list_for_recruits %}selected{% endif %} value="recruits_{{session.id}}">Recruits of - {{session.session}} </option>  
+                        {% endfor %}
+                        
+                      </select>
+                  </div>
+
+                  <div class="form-group row align-items-center">
+                    <label for="captions" class="col-sm-3 form-control-label" style="display: flex;">Add Attendee: &nbsp;
+                        <span>
+                            <div class="item">
+                                <div class="tooltip">If you'd like to include an attendee who isn't on the Select Attendee List, please enter their email address here.</div>
+                                <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </span>
+                    </label>
+                    <div class="col-sm-7">
+                        <!-- Add input field for captions here if needed -->
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                        <button type="button" class="circle-btn plus-sign" data-toggle="modal" data-target="#AddCaptionModal"></button>
+                    </div>
+                </div>
+                
+                <hr>
+                <div id="attendees-container">
+                    {% for attendee,values in additional_attendees.items %}
+                    <div id="attendee_{{attendee}}" class="row container-fluid bg-light mt-3" style="margin:auto;">
+                        <div class="col-sm-11">
+                            <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal" onclick="openModal('{{values.displayName}}', '{{values.email}}')">{{values.displayName}}</a>
+                            <input type="hidden" id="attendee_name" name="attendee_name" value="{{values.displayName}}"/>
+                            <input type="hidden" id="attendee_email" name="attendee_email" value="{{values.email}}"/>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openAttendeeDeleteModal({{attendee}}, '{{values.displayName}}', '{{values.email}}')">✖</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <br>
+
+                {% if not is_event_published_gc %}
+                    <!--upload doc-->
+                    <div class="form-group">
+                        <label for="documents" style="display: flex;">Upload Attachments (if any):  &nbsp;
+                            <span>
+                                <div class="item">
+                                    <div class="tooltip">If you have any attachments, please upload them here. Be sure to click the "Publish Event to Google Calendar" button, and then click "Update Changes" to send the email with the attachments.</div>
+                                    <div class="icon"><i class="fa fa-info-circle" aria-hidden="true"></i></div>
+                                </div>
+                            </span>
+                        </label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="content-doc-input" name="document" multiple>
+                            <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
+                        </div>
+                        
+                        <br>
+                    
+                        <div id="content-selected-docs-container"></div>
+                        <input type="hidden" name="selected_documents" id="content-selected-documents">
+                        <small class="form-text text-muted mt-1">Hold down the Ctrl (Windows) or Command (Mac) button to select multiple documents.</small>
+                    </div>
+                {% endif %}
+
+                <div flex-direction="column" justify-content="flex-end">
+                    {% if event_gc_attachments|length > 0 %}
+                    <label>Attachments:</label>
+                    {% for attachment in event_gc_attachments %}
+                    <div class="row container-fluid bg-light mt-3" style="margin:auto;">
+                        <div class="col-sm-11 text-left">
+                            <a href="{{attachment.file_url}}" class="btn btn-link btn-block" target="_blank" rel="noopener noreferrer">{{attachment.file_name}}</a>
+                        </div>
+                        <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                            <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#AttachmentConfirmDeleteModal" onclick="openAttachmentDeleteModal('{{attachment.pk}}')">✖</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <br><br>
+
+                <div style="text-align: center;">
+                    <div id="spinner1" class="spinner" style="display: none;"></div>
+                    {% if is_branch %}
+                    <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        {% endif %}
+                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% endif %}
+                </div>
+                <br> 
+
+            </div>
+        </form>
+    </div>
+</div>
+
+   <!-- modal for adding new attendees -->
+   <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCaptionModalLabel">Add Attendee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                
+            </div>
+            <div class="modal-body">  
+                <form id="AddCaptionModalForm">               
+                    <div class="form-group">
+                        <label>Attendee Name:</label> 
+                            <input
+                                placeholder="Attendee"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                id="attendeeName"
+                            />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Attendee Email:</label> 
+                            <input
+                                placeholder="Email"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                required
+                                id="attendeeEmail"
+                            />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!-- Change the button label and name attribute -->
+                <button type="button" class="btn btn-outline-success txt-success buttons" id="addAttendee" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- modal for editing attendees -->
+<div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCaptionModalLabel">View Attendee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group">
+                        <label>Attendee Name: </label> 
+                            <input
+                                placeholder="Attendee"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                id="attendee_Name"
+                                disabled
+                            />
+                        <br>
+                            
+                    </div>
+                    <div class="form-group">
+                        <label>Attendee Email: </label> 
+                            <input
+                                placeholder="Email"
+                                class="form-control"
+                                type="text"
+                                autocomplete="off"
+                                ID="attendee_Email"
+                                disabled
+                            />
+                        <br>
+                            
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Confirmation modal for delete attendee -->
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-top" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <input id="attendee_id" name= "attendee_id" type="hidden">
+            <p>Are you sure you want to delete the attendee?</p>
+            <p id="delete_attendee_Name">Name: </p>
+            <p id="delete_attendee_Email">Email: </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="removeAttendee" class="btn btn-outline-danger" data-dismiss="modal">Confirm</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<!-- Confirmation modal for delete attachment -->
+<div class="modal fade" id="AttachmentConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="AttachmentConfirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attachmentconfirmDeleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                <input id="remove_attachment" name= "remove_attachment" type="hidden">
+                <p>Are you sure you want to delete the attachment?</p>
+                <p class="text-danger">Warning: This will only delete the file in server. The invitation email will not be updated!</p>
+            </div>
+            <div class="modal-footer">
+                <div id="spinner2" class="spinner" style="display: none;"></div>
+                <input type="submit" id="removeAttachmentBtn" name="remove" class="btn btn-outline-danger" value="Confirm" >
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <script>
+        document.querySelectorAll('.item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                item.classList.toggle('active');
+            });
+        });
+        
+        document.getElementById('updateButton').addEventListener('click', function() {
+            document.getElementById('spinner1').style.display = 'block';
+        });
+        document.getElementById('removeAttachmentBtn').addEventListener('click', function() {
+            document.getElementById('spinner2').style.display = 'block';
+            document.getElementById('spinner2').style.margin = '0';
+        });
+    </script>       
+    <script>
+    // Function to update the selected documents container
+    function updateSelectedDocuments() {
+        var selectedDocumentsContainer = document.getElementById('content-selected-docs-container');
+        var selectedDocumentsInput = document.getElementById('content-selected-documents');
+        var inputFiles = document.getElementById('content-doc-input').files;
+  
+        // Clear the container
+        selectedDocumentsContainer.innerHTML = '';
+  
+        // Update the container with selected document links
+        for (var i = 0; i < inputFiles.length; i++) {
+            var documentLink = document.createElement('a');
+            //documentLink.href = '#'; // Set the link href accordingly
+            documentLink.className = 'btn btn-link btn-block';
+            documentLink.textContent = inputFiles[i].name;
+            selectedDocumentsContainer.appendChild(documentLink);
+  
+            // Add a line break after each link
+            selectedDocumentsContainer.appendChild(document.createElement('br'));
+  
+            // Update the hidden input with selected document names
+            selectedDocumentsInput.value += inputFiles[i].name + ',';
+        }
+    }
+  
+    // Attach the updateSelectedDocuments function to the file input change event
+    document.getElementById('content-doc-input').addEventListener('change', updateSelectedDocuments);
+  </script>
+  <script>
+    const google_calendar_toggle_button = document.getElementById('google_calendar_toggle_button');
+    google_calendar_toggle_button.addEventListener('click',()=>{
+        if (google_calendar_toggle_button.classList.toggle('active') === false){
+            swal("Warning!", "Event will be unpublished from Google Calendar after clicking 'Update Changes'! Sent email would not be deleted.", "warning");
+        }
+    });
+  </script>
+
+  <script>
+    document.getElementById('removeAttendee').addEventListener('click', function() {
+        var val = document.getElementById('attendee_id').value;
+        var element = document.getElementById('attendee_'+val);
+        element.remove();
+    });
+  </script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          var form = document.getElementById('myForm');
+          var isFormDirty = false;
+        
+          // Listen for changes in the form fields
+          form.addEventListener('input', function () {
+            isFormDirty = true;
+          });
+        
+          // Handle form submission
+          form.addEventListener('submit', function () {
+            // Set isFormDirty to false when the form is submitted
+            isFormDirty = false;
+          });
+        
+          // Warn the user before leaving the page if the form is dirty
+          window.addEventListener('beforeunload', function (event) {
+            if (isFormDirty) {
+              event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+            }
+          });
+        });
+        
+      </script>
+
+
+<script>
+
+    const container = document.getElementById('attendees-container');
+    var count = {{additional_attendees.items|length}};
+    document.getElementById('addAttendee').addEventListener('click', function() {
+        const container = document.getElementById('attendees-container');
+        const attendeeName = document.getElementById('attendeeName').value;
+        const attendeeEmail = document.getElementById('attendeeEmail').value;
+        const htmlString = `
+            <div id="attendee_${count+1}" class="row container-fluid bg-light mt-3" style="margin:auto;">
+                <div class="col-sm-11">
+                    <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#EditCaptionModal" onclick="openModal('${attendeeName}', '${attendeeEmail}')">${attendeeName}</a>
+                    <input type="hidden" name="attendee_name" value="${attendeeName}"/>
+                    <input type="hidden" name="attendee_email" value="${attendeeEmail}"/>
+                </div>
+                <div class="col-sm-1 d-flex align-items-center justify-content-center">
+                    <button type="button" class="close" aria-label="Close" data-toggle="modal" data-target="#ConfirmDeleteModal" onclick="openAttendeeDeleteModal(${count+1}, '${attendeeName}', '${attendeeEmail}')">✖</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', htmlString);
+        count = count + 1;
+        document.getElementById('AddCaptionModalForm').reset();
+    });
+
+    function openModal(attendeeName, attendeeEmail) {
+        // Set data in the modal
+        var inputElement = document.getElementById('attendee_Name');
+        inputElement.value=attendeeName;
+        var inputElement2 = document.getElementById('attendee_Email');    
+        inputElement2.value=attendeeEmail;
+    }
+
+    function openAttendeeDeleteModal(attendee_id, attendeeName, attendeeEmail)
+    {
+        var inputElement = document.getElementById('delete_attendee_Name');    
+        inputElement.innerText="Name: "+attendeeName;
+        var inputElement2 = document.getElementById('delete_attendee_Email');    
+        inputElement2.innerText="Email: "+attendeeEmail;
+        var inputElement3 = document.getElementById('attendee_id');
+        inputElement3.value = attendee_id
+    }
+
+    function openAttachmentDeleteModal(attachment_id)
+    {
+        var inputElement = document.getElementById('remove_attachment');
+        inputElement.value = attachment_id;
+    }
+</script>
+
+        </div>
+        <!--PAGE END-->
+
+        
+        
+        
+
+        
+
+    
+
+        <!--Theme Switcher-->
+
+        {% block theme_switcher %}
+            {% include "theme_switcher.html" %}
+        {% endblock theme_switcher %}
+    
+    </div>
+    <!-- app end-->
+
+    {% block common_js %}
+        {% include "common_js.html" %}
+    {% endblock common_js %}
+
+    <script src="{% static 'tab_view.js'%}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+
+    
+
+</body>
+</html>

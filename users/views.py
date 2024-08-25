@@ -3,13 +3,17 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from system_administration.models import adminUsers
+from central_events.google_calendar_handler import CalendarHandler
+from insb_port import settings
+from system_administration.models import SystemErrors, adminUsers
+from task_assignation.models import Member_Task_Point
 from users import registerUser
 from django.db import connection
 from django.db.utils import IntegrityError
 from recruitment.models import recruited_members
 from . models import Members,ResetPasswordTokenTable,UserSignupTokenTable
 import csv,datetime
+from django.utils.timezone import now
 from django.db import DatabaseError
 from . import renderData
 from django.utils.datastructures import MultiValueDictKeyError
@@ -25,6 +29,7 @@ import traceback
 from central_branch import views as cv
 from .renderData import member_login_permission
 from task_assignation.renderData import Task_Assignation
+from django.utils import timezone
 
 logger=logging.getLogger(__name__)
 
@@ -66,6 +71,10 @@ def signup_user_validation(request):
     if(request.method=="POST"):
         if(request.POST.get('signup')):
             ieee_id=request.POST['ieee_id']
+            if(not ieee_id.isnumeric()):
+                messages.info(request,"Your IEEE ID is an 8 or 9 digits number.")
+                return redirect('users:signup_validation')
+            
             try:
                 getMember=Members.objects.get(ieee_id=ieee_id)
                 # check if member is already signed in
@@ -180,7 +189,6 @@ def dashboard(request):
     try:
 
         #### LOOK into registerUser.py for manual input of data from csv. Templates are created there.
-    
         is_eb_or_admin = renderData.is_eb_or_admin(request.user)
         #getting year list for the last 5 years event chart
         years = renderData.getEventNumberStatYear()
@@ -198,8 +206,9 @@ def dashboard(request):
         hit_count_monthly = renderData.getHitCountYearly()
         #getting visitors on main website over last 5 years
         hit_count_over_5_years = renderData.getHitCountOver5Years()
-
-        
+        #getting monthly members with highest task completion points
+        monthly_top_members = renderData.getMonthlyTopMembers()
+                
         # Get the SC & AGS
         sc_ag=PortData.get_all_sc_ag(request=request)
         #scheduler.start()
@@ -235,7 +244,9 @@ def dashboard(request):
             'current_year_month_name':hit_count_monthly[1],
             'hit_count_monthly_data':hit_count_monthly[2],
             'hit_count_over_5_years':hit_count_over_5_years,
+            'monthly_top_3_members':monthly_top_members,
             'all_sc_ag':sc_ag,
+            'media_url':settings.MEDIA_URL
         }
 
         
@@ -427,6 +438,7 @@ def update_information(request):
                 major = request.POST['major']
                 facebook_url = request.POST['facebook_url']
                 linkedin_url = request.POST['linkedin_url']
+                blood_group = request.POST['blood_group']
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -443,7 +455,8 @@ def update_information(request):
                                             contact_no=contact_no,
                                             major=major,
                                             facebook_url=facebook_url,
-                                            linkedin_url=linkedin_url)):
+                                            linkedin_url=linkedin_url,
+                                            blood_group=blood_group)):
                     messages.success(request, "Profile updated successfully")
                 else:
                     messages.error(request, "Something went wrong while updating profile information")                          

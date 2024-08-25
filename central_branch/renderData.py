@@ -1,13 +1,19 @@
 import os
 from bs4 import BeautifulSoup
 from django.http import Http404
+from django.urls import reverse
+from central_events.google_calendar_handler import CalendarHandler
+from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
 from insb_port import settings
 from main_website.models import About_IEEE, HomePageTopBanner, IEEE_Bangladesh_Section, IEEE_NSU_Student_Branch, IEEE_Region_10, Page_Link,FAQ_Question_Category,FAQ_Questions,HomePage_Thoughts,IEEE_Bangladesh_Section_Gallery
+from notification.models import NotificationTypes
+from notification.notifications import NotificationHandler
 from port.models import Teams,Roles_and_Position,Chapters_Society_and_Affinity_Groups,Panels
+from port.renderData import PortData
 from users.models import Members,Panel_Members,Alumni_Members
 from django.db import DatabaseError
 from system_administration.models import MDT_Data_Access
-from central_events.models import Event_Feedback, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
+from central_events.models import Event_Feedback, Google_Calendar_Attachments, SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue,Event_Permission,Event_Category
 from events_and_management_team.models import Venue_List, Permission_criteria
 from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
@@ -24,11 +30,16 @@ from system_administration.system_error_handling import ErrorHandling
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from content_writing_and_publications_team.models import Content_Team_Document
-
+from recruitment.models import recruited_members
 
 class Branch:
 
     logger=logging.getLogger(__name__)
+    try:
+        event_notification_type = NotificationTypes.objects.get(type="Event")
+    except:
+        event_notification_type = None
+
     
     def getBranchID():
         '''This Method returns the object of Branch from Society chapters and AG Table'''
@@ -460,13 +471,25 @@ class Branch:
                 else:
                     pass
 
-    def update_event_details(event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
+    def update_event_details(request, event_id, event_name, event_description, super_event_id, event_type_list,publish_event, event_start_date, event_end_date, inter_branch_collaboration_list, intra_branch_collaboration, venue_list_for_event,
                              flagship_event,registration_fee,registration_fee_amount,more_info_link,form_link,is_featured_event):
             ''' Update event details and save to database '''
 
         
             #Get the selected event details from database
             event = Events.objects.get(pk=event_id)
+
+            create_notification = False
+            delete_notification = False
+            update_notification = False
+            dt = datetime.strptime(event_start_date, '%Y-%m-%dT%H:%M')
+            if(publish_event and not event.publish_in_main_web):
+                create_notification = True
+            elif(not publish_event and event.publish_in_main_web):
+                delete_notification = True
+            elif((event_name != event.event_name or str(dt) != str(event.start_date.astimezone(dt.tzinfo))[:-6]) and event.publish_in_main_web):
+                update_notification = True
+
             if event_end_date == "":
                 event_end_date = None
             #Check if super id is null
@@ -504,6 +527,9 @@ class Branch:
             event.event_type.add(*event_type_list)
             event.start_date = event_start_date
             event.end_date = event_end_date
+            ####################################################
+            ######event publish/not publish trigger here####################
+            ####################################################
             event.publish_in_main_web = publish_event
             event.flagship_event = flagship_event
             event.registration_fee = registration_fee
@@ -566,9 +592,236 @@ class Branch:
                     intrabranchcollaborations.update(collaboration_with=intra_branch_collaboration)
                 else:
                     IntraBranchCollaborations.objects.create(event_id=event, collaboration_with=intra_branch_collaboration)
+            
+            event = Events.objects.get(pk=event_id)
+
+            if(create_notification):
+                inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
+                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
+                # receiver_list=Branch.load_all_active_general_members_of_branch()
+                receiver_list=Branch.get_attendee_list_from_backend(event.selected_attendee_list)
+                if receiver_list == None or len(receiver_list) == 0:
+                    messages.warning(request, "The attendee list is empty! Could not create notifications or notify members")
+                    return True
+                if(NotificationHandler.create_notifications(notification_type=Branch.event_notification_type.pk,
+                                                            title="New Event has been published!",
+                                                            general_message=general_message,
+                                                            inside_link=inside_link,
+                                                            created_by="IEEE NSU SB",
+                                                            reciever_list=receiver_list,
+                                                            notification_of=event,
+                                                            event = event)):
+                    messages.success(request, "Notifications created and sent to members!")
+                else:
+                    messages.warning(request, "Could not create notifications or notify members!")
+            elif(update_notification):
+                general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
+                if(NotificationHandler.update_notification(notification_type=Branch.event_notification_type, notification_of=event, contents={'general_message':general_message})):
+                    messages.success(request, "Notifications updated successfully!")
+                else:
+                    messages.warning(request, "Could not update notifications!")
+            elif(delete_notification):
+                if(NotificationHandler.delete_notification(notification_type=Branch.event_notification_type,notification_of=event)):
+                    messages.success(request, "Notifications deleted successfully!")
+                else:
+                    messages.warning(request, "Could not delete notifications!")
+
+            if(event.google_calendar_event_id):
+                venue = Event_Venue.objects.filter(event_id=event)
+                if not venue:
+                    venue = "North South University"
+                else:
+                    venue = venue[0].venue_id.venue_name
+                if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, event.event_name, None, venue, event.start_date, event.end_date, None)):
+                    messages.success(request, "Event updated in calendar")
+                else:
+                    messages.warning(request, "Could not update event in calendar")
 
             return True
+    
+    def get_attendee_list_from_backend(request, attendeeOption):
+        to_attendee_final_list = []
+        if (not attendeeOption):
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Arman M (IEEE)",
+                    'email':'arman.mokammel@ieee.org'
+                },
+            )
+            to_attendee_final_list.append(
+                {
+                    'displayName':"Arman M (NSU)",
+                    'email':'arman.mokammel@northsouth.edu'
+                },
+            )
+            
+            return to_attendee_final_list
+        for option in attendeeOption:
+            if(option == "general_members"):
+                general_members=Branch.load_all_active_members_of_branch()
+                for member in general_members:
+                    to_attendee_final_list.append({
+                        'displayName':member.name,
+                        'email':member.email_nsu,
+                    })
+            elif option=="all_officers":
+                # get all officers email
+                branch_officers=Branch.load_all_officers_of_branch()
+                for officer in branch_officers:
+                    to_attendee_final_list.append({
+                        'displayName':officer.name,
+                        'email':officer.email_nsu,
+                    })
+                    # to_attendee_final_list.append({
+                    #     'displayName':officer.name,
+                    #     'email':officer.email_ieee,
+                    # })
+                            
+            elif option=="eb_panel":
+                # get all eb panel email
+                eb_panel=Branch.load_branch_eb_panel()
+                for eb in eb_panel:
+                    #if is faculty then skip
+                    if not eb.position.is_faculty:
+                        to_attendee_final_list.append({
+                            'displayName':eb.name,
+                            'email':eb.email_nsu,
+                        })
+                        # to_attendee_final_list.append({
+                            # 'displayName':eb.name,
+                            # 'email':eb.email_ieee,
+                        # })
+            elif option=="excom_branch":
+                # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
+                eb_panel=Branch.load_branch_eb_panel()
+                branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
+                for eb in eb_panel:
+                    #If is faculty then skip
+                    if not eb.position.is_faculty:
+                        to_attendee_final_list.append({
+                            'displayName':eb.name,
+                            'email':eb.email_nsu,
+                        })
+                        # to_attendee_final_list.append({
+                        #     'displayName':eb.name,
+                        #     'email':eb.email_ieee,
+                        # })
+                for excom in branch_ex_com:
+                    to_attendee_final_list.append({
+                        'displayName':excom.member.name,
+                        'email':excom.member.email_nsu,
+                    })
+                    # to_attendee_final_list.append({
+                    #     'displayName':excom.member.name,
+                    #     'email':excom.member.email_ieee,
+                    # })
+                pass
+            elif option=="scag_eb":
+                # get all the society, chapters and AG EBS
+                for i in range(2,6):
+                    get_current_panel_of_sc_ag=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=i)
+                    if(get_current_panel_of_sc_ag.exists()):
+                        ex_com=SC_AG_Info.get_sc_ag_executives_from_panels(request=request,panel_id=get_current_panel_of_sc_ag[0].pk)
+                        for ex in ex_com:
+                            if ex.member is not None:
+                                #If is faculty then skip
+                                if not ex.member.position.is_faculty:
+                                    to_attendee_final_list.append({
+                                        'displayName':ex.member.name,
+                                        'email':ex.member.email_nsu,
+                                    })
+                                    # to_attendee_final_list.append({
+                                    #     'displayName':ex.member.name,
+                                    #     'email':ex.member.email_ieee,
+                                    # })
+                            else:
+                                to_attendee_final_list.append({
+                                    'displayName':ex.ex_member.name,
+                                    'email':ex.ex_member.email,
+                                })
+            elif option[0:9] == "recruits_":
+                recruit_id = int(option[9:])
+                recruited_mem = recruited_members.objects.filter(session_id = recruit_id)
+                for mem in recruited_mem:
+                    to_attendee_final_list.append({
+                        'displayName':mem.first_name,
+                        'email':mem.email_nsu,
+                    })
+                    # to_attendee_final_list.append({
+                    #     'displayName':mem.first_name,
+                    #     'email'::mem.email_nsu,
+                    # })
+                
         
+        return to_attendee_final_list
+
+    
+    def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, add_attendee_names, add_attendee_emails, documents):
+
+        event = Events.objects.get(id=event_id)
+        event.publish_in_google_calendar = publish_event_gc
+        event.event_description_for_gc = description
+        event.selected_attendee_list = ""
+        for option in attendeeOption:
+            event.selected_attendee_list += option
+            event.selected_attendee_list += ','
+
+        event.additional_attendees = {}
+        for i in range(len(add_attendee_emails)):
+            additional_attendees = {
+                'displayName':add_attendee_names[i],
+                'email':add_attendee_emails[i]
+            }
+            event.additional_attendees[i] = additional_attendees
+        event.save()
+
+        if documents:
+            for doc in documents:
+                file = CalendarHandler.google_drive_upload_files(request, doc)
+                if file:
+                    Google_Calendar_Attachments.objects.create(event_id=event, file_id=file['id'] , file_name=file['name'] , file_url=file['webViewLink'])
+
+        documents = Google_Calendar_Attachments.objects.filter(event_id=event_id)
+
+        to_attendee_final_list = []
+        if event.publish_in_google_calendar:
+            to_attendee_final_list = Branch.get_attendee_list_from_backend(request, attendeeOption)
+        
+            for attendee,value in event.additional_attendees.items():
+                to_attendee_final_list.append(
+                    {
+                        'displayName':value['displayName'],
+                        'email':value['email']
+                    }
+                ) 
+
+        venue = Event_Venue.objects.filter(event_id=event)
+        if not venue:
+            venue = "North South University"
+        else:
+            venue = venue[0].venue_id.venue_name
+        if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
+            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location=venue, start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
+            if(not event.google_calendar_event_id):
+                event.publish_in_google_calendar = False
+                messages.warning(request, "Could not publish event in calendar")
+            else:
+                messages.success(request, "Event published in calendar")
+
+            event.save()
+        elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
+            if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
+                event.google_calendar_event_id = ""
+                messages.success(request, "Event deleted from calendar")
+            else:
+                event.publish_in_google_calendar = True
+                messages.warning(request, "Could not delete event from calendar")
+            event.save()
+        elif(event.google_calendar_event_id):
+            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, None, to_attendee_final_list)):
+                messages.success(request, "Event updated in calendar")
+            else:
+                messages.warning(request, "Could not update event in calendar")
         
     def add_feedback(event_id, name, email, satisfaction, comment):
         try:
@@ -686,6 +939,19 @@ class Branch:
                     
                     general_members.append(member)
         return general_members
+    
+    def load_all_active_members_of_branch():
+        '''This function loads all the members from the branch whose memberships are active
+        '''
+        all_members=Members.objects.all()
+        members=[]
+        
+        for member in all_members:
+           
+            if (MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)):                
+                members.append(member)
+
+        return members
     
     def create_panel(request,tenure_year,current_check,panel_start_date,panel_end_date):
         '''This function creates a panel object. Collects parameter value from views '''
@@ -971,6 +1237,11 @@ class Branch:
 
         return Events.objects.get(id = event_id).publish_in_main_web
     
+    def load_event_published_gc(event_id):
+        '''This function will return wheather the event is published in google calendar or not'''
+
+        return Events.objects.get(id = event_id).publish_in_google_calendar
+    
     def is_flagship_event(event_id):
 
         '''This function will return wheather the event is flagship or not'''
@@ -1077,11 +1348,21 @@ class Branch:
         return Events.objects.filter(event_organiser=5).order_by('-start_date','-event_date')
     
 
-    def delete_event(event_id):
+    def delete_event(request, event_id):
         ''' This function deletes event from database '''
         try:
             #Getting the event instance
             event = Events.objects.get(id = event_id)
+
+            if(event.google_calendar_event_id):
+                CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)
+
+            if(NotificationHandler.delete_notification(notification_type=Branch.event_notification_type, notification_of=event)):
+                messages.success(request, "Notifications of the event deleted successfully!")
+            else:
+                messages.warning(request, "Could not delete notifications of the event!")
+                return False
+
             try:
                 #getting banner image of the image and deleting it from if exists
                 graphics_image = Graphics_Banner_Image.objects.get(event_id = event)
@@ -1104,6 +1385,10 @@ class Branch:
                 doc_path = settings.MEDIA_ROOT + str(file.document)
                 if os.path.exists(doc_path):
                     os.remove(doc_path)
+
+            attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
+            for attachment in attachments:
+                Branch.delete_attachment(request, attachment.pk)
             #deleting the event along with its  related data from DB
             event.delete()
             return True
@@ -1861,4 +2146,12 @@ class Branch:
         except Exception as e:
             Branch.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+            return False
+        
+    def delete_attachment(request, attachment_id):
+        file = Google_Calendar_Attachments.objects.get(pk=attachment_id)
+        if(CalendarHandler.google_drive_delete_file(request, file.file_id) == ""):
+            file.delete()
+            return True
+        else:
             return False

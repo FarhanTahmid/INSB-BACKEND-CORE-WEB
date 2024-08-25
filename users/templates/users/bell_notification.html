@@ -1,0 +1,902 @@
+{% block bell_notification %}
+{% load static %}
+<style>
+  #notification {
+    max-height: 450px;
+    width: 413px;
+    position: absolute;
+    display: none;
+    background-color: rgba(255, 255, 255);
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+    top: 45px;
+    right: 4%;
+    box-shadow: -2px 2px 20px 2px #0000000f;
+  }
+
+  .msg-box {
+    max-height: 420px;
+    width: 412px;
+    padding: 4px 0px 0px 5px;
+    overflow-y: auto;
+    overflow-x: clip;
+  }
+
+  .msg {
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: -27px;
+    background-color: rgb(224, 242, 254);
+    color: #000;
+    transition: all 0.2s ease-in;
+  }
+
+  .sender_title {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .sender_title_ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .notification_time {
+    color: gray;
+    font-size: 9px;
+    position: relative;
+    top: 3px;
+    width: 58px;
+  }
+
+  .time_dropdown > h6{
+    margin: 0;
+  }
+  .notification_msg {
+    top: 20px;
+    font-size: 12px;
+    margin-bottom: 0;
+    color: #464646;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .sender_content {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .notification_content {
+    max-width: 78%;
+  }
+
+  .notification_content>h6 {
+    padding: 0;
+  }
+
+  .see-all,
+  .see-all.active {
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    color: #00629b !important;
+    transition: all 0.3s ease;
+  }
+
+  .dropdown-content.active {
+    color: #000 !important;
+  }
+
+  .see-all:hover,
+  .see-all.active:hover {
+    color: #FFA300 !important;
+  }
+
+  .msg:hover,
+  .see-all:hover {
+    cursor: pointer;
+  }
+
+  .bell-icon {
+    color: #000000;
+    transition: all .1s ease-in;
+  }
+
+  /* .bell-icon:hover {
+    transform: translateX(10px);
+  } */
+
+  .msg-box::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .msg-box::-webkit-scrollbar-thumb {
+    background-color: #e7eeef;
+    transition: all 0.4s ease-in-out;
+    border-radius: 4px;
+  }
+
+  .msg-box::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(169, 170, 170);
+  }
+
+  .sender_frame {
+    height: 50px;
+    width: 50px;
+    overflow: hidden;
+  }
+
+  .sender_frame img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+  }
+
+  .time_dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .three_dots {
+    color: #818da2;
+    font-weight: bold;
+    text-align: center;
+    font-weight: bold;
+    font-size: 19px;
+    position: relative;
+    bottom: 12px;
+    left: 355px;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .three_dots:hover {
+    color: #000000;
+    background-color: #f6f6f6;
+  }
+
+  .three_dots>p {
+    margin: 0;
+    position: relative;
+    bottom: 4px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 31px;
+    bottom: -11px;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 7px 10px;
+    text-decoration: none;
+    display: block;
+    font-weight: lighter;
+    font-size: 14px;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+  .burger {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .burger span:nth-of-type(1) {
+    top: 6px;
+  }
+
+  .burger span:nth-of-type(2) {
+    top: 12px;
+  }
+
+  .burger span:nth-of-type(3) {
+    top: 18px;
+  }
+
+  .burger.open span:nth-of-type(1) {
+    top: 6px;
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .burger.open span:nth-of-type(2) {
+    top: 12px;
+    opacity: 0;
+  }
+
+  .burger.open span:nth-of-type(3) {
+    top: 18px;
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  @media screen and (max-width: 425px) {
+    #notification {
+      width: 94%;
+    }
+
+    .msg {
+      width: auto;
+    }
+
+    .notification_content {
+      max-width: 75%;
+    }
+
+    .msg-box {
+      width: auto;
+    }
+
+    .three_dots {
+      left: 89%;
+    }
+  }
+  .bell_friend_svg {
+    position: absolute;
+    left: 30px;
+    top: 27px;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    /* border-radius: 50%; */
+    scale: .7;
+}
+  .bell_friend_svg > img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+.new-notification {
+  background-color: lightblue;
+  transition: background-color 0.5s ease-out;
+}
+.nftn_lbl{
+  background-color: #00629b;
+  color: #fff;
+  position: absolute;
+  top: 3px;
+  right: 1px;
+  min-width: 4px;
+  min-height: 4px;
+  display: inline-block;
+  font-size: 9px;
+}
+.wobble-hor-top {
+	-webkit-animation: wobble-hor-top 0.8s both;
+	        animation: wobble-hor-top 0.8s both;
+}
+@-webkit-keyframes wobble-hor-top {
+  0%,
+  100% {
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%);
+    -webkit-transform-origin: 0% 0%;
+            transform-origin: 0% 0%;
+  }
+  15% {
+    -webkit-transform: translateX(-3px) rotate(0.2deg);
+            transform: translateX(-3px) rotate(0.2deg);
+  }
+  30% {
+    -webkit-transform: translateX(2px) rotate(-0.2deg);
+            transform: translateX(2px) rotate(-0.2deg);
+  }
+  45% {
+    -webkit-transform: translateX(-1px) rotate(0.4deg);
+            transform: translateX(-1px) rotate(0.4deg);
+  }
+  60% {
+    -webkit-transform: translateX(1px) rotate(-0.4deg);
+            transform: translateX(1px) rotate(-0.4deg);
+  }
+  75% {
+    -webkit-transform: translateX(-1px) rotate(0.2deg);
+            transform: translateX(-1px) rotate(0.2deg);
+  }
+}
+  @keyframes wobble-hor-top {
+    0%,
+    100% {
+      -webkit-transform: translateX(0%);
+              transform: translateX(0%);
+      -webkit-transform-origin: 0% 0%;
+              transform-origin: 0% 0%;
+    }
+    15% {
+    -webkit-transform: translateX(-3px) rotate(0.2deg);
+            transform: translateX(-3px) rotate(0.2deg);
+    }
+    30% {
+      -webkit-transform: translateX(2px) rotate(-0.2deg);
+              transform: translateX(2px) rotate(-0.2deg);
+    }
+    45% {
+      -webkit-transform: translateX(-1px) rotate(0.4deg);
+              transform: translateX(-1px) rotate(0.4deg);
+    }
+    60% {
+      -webkit-transform: translateX(1px) rotate(-0.4deg);
+              transform: translateX(1px) rotate(-0.4deg);
+    }
+    75% {
+      -webkit-transform: translateX(-1px) rotate(0.8deg);
+              transform: translateX(-1px) rotate(0.8deg);
+    }
+  }
+
+</style>
+<li class="nav-item dropdown pos-stc-xs">
+  <a class="nav-link mr-2" href data-toggle="dropdown">
+    <i class="material-icons bell-icon" onclick="show_ntfn()">&#xe7f4;</i>
+    <span class="label label-sm nftn_lbl" id="nftn_lbl" value="{{user_data.unread_notification_count}}"></span>
+  </a>
+  <!-- <div ui-include="'../views/blocks/dropdown.notification.html'"></div> -->
+</li>
+<div id="notification">
+  <div class="msg-box">
+    <!--redirect link-->
+    {% for notification in user_data.notifications %}
+      <!--redirect link-->
+      <div class="msg-info-div">
+        <a href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" target="_blank">
+          <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+            <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
+            <div class="sender_content">
+              <div class="sender_frame">
+                <img src="/media_files/{% if notification.notification.created_by != None %}{{notification.notification.created_by.user_profile_picture}}{% elif notification.notification.event %}{{notification.notification.event.event_organiser.logo}}{% else %}{{user_data.admin.profile_picture}}{% endif %}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+              </div>
+              <div class="bell_friend_svg" >
+                <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
+              </div>
+              <div class="notification_content">
+                <h6 class="sender_title sender_title_ellipsis">{{notification.notification.title|safe}}</h6>
+                <h6 class="notification_msg ellipsis">
+                  {{notification.notification.general_message|safe}}
+                </h6>
+              </div>
+            </div>
+            <div class="time_dropdown">
+              <h6 class="notification_time">{{notification.notification.timestamp}}</h6>
+            </div>
+          </div>
+        </a>
+        <div class="dropdown three_dots burger" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)"
+          onmouseout="hoverOutDots(this)">
+          <div class="" id="burger">
+            <span style="position: relative; top: -4px">...</span>
+          </div>
+          <div class="dropdown-content" id="dropdownContent">
+            <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
+            <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
+            <a href="#" onclick="seeMore(this)">See More</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+  <a href="{% url 'notification:all_notifications' %}" class="see-all">See All</a>
+</div>
+
+<script>
+  //function to display the notification box
+  function show_ntfn() {
+    var icon = document.querySelector(".bell-icon");
+    const ntfn_content = document.getElementById("notification");
+    if (ntfn_content.style.display === "block") {
+      // icon.classList.remove("wobble-hor-top");
+      ntfn_content.style.display = "none";
+    } else {
+      // icon.classList.add("wobble-hor-top");
+      ntfn_content.style.display = "block";
+    }
+  }
+
+  //function to change the color when clicked
+  function msg_read(msg_div) {
+
+    if(msg_div.firstElementChild.value != "2")
+    {   
+        var dropdownContent = msg_div.closest(".msg-info-div").querySelector(".dropdown-content");
+        var member_notification_id = dropdownContent.querySelector("#member_notification_id").value;
+        // Make an AJAX request to retrieve data for the selected category
+        $.ajax({
+          url: "{% url 'notification:mark_as_read' %}",
+    
+          type: "GET",
+          data: {'member_notification_id':member_notification_id},
+          success: function (response) {
+              //updating the hidden input value
+              msg_div.firstElementChild.value = "2";
+          
+              notification_count();
+              // shakeBell()
+
+              // Change the background color of the tr
+              msg_div.style.backgroundColor = "white";
+              //changing the dropdown text as needed according to the hidden input value
+              dropdownContent.querySelector('#notify_action').textContent = 'Mark as unread';
+          },
+          error: function (error) {
+              console.log("Error:", error);
+          }
+      });
+    }
+  }
+
+  //counts the number of unread notification and shows up on the bell icon
+  function notification_count() {
+    var hiddenInputs = document.querySelectorAll(".msg input");
+    var val = 0;
+
+    hiddenInputs.forEach(function (input) {
+      if (input.getAttribute("value") === "1") {
+        val++;
+      }
+    });
+
+    //updating the unread notification count
+    var lbl = document.getElementById("nftn_lbl");
+    lbl.textContent = val;
+    console.log(lbl.textContent)
+    if(lbl.textContent != '0'){
+      lbl.style.opacity = "1";
+    }
+    else{
+      lbl.style.opacity = "0";
+    }
+
+
+    
+  }
+
+  //loading which msg is read/unread based on load nd updating the bell icon count
+  window.onload = function () {
+    var divs = document.querySelectorAll(".msg");
+
+    divs.forEach(function (msg_val) {
+      if (msg_val.firstElementChild.value == "2") {
+        msg_val.style.backgroundColor = "white";
+      }
+    });
+
+    var hiddenInputs = document.querySelectorAll(".msg input");
+    var val = 0;
+
+    hiddenInputs.forEach(function (input) {
+      if (input.getAttribute("value") === "1") {
+        val++;
+      }
+    });
+
+    var lbl = document.getElementById("nftn_lbl");
+    lbl.textContent = val;
+
+    if(lbl.textContent != '0'){
+      lbl.style.opacity = "1";
+    }
+    else{
+      lbl.style.opacity = "0";
+    }
+  };
+</script>
+<script>
+  //change color on hover
+  function hoverIn(element) {
+    element.style.backgroundColor = "rgb(192, 230, 255)";
+  }
+
+  function hoverOut(element) {
+    let value = element.firstElementChild.value;
+
+    if (value === "1") {
+      element.style.backgroundColor = "rgb(224, 242, 254)";
+    } else {
+      element.style.backgroundColor = "white";
+    }
+  }
+
+  //hover effect on three dots
+  function hoverInDots(element) {
+    let msgElement = element.previousElementSibling;
+    hoverIn(msgElement);
+  }
+
+  //hover effect on three dots
+  function hoverOutDots(element) {
+    let msgElement = element.previousElementSibling;
+    hoverOut(msgElement);
+  }
+</script>
+<script>
+  //dropdown js for mark as read and unread 
+  document.addEventListener("click", function (event) {
+    // Close dropdowns if the click is not inside any dropdown
+    if (!event.target.closest(".dropdown")) {
+      var dropdownContents = document.querySelectorAll(".dropdown-content");
+      var burgers = document.querySelectorAll(".burger");
+
+      dropdownContents.forEach(function (content) {
+        content.style.display = "none";
+      });
+      burgers.forEach(function (burger) {
+        burger.classList.remove("open");
+      });
+    }
+  });
+
+  function toggleDropdown(event) {
+    var dropdownContent =
+      event.currentTarget.querySelector(".dropdown-content");
+    var burger = event.currentTarget.querySelector(".burger");
+
+    // Check if dropdown is currently open
+    var isOpen = dropdownContent.style.display === "block";
+
+    // Close all dropdowns and remove 'open' class from all burgers
+    var dropdownContents = document.querySelectorAll(".dropdown-content");
+    var burgers = document.querySelectorAll(".burger");
+
+    dropdownContents.forEach(function (content) {
+      content.style.display = "none";
+    });
+    burgers.forEach(function (burger) {
+      burger.classList.remove("open");
+    });
+
+    // If the clicked dropdown was not already open, open it
+    if (!isOpen) {
+      dropdownContent.style.display = "block";
+      // burger.classList.add("open");
+    }
+  }
+</script>
+<!-- Include Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyDj1YviC5nz_96MX1wqCZuir67QNsyWunY",
+    authDomain: "ieee-nsu-sb-portal.firebaseapp.com",
+    projectId: "ieee-nsu-sb-portal",
+    storageBucket: "ieee-nsu-sb-portal.appspot.com",
+    messagingSenderId: "608760512807",
+    appId: "1:608760512807:web:8730f4f3588840636aa902",
+    measurementId: "G-4G0H22SDX5"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+  // Register the service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('{% static 'firebase/firebase.js' %}')
+    .then(function(registration) {
+      // console.log('Service Worker registered with scope:', registration.scope);
+      messaging.useServiceWorker(registration);
+
+      // Request permission and get token
+      messaging.requestPermission()
+      .then(function() {
+        return messaging.getToken();
+      })
+      .then(function(token) {
+        // console.log("FCM Token:", token);
+        $.ajax({
+          url: "{% url 'notification:receive_token' %}",
+          type: "GET",
+          data: {'token': token},
+          success: function (response) {
+            // console.log("Success:", response);
+          },
+          error: function (error) {
+              // console.log("Error:", error);
+          }
+        });
+      })
+      .catch(function(err) {
+        console.error("Error getting FCM token:", err);
+      });
+    })
+    .catch(function(err) {
+      console.error('Service Worker registration failed:', err);
+    });
+  }
+
+  messaging.onMessage(function(payload) {
+    // console.log("Message received. ", payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+      body: payload.notification.body,
+    };
+
+    if (Notification.permission === 'granted') {
+      var notification = new Notification(notificationTitle, notificationOptions);
+    }
+  });
+</script>
+<script>
+  let notification_array = [];
+  let loadedNotificationTimeStamp = new Date('{{user_data.latest_timestamp}}'); 
+  // console.log(loadedNotificationTimeStamp); 
+  {% comment %} let notificationLabel = document.getElementById('nftn_lbl');
+  let newNotificationCount = parseInt(notificationLabel.textContent);
+  if (isNaN(newNotificationCount)){
+    newNotificationCount = 0;
+  }
+  // console.log("initial notification id ",latestNotificationId);
+  
+  console.log(newNotificationCount); {% endcomment %}
+  function fetchNotifications() {
+      $.ajax({
+          url: "{% url 'notification:fetch_notifications' %}",
+          method: "GET",
+          success: function(data) {
+              const notifications = data.notifications;
+              if (notifications.length > 0) {
+                //console.log('New notifications:', notifications);
+                updateNotifications(notifications);
+                notification_count();
+                shakeBell();
+                //updateNotificationCount();
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error('Error fetching notifications:', error);
+          }
+      });
+  }
+  function collectNotificationIds() {
+    const notificationElements = document.querySelectorAll('.msg-info-div');
+    notificationIds = Array.from(notificationElements).map(elem => elem.dataset.notificationId);
+  }
+
+  function isIn(notification){
+    let isin = false;
+    for (let i=0;i<notification_array.length;i++){
+      if (notification_array[i] == notification){
+        isin = true;
+      }
+    }
+    return isin;
+  }
+
+  function updateNotifications(notifications) {
+    const msgBox = document.querySelector('.msg-box');
+    //let newNotificationCount;
+    notifications.forEach(notification => {
+      //console.log("latestnotifcationID",latestNotificationId);
+      //console.log("notification id",notification.id);
+      // console.log(new Date(notification.timestamp));
+      // console.log(new Date(loadedNotificationTimeStamp));
+      if (new Date(notification.timestamp)> new Date(loadedNotificationTimeStamp)) {
+            playNotificationSound();
+            loadedNotificationTimeStamp = notification.timestamp;
+            //latestNotificationId = notification.id;
+            //newNotificationCount += 1;
+            //console.log(`printing newNotificationCount, ${newNotificationCount}`);
+            let notificationLink;
+            if (notification.notification_type === "Custom Notification"){
+              notificationLink = notification.inside_link;
+            }else{
+              notificationLink = '//' + notification.inside_link;
+            }
+            let notificationCreatorPicture;
+            if (notification.created_by.profile_picture === null){
+              if (notification.event){
+                notificationCreatorPicture = notification.event_organiser;
+              } else{
+                notificationCreatorPicture = notification.admin;
+              }
+            } else {
+              notificationCreatorPicture = notification.created_by.profile_picture;
+            }
+            //console.log('here trying to append notification');
+            const notificationElement = `
+                <div class="msg-info-div new-notification">
+                    <a href="${notificationLink}" target="_blank">
+                        <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
+                            <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
+                            <div class="sender_content">
+                                <div class="sender_frame">
+                                    <img src="${notificationCreatorPicture}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                                </div>
+                                <div class="bell_friend_svg">
+                                  <img src=${notification.notification_type_image}/> 
+                                </div>
+                                <div class="notification_content">
+                                    <h6 class="sender_title sender_title_ellipsis">${notification.title}</h6>
+                                    <h6 class="notification_msg ellipsis">${notification.general_message}</h6>
+                                </div>
+                            </div>
+                            <div class="time_dropdown">
+                                <h6 class="notification_time">${new Date(notification.timestamp).toLocaleString('en-US', {timeZone: 'Asia/Dhaka',month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true})}</h6>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="dropdown three_dots burger" onclick="toggleDropdown(event)" onmouseover="hoverInDots(this)" onmouseout="hoverOutDots(this)">
+                        <div class="" id="burger">
+                            <span style="position: relative; top: -4px">...</span>
+                        </div>
+                        <div class="dropdown-content" id="dropdownContent">
+                            <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">${notification.is_read ? 'Mark as unread' : 'Mark as read'}</a>
+                            <input type="hidden" id="member_notification_id" name="member_notification_id" value="${notification.id}"/>
+                            <a href="#" onclick="seeMore(this)">See More</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            msgBox.insertAdjacentHTML('afterbegin', notificationElement);
+           
+        }
+    });
+
+
+    // Attach event listeners for new notifications
+    document.querySelectorAll('.msg').forEach(msg => {
+        msg.addEventListener('click', function() {
+            msg_read(this);
+        });
+    });
+
+    document.querySelectorAll('.three_dots').forEach(dot => {
+        dot.addEventListener('click', function(event) {
+            toggleDropdown(event);
+        });
+    });
+  }
+  function updateNotificationCount() {
+    const notificationLabel = document.getElementById('nftn_lbl');
+    notificationLabel.textContent = newNotificationCount;
+  }
+  function playNotificationSound() {
+    var audio = document.createElement("audio");
+    audio.src = "{% static 'notification_sound.mp3' %}";
+    audio.play();   
+    
+      }
+  $(document).ready(function() {
+      // Poll for new notifications every 3 seconds
+      setInterval(fetchNotifications, 2000);
+  });
+</script>
+<script>
+  //change dropdown text and notification color based on click
+  function markAsRead_markAsUnread(element) {
+    // Find the closest .msg container
+    var msgContainer = element.parentElement.parentElement.parentElement;
+    var msg = element.parentElement.parentElement.parentElement.children[0];
+
+    // Find the hidden input within this container
+    var hiddenInput = msgContainer.querySelector(".hidden-input");
+
+    // Access the value of the hidden input
+    var inputValue = hiddenInput.value;
+
+    var dropdownContent = element.parentElement;
+    // Get the hidden input element within this closest parent
+    var member_notification_id = dropdownContent.querySelector("#member_notification_id").value;
+
+    if (inputValue == "1") {
+
+        // Make an AJAX request to retrieve data for the selected category
+        $.ajax({
+            url: "{% url 'notification:mark_as_read' %}",
+
+            type: "GET",
+            data: {'member_notification_id':member_notification_id},
+            success: function (response) {
+                // Change the background color of the tr
+                msg.children[0].style.backgroundColor = "white";
+                hiddenInput.value = "2";
+
+                // Change the text of the link to "Mark as unread"
+                dropdownContent.querySelector('#notify_action').textContent = 'Mark as unread';
+                
+                //updating the bell icon count
+                notification_count();
+                // shakeBell()
+            },
+            error: function (error) {
+                // console.log("Error:", error);
+            }
+        });
+    } else if (inputValue == "2") {
+
+      // Make an AJAX request to retrieve data for the selected category
+      $.ajax({
+          url: "{% url 'notification:mark_as_unread' %}",
+
+          type: "GET",
+          data: {'member_notification_id':member_notification_id},
+          success: function (response) {
+              // Change the background color of the tr
+              msg.children[0].style.backgroundColor = "rgb(224, 242, 254)";
+              hiddenInput.value = "1";
+
+              // Change the text of the link to "Mark as read"
+              dropdownContent.querySelector('#notify_action').textContent = 'Mark as read';
+
+              //updating the bell icon count
+              notification_count();
+              // shakeBell()
+          },
+          error: function (error) {
+              // console.log("Error:", error);
+          }
+      });
+    }
+  }
+
+  function shakeBell(){
+      //shake bell when notification count is updated
+      var icon = document.querySelector(".bell-icon");
+      if(icon.classList.contains("wobble-hor-top")) {
+        icon.classList.remove("wobble-hor-top");
+      }
+  
+      icon.classList.add("wobble-hor-top");
+    }
+
+  function seeMore(element){
+    var showMore = element.parentElement.parentElement.parentElement.querySelector('.notification_msg');
+    var showMore2 = element.parentElement.parentElement.parentElement.querySelector('.sender_title');
+    
+    
+    if (showMore.classList.contains('ellipsis')){
+      showMore.classList.remove('ellipsis');
+      showMore2.classList.remove('sender_title_ellipsis');
+      element.innerHTML = 'See Less'
+    }
+    else{
+      showMore.classList.add('ellipsis');
+      showMore2.classList.add('sender_title_ellipsis');
+      element.innerHTML = 'See More'
+    }
+  }
+</script>
+
+{% endblock bell_notification %}

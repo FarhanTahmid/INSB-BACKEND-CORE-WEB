@@ -38,6 +38,7 @@ class Members(models.Model):
     is_active_member = models.BooleanField(null=False,blank=False,default=True)
     is_blocked = models.BooleanField(null=False,blank=False,default=False)
     completed_task_points = models.FloatField(null=False,blank=False,default=0)
+    blood_group = models.CharField(max_length=10,null=True,blank=True,default="None")
 
     def save(self, *args, **kwargs):
 

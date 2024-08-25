@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from central_events.models import Events, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
+from central_events.models import Events, Google_Calendar_Attachments, InterBranchCollaborations, IntraBranchCollaborations, SuperEvents
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
@@ -15,6 +15,7 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from public_relation_team.renderData import PRT_Data
 from system_administration.models import adminUsers
 from system_administration.system_error_handling import ErrorHandling
 from task_assignation.models import Task, Task_Category
@@ -27,6 +28,7 @@ from main_website.models import Research_Papers,Blog
 import users
 from users.models import MemberSkillSets, Members,Panel_Members
 from django.conf import settings
+from insb_port import settings as Settings
 from users.renderData import LoggedinUser,member_login_permission
 import os
 import xlwt
@@ -40,7 +42,7 @@ from users.renderData import Alumnis
 import logging
 import traceback
 from chapters_and_affinity_group.get_sc_ag_info import SC_AG_Info
-from central_events.forms import EventForm
+from central_events.forms import EventForm, EventFormGC
 from .forms import *
 from .website_render_data import MainWebsiteRenderData
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -52,6 +54,7 @@ from system_administration.render_access import Access_Render
 from django.views import View
 from users.renderData import member_login_permission
 from task_assignation.models import *
+import re
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -2503,6 +2506,7 @@ def manage_view_access(request):
                     team_details_page=False
                     manage_web_access=False
                     manage_award_access=False
+                    manage_custom_notification_access = False
 
                     # Getting values from check box
                     
@@ -2524,6 +2528,8 @@ def manage_view_access(request):
                         manage_web_access=True
                     if(request.POST.get('manage_award_access')):
                         manage_award_access=True
+                    if(request.POST.get('manage_custom_notification_access')):
+                        manage_custom_notification_access=True
                     
                     # ****The passed keys must match the field name in the models. otherwise it wont update access
                     if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
@@ -2531,7 +2537,8 @@ def manage_view_access(request):
                                                             'create_individual_task_access':create_individual_task_access,
                                                             'create_team_task_access':create_team_task_access,
                                                             'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
-                                                            'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access})):
+                                                            'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access,
+                                                            'manage_custom_notification_access':manage_custom_notification_access})):
                         return redirect('central_branch:manage_access')
                     
                 if(request.POST.get('add_member_to_access')):
@@ -2591,8 +2598,8 @@ def event_control_homepage(request):
         }
 
         if(request.method=="POST"):
-            if request.POST.get('create_new_event'):
-                print("Create")
+            if request.POST.get('authorise'):
+                return redirect('port:authorize')
             
             #Creating new event type for Group 1 
             elif request.POST.get('add_event_type'):
@@ -3090,7 +3097,7 @@ def event_edit_form(request, event_id):
                     else:
                         registration_fee_amount=event_details.registration_fee_amount
                     #Check if the update request is successful
-                    if(Branch.update_event_details(event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
+                    if(Branch.update_event_details(request=request, event_id=event_id, event_name=event_name, event_description=event_description, super_event_id=super_event_id, event_type_list=event_type_list,publish_event = publish_event, event_start_date=event_start_date, event_end_date=event_end_date, inter_branch_collaboration_list=inter_branch_collaboration_list, intra_branch_collaboration=intra_branch_collaboration, venue_list_for_event=venue_list_for_event,
                                                             flagship_event = flagship_event,registration_fee = registration_fee,registration_fee_amount=registration_fee_amount,more_info_link=more_info_link,form_link = form_link,is_featured_event= is_featured)):
                         messages.success(request,f"EVENT: {event_name} was Updated successfully")
                         return redirect('central_branch:event_edit_form', event_id) 
@@ -3100,7 +3107,7 @@ def event_edit_form(request, event_id):
                     
                 if request.POST.get('delete_event'):
                     ''' To delete event from databse '''
-                    if(Branch.delete_event(event_id=event_id)):
+                    if(Branch.delete_event(request=request, event_id=event_id)):
                         messages.success(request,f"Event with EVENT ID {event_id} was Removed successfully")
                         return redirect('central_branch:event_control')
                     else:
@@ -3617,7 +3624,6 @@ def event_feedback(request, event_id):
 
         has_access = Branch_View_Access.get_event_edit_access(request)
         if has_access:
-            event = Events.objects.get(id=event_id)
             event_feedbacks = Branch.get_all_feedbacks(event_id=event_id)
 
             context = {
@@ -3632,6 +3638,72 @@ def event_feedback(request, event_id):
         else:
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+@login_required
+@member_login_permission
+def event_google_calendar(request, event_id):
+
+    try:
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        sc_ag=PortData.get_all_sc_ag(request=request)
+
+        has_access = Branch_View_Access.get_event_edit_access(request)
+        if has_access:
+            if(request.method == "POST"):
+                if('update_event_gc' in request.POST):
+                    google_calendar_publish_event_status = request.POST.get('publish_event_gc')
+                    attendeeOption = request.POST.getlist('attendeeList')
+                    event_description_for_gc = request.POST.get('event_description_for_gc')
+                    add_attendee_names = request.POST.getlist('attendee_name')
+                    add_attendee_emails = request.POST.getlist('attendee_email')
+
+                    documents = None
+                    if request.FILES.get('document'):
+                        documents = request.FILES.getlist('document')
+
+                    publish_event_gc = Branch.button_status(google_calendar_publish_event_status)
+                    Branch.update_event_google_calendar(request=request, event_id=event_id, description=event_description_for_gc, publish_event_gc=publish_event_gc, attendeeOption=attendeeOption, add_attendee_names=add_attendee_names, add_attendee_emails=add_attendee_emails, documents=documents)
+                if('remove_attachment') in request.POST:
+                    attachment_id = request.POST.get('remove_attachment')
+                    Branch.delete_attachment(request, attachment_id)
+
+            event = Events.objects.get(id=event_id)
+            event_gc_attachments = Google_Calendar_Attachments.objects.filter(event_id=event)
+            form = EventFormGC({'event_description_for_gc' : event.event_description_for_gc})
+            is_event_published_gc = event.publish_in_google_calendar
+            additional_attendees = event.additional_attendees
+            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+            if event.selected_attendee_list:
+                selected_attendee_list = event.selected_attendee_list.split(',')
+                selected_attendee_list_for_recruits = [re.findall(r'\d+', item)[0] for item in selected_attendee_list if re.findall(r'\d+', item)]
+            else:
+                selected_attendee_list = None
+                selected_attendee_list_for_recruits = None
+
+            context = {
+                'is_branch':True,
+                'user_data':user_data,
+                'all_sc_ag':sc_ag,
+                'event':event,
+                'is_event_published_gc':is_event_published_gc,
+                'event_id':event_id,
+                'form':form,
+                'event_gc_attachments':event_gc_attachments,
+                'additional_attendees':additional_attendees,
+                'recruitment_sessions':recruitment_sessions,
+                'selected_attendee_list':selected_attendee_list,
+                'selected_attendee_list_for_recruits':selected_attendee_list_for_recruits,
+            }
+
+            return render(request, 'Events/event_edit_google_calendar.html', context)
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+    
     except Exception as e:
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
@@ -3746,6 +3818,7 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
+                blood_group = request.POST['blood_group']
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -3776,7 +3849,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=None,
-                                                                last_renewal_session=None 
+                                                                last_renewal_session=None,
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -3800,7 +3874,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
-                                                                last_renewal_session=None 
+                                                                last_renewal_session=None,
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -3826,7 +3901,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=None,
-                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -3850,7 +3926,8 @@ def member_details(request,ieee_id):
                                                                 home_address=home_address,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
-                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value) 
+                                                                last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
+                                                                blood_group = blood_group, 
                                                                 )
                         #checking to see if user wants to update picture or not
                         if profile_picture == None:
@@ -4486,7 +4563,7 @@ def create_task(request,team_primary = None):
                 else:
                     return redirect(f'{app_name}:task_home_team',team_primary)
             
-            task_categories = Task_Category.objects.all()
+            task_categories = Task_Category.objects.all().order_by('name')
             
             #loads central bracnh if none or if is 1
             if team_primary == None or team_primary == "1":
@@ -4566,7 +4643,7 @@ def task_home(request,team_primary = None):
             app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
             permission_for_co_ordinator_and_incharges_to_create_task = "Team"
         #getting all task categories
-        all_task_categories = Task_Category.objects.all()
+        all_task_categories = Task_Category.objects.all().order_by('name')
 
         if request.method == "POST":
 
@@ -4606,7 +4683,7 @@ def task_home(request,team_primary = None):
         
         else:
             team = Teams.objects.get(primary=team_primary)
-            all_tasks = Task.objects.filter(team=team).order_by('is_task_completed','-deadline')
+            all_tasks = Task.objects.filter(team=team).order_by('-pk','is_task_completed')
             desired_team = Task_Assignation.get_team_app_name(team_primary)
             
             #getting nav_bar_name
@@ -4671,7 +4748,6 @@ def upload_task(request, task_id,team_primary = None):
         comments = None
         has_coordinator_access_or_incharge_access_for_team_task = False
 
-        print("sakib")
         print(create_individual_task_access)
         print(create_team_task_access)
         #to check if this is users task
@@ -4732,111 +4808,118 @@ def upload_task(request, task_id,team_primary = None):
 
             if request.method == 'POST':
 
-                if request.POST.get('save_task'):
+                if not task.is_task_completed:
+                    if request.POST.get('save_task'):
 
-                    file_upload = None
-                    media = None
+                        file_upload = None
+                        media = None
 
-                    if member_task_type.has_permission_paper:
-                        permission_paper = request.POST.get('permission_paper')
-                        if permission_paper != None:
-                            permission_paper_loaded = permission_paper
-                    if member_task_type.has_content:
-                        content = request.POST.get('content_details')
-                        if content != None:
-                            content_loaded = content 
-                    if member_task_type.has_drive_link:
-                        drive_link = request.POST.get('content_drive')
-                        if drive_link != None:
-                            drive_link_loaded = drive_link
-                    if member_task_type.has_file_upload:
-                        file_upload = request.FILES.getlist('document')
-                    if member_task_type.has_media:
-                        media = request.FILES.getlist('images')            
+                        if member_task_type.has_permission_paper:
+                            permission_paper = request.POST.get('permission_paper')
+                            if permission_paper != None:
+                                permission_paper_loaded = permission_paper
+                        if member_task_type.has_content:
+                            content = request.POST.get('content_details')
+                            if content != None:
+                                content_loaded = content 
+                        if member_task_type.has_drive_link:
+                            drive_link = request.POST.get('content_drive')
+                            if drive_link != None:
+                                drive_link_loaded = drive_link
+                        if member_task_type.has_file_upload:
+                            file_upload = request.FILES.getlist('document')
+                        if member_task_type.has_media:
+                            media = request.FILES.getlist('images')            
 
-                    if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
-                        messages.success(request,"Task Saved! Please finish it as soon as you can")
-                    else:
-                        messages.warning(request,"Something went wrong while saving the task!")
-
-                    if team_primary == None or team_primary == "1":
-
-                        return redirect('central_branch:upload_task',task_id)
-                    else:
-                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
-
-                elif request.POST.get('add_comment'):
-                    member_id = request.POST.get('comments_member')
-                    comments = request.POST.get('comments_details')
-
-                    if Task_Assignation.add_comments(request,task, member_id, comments):
-                        messages.success(request,f"Comments added for {member_id} successfully!")
-                    else:
-                        messages.warning(request,"Something went wrong while adding the comments!")
-                    
-                    if team_primary == None or team_primary == "1":
-
-                        return redirect('central_branch:upload_task',task_id)
-                    else:
-                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
-                
-                elif request.POST.get('finish_task'):
-
-                    file_upload = None
-                    media = None
-
-                    if member_task_type.has_permission_paper:
-                        permission_paper = request.POST.get('permission_paper')
-                        if permission_paper != None:
-                            permission_paper_loaded = permission_paper
-                    if member_task_type.has_content:
-                        content = request.POST.get('content_details')
-                        if content != None:
-                            content_loaded = content 
-                    if member_task_type.has_drive_link:
-                        drive_link = request.POST.get('content_drive')
-                        if drive_link != None:
-                            drive_link_loaded = drive_link
-                    if member_task_type.has_file_upload:
-                        file_upload = request.FILES.getlist('document')
-                    if member_task_type.has_media:
-                        media = request.FILES.getlist('images')            
-
-                    if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
-                        
-                        if Task_Assignation.task_email_to_eb(request,task,logged_in_user):
-                            messages.success(request,"You task has been requested for reviewing!")
+                        if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
+                            messages.success(request,"Task Saved! Please finish it as soon as you can")
                         else:
-                            messages.warning(request,"Something went wrong while saving!")
-                    else:
-                        messages.warning(request,"Something went wrong while saving the task!")
-            
-                    if team_primary == None or team_primary == "1":
+                            messages.warning(request,"Something went wrong while saving the task!")
 
-                        return redirect('central_branch:upload_task',task_id)
-                    else:
-                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+                        if team_primary == None or team_primary == "1":
+
+                            return redirect('central_branch:upload_task',task_id)
+                        else:
+                            return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+
+                    elif request.POST.get('add_comment'):
+                        member_id = request.POST.get('comments_member')
+                        comments = request.POST.get('comments_details')
+
+                        if Task_Assignation.add_comments(request,task, member_id, comments):
+                            messages.success(request,f"Comments added for {member_id} successfully!")
+                        else:
+                            messages.warning(request,"Something went wrong while adding the comments!")
+                        
+                        if team_primary == None or team_primary == "1":
+
+                            return redirect('central_branch:upload_task',task_id)
+                        else:
+                            return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+                    
+                    elif request.POST.get('finish_task'):
+
+                        file_upload = None
+                        media = None
+
+                        if member_task_type.has_permission_paper:
+                            permission_paper = request.POST.get('permission_paper')
+                            if permission_paper != None:
+                                permission_paper_loaded = permission_paper
+                        if member_task_type.has_content:
+                            content = request.POST.get('content_details')
+                            if content != None:
+                                content_loaded = content 
+                        if member_task_type.has_drive_link:
+                            drive_link = request.POST.get('content_drive')
+                            if drive_link != None:
+                                drive_link_loaded = drive_link
+                        if member_task_type.has_file_upload:
+                            file_upload = request.FILES.getlist('document')
+                        if member_task_type.has_media:
+                            media = request.FILES.getlist('images')            
+
+                        if Task_Assignation.save_task_uploads(task,logged_in_user,permission_paper_loaded,media,content_loaded,file_upload,drive_link_loaded):
+                            
+                            if Task_Assignation.task_email_to_eb(request,task,logged_in_user,team_primary):
+                                messages.success(request,"You task has been requested for reviewing!")
+                            else:
+                                messages.warning(request,"Something went wrong while saving!")
+                        else:
+                            messages.warning(request,"Something went wrong while saving the task!")
                 
-                elif request.POST.get('delete_doc'):
-                    doc = Task_Document.objects.get(id=request.POST.get('doc_id'))
-                    if(Task_Assignation.delete_task_document(doc)):
-                        messages.success(request,"Document deleted successfully!")
-                    else:
-                        messages.warning(request,"Something went wrong while deleting the document!")
-                    if team_primary == None or team_primary == "1":
+                        if team_primary == None or team_primary == "1":
 
-                        return redirect('central_branch:upload_task',task_id)
-                    else:
-                        return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
-                
-                elif request.POST.get('delete_image'):
-                    media = Task_Media.objects.get(id=request.POST.get('image_id'))
-                    if(Task_Assignation.delete_task_media(media)):
-                        messages.success(request,"Media deleted successfully!")
-                    else:
-                        messages.warning(request,"Something went wrong while deleting the media!")
-                    if team_primary == None or team_primary == "1":
+                            return redirect('central_branch:upload_task',task_id)
+                        else:
+                            return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+                    
+                    elif request.POST.get('delete_doc'):
+                        doc = Task_Document.objects.get(id=request.POST.get('doc_id'))
+                        if(Task_Assignation.delete_task_document(doc)):
+                            messages.success(request,"Document deleted successfully!")
+                        else:
+                            messages.warning(request,"Something went wrong while deleting the document!")
+                        if team_primary == None or team_primary == "1":
 
+                            return redirect('central_branch:upload_task',task_id)
+                        else:
+                            return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+                    
+                    elif request.POST.get('delete_image'):
+                        media = Task_Media.objects.get(id=request.POST.get('image_id'))
+                        if(Task_Assignation.delete_task_media(media)):
+                            messages.success(request,"Media deleted successfully!")
+                        else:
+                            messages.warning(request,"Something went wrong while deleting the media!")
+                        if team_primary == None or team_primary == "1":
+
+                            return redirect('central_branch:upload_task',task_id)
+                        else:
+                            return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
+                else:
+                    messages.error(request,"Task Marked Completed. Cannot Submit Now")
+                    if team_primary == None or team_primary == "1":
                         return redirect('central_branch:upload_task',task_id)
                     else:
                         return redirect(f'{app_name}:upload_task_team',task_id,team_primary)
@@ -5283,5 +5366,87 @@ class SaveMemberTaskPointsAjax(View):
             return JsonResponse('Something went wrong!',safe=False)
         
 # task history
-def individual_task_history(request):
-    return render(request,"Task History/per_individual_task_history.html")
+def individual_task_history(request, ieee_id):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        has_common_access = Branch_View_Access.common_access(username=request.user.username)
+
+        if has_common_access:
+            member = Members.objects.get(ieee_id=ieee_id)
+            all_tasks_of_member_with_points = Member_Task_Point.objects.filter(member=member.ieee_id, task__is_task_completed=True).order_by('-task__deadline')
+
+            context = {
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'member': member,
+                'all_tasks_of_member_with_points': all_tasks_of_member_with_points,
+                'media_url': Settings.MEDIA_URL
+            }
+
+            return render(request,"Task History/per_individual_task_history.html", context)
+        else:
+            return render(request,"access_denied2.html", {'all_sc_ag':sc_ag, 'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+def team_task_history(request, team_primary):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+
+        has_common_access = Branch_View_Access.common_access(username=request.user.username)
+
+        if has_common_access:
+            team = Teams.objects.get(primary=team_primary)
+            all_tasks_of_team_with_points = Team_Task_Point.objects.filter(team=team, task__is_task_completed=True).order_by('-task__deadline')
+
+            context = {
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+                'team_details': team,
+                'all_tasks_of_team_with_points': all_tasks_of_team_with_points
+            }
+
+            return render(request,"Task History/per_team_task_history.html", context)
+        else:
+            return render(request,"access_denied2.html", {'all_sc_ag':sc_ag, 'user_data':user_data})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+
+def task_leaderboard(request):
+    try:
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        has_common_access = Branch_View_Access.common_access(username=request.user.username)
+
+        all_members = Members.objects.all().exclude(completed_task_points=0).order_by('-completed_task_points')
+        all_teams = Teams.objects.filter(team_of__primary=1).order_by('-completed_task_points')
+
+        context = {
+            'all_sc_ag':sc_ag,
+            'user_data':user_data,
+            'all_members': all_members,
+            'all_teams': all_teams,
+            'has_common_access': has_common_access
+        }
+
+        return render(request,"LeaderBoards/task_leaderboard.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)

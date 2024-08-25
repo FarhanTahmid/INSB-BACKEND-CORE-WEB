@@ -127,6 +127,9 @@ class Member_Task_Point(models.Model):
     is_task_completed = models.BooleanField(null=False,blank=False,default=False)
     deducted_points_logs = models.JSONField(default = dict)
     comments = models.TextField(null=True,blank=True,default="")
+    
+    #Set this value only when the task has been set to completed by task assignee
+    completion_date = models.DateTimeField(null=True,blank=True)
 
     class Meta:
         verbose_name="Member Task Point"

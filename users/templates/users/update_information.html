@@ -218,6 +218,18 @@
                                 <input class="input" type="text" name="address" value="{{ user_data.home_address }}"><br>
                                 <label for="email_personal">Personal Email</label>
                                 <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}"><br>
+                                <label for="blood_group">Blood Group</label>
+                                <select class="form-control" name="blood_group" value="{{ user_data.blood_group }}">
+                                    <option value="None" disabled {% if user_data.blood_group == "None" %}selected{% endif %}>-------------------</option>
+                                    <option value="A+" {% if user_data.blood_group == "A+" %}selected{% endif %}>A+</option>
+                                    <option value="A-" {% if user_data.blood_group == "A-" %}selected{% endif %}>A-</option>
+                                    <option value="B+" {% if user_data.blood_group == "B+" %}selected{% endif %}>B+</option>
+                                    <option value="B-" {% if user_data.blood_group == "B-" %}selected{% endif %}>B-</option>
+                                    <option value="O+" {% if user_data.blood_group == "O+" %}selected{% endif %}>O+</option>
+                                    <option value="O-" {% if user_data.blood_group == "O-" %}selected{% endif %}>O-</option>
+                                    <option value="AB+" {% if user_data.blood_group == "AB+" %}selected{% endif %}>AB+</option>
+                                    <option value="AB-" {% if user_data.blood_group == "AB-" %}selected{% endif %}>AB-</option>
+                                </select><br>
                                 <label for="email_nsu">NSU Email</label>
                                 <input class="input" type="email" name="email_nsu" value="{{ user_data.email_nsu }}" required><br>
                                 <label for="contact_no">Contact</label>
