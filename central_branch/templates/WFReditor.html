@@ -73,7 +73,7 @@
             left: 0;
             width: calc(100% - 40px);
             height: calc(100% - 40px);
-            z-index: 100;
+            z-index: 1099;
             background-color: #fff;
             margin: 20px;
             border-radius: 5px;
@@ -98,7 +98,7 @@
 
         .modal-bg {
             position: fixed;
-            z-index: 999; 
+            z-index: 1100; 
             left: 0;
             top: 0;
             width: 100%;
@@ -110,18 +110,19 @@
         .modal-bg h2{
             /* background-image: linear-gradient(90deg, #0073ffba, #c000ffba); */
             margin: 0;
-            padding: 20px;
+            padding: 0 20px;
             position: relative;
             left: -20px;
             width: 100%;
             border-radius: 5px 5px 0 0;
+            font-size: 25px;
         }
         
         .modal-content {
             font-family: sans-serif;
             background-color: #fefefe;
             margin: auto;
-            padding: 0 20px 20px;
+            padding: 20px 20px;
             border: 1px solid #888;
             width: 80%;
             max-width: 550px;
@@ -141,7 +142,7 @@
             font-family: sans-serif;
             background-color: #fefefe;
             margin: 15% auto;
-            padding: 0 20px 20px;
+            padding: 20px 20px;
             border: 1px solid #888;
             border-radius: 8px;
             display: flex;
@@ -150,25 +151,29 @@
 
         .modal-img label{
             padding: 10px 0 3px 0;
+            margin: 0;
         }
 
         .modal-img input{
             padding: 3px;
             border: 1px solid;
             border-radius: 5px;
-            margin-bottom: 10px;
+            /* margin-bottom: 10px; */
+            width: 100%;
         }
 
         .modal-img button{
             position: relative;
             /* top: 78px; */
-            width: 100px;
-            left: 200px;
+            /* width: 100px; */
+            width: 100%;
+            /* left: 200px; */
             padding: 5px;
             border: none;
             border-radius: 5px;
             background: #5450ff;
             color: white;
+            margin-top: 10px;
         }
 
         .modal-link {
@@ -177,7 +182,7 @@
             font-family: sans-serif;
             background-color: #fefefe;
             margin: 15% auto;
-            padding: 0 20px 20px;
+            padding: 20px 20px;
             border: 1px solid #888;
             border-radius: 8px;
             display: flex;
@@ -186,19 +191,22 @@
 
         .modal-link label {
             padding: 10px 0 3px 0;
+            margin: 0;
         }
 
         .modal-link input {
             padding: 3px;
             border: 1px solid;
             border-radius: 5px;
-            margin-bottom: 10px;
+            /* margin-bottom: 10px; */
+            width: 100%;
         }
 
         .modal-link button {
             position: relative;
             /* top: 97px; */
-            width: 100px;
+            /* width: 100px; */
+            width: 100%;
             align-self: flex-end;
             padding: 5px;
             border: none;
@@ -206,6 +214,7 @@
             background: #5450ff;
             color: white;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         .modal-table {
@@ -214,7 +223,7 @@
             font-family: sans-serif;
             background-color: #fefefe;
             margin: 15% auto;
-            padding: 0 20px 20px;
+            padding: 20px 20px;
             border: 1px solid #888;
             border-radius: 8px;
             display: flex;
@@ -223,18 +232,21 @@
 
         .modal-table label {
             padding: 10px 0 3px 0;
+            margin: 0;
         }
 
         .modal-table input, .modal-table select {
             padding: 3px;
             border: 1px solid;
             border-radius: 5px;
-            margin-bottom: 10px;
+            /* margin-bottom: 10px; */
+            width: 100%;
         }
 
         .modal-table button {
             position: relative;
-            width: 100px;
+            /* width: 100px; */
+            width: 100%;
             align-self: flex-end;
             padding: 5px;
             border: none;
@@ -242,6 +254,7 @@
             background: #5450ff;
             color: white;
             cursor: pointer;
+            margin-top: 10px;
         }
 
     </style>
@@ -281,7 +294,7 @@
                 <button onclick="openLinkModal()" title="Insert Link"><i class="fa fa-link"></i></button>
                 <button onclick="openTableModal()" title="Insert Table"><i class="fa fa-table"></i></button>
                 <button class="expand-editor" onclick="toggleExpand()" title="Expand Editor"><i class="fa fa-expand"></i></button>
-                <button onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%;"></i></button>
+                <button onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%; font-size: 9.5px;"></i></button>
             </div>
         </div>
         <div contenteditable="true" class="editor"></div>
@@ -500,7 +513,7 @@
             editorContainer.classList.toggle('expanded');
             const button = document.querySelector('.expand-editor');
             if(document.querySelector('.expanded')){
-                height = document.querySelector('.toolbar').clientHeight + document.querySelector('.resize-handle').clientHeight + 11;
+                height = document.querySelector('.toolbar').clientHeight + document.querySelector('.resize-handle').clientHeight -8;
                 document.querySelector('.editor').style.height = `calc(100% - ${height}px)`;
             }else{
                 document.querySelector('.editor').style.height = `200px`;
