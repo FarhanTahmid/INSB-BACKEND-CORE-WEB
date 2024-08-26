@@ -11,11 +11,9 @@ from googleapiclient.discovery import build
 @shared_task
 def send_scheduled_email(id,unique_task_name_json):
     id_id = json.loads(id)
-    # to_email_list = json.loads(to_email_list)
-    # cc_email_list = json.loads(cc_email_list)
-    # bcc_email_list = json.loads(bcc_email_list)
+
     unique_task_name = json.loads(unique_task_name_json)
-    is_scheduled= True
+
     # PRT_Email_System.send_email(to_email_list, cc_email_list, bcc_email_list, subject, mail_body,is_scheduled,get_list_of_attachments)
     
     credentials = GmailHandler.get_credentials()

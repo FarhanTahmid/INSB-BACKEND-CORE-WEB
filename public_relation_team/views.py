@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect
 from django.conf import settings
-from googleapiclient.discovery import build
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
 from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
@@ -14,8 +13,7 @@ from users.models import Members
 from port.models import Roles_and_Position
 from django.http import HttpResponse
 from .models import Manage_Team
-# from main_website.forms import HomePageBannerWithTextForm
-from datetime import datetime,timedelta
+from datetime import datetime
 from users import renderData
 import json
 from django.core.files.base import ContentFile
@@ -496,7 +494,7 @@ def send_email(request):
                                     email_single_email,email_to_list,email_cc_list,email_bcc_list,request
                                 )
                                 
-                                if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
+                                if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
                                     messages.success(request,"Email scheduled successfully!")
                                 else:
                                     messages.error(request,"Email could not be scheduled! Try again Later") 
@@ -504,7 +502,7 @@ def send_email(request):
                                 to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
                                     email_single_email,email_to_list,email_cc_list,email_bcc_list,request
                                 )
-                                if PRT_Email_System.send_scheduled_email(to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
+                                if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
                                     messages.success(request,"Email scheduled successfully!")
                                 else:
                                     messages.error(request,"Email could not be scheduled! Try again Later")
