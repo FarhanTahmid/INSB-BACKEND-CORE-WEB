@@ -33,6 +33,105 @@
   <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
 
   <!--Internal CSS-->
+  <style>
+    .compose {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 637px;
+      border: 1px solid black;
+    }
+    .child-body {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+    }
+    .fa-pen {
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+    .button {
+      background-color: #137aac;
+      border: none;
+      color: white;
+      padding: 15px 15px;
+    
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    .compose_email {
+      /* position: fixed;
+      bottom: 70px;
+      right: 10px; */
+      margin: 10px;
+    }
+    input[type="text"] {
+      width: 610px;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      background-color: #d9d9d9;
+    }
+    input::placeholder {
+      color: black;
+    }
+    
+    textarea {
+      resize: none;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      width: 590px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #e0e0e0;
+      height: 100px;
+      /* color: black; */
+    }
+    .send {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px;
+    }
+    .buttonsEmail {
+      display: flex;
+    }
+    .attach_file {
+      margin-left: 5px;
+    }
+    .button1 {
+      background-color: #d9d9d9;
+      border: none;
+      color: black;
+      padding: 8px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      /* margin-right: 10px; */
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    
+    textarea::placeholder {
+      color: black;
+      padding-left: 7px;
+    }
+    
+  </style>
   <!--Internal CSS End-->
 </head>
 <body>
@@ -265,7 +364,31 @@
       </div>
   </div>
   <!--Email Section End-->
+ <!-- Farhana Compose Code -->
 
+<div class="child-body">
+  <button class="button"><i class="fa-solid fa-pen"></i>Compose an Email</button>
+</div>
+<div class="compose hidden">
+
+
+  <div class="compose_email">
+      <input type="text" id="to" name="to" placeholder="To"><br>
+      <input type="text" id="fname" name="fname" placeholder="From"><br>
+      <input type="text" id="fname" name="fname" placeholder="CC"><br>
+      <input type="text" id="fname" name="fname" placeholder="BCC"><br>
+
+      <textarea placeholder="Body"></textarea>
+
+  </div>
+  <div class="send">
+      <div class="attach_file"><i class="fa-solid fa-paperclip"></i></div>
+      <div class="buttonsEmail">
+          <button class="btnClose button1">Close</button>
+          <button class="btnSend button1">Send</button>
+      </div>
+  </div>
+</div>
 </div>
 
 <!-- ############ PAGE END-->
@@ -317,6 +440,22 @@
 <!-- ############ LAYOUT END-->
 
   </div>
+  <script>
+    const composeBtn = document.querySelector('.child-body');
+const composeBody = document.querySelector('.compose');
+const btnClose = document.querySelector('.btnClose');
+composeBtn.addEventListener('click', function(){
+    // console.log('clicked');
+    composeBtn.classList.add('hidden');
+    composeBody.classList.remove('hidden');
+})
+
+btnClose.addEventListener('click', function(){
+    // console.log('clicked');
+    composeBtn.classList.remove('hidden');
+    composeBody.classList.add('hidden');
+})  
+  </script>
 <!-- build:js scripts/app.html.js -->
 <!-- jQuery -->
 <script src="{% static 'script/jquery.js'%}"></script>
