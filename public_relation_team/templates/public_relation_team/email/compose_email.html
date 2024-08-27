@@ -258,14 +258,73 @@
       width: 99%;
     }
     
-    /* .editor-container{
-      margin-top: 8px;
+    .email_wrapper{
+      background: white;
     }
-    .editor{
-      border-color: #f5f5f5;
-      border-style: solid;
-      border-width: 0 2px;
-    } */
+    
+    .email_container input[type="checkbox"]{
+      position: relative;
+      top: 1px;
+    }
+    
+    .email_boxes{
+      position: sticky;
+      display: flex;
+      /* gap: 10px; */
+    }
+
+    .email_box{
+      text-decoration: none;
+      /* font-weight: bold; */
+      font-size: large;
+      padding: 2px 20px;
+      transition: all .3s ease-in-out;
+    }
+    .email_boxes .active{
+      background-color: #137aac;
+      color: white;
+    }
+
+    .email_box:hover{
+      background-color: #137aac;
+      color: white;
+    }
+
+    .email_options{
+      border-radius: 12px;
+      border-top: 1px solid #646464;
+      padding: 10px 15px 30px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 15px;
+    }
+
+    .email_options_left > label{
+      margin: 0;
+      margin-left: 5px;
+    }
+
+    .email_inner_container{
+      border-top: 1px solid #646464;
+      border-radius: 18px 18px 0 0;
+      position: relative;
+      top: -15px;
+      /* display: none; */
+    }
+
+    .show{
+      display: block;
+    }
+    .email_row{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 15px 15px 0px 15px;
+      padding: 15px 20px;
+      background-color: aliceblue;
+    }
     /* responsive code for tablet and small screens */
     
     @media screen and (max-width: 768px) {
@@ -340,6 +399,167 @@
       <!-- ############ PAGE START-->
       <!--Email Section Start-->
       <!--email ui start-->
+      <div class="email_wrapper">
+        <div class="email_boxes">
+          <a href="#" class="email_box active">Inbox</a>
+          <a href="#" class="email_box">Sent</a>
+          <a href="#" class="email_box">Dev Mail</a>
+        </div>
+
+
+        <div class="email_container">
+          <div class="email_options">
+            <div class="email_options_left">
+              <input type="checkbox" id="select_all" name="select_all">
+              <label for="select_all">Select All</label>
+            </div>
+            <div class="email_options_right">Pagination</div>
+          </div>
+
+          <div class="email_inner_container inbox">
+            <div class="email_row">
+              <div>
+                <input type="checkbox" id="select" name="select">
+                <label for="select">Inbox</label>
+              </div>
+              <div class="email_content">
+                <div class="subject">Subject</div>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+              </div>
+              <div class="email_date">25th August, 2024 9:00 AM</div>
+            </div>
+            <div class="email_row">
+              <div>
+                <input type="checkbox" id="select" name="select">
+                <label for="select">Inbox</label>
+              </div>
+              <div class="email_content">
+                <div class="subject">Subject</div>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+              </div>
+              <div class="email_date">25th August, 2024 9:00 AM</div>
+            </div>
+            <div class="email_row">
+              <div>
+                <input type="checkbox" id="select" name="select">
+                <label for="select">Inbox</label>
+              </div>
+              <div class="email_content">
+                <div class="subject">Subject</div>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+              </div>
+              <div class="email_date">25th August, 2024 9:00 AM</div>
+            </div>
+            <div class="email_row">
+              <div>
+                <input type="checkbox" id="select" name="select">
+                <label for="select">Inbox</label>
+              </div>
+              <div class="email_content">
+                <div class="subject">Subject</div>
+                <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+              </div>
+              <div class="email_date">25th August, 2024 9:00 AM</div>
+            </div>
+
+            <div class="email_inner_container sent">
+              <div class="email_row">
+                <div>
+                  <input type="checkbox" id="select" name="select">
+                  <label for="select">Sender Name</label>
+                </div>
+                <div class="email_content">
+                  <div class="subject">Subject</div>
+                  <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                </div>
+                <div class="email_date">25th August, 2024 9:00 AM</div>
+              </div>
+              <div class="email_row">
+                <div>
+                  <input type="checkbox" id="select" name="select">
+                  <label for="select">Sender Name</label>
+                </div>
+                <div class="email_content">
+                  <div class="subject">Subject</div>
+                  <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                </div>
+                <div class="email_date">25th August, 2024 9:00 AM</div>
+              </div>
+              <div class="email_row">
+                <div>
+                  <input type="checkbox" id="select" name="select">
+                  <label for="select">Sender Name</label>
+                </div>
+                <div class="email_content">
+                  <div class="subject">Subject</div>
+                  <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                </div>
+                <div class="email_date">25th August, 2024 9:00 AM</div>
+              </div>
+              <div class="email_row">
+                <div>
+                  <input type="checkbox" id="select" name="select">
+                  <label for="select">Sender Name</label>
+                </div>
+                <div class="email_content">
+                  <div class="subject">Subject</div>
+                  <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                </div>
+                <div class="email_date">25th August, 2024 9:00 AM</div>
+              </div>
+
+
+              <div class="email_inner_container dev_mail">
+                <div class="email_row">
+                  <div>
+                    <input type="checkbox" id="select" name="select">
+                    <label for="select">Dev</label>
+                  </div>
+                  <div class="email_content">
+                    <div class="subject">Subject</div>
+                    <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                  </div>
+                  <div class="email_date">25th August, 2024 9:00 AM</div>
+                </div>
+                <div class="email_row">
+                  <div>
+                    <input type="checkbox" id="select" name="select">
+                    <label for="select">Dev</label>
+                  </div>
+                  <div class="email_content">
+                    <div class="subject">Subject</div>
+                    <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                  </div>
+                  <div class="email_date">25th August, 2024 9:00 AM</div>
+                </div>
+                <div class="email_row">
+                  <div>
+                    <input type="checkbox" id="select" name="select">
+                    <label for="select">Dev</label>
+                  </div>
+                  <div class="email_content">
+                    <div class="subject">Subject</div>
+                    <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                  </div>
+                  <div class="email_date">25th August, 2024 9:00 AM</div>
+                </div>
+                <div class="email_row">
+                  <div>
+                    <input type="checkbox" id="select" name="select">
+                    <label for="select">Dev</label>
+                  </div>
+                  <div class="email_content">
+                    <div class="subject">Subject</div>
+                    <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
+                  </div>
+                  <div class="email_date">25th August, 2024 9:00 AM</div>
+                </div>
+
+
+
+          </div>
+        </div>
+      </div>
       <!--email ui end-->
       <!-- Farhana Compose Code -->
       
@@ -367,7 +587,9 @@
           {% endblock WFReditor %}
         </div>
         <div class="send">
-          <div class="attach_file"><i class="fa fa-paperclip" aria-hidden="true"></i>
+          <div class="attach_file">
+            <label for="myfile"><i class="fa fa-paperclip" for="myfile" aria-hidden="true"></i></label>
+            <input type="file" id="myfile" name="myfile" hidden>
           </div>
           <div class="buttonsEmail">
             <button class="btnClose button1">Close</button>
@@ -385,12 +607,12 @@
         <div class="schedule-conf-modal">
           <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Want to Schedule the Email?</h3>
           <button class="scadule-yes">Yes</button>
-          <button class="scadule-no">NO, Send without Schedule</button>
+          <button class="scadule-no">No, Send without Schedule</button>
         </div>
 
         <!-- schedule modals -->
         <div class="schedule-modal">
-          <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Want to Schedule the Email?</h3>
+          <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Set the time and date</h3>
           <div style="display: flex; justify-content: space-between;">
             <input type="datetime-local" style="border: 0;
                                                 background: #b0cfff;
@@ -403,16 +625,9 @@
 
         <!-- main confirmation -->
         <div class="confirm-modal">
-          <h3 style="text-align: center; position: relative; top: 50%; transform: translateY(-50%);">Email has sent successfully!</h3>
+          <h3 style="text-align: center; position: relative; top: 50%; transform: translateY(-50%);">Email has been sent successfully!</h3>
         </div>
       </div>
-        <!-- pick a date and time to schedule modal -->
-
-        
-        <!-- email sent confirmed modal-->
-
-        
-      <!-- Rubai Modal Code end-->
       <!--Email Section End-->
 
         
