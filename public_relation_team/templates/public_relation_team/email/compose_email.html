@@ -38,7 +38,8 @@
       position: fixed;
       bottom: 10px;
       right: 10px;
-      width: 637px;
+      width: 50%;
+      max-width: 637px;
       border: 1px solid black;
     }
     .child-body {
@@ -75,7 +76,7 @@
       margin: 10px;
     }
     input[type="text"] {
-      width: 610px;
+      width: 100%;
       padding: 12px 20px;
       margin: 8px 0;
       display: inline-block;
@@ -92,21 +93,25 @@
       resize: none;
       font-family: Arial, sans-serif;
       font-size: 14px;
-      width: 590px;
+      width: 100%;
       padding: 10px;
+      height: auto;
       border: 1px solid #ccc;
       border-radius: 4px;
       background-color: #e0e0e0;
       height: 100px;
       /* color: black; */
+      box-sizing: border-box;
     }
     .send {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       margin: 10px;
     }
     .buttonsEmail {
       display: flex;
+      gap: 10px;
     }
     .attach_file {
       margin-left: 5px;
@@ -115,11 +120,11 @@
       background-color: #d9d9d9;
       border: none;
       color: black;
-      padding: 8px 15px;
+      padding: 10px 12px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 16px;
+      font-size: 14px;
       margin: 4px 2px;
       /* margin-right: 10px; */
       cursor: pointer;
@@ -129,6 +134,50 @@
     textarea::placeholder {
       color: black;
       padding-left: 7px;
+    }
+    
+    /* responsive code for tablet and small screens */
+    
+    @media screen and (max-width: 768px) {
+      .compose {
+        width: 90%;
+        bottom: 20px;
+        right: 5%;
+      }
+    
+      input[type="text"],
+      textarea {
+        width: 100%;
+      }
+    
+      .send {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    
+      .attach_file {
+        margin-bottom: 10px;
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .compose {
+        width: 95%;
+        bottom: 10px;
+        right: 2.5%;
+      }
+    
+      input[type="text"],
+      textarea {
+        width: 100%;
+        font-size: 14px;
+      }
+    
+      .button,
+      .button1 {
+        padding: 10px;
+        font-size: 14px;
+      }
     }
     
   </style>
