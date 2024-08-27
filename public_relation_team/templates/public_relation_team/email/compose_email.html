@@ -1,36 +1,17 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <title>Send Email | Public Relations Team</title>
-  <meta name="description" content="Admin, Dashboard, Bootstrap, Bootstrap 4, Angular, AngularJS" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Email | IEEE NSU Student Branch</title>
 
-  <!-- for ios 7 style, multi-resolution icon of 152x152 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
-  <link rel="apple-touch-icon" href="../assets/images/logo.png">
-  <meta name="apple-mobile-web-app-title" content="Flatkit">
-  <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="shortcut icon" sizes="196x196" href="../assets/images/logo.png">
-  
-  <!-- style -->
-  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
-  <link rel="stylesheet" href="{% static '/assets/animate.css/animate.min.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/glyphicons/glyphicons.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/font-awesome/css/font-awesome.min.css' %}" type="text/css" />
-  <link rel="stylesheet" href="{% static '/assets/material-design-icons/material-design-icons.css' %}" type="text/css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
-
-  <link rel="stylesheet" href="{% static '/assets/bootstrap/dist/css/bootstrap.min.css' %}" type="text/css" />
-  <!-- build:css ../assets/styles/app.min.css -->
-  <link rel="stylesheet" href="{% static '/assets/styles/app.css' %}" type="text/css" />
-  <!-- endbuild -->
-  <link rel="stylesheet" href="{% static '/assets/styles/font.css' %}" type="text/css" />
+  {% block common_css %}
+    {% include "common_css.html" %}
+  {% endblock common_css %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!--Internal CSS-->
   <style>
@@ -39,43 +20,52 @@
       bottom: 10px;
       right: 10px;
       width: 637px;
-      border: 1px solid black;
+      border: 1px solid #ccc;
+      background: white;
+      border-radius: 5px;
     }
+
     .child-body {
       position: fixed;
       bottom: 20px;
       right: 30px;
     }
+
     .fa-pen {
       margin-right: 5px;
       margin-top: 2px;
     }
+
     .button {
       background-color: #137aac;
       border: none;
       color: white;
-      padding: 12px 20px;
-    
+      padding: 15px 15px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
       margin: 4px 2px;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 10px;
     }
-    
+
     .hidden {
       display: none;
     }
+
     .compose_email {
       /* position: fixed;
       bottom: 70px;
       right: 10px; */
       margin: 10px;
     }
-    input[type="text"] {
+    .compose_email input[type="text"] {
       width: 100%;
+    }
+
+    .compose_email input[type="text"] {
+      width: 610px;
       padding: 12px 20px;
       margin: 8px 0;
       display: inline-block;
@@ -84,34 +74,38 @@
       box-sizing: border-box;
       background-color: #d9d9d9;
     }
+
     input::placeholder {
       color: black;
     }
-    
+
     textarea {
       resize: none;
       font-family: Arial, sans-serif;
       font-size: 14px;
-      width: 100%;
+      width: 590px;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 4px;
       background-color: #e0e0e0;
-      height: 150px;
-      margin-top: 8px;
+      height: 100px;
       /* color: black; */
     }
+
     .send {
       display: flex;
       justify-content: space-between;
       margin: 10px;
     }
+
     .buttonsEmail {
       display: flex;
     }
+
     .attach_file {
       margin-left: 5px;
     }
+
     .button1 {
       background-color: #d9d9d9;
       border: none;
@@ -126,91 +120,146 @@
       cursor: pointer;
       border-radius: 5px;
     }
-    
+
     textarea::placeholder {
       color: black;
       padding-left: 7px;
     }
-    
   </style>
   <!--Internal CSS End-->
 </head>
+
 <body>
   <div class="app" id="app">
 
-<!-- ############ LAYOUT START-->
+    <!-- ############ LAYOUT START-->
 
-<!-- aside -->
-<div id="aside" class="app-aside modal nav-dropdown">
-  	{% block sidebar %}
-	    {% include 'users/sidebar.html' %}
-  	{% endblock %}
-</div>
-<!-- / -->
-<!-- navbar content -->
-<div id="content" class="app-content box-shadow-z0" role="main">
-  {% block navbar %}
-    {% include 'navbar.html' %}
-  {% endblock navbar %}
+    <!-- aside -->
+    <div id="aside" class="app-aside modal nav-dropdown">
+      {% block sidebar %}
+      {% include 'users/sidebar.html' %}
+      {% endblock %}
+    </div>
+    <!-- / -->
+    <!-- navbar content -->
+    <div id="content" class="app-content box-shadow-z0" role="main">
+      {% block navbar %}
+      {% include 'navbar.html' %}
+      {% endblock navbar %}
 
-</div>
-<!--navbar content-->
-    
-<div ui-view class="app-body" id="view" style="justify-content:center;">
+    </div>
+    <!--navbar content-->
 
-<!-- ############ PAGE START-->
-    <!--Page Intro Start-->
+    <div ui-view class="app-body" id="view" style="justify-content:center;">
 
-</div>
-  <!--Email Section End-->
- <!-- Farhana Compose Code -->
-
-<div class="child-body">
-  <button class="button"><i class="fa-solid fa-pen"></i>Compose an Email</button>
-</div>
-<div class="compose hidden">
-
-
-  <div class="compose_email">
-      <input type="text" id="to" name="to" placeholder="To"><br>
-      <input type="text" id="fname" name="fname" placeholder="From"><br>
-      <input type="text" id="fname" name="fname" placeholder="CC"><br>
-      <input type="text" id="fname" name="fname" placeholder="BCC"><br>
-
-      <textarea placeholder="Body"></textarea>
-
-  </div>
-  <div class="send">
-      <div class="attach_file"><i class="fa-solid fa-paperclip"></i></div>
-      <div class="buttonsEmail">
-          <button class="btnClose button1">Close</button>
-          <button class="btnSend button1">Send</button>
+      <!-- ############ PAGE START-->
+      <!--Email Section Start-->
+      <!--email ui start-->
+      <!--email ui end-->
+      <!-- Farhana Compose Code -->
+      
+      <div class="child-body">
+        <button class="button"><i class="fa-solid fa-pen"></i>Compose an Email</button>
       </div>
-  </div>
-</div>
+      <div class="compose hidden">
+        <div class="compose_email">
+          <input type="text" name="to" placeholder="To"><br>
+          <input type="text" name="from" placeholder="From"><br>
+          <input type="text" name="cc" placeholder="CC"><br>
+          <input type="text" name="bcc" placeholder="BCC"><br>
+          
+          {% block WFReditor2 %}
+          {% include 'WFReditor.html' %}
+          {% endblock WFReditor2 %}
+          
+        </div>
+        <div class="send">
+          <div class="attach_file"><i class="fa-solid fa-paperclip"></i></div>
+          <div class="buttonsEmail">
+            <button class="btnClose button1">Close</button>
+            <button class="btnSend button1">Send</button>
+          </div>
+        </div>
+      </div>
+      <!-- Farhana Compose Code end-->
+      <!-- Rubai Modal Code start-->
+      
+      <!--Modal-->
+        <!-- schedule modals -->
+        <div class="send-modal">
+          <div class="confirm-modal">
+            <h3>Want to Schedule the Email?</h3>
+            <button class="scadule-yes">Yes</button>
+            <button class="scadule-no">NO, Send without Schedule</button>
+          </div>
+        </div>
+        <!-- pick a date and time to schedule modal -->
+<div id="m-s-a" class="modal fade animate" data-backdrop="true">
+          <div class="modal-dialog" id="animate">
+            <div class="modal-content"  style="margin: 35% auto; transform: translateY(0);">
+              <div class="modal-header">
+                <h5 class="modal-title">Warning!</h5>
+              </div>
+              <div class="modal-body text-left p-lg">
+                <p>Are you sure that you want to send this E-mail to all the selected email Addresses?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                <input type="submit" class="btn btn-success" data-bs-dismiss="modal" name="send_email"
+                value="Yes, Send">
+              </div>
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+        <!--Schedule mail modal-->
+        <div id="m-s-d" class="modal fade animate" data-backdrop="true">
+          <div class="modal-dialog" id="animate">
+            <div class="modal-content" style="margin: 35% auto; transform: translateY(0);">
+              <div class="modal-header">
+                <h5 class="modal-title">Schedule Mail!</h5>
+              </div>
+              <div class="modal-body text-left p-lg">
+                <p>Pick the Date and Time you want to Schedule the mail for:</p>
+                <input type="datetime-local" id="date_time" name="date_time">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
+                <input type="submit" class="btn btn-success" data-bs-dismiss="modal" name="send_email"
+                value="Yes, Send">
+              </div>
+            </div><!-- /.modal-content -->
+          </div>
+        </div>
+        
+        <!-- email sent confirmed modal-->
 
-<!-- ############ LAYOUT END-->
-<!-- ############ PAGE END-->
+        
+      <!-- Rubai Modal Code end-->
+      <!--Email Section End-->
 
-<!--js for compose a mail button-->
+        
+      </div>
+      <!-- ############ PAGE END-->
+    </div>
+  <!-- ############ LAYOUT END-->
+
   <script>
     const composeBtn = document.querySelector('.child-body');
     const composeBody = document.querySelector('.compose');
     const btnClose = document.querySelector('.btnClose');
-
-    composeBtn.addEventListener('click', function(){
+    composeBtn.addEventListener('click', function () {
       composeBtn.classList.add('hidden');
       composeBody.classList.remove('hidden');
     })
 
-    btnClose.addEventListener('click', function(){
-        composeBtn.classList.remove('hidden');
-        composeBody.classList.add('hidden');
+    btnClose.addEventListener('click', function () {
+      composeBtn.classList.remove('hidden');
+      composeBody.classList.add('hidden');
     })  
   </script>
-    {% block common_js %}
-      {% include "common_js.html" %}
-    {% endblock common_js %}
-<!-- endbuild -->
+      {% block common_js %}
+          {% include "common_js.html" %}
+      {% endblock common_js %}
 </body>
+
 </html>
