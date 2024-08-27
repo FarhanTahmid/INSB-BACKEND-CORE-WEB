@@ -3,6 +3,7 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from uuid import uuid4
 from central_branch.renderData import Branch
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
@@ -10,8 +11,8 @@ from django.core.files.base import ContentFile
 import json,os
 from datetime import datetime
 from insb_port import settings
+from public_relation_team.models import Email_Draft
 from system_administration.google_mail_handler import GmailHandler
-from .models import Email_Attachements
 from googleapiclient.discovery import build
 from django.template.loader import render_to_string
 import traceback
@@ -47,13 +48,16 @@ class PRT_Email_System:
                     # get general member emails
                     general_members=Branch.load_all_active_general_members_of_branch()
                     for member in general_members:
-                        to_email_final_list.append(member.email_nsu) 
+                        if member.email_nsu:
+                            to_email_final_list.append(member.email_nsu) 
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
-                        to_email_final_list.append(officer.email_nsu)
-                        to_email_final_list.append(officer.email_ieee)
+                        if officer.email_nsu:
+                            to_email_final_list.append(officer.email_nsu)
+                        if officer.email_ieee:
+                            to_email_final_list.append(officer.email_ieee)
                         
                 elif email=="eb_panel":
                     # get all eb panel email
@@ -61,8 +65,10 @@ class PRT_Email_System:
                     for eb in eb_panel:
                         #if is faculty then skip
                         if not eb.position.is_faculty:
-                            to_email_final_list.append(eb.email_nsu)
-                            to_email_final_list.append(eb.email_ieee)
+                            if eb.email_nsu:
+                                to_email_final_list.append(eb.email_nsu)
+                            if eb.email_ieee:
+                                to_email_final_list.append(eb.email_ieee)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
                     eb_panel=Branch.load_branch_eb_panel()
@@ -70,11 +76,15 @@ class PRT_Email_System:
                     for eb in eb_panel:
                         #If is faculty then skip
                         if not eb.position.is_faculty:
-                            to_email_final_list.append(eb.email_nsu)
-                            to_email_final_list.append(eb.email_ieee)
+                            if eb.email_nsu:
+                                to_email_final_list.append(eb.email_nsu)
+                            if eb.email_ieee:
+                                to_email_final_list.append(eb.email_ieee)
                     for excom in branch_ex_com:
-                        to_email_final_list.append(excom.member.email_nsu)
-                        to_email_final_list.append(excom.member.email_ieee)
+                        if excom.member.email_nsu:
+                            to_email_final_list.append(excom.member.email_nsu)
+                        if excom.member.email_ieee:
+                            to_email_final_list.append(excom.member.email_ieee)
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
@@ -86,10 +96,13 @@ class PRT_Email_System:
                                 if ex.member is not None:
                                     #If is faculty then skip
                                     if not ex.member.position.is_faculty:
-                                        to_email_final_list.append(ex.member.email_ieee)
-                                        to_email_final_list.append(ex.member.email_nsu)
+                                        if ex.member.email_ieee:
+                                            to_email_final_list.append(ex.member.email_ieee)
+                                        if ex.member.email_nsu:
+                                            to_email_final_list.append(ex.member.email_nsu)
                                 else:
-                                    to_email_final_list.append(ex.ex_member.email)
+                                    if ex.ex_member.email:
+                                        to_email_final_list.append(ex.ex_member.email)
         # Removing the mails which are common in single email list and to email list
         for email in to_email_final_list:
             if email in single_emails_final_list:
@@ -106,31 +119,40 @@ class PRT_Email_System:
                     # get general member emails
                     general_members=Branch.load_all_active_general_members_of_branch()
                     for member in general_members:
-                        cc_email_final_list.append(member.email_nsu)
+                        if member.email_nsu:
+                            cc_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
-                        cc_email_final_list.append(officer.email_nsu)
-                        cc_email_final_list.append(officer.email_ieee)
+                        if officer.email_nsu:
+                            cc_email_final_list.append(officer.email_nsu)
+                        if officer.email_ieee:
+                            cc_email_final_list.append(officer.email_ieee)
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            cc_email_final_list.append(eb.email_ieee)
-                            cc_email_final_list.append(eb.email_nsu)
+                            if eb.email_ieee:
+                                cc_email_final_list.append(eb.email_ieee)
+                            if eb.email_nsu:
+                                cc_email_final_list.append(eb.email_nsu)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
                     eb_panel=Branch.load_branch_eb_panel()
                     branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            cc_email_final_list.append(eb.email_ieee)
-                            cc_email_final_list.append(eb.email_nsu)
+                            if eb.email_ieee:
+                                cc_email_final_list.append(eb.email_ieee)
+                            if eb.email_nsu:
+                                cc_email_final_list.append(eb.email_nsu)
                     for excom in branch_ex_com:
-                        cc_email_final_list.append(excom.member.email_ieee)
-                        cc_email_final_list.append(excom.member.email_nsu)
+                        if excom.member.email_ieee:
+                            cc_email_final_list.append(excom.member.email_ieee)
+                        if excom.member.email_nsu:
+                            cc_email_final_list.append(excom.member.email_nsu)
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
@@ -141,10 +163,13 @@ class PRT_Email_System:
                             for ex in ex_com:
                                 if ex.member is not None:
                                     if not ex.member.position.is_faculty:
-                                        cc_email_final_list.append(ex.member.email_ieee)
-                                        cc_email_final_list.append(ex.member.email_nsu)
+                                        if ex.member.email_ieee:
+                                            cc_email_final_list.append(ex.member.email_ieee)
+                                        if ex.member.email_nsu:
+                                            cc_email_final_list.append(ex.member.email_nsu)
                                 else:
-                                    cc_email_final_list.append(ex.ex_member.email)
+                                    if ex.ex_member.email:
+                                        cc_email_final_list.append(ex.ex_member.email)
         
         # get all bcc_email_list
         bcc_email_final_list=[]
@@ -155,31 +180,40 @@ class PRT_Email_System:
                     # get general member emails
                     general_members=Branch.load_all_active_general_members_of_branch()
                     for member in general_members:
-                        bcc_email_final_list.append(member.email_nsu)
+                        if member.email_nsu:
+                            bcc_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
-                        bcc_email_final_list.append(officer.email_nsu)
-                        bcc_email_final_list.append(officer.email_ieee)
+                        if officer.email_nsu:
+                            bcc_email_final_list.append(officer.email_nsu)
+                        if officer.email_ieee:
+                            bcc_email_final_list.append(officer.email_ieee)
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            bcc_email_final_list.append(eb.email_ieee)
-                            bcc_email_final_list.append(eb.email_nsu)
+                            if eb.email_ieee:
+                                bcc_email_final_list.append(eb.email_ieee)
+                            if eb.email_nsu:
+                                bcc_email_final_list.append(eb.email_nsu)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
                     eb_panel=Branch.load_branch_eb_panel()
                     branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            bcc_email_final_list.append(eb.email_ieee)
-                            bcc_email_final_list.append(eb.member.email_nsu)
+                            if eb.email_ieee:
+                                bcc_email_final_list.append(eb.email_ieee)
+                            if eb.email_nsu:
+                                bcc_email_final_list.append(eb.member.email_nsu)
                     for excom in branch_ex_com:
-                        bcc_email_final_list.append(excom.member.email_ieee)
-                        bcc_email_final_list.append(excom.member.email_nsu)
+                        if excom.member.email_ieee:
+                            bcc_email_final_list.append(excom.member.email_ieee)
+                        if excom.member.email_nsu:
+                            bcc_email_final_list.append(excom.member.email_nsu)
                     pass
                 elif email=="scag_eb":
                     # get all the society, chapters and AG EBS
@@ -190,10 +224,13 @@ class PRT_Email_System:
                             for ex in ex_com:
                                 if ex.member is not None:
                                     if not ex.member.position.is_faculty:
-                                        bcc_email_final_list.append(ex.member.email_ieee)
-                                        bcc_email_final_list.append(ex.member.email_nsu)
+                                        if ex.member.email_ieee:
+                                            bcc_email_final_list.append(ex.member.email_ieee)
+                                        if ex.member.email_nsu:
+                                            bcc_email_final_list.append(ex.member.email_nsu)
                                 else:
-                                    bcc_email_final_list.append(ex.ex_member.email)
+                                    if ex.ex_member.email:
+                                        bcc_email_final_list.append(ex.ex_member.email)
     
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
            the 'to' and kept in 'cc' '''
@@ -243,33 +280,25 @@ class PRT_Email_System:
         if len(to_email_list)>=40 and len(bcc_email_list)>=40:
             while len(to_email_list)!=0 and len(bcc_email_list)!=0:
                 # print(f"to_email_list >= {len(to_email_list)}  and bcc_email_list>={len(bcc_email_list)}")
-                # print(len(to_email_list))
-                # print(len(bcc_email_list))
                 if PRT_Email_System.send_email_confirmation(request, to_email_list[:40],cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
                     to_email_list = to_email_list[40:]
                     bcc_email_list = bcc_email_list[40:]
-                    # print(len(to_email_list))
-                    # print(len(bcc_email_list))
                 else:
                     return False
 
         if len(to_email_list)>=40:
             while len(to_email_list)!=0:
                 # print(f"to_email_list only more than {len(to_email_list)}")
-                # print(len(to_email_list))
                 if PRT_Email_System.send_email_confirmation(request, to_email_list[:40],cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                     to_email_list = to_email_list[40:]
-                    # print(len(to_email_list))
                 else:
                     return False
     
         if len(bcc_email_list)>=40:
             while len(bcc_email_list)!=0:
                 # print(f"bcc_email_list only more than {len(bcc_email_list)}")
-                # print(len(bcc_email_list))
                 if PRT_Email_System.send_email_confirmation(request, to_email_list,cc_email_list,bcc_email_list[:40],subject,mail_body,is_scheduled,attachment):
                     bcc_email_list = bcc_email_list[40:]
-                    # print(len(bcc_email_list))
                 else:
                     return False
                 
@@ -278,8 +307,6 @@ class PRT_Email_System:
         #changes in the lists'''
         if (len(to_email_list)>0 and len(to_email_list)<40) or (len(bcc_email_list)>0 and len(bcc_email_list)<40):
             # print(f"Outside, less than 40")
-            # print(len(to_email_list))
-            # print(len(bcc_email_list))
             if PRT_Email_System.send_email_confirmation(request, to_email_list,cc_email_list,bcc_email_list,subject,mail_body,is_scheduled,attachment):
                 return True
             else:
@@ -308,24 +335,12 @@ class PRT_Email_System:
 
                     message["From"] = "ieeensusb.portal@gmail.com"
                     message["To"] = ','.join(to_email_list_final)
-                    # message["Cc"] = ','.join(cc_email_list_final)
-                    # message["Bcc"] = ','.join(bcc_email_list_final)
+                    message["Cc"] = ','.join(cc_email_list_final)
+                    message["Bcc"] = ','.join(bcc_email_list_final)
                     message["Subject"] = subject
 
                     # encoded message
                     encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-
-                    # create_message = {"message": {"raw": encoded_message}}
-
-                    # draft = (
-                    #     service.users()
-                    #     .drafts()
-                    #     .create(userId="me", body=create_message)
-                    #     .execute()
-                    # )
-
-                    # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
-                    # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
                     
                     create_message = {"raw": encoded_message}
 
@@ -347,26 +362,27 @@ class PRT_Email_System:
             else:
                 try:
                     if is_scheduled:
-                        email=EmailMultiAlternatives(subject,mail_body,
-                                email_from,
-                                to_email_list_final,
-                                bcc=bcc_email_list_final,
-                                cc=cc_email_list_final
-                                )
-                        email_name=None
-                        for i in attachment:
-                            email.attach_file(settings.MEDIA_ROOT+str(i.email_content))
-                            email_name = i.email_name
-                        email.send()
+                        pass
+                        # email=EmailMultiAlternatives(subject,mail_body,
+                        #         email_from,
+                        #         to_email_list_final,
+                        #         bcc=bcc_email_list_final,
+                        #         cc=cc_email_list_final
+                        #         )
+                        # email_name=None
+                        # for i in attachment:
+                        #     email.attach_file(settings.MEDIA_ROOT+str(i.email_content))
+                        #     email_name = i.email_name
+                        # email.send()
 
-                        #Removing those file and deleting the object from database after sending email
-                        email_attachements = Email_Attachements.objects.filter(email_name = email_name)
-                        if len(email_attachements)>0:
-                            for i in email_attachements:
-                                path = settings.MEDIA_ROOT+str(i.email_content)
-                                i.delete()
-                                os.remove(path)          
-                        return True
+                        # #Removing those file and deleting the object from database after sending email
+                        # email_attachements = Email_Attachements.objects.filter(email_name = email_name)
+                        # if len(email_attachements)>0:
+                        #     for i in email_attachements:
+                        #         path = settings.MEDIA_ROOT+str(i.email_content)
+                        #         i.delete()
+                        #         os.remove(path)          
+                        # return True
 
                     else:
                         try:
@@ -382,8 +398,8 @@ class PRT_Email_System:
 
                             message["From"] = "ieeensusb.portal@gmail.com"
                             message["To"] = ','.join(to_email_list_final)
-                            # message["Cc"] = ','.join(cc_email_list_final)
-                            # message["Bcc"] = ','.join(bcc_email_list_final)
+                            message["Cc"] = ','.join(cc_email_list_final)
+                            message["Bcc"] = ','.join(bcc_email_list_final)
                             message["Subject"] = subject
 
                             # Attach the main message body
@@ -403,18 +419,6 @@ class PRT_Email_System:
 
                             # encoded message
                             encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-
-                            # create_message = {"message": {"raw": encoded_message}}
-
-                            # draft = (
-                            #     service.users()
-                            #     .drafts()
-                            #     .create(userId="me", body=create_message)
-                            #     .execute()
-                            # )
-
-                            # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
-                            # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
                             
                             create_message = {"raw": encoded_message}
 
@@ -436,35 +440,107 @@ class PRT_Email_System:
                     print(e)
                     return False
             
-    def send_scheduled_email(to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,email_schedule_date_time,attachment=None):
+    def send_scheduled_email(request, to_email_list_final,cc_email_list_final,bcc_email_list_final,subject,mail_body,email_schedule_date_time,attachment=None):
         
-        '''This funciton sends the schedules email on time '''
-        try:
+        '''This function sends the schedules email on time '''
+        # try:
+        drafts = {}
 
+        if len(to_email_list_final)>=40 and len(bcc_email_list_final)>=40:
+            count = 1
+            while len(to_email_list_final)!=0 and len(bcc_email_list_final)!=0:
+                # print(f"to_email_list >= {len(to_email_list)}  and bcc_email_list>={len(bcc_email_list)}")
+                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+                if drafts[count] is not None:
+                    to_email_list_final = to_email_list_final[40:]
+                    bcc_email_list_final = bcc_email_list_final[40:]
+                    count += 1
+                else:
+                    return False
 
-            try:
-                #formatting the time and date and assigning unique name to it to store it in database of celery beat
-                scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
-                unique_task_name = f"{subject}_{scheduled_email_date_time.timestamp()}"
-                credentials = GmailHandler.get_credentials()
-                if not credentials:
-                    print("NOT OKx")
-                    return None
-
-                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
-
-                message=MIMEMultipart()
-
-                message["From"] = "ieeensusb.portal@gmail.com"
-                message["To"] = ','.join(to_email_list_final)
-                # message["Cc"] = ','.join(cc_email_list_final)
-                # message["Bcc"] = ','.join(bcc_email_list_final)
-                message["Subject"] = subject
-
-                # Attach the main message body
-                message.attach(MIMEText(mail_body, 'plain'))
+        if len(to_email_list_final) >= 40:
+            count = 1
+            while len(to_email_list_final)!=0:
+                # print(f"to_email_list only more than {len(to_email_list)}")
+                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+                if drafts[count] is not None:
+                    to_email_list_final = to_email_list_final[5:]
+                    count += 1
+                else:
+                    return False
     
+        if len(bcc_email_list_final)>=40:
+            count = 1
+            while len(bcc_email_list_final)!=0:
+                # print(f"bcc_email_list only more than {len(bcc_email_list)}")
+                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+                if drafts[count] is not None:
+                    bcc_email_list_final = bcc_email_list_final[40:]
+                    count += 1
+                else:
+                    return False
+                
+        
+        #If both list does not have more than 40 than normal just sending the emails without any
+        #changes in the lists'''
+        if (len(to_email_list_final)>0 and len(to_email_list_final)<40) or (len(bcc_email_list_final)>0 and len(cc_email_list_final)<40):
+            # print(f"Outside, less than 40")
+            if not PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment):
+                return False
+            
+        # if len(to_email_list_final)==0 and len(bcc_email_list_final)==0 and len(cc_email_list_final)>0:
+        #     return True
+        
+        #formatting the time and date and assigning unique name to it to store it in database of celery beat
+        scheduled_email_date_time = datetime.strptime(email_schedule_date_time, '%Y-%m-%dT%H:%M')
+        uuid = uuid4()
+        uuid = str(uuid)[:6]
+        unique_task_name = f"{uuid}_{scheduled_email_date_time.timestamp()}"
+        
+        unique_task_name_json = json.dumps(unique_task_name)
+
+        Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts)
+    
+        #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
+        #and clocked argument is foregined key with ClockedScheudle          
+        PeriodicTask.objects.create(
+                            clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
+                            name=unique_task_name ,
+                            task = "public_relation_team.tasks.send_scheduled_email",
+                            args =json.dumps([unique_task_name_json]),
+                            one_off = True,
+                            enabled = True,
+                    )
+        return True
+        # except Exception as e:
+        #     PRT_Email_System.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        #     messages.error(request, "Could not scheduled the email!")
+        #     return False
+        
+
+    def send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment):
+        # try:
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OKx")
+                return None
+
+            service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+            message=MIMEMultipart()
+
+            message["From"] = "ieeensusb.portal@gmail.com"
+            message["To"] = ','.join(to_email_list_final)
+            message["Cc"] = ','.join(cc_email_list_final)
+            message["Bcc"] = ','.join(bcc_email_list_final)
+            message["Subject"] = subject
+
+            # Attach the main message body
+            message.attach(MIMEText(mail_body, 'plain'))
+
+            if attachment:
                 for attachment in attachment:
                     content_file = ContentFile(attachment.read())
                     content_file.name = attachment.name
@@ -477,55 +553,20 @@ class PRT_Email_System:
                     )
                     message.attach(part)
 
-                # encoded message
-                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+            # encoded message
+            encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
-                create_message = {"message": {"raw": encoded_message}}
+            create_message = {"message": {"raw": encoded_message}}
 
-                draft = (
-                    service.users()
-                    .drafts()
-                    .create(userId="me", body=create_message)
-                    .execute()
-                )
+            draft = (
+                service.users()
+                .drafts()
+                .create(userId="me", body=create_message)
+                .execute()
+            )
 
-                print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
-                # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
-    
-            
-            
-            # to_email_list_json = json.dumps(to_email_list_final)
-            # cc_email_list_json = json.dumps(cc_email_list_final)
-            # bcc_email_list_json = json.dumps(bcc_email_list_final)
-                unique_task_name_json = json.dumps(unique_task_name)
-                dit = json.dumps(draft["id"])
-            # email_attachments = None
-            # if attachment != None:
-            #     for i in attachment:
-            #         email_attachments = Email_Attachements.objects.create(email_name=unique_task_name,email_content = i)
-            #         email_attachments.save()
-                
-            
-                #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
-                #and clocked argument is foregined key with ClockedScheudle
-                
-                PeriodicTask.objects.create(
-                                    clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
-                                    name=unique_task_name ,
-                                    task = "public_relation_team.tasks.send_scheduled_email",
-                                    args =json.dumps([dit,unique_task_name_json]),
-                                    one_off = True,
-                                    enabled = True,
-                            )
-                return True
-            except Exception as e:
-                print(e)
-                print(f'Failed to create service instance for gmail')
-                return None  
-            return True
-        except Exception as e:
-            PRT_Email_System.logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-            messages.error("Could not scheduled the email!")
-            return False
-        
+            print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+            return draft['id']
+        # except:
+        #     print('Could not do it :)')
+        #     return None
