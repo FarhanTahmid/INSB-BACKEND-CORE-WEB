@@ -5,10 +5,12 @@
 <head>
   <meta charset="utf-8" />
   <title>Email | IEEE NSU Student Branch</title>
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
 
   {% block common_css %}
     {% include "common_css.html" %}
   {% endblock common_css %}
+
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
@@ -19,7 +21,7 @@
       position: fixed;
       bottom: 10px;
       right: 10px;
-      width: 637px;
+      width: 587px;
       border: 1px solid #ccc;
       background: white;
       border-radius: 5px;
@@ -40,14 +42,14 @@
       background-color: #137aac;
       border: none;
       color: white;
-      padding: 15px 15px;
+      padding: 12px 20px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 16px;
+      font-size: 1rem;
       margin: 4px 2px;
       cursor: pointer;
-      border-radius: 10px;
+      border-radius: 4px;
     }
 
     .hidden {
@@ -60,19 +62,15 @@
       right: 10px; */
       margin: 10px;
     }
-    .compose_email input[type="text"] {
-      width: 100%;
-    }
 
     .compose_email input[type="text"] {
-      width: 610px;
-      padding: 12px 20px;
-      margin: 8px 0;
+      width: 100%;
+      /* padding: 10px 12px; */
+      margin: 3px 0;
       display: inline-block;
-      border: 1px solid #ccc;
+      border: 0px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
-      background-color: #d9d9d9;
     }
 
     input::placeholder {
@@ -125,6 +123,23 @@
       color: black;
       padding-left: 7px;
     }
+
+    hr{
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, .1);
+      width: 99%;
+    }
+    
+    /* .editor-container{
+      margin-top: 8px;
+    }
+    .editor{
+      border-color: #f5f5f5;
+      border-style: solid;
+      border-width: 0 2px;
+    } */
   </style>
   <!--Internal CSS End-->
 </head>
@@ -159,14 +174,20 @@
       <!-- Farhana Compose Code -->
       
       <div class="child-body">
-        <button class="button"><i class="fa-solid fa-pen"></i>Compose an Email</button>
+        <button class="button"><i class="fa fa-pencil" aria-hidden="true"></i>
+          Compose an Email</button>
       </div>
       <div class="compose hidden">
         <div class="compose_email">
-          <input type="text" name="to" placeholder="To"><br>
-          <input type="text" name="from" placeholder="From"><br>
-          <input type="text" name="cc" placeholder="CC"><br>
-          <input type="text" name="bcc" placeholder="BCC"><br>
+          <input type="text" name="to" placeholder="To">
+          <hr>
+          <input type="text" name="from" placeholder="From">
+          <hr>
+          <input type="text" name="cc" placeholder="CC">
+          <hr>
+          <input type="text" name="bcc" placeholder="BCC">
+          <hr>
+          <input type="text" name="subject" placeholder="Subject">
           
           {% block WFReditor2 %}
           {% include 'WFReditor.html' %}
@@ -186,13 +207,13 @@
       
       <!--Modal-->
         <!-- schedule modals -->
-        <div class="send-modal">
+        <!-- <div class="send-modal">
           <div class="confirm-modal">
             <h3>Want to Schedule the Email?</h3>
             <button class="scadule-yes">Yes</button>
             <button class="scadule-no">NO, Send without Schedule</button>
           </div>
-        </div>
+        </div> -->
         <!-- pick a date and time to schedule modal -->
 
         
