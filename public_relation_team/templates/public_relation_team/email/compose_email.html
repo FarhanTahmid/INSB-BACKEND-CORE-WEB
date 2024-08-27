@@ -9,9 +9,9 @@
   {% block common_css %}
     {% include "common_css.html" %}
   {% endblock common_css %}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
   <!--Internal CSS-->
   <style>
@@ -194,42 +194,7 @@
           </div>
         </div>
         <!-- pick a date and time to schedule modal -->
-<div id="m-s-a" class="modal fade animate" data-backdrop="true">
-          <div class="modal-dialog" id="animate">
-            <div class="modal-content"  style="margin: 35% auto; transform: translateY(0);">
-              <div class="modal-header">
-                <h5 class="modal-title">Warning!</h5>
-              </div>
-              <div class="modal-body text-left p-lg">
-                <p>Are you sure that you want to send this E-mail to all the selected email Addresses?</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                <input type="submit" class="btn btn-success" data-bs-dismiss="modal" name="send_email"
-                value="Yes, Send">
-              </div>
-            </div><!-- /.modal-content -->
-          </div>
-        </div>
-        <!--Schedule mail modal-->
-        <div id="m-s-d" class="modal fade animate" data-backdrop="true">
-          <div class="modal-dialog" id="animate">
-            <div class="modal-content" style="margin: 35% auto; transform: translateY(0);">
-              <div class="modal-header">
-                <h5 class="modal-title">Schedule Mail!</h5>
-              </div>
-              <div class="modal-body text-left p-lg">
-                <p>Pick the Date and Time you want to Schedule the mail for:</p>
-                <input type="datetime-local" id="date_time" name="date_time">
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn dark-white p-x-md" data-dismiss="modal">No</button>
-                <input type="submit" class="btn btn-success" data-bs-dismiss="modal" name="send_email"
-                value="Yes, Send">
-              </div>
-            </div><!-- /.modal-content -->
-          </div>
-        </div>
+
         
         <!-- email sent confirmed modal-->
 
