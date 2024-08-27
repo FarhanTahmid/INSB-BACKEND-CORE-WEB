@@ -25,6 +25,7 @@
       border: 1px solid #ccc;
       background: white;
       border-radius: 5px;
+      z-index: 1020;
     }
 
     .child-body {
@@ -81,38 +82,55 @@
       resize: none;
       font-family: Arial, sans-serif;
       font-size: 14px;
-      width: 590px;
+      width: 100%;
       padding: 10px;
+      height: auto;
       border: 1px solid #ccc;
       border-radius: 4px;
       background-color: #e0e0e0;
       height: 100px;
       /* color: black; */
+      box-sizing: border-box;
     }
 
     .send {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       margin: 10px;
     }
 
     .buttonsEmail {
       display: flex;
+      gap: 10px;
     }
 
     .attach_file {
-      margin-left: 5px;
+      margin-left: -6px;
+      font-weight: bold;
+      font-size: 1.25rem;
+      transform: rotate(90deg);
+      color: #646464;
+    }
+
+    .fa-paperclip{
+      padding: 6px 9px;
+      border-radius: 50%;
+      transition: all .3sec ease-in-out;
+    }
+    .fa-paperclip:hover{
+      background-color: #ccc;
     }
 
     .button1 {
       background-color: #d9d9d9;
       border: none;
       color: black;
-      padding: 8px 15px;
+      padding: 10px 12px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 16px;
+      font-size: 14px;
       margin: 4px 2px;
       /* margin-right: 10px; */
       cursor: pointer;
@@ -140,6 +158,50 @@
       border-style: solid;
       border-width: 0 2px;
     } */
+    /* responsive code for tablet and small screens */
+    
+    @media screen and (max-width: 768px) {
+      .compose {
+        width: 90%;
+        bottom: 20px;
+        right: 5%;
+      }
+    
+      input[type="text"],
+      textarea {
+        width: 100%;
+      }
+    
+      .send {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    
+      .attach_file {
+        margin-bottom: 10px;
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .compose {
+        width: 95%;
+        bottom: 10px;
+        right: 2.5%;
+      }
+    
+      input[type="text"],
+      textarea {
+        width: 100%;
+        font-size: 14px;
+      }
+    
+      .button,
+      .button1 {
+        padding: 10px;
+        font-size: 14px;
+      }
+    }
+    
   </style>
   <!--Internal CSS End-->
 </head>
@@ -195,7 +257,8 @@
           
         </div>
         <div class="send">
-          <div class="attach_file"><i class="fa-solid fa-paperclip"></i></div>
+          <div class="attach_file"><i class="fa fa-paperclip" aria-hidden="true"></i>
+          </div>
           <div class="buttonsEmail">
             <button class="btnClose button1">Close</button>
             <button class="btnSend button1">Send</button>
