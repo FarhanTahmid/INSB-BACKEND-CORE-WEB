@@ -125,6 +125,84 @@
       color: black;
       padding-left: 7px;
     }
+
+    .send-modal{
+      display: none;
+      width: 100%;
+      height: -webkit-fill-available;
+      background: #00000069;
+      position: absolute;
+      z-index: 1050;
+      top: 0;
+      left: 0;
+    }
+    .send-modal h3{
+      font-size: 23px;
+    }
+    .schedule-conf-modal{
+      display: none;
+      background: white;
+      width: 450px;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1.5px solid #656565;
+      border-radius: 10px;
+    }
+    .scadule-yes{
+      background: #00dc00;
+      border: 0;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin: 5px 0 0;
+    }
+    .scadule-yes:hover{
+      background: #00f400;
+      transition: .3s;
+      cursor: pointer;
+    }
+    .scadule-no{
+      background: #00b9dc;
+      border: 0;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin: 5px 0 0 5px;
+    }
+    .scadule-no:hover{
+      background: #00c6ed;
+      transition: .3s;
+      cursor: pointer;
+    }
+    .schedule-modal{
+      display: none;
+      background: white;
+      width: 450px;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1.5px solid #656565;
+      border-radius: 10px;
+    }
+    .scadule-send{
+      background: #00dc00;
+      border: 0;
+      border-radius: 5px;
+      padding: 5px 10px;
+      margin: 5px 0 0 5px;
+    }
+    .scadule-send:hover{
+      background: #00f400;
+      transition: .3s;
+      cursor: pointer;
+    }
+    .confirm-modal{
+      display: none;
+      background: white;
+      width: 450px;
+      height: 100px;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1.5px solid #656565;
+      border-radius: 10px;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -168,13 +246,13 @@
           <input type="text" name="cc" placeholder="CC"><br>
           <input type="text" name="bcc" placeholder="BCC"><br>
           
-          {% block WFReditor2 %}
+          {% block WFReditor %}
           {% include 'WFReditor.html' %}
-          {% endblock WFReditor2 %}
+          {% endblock WFReditor %}
           
         </div>
         <div class="send">
-          <div class="attach_file"><i class="fa-solid fa-paperclip"></i></div>
+          <div class="attach_file"><i class="fa fa-paperclip"></i></div>
           <div class="buttonsEmail">
             <button class="btnClose button1">Close</button>
             <button class="btnSend button1">Send</button>
@@ -182,17 +260,36 @@
         </div>
       </div>
       <!-- Farhana Compose Code end-->
+
       <!-- Rubai Modal Code start-->
-      
       <!--Modal-->
+      <div class="send-modal">
+
+        <!-- schedule confirmation modals -->
+        <div class="schedule-conf-modal">
+          <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Want to Schedule the Email?</h3>
+          <button class="scadule-yes">Yes</button>
+          <button class="scadule-no">NO, Send without Schedule</button>
+        </div>
+
         <!-- schedule modals -->
-        <div class="send-modal">
-          <div class="confirm-modal">
-            <h3>Want to Schedule the Email?</h3>
-            <button class="scadule-yes">Yes</button>
-            <button class="scadule-no">NO, Send without Schedule</button>
+        <div class="schedule-modal">
+          <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Want to Schedule the Email?</h3>
+          <div style="display: flex; justify-content: space-between;">
+            <input type="datetime-local" style="border: 0;
+                                                background: #b0cfff;
+                                                padding: 0 10px;
+                                                border-radius: 5px;
+                                                margin-top: 5px;" >
+            <button class="scadule-send">Send</button>
           </div>
         </div>
+
+        <!-- main confirmation -->
+        <div class="confirm-modal">
+          <h3 style="text-align: center; position: relative; top: 50%; transform: translateY(-50%);">Email has sent successfully!</h3>
+        </div>
+      </div>
         <!-- pick a date and time to schedule modal -->
 
         
