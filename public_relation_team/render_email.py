@@ -485,7 +485,8 @@ class PRT_Email_System:
         #changes in the lists'''
         if (len(to_email_list_final)>0 and len(to_email_list_final)<40) or (len(bcc_email_list_final)>0 and len(cc_email_list_final)<40):
             # print(f"Outside, less than 40")
-            if not PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment):
+            drafts[0] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+            if drafts[0] is None:
                 return False
             
         # if len(to_email_list_final)==0 and len(bcc_email_list_final)==0 and len(cc_email_list_final)>0:
