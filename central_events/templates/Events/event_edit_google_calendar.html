@@ -380,6 +380,14 @@
         border-style: solid;
         border-color: rgba(59, 59, 59) transparent transparent transparent;
     }
+    .update_cancel{
+        text-align: center;
+        position: sticky;
+        top: 88px;
+        background: white;
+        padding-top: 16px;
+        z-index: 9999;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -395,6 +403,18 @@
         <form id="myForm" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
             <div class="box-body">
+                <div class='update_cancel'>
+                    <div id="spinner1" class="spinner" style="display: none;"></div>
+                    {% if is_branch %}
+                    <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        {% endif %}
+                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% endif %}
+                </div>
                 <div class="publish-switch">
                     <label class="form-control-label slider-checkbox">Publish Event to Google Calendar:</label>
                     <span>                                            
@@ -505,22 +525,7 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-                
-                <br><br>
 
-                <div style="text-align: center;">
-                    <div id="spinner1" class="spinner" style="display: none;"></div>
-                    {% if is_branch %}
-                    <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
-                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
-                    {% else %}
-                        {% if has_access_for_sc_ag_updates %}
-                        <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
-                        {% endif %}
-                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
-                    {% endif %}
-                </div>
-                <br> 
 
             </div>
         </form>
@@ -716,7 +721,7 @@
   <script>
     const google_calendar_toggle_button = document.getElementById('google_calendar_toggle_button');
     google_calendar_toggle_button.addEventListener('click',()=>{
-        if (google_calendar_toggle_button.classList.toggle('active') === false){
+        if (!google_calendar_toggle_button.checked){
             swal("Warning!", "Event will be unpublished from Google Calendar after clicking 'Update Changes'! Sent email would not be deleted.", "warning");
         }
     });

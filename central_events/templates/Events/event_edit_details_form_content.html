@@ -42,6 +42,15 @@
         bottom: 30px;
         left: 95%;
       }
+    
+    .update_cancel{
+        text-align: center;
+        position: sticky;
+        top: 88px;
+        background: white;
+        padding-top: 16px;
+        z-index: 9999;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -57,6 +66,18 @@
         <form id="myForm" method = "POST">
         {% csrf_token %}
             <div class="box-body">
+                <div class="update_cancel">
+                    
+                    {% if is_branch %}
+                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% else %}
+                        {% if has_access_for_sc_ag_updates %}
+                        <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                        {% endif %}
+                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
+                    {% endif %}
+                </div>
                 <div class="publish-switch">
                     <label class="form-control-label slider-checkbox">Publish Event:</label>
                     <span>                                            
@@ -280,19 +301,6 @@
                 </div>
                 
                 <br>
-                <div style="text-align: center;">
-                    
-                    {% if is_branch %}
-                    <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
-                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
-                    {% else %}
-                        {% if has_access_for_sc_ag_updates %}
-                        <input type="submit" name="update_event" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
-                        {% endif %}
-                    <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
-                    {% endif %}
-                </div>
-                <br> 
 
             </div>
         </form>
