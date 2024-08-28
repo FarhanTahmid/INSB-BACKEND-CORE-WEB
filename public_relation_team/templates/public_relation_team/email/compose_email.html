@@ -895,14 +895,14 @@
         const starIcon = row.querySelector('.fa-star');
         if (element.classList.contains('fa-star')){
           if (starIcon && starIcon.classList.contains('fa-star')) {
-            row.style.display = 'flex';  // Show starred email
+            row.style.display = 'grid';  // Show starred email
           } 
           else {
             row.style.display = 'none';  // Hide non-starred email
           }
         }
         else{
-          row.style.display = 'flex';  // Show all emails
+          row.style.display = 'grid';  // Show all emails
         }
         
     });
@@ -931,7 +931,7 @@
       emailRows.forEach(row => {
         const starIcon = row.querySelector('.fa-star, .fa-star-o');
         if (starIcon && starIcon.classList.contains('fa-star')) {
-          row.style.display = 'flex';  // Show starred email
+          row.style.display = 'grid';  // Show starred email
         } else {
           row.style.display = 'none';  // Hide non-starred email
         }
