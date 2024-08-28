@@ -188,7 +188,9 @@
     .send-modal h3{
       font-size: 23px;
     }
-    .schedule-conf-modal{
+
+    /*  */
+    .schedule-conf-modal, .schedule-modal, .confirm-modal {
       display: none;
       background: white;
       width: 450px;
@@ -196,6 +198,7 @@
       padding: 20px;
       border: 1.5px solid #656565;
       border-radius: 10px;
+      position: relative;
     }
     .scadule-yes{
       background: #00dc00;
@@ -221,15 +224,7 @@
       transition: .3s;
       cursor: pointer;
     }
-    .schedule-modal{
-      display: none;
-      background: white;
-      width: 450px;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1.5px solid #656565;
-      border-radius: 10px;
-    }
+
     .scadule-send{
       background: #00dc00;
       border: 0;
@@ -242,16 +237,7 @@
       transition: .3s;
       cursor: pointer;
     }
-    .confirm-modal{
-      display: block;
-      background: white;
-      width: 450px;
-      height: 100px;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1.5px solid #656565;
-      border-radius: 10px;
-    }
+
 
     hr{
       margin-top: 0.5rem;
@@ -431,6 +417,25 @@
     .email_wrapper .fa-star{
       color: goldenrod;
     }
+
+    /* Extra added */
+      /* Close Button for Modals */
+    .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    }
+
+    .modal-close:hover {
+        color: #ff0000;
+    }
+
+
+
     /* responsive code for tablet and small screens */
     
     @media screen and (max-width: 768px) {
@@ -791,6 +796,7 @@
   
           <!-- schedule confirmation modals -->
           <div class="schedule-conf-modal">
+            <span class="modal-close">&times;</span>
               <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Want to Schedule the Email?</h3>
               <button class="scadule-yes">Yes</button>
               <button class="scadule-no">No, Send without Schedule</button>
@@ -798,6 +804,7 @@
   
           <!-- schedule modals -->
           <div class="schedule-modal">
+            <span class="modal-close">&times;</span>
               <h3 style="border-bottom: 2px solid #444; padding: 0 0 10px;">Set the time and date</h3>
               <div style="display: flex; justify-content: space-between;">
                   <input type="datetime-local" style="border: 0;
@@ -811,6 +818,7 @@
   
           <!-- main confirmation -->
           <div class="confirm-modal">
+            <span class="modal-close">&times;</span>
               <h3 style="text-align: center; position: relative; top: 50%; transform: translateY(-50%);">Email has been sent successfully!</h3>
           </div>
       </div>
@@ -905,6 +913,47 @@
 
 
     }
+
+    // Function to toggle the visibility of modals
+function toggleModal(modal) {
+  if (modal.style.display === 'block') {
+    modal.style.display = 'none';
+  } else {
+    modal.style.display = 'block';
+  }
+}
+
+    // Close modal buttons
+    const modalCloses = document.querySelectorAll('.modal-close');
+    modalCloses.forEach(function (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        this.parentElement.style.display = 'none';
+        if (this.parentElement.classList.contains('confirm-modal') || 
+            this.parentElement.classList.contains('schedule-conf-modal')) {
+          document.querySelector('.send-modal').style.display = 'none';
+        }
+      });
+    });
+
+    // Handling Send and Schedule button clicks to show modals
+    document.querySelector('.button2').addEventListener('click', function () {
+      toggleModal(document.querySelector('.send-modal'));
+    });
+
+    document.querySelector('.button1').addEventListener('click', function () {
+      toggleModal(document.querySelector('.confirm-modal'));
+    });
+
+    document.querySelector('.scadule-yes').addEventListener('click', function () {
+      toggleModal(document.querySelector('.schedule-conf-modal'));
+      toggleModal(document.querySelector('.confirm-modal'));
+    });
+
+    document.querySelector('.scadule-send').addEventListener('click', function () {
+      toggleModal(document.querySelector('.schedule-modal'));
+      toggleModal(document.querySelector('.confirm-modal'));
+    });
+
 
 
   </script>
