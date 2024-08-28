@@ -599,13 +599,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
   var firebaseConfig = {
-    apiKey: "AIzaSyDj1YviC5nz_96MX1wqCZuir67QNsyWunY",
-    authDomain: "ieee-nsu-sb-portal.firebaseapp.com",
-    projectId: "ieee-nsu-sb-portal",
-    storageBucket: "ieee-nsu-sb-portal.appspot.com",
-    messagingSenderId: "608760512807",
-    appId: "1:608760512807:web:8730f4f3588840636aa902",
-    measurementId: "G-4G0H22SDX5"
+    apiKey: "{{user_data.FIREBASE_API_KEY}}",
+    authDomain: "{{user_data.FIREBASE_AUTH_DOMAIN}}",
+    projectId: "{{user_data.FIREBASE_PROJECT_ID}}",
+    storageBucket: "{{user_data.FIREBASE_STORAGE_BUCKET}}",
+    messagingSenderId: "{{user_data.FIREBASE_MESSAGING_SENDER_ID}}",
+    appId: "{{user_data.FIREBASE_APP_ID}}",
+    measurementId: "{{user_data.FIREBASE_MEASUREMENT_ID}}"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
