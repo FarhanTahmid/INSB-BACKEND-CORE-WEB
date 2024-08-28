@@ -309,7 +309,7 @@
     .email_options{
       border-radius: 12px;
       box-shadow: 0px 2px 5px 0px gray;
-      padding: .5rem 1.5rem 3rem;
+      padding: .5rem 1.5rem 1rem;
       background: white;
       display: flex;
       align-items: center;
@@ -336,7 +336,7 @@
       padding: .5rem;
       border-radius: 50%;
       margin-right: .5rem;
-      transition: all .3s ease-in-out;
+      /* transition: all .3s ease-in-out; */
     }
     .more_options i:hover{
       background-color: #f0f0f0;
@@ -353,10 +353,10 @@
       box-shadow: 0px 2px 5px 0px gray;
       border-radius: 8px;
       position: relative;
-      top: -45px;
+      top: -14px;
       display: none;
       background-color: white;
-      padding: 2px;
+      /* padding: 2px; */
       max-height: 550px;
       overflow-y: auto;
     }
@@ -366,7 +366,7 @@
     }
 
     .email_inner_container::-webkit-scrollbar-thumb{
-      background-color: #137aac;
+      background-color: #ccc;
       border-radius: 12px;
     }
     .show{
@@ -428,7 +428,7 @@
       top: 2px;
     }
 
-    .fa-star{
+    .more_options .fa-star{
       color: goldenrod;
     }
     /* responsive code for tablet and small screens */
@@ -506,7 +506,7 @@
       <!--Email Section Start-->
       <div class="email_wrapper">
           <div class="email_boxes">
-              <a href="#" onclick="activeInbox(this, 'inbox')" class="email_box active">Inbox</a>
+              <a href="#" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
               <a href="#" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
               <a href="#" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev Mail</a>
           </div>
@@ -520,7 +520,10 @@
                     </div>
                       <div class="more_options">
                         <i class="fa fa-envelope-open-o"></i>
-                        <i class="fa fa-star-o" onclick="showStarredEmails(this)"></i>
+                        <i class="fa fa-star-o starInbox" onclick="showStarredEmails(this)"></i>
+                        <i class="fa fa-trash-o" ></i>
+                        <i class="fa fa-folder-o"></i>
+
                       </div>
                     </div>
                   <div class="email_options_right">Pagination</div>
@@ -835,6 +838,11 @@
 
     //showing emails according to selected email box
     function activeInbox(element, section) {
+      const starEmailIcon = document.querySelector('.more_options .starInbox');
+      if(starEmailIcon.classList.contains('fa-star')){
+        starEmailIcon.classList.remove('fa-star');
+        starEmailIcon.classList.add('fa-star-o');
+      }
         // Hide all sections
         const sections = document.querySelectorAll('.email_inner_container');
         sections.forEach(sec => sec.classList.remove('show'));
@@ -869,8 +877,12 @@
       function showStarredEmails(element){
       //getting the inbox emails
       const inbox = document.querySelector('.inbox');
+      const inboxed = document.querySelector('.inboxed');
 
       //hiding other inboxes
+      const links = document.querySelectorAll('.email_box');
+      links.forEach(link => link.classList.remove('active'));  
+
       const sections = document.querySelectorAll('.email_inner_container');
       sections.forEach(sec => sec.classList.remove('show'));
 
@@ -888,6 +900,7 @@
         document.querySelector('.starred').classList.remove('show');
         //showing inbox emails
         inbox.classList.add('show');
+        inboxed.classList.add('active');
       }
 
 
