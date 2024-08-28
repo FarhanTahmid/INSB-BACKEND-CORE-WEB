@@ -141,6 +141,11 @@ document.addEventListener("DOMContentLoaded", checkNotificationPermission);
                       </a>
                     </li>
                     <li>
+                      <a href="{% url 'public_relation_team:send_email' %}" >
+                        <span class="nav-text">Emails</span>
+                      </a>
+                    </li>
+                    <li>
                       <a href="{% url 'central_branch:members_list' %}">
                         <span class="nav-text">Members</span>
                       </a>
@@ -338,11 +343,6 @@ document.addEventListener("DOMContentLoaded", checkNotificationPermission);
                     <li>
                       <a href="{% url 'public_relation_team:task_home_team' 6 %}">
                         <span class="nav-text">Tasks</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="{% url 'public_relation_team:send_email' %}" >
-                        <span class="nav-text">Send Email</span>
                       </a>
                     </li>
                     <li>

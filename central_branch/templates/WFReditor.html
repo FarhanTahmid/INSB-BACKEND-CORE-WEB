@@ -1,0 +1,703 @@
+<!-- WFReditor Component -->
+{% load static %}
+{% block WFReditor %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .editor-container {
+            border: 1px solid #ccc;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 5px;
+            overflow: hidden; 
+            max-height: 100vh; 
+            position: relative;
+        }
+
+        .toolbar {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button, .toolbar select {
+            font-size: 12px;
+            padding: 5px 10px;
+            /* margin-right: 5px;
+            margin-bottom: 5px; */
+            border: 0 solid #ccc;
+            background-color: #f5f5f500;
+            cursor: pointer;
+            height: 100%;
+            color: #333;
+        }
+
+        .toolbar button:hover, .toolbar select:hover {
+            background: #a4d5ff69;
+            border-radius: 5px;
+        }
+
+        .editor {
+            padding: 10px;
+            height: 200px;
+            border: none;
+            outline: none;
+            overflow: auto;
+            background: #fff;
+            /* resize: both; */
+        }
+
+        .resize-handle {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            height: 10px; 
+            background-color: #eee; 
+            cursor: ns-resize; 
+            border-top: 1px solid #ccc;
+        }
+
+        .dots {
+            height: 2px;
+            width: 2px;
+            background-color: #aaa;
+            margin: .5px 2px;
+        }
+
+        .expanded {    
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: calc(100% - 40px);
+            height: calc(100% - 40px);
+            z-index: 1099;
+            background-color: #fff;
+            margin: 20px;
+            border-radius: 5px;
+        }
+
+        .tool-sec{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 25px;
+            margin: 0 3px 0 0;
+            padding-right: 5px;
+        }
+
+        .toolbar button.active {
+            background-color: #ffadad;
+            /* border: 1px solid #bbb; */
+            border-radius: 5px;
+            margin: 0 1px;
+            padding: 5px 9px;
+        }
+
+        .modal-bg {
+            position: fixed;
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-bg h2{
+            /* background-image: linear-gradient(90deg, #0073ffba, #c000ffba); */
+            margin: 0;
+            padding: 0 20px;
+            position: relative;
+            left: -20px;
+            width: 100%;
+            border-radius: 5px 5px 0 0;
+            font-size: 25px;
+        }
+        
+        .modal-content {
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 550px;
+            border-radius: 8px;
+            transform: translateY(-50%); /* Adjust for vertical centering */
+            position: relative;
+            top: 50%; /* Move content down by 50% */
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-content li{
+            font-size: 14px;
+        }
+
+        .modal-img{
+            width: 300px;
+            height: fit-content;
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-img label{
+            padding: 10px 0 3px 0;
+            margin: 0;
+        }
+
+        .modal-img input{
+            padding: 3px;
+            border: 1px solid;
+            border-radius: 5px;
+            /* margin-bottom: 10px; */
+            width: 100%;
+        }
+
+        .modal-img button{
+            position: relative;
+            /* top: 78px; */
+            /* width: 100px; */
+            width: 100%;
+            /* left: 200px; */
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #5450ff;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .modal-link {
+            width: 300px;
+            height: fit-content;
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-link label {
+            padding: 10px 0 3px 0;
+            margin: 0;
+        }
+
+        .modal-link input {
+            padding: 3px;
+            border: 1px solid;
+            border-radius: 5px;
+            /* margin-bottom: 10px; */
+            width: 100%;
+        }
+
+        .modal-link button {
+            position: relative;
+            /* top: 97px; */
+            /* width: 100px; */
+            width: 100%;
+            align-self: flex-end;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #5450ff;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal-table {
+            width: 300px;
+            height: auto;
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-table label {
+            padding: 10px 0 3px 0;
+            margin: 0;
+        }
+
+        .modal-table input, .modal-table select {
+            padding: 3px;
+            border: 1px solid;
+            border-radius: 5px;
+            /* margin-bottom: 10px; */
+            width: 100%;
+        }
+
+        .modal-table button {
+            position: relative;
+            /* width: 100px; */
+            width: 100%;
+            align-self: flex-end;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #5450ff;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+    </style>
+
+    <div class="editor-container">
+        <div class="toolbar">
+            <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                <button onclick="formatText('undo')" title="Undo"><i class="fa fa-rotate-left"></i></button>
+                <button onclick="formatText('redo')" title="Redo"><i class="fa fa-rotate-right"></i></button>
+            </div>
+            <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                <button onclick="formatText('bold')" title="Bold"><b style="font-size: 13px;">B</b></button>
+                <button onclick="formatText('italic')" title="Italic"><i style="font-family: auto; font-size: 14px;">I</i></button>
+                <button onclick="formatText('underline')" title="Underline"><u>U</u></button>
+                <button onclick="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
+                <select onchange="formatText('fontSize', this.value)" title="Font Size">
+                    <option value="1">Small</option>
+                    <option value="3" selected>Normal</option>
+                    <option value="5">Large</option>
+                    <option value="7">Huge</option>
+                </select>
+            </div>
+            <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                <button onclick="formatText('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
+                <button onclick="formatText('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
+                <button onclick="formatText('justifyRight')" title="Align Right"><i class="fa fa-align-right"></i></button>
+                <button onclick="formatText('justifyFull')" title="Justify"><i class="fa fa-align-justify"></i></button>
+            </div>
+            <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                <button onclick="formatText('insertUnorderedList')" title="Bulleted List"><i class="fa fa-list-ul"></i></button>
+                <button onclick="formatText('insertOrderedList')" title="Numbered List"><i class="fa fa-list-ol"></i></button>
+                <button onclick="formatText('indent')" title="Increase Indent"><i class="fa fa-indent"></i></button>
+                <button onclick="formatText('outdent')" title="Decrease Indent"><i class="fa fa-outdent"></i></button>
+            </div>
+            <div class="tool-sec">
+                <button onclick="openImageModal()" title="Insert Image"><i class="fa fa-image"></i></button>
+                <button onclick="openLinkModal()" title="Insert Link"><i class="fa fa-link"></i></button>
+                <button onclick="openTableModal()" title="Insert Table"><i class="fa fa-table"></i></button>
+                <button class="expand-editor" onclick="toggleExpand()" title="Expand Editor"><i class="fa fa-expand"></i></button>
+                <button onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%; font-size: 9.5px;"></i></button>
+            </div>
+        </div>
+        <div contenteditable="true" class="editor"></div>
+        <div class="resize-handle">
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+                <div class="dots"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal-bg" style="display:none;">
+        <div class="modal-content">
+            <h2>User Guide</h2>
+            <p>Welcome to the WFReditor! Here's how to make the most of this editor:</p>
+            <ul>
+                <li><strong>Undo/Redo:</strong> Quickly revert any recent changes with the Undo button, or reapply them using Redo.</li>
+                <li><strong>Text Formatting:</strong> 
+                    <ul>
+                        <li><strong>Bold:</strong> Emphasize your text with the bold option.</li>
+                        <li><strong>Italic:</strong> Add a stylish slant to your words with italic.</li>
+                        <li><strong>Underline:</strong> Draw attention by underlining your text.</li>
+                        <li><strong>Strikethrough:</strong> Cross out text that’s no longer relevant.</li>
+                    </ul>
+                </li>
+                <li><strong>Text Alignment:</strong> 
+                    <ul>
+                        <li><strong>Left Align:</strong> Align your text to the left margin.</li>
+                        <li><strong>Center Align:</strong> Center your text on the page.</li>
+                        <li><strong>Right Align:</strong> Align your text to the right margin.</li>
+                        <li><strong>Justify:</strong> Evenly distribute text across the width of the page.</li>
+                    </ul>
+                </li>
+                <li><strong>Lists:</strong> 
+                    <ul>
+                        <li><strong>Unordered List:</strong> Create a bulleted list.</li>
+                        <li><strong>Ordered List:</strong> Create a numbered list.</li>
+                    </ul>
+                </li>
+                <li><strong>Indents:</strong> 
+                    <ul>
+                        <li><strong>Increase Indent:</strong> Move your paragraph further from the margin.</li>
+                        <li><strong>Decrease Indent:</strong> Bring your paragraph closer to the margin.</li>
+                    </ul>
+                </li>
+                <li><strong>Insert Elements:</strong> 
+                    <ul>
+                        <li><strong>Insert Image:</strong> Add an image via a URL or upload from your computer.</li>
+                        <li><strong>Insert Link:</strong> Embed a hyperlink in your text.</li>
+                        <li><strong>Insert Table:</strong> Create and customize tables with rows, columns, and headers.</li>
+                    </ul>
+                </li>
+                <li><strong>Resize Editor:</strong> Expand the editor to full-screen for a more immersive writing experience.</li>
+            </ul>
+            <p style="font-size: 14px;">Hover over each button to see a tooltip describing its function. This guide is here to help you explore and use all the features available.</p>
+        </div>
+    </div>
+
+
+    <!-- Insert Image Modal -->
+    <div id="imageModal" class="modal-bg" style="display:none;">
+        <div class="modal-img">
+            <h2>Insert Image</h2>
+            <label for="imageURL">Image URL:</label>
+            <input type="text" id="imageURL" placeholder="http://">
+            
+            <label for="imageFile">or Upload Image:</label>
+            <input type="file" id="imageFile" accept="image/*">
+            
+            <label for="imageWidth">Width (px)(optional):</label>
+            <input type="number" id="imageWidth" placeholder="e.g., 500px">
+            
+            <label for="imageHeight">Height (px)(optional):</label>
+            <input type="number" id="imageHeight" placeholder="e.g., 280px">
+            
+            <button onclick="insertImage()">Insert Image</button>
+        </div>
+    </div>
+
+    <!-- Insert Link Modal -->
+    <div id="linkModal" class="modal-bg" style="display:none;">
+        <div class="modal-link">
+            <h2>Insert Link</h2>
+            <label for="linkURL">URL:</label>
+            <input type="text" id="linkURL" placeholder="http://">
+            
+            <label for="linkText">Display Text (optional):</label>
+            <input type="text" id="linkText" placeholder="Link Text">
+            
+            <button onclick="insertLink()">Insert Link</button>
+        </div>
+    </div>
+
+    <!-- Insert Table Modal -->
+    <div id="tableModal" class="modal-bg" style="display:none;">
+        <div class="modal-table">
+            <h2>Insert Table</h2>
+            
+            <label for="tableRows">Rows:</label>
+            <input type="number" id="tableRows" value="2" min="1">
+            
+            <label for="tableCols">Columns:</label>
+            <input type="number" id="tableCols" value="2" min="1">
+            
+            <label for="tableWidth">Table Width (optional):</label>
+            <input type="text" id="tableWidth" placeholder="e.g., 100%, 500px">
+            
+            <label for="tableHeight">Table Height (optional):</label>
+            <input type="text" id="tableHeight" placeholder="e.g., 300px">
+            
+            <label for="tableHeaders">Table Headers:</label>
+            <select id="tableHeaders">
+                <option value="none">None</option>
+                <option value="row">First Row</option>
+                <option value="col">First Column</option>
+                <option value="both">Both</option>
+            </select>
+            
+            <button onclick="insertTable()">Insert Table</button>
+        </div>
+    </div>
+
+    <!-- getEditorContent() function to get the content of this editor -->
+    <script>
+        function getEditorContent() {
+            const editor = document.querySelector('.editor');
+            return editor.innerHTML;
+        }
+    </script>
+
+    <!-- shortcut title selector -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const isLinux = navigator.platform.toUpperCase().indexOf('LINUX') >= 0;
+
+            function updateToolTitles() {
+                const shortcuts = {
+                    undo: isMac ? '⌘ + Z' : 'Ctrl + Z',
+                    redo: isMac ? '⌘ + ⇧ + Z' : 'Ctrl + Y',
+                    bold: isMac ? '⌘ + B' : 'Ctrl + B',
+                    italic: isMac ? '⌘ + I' : 'Ctrl + I',
+                    underline: isMac ? '⌘ + U' : 'Ctrl + U',
+                    strikeThrough: isLinux ? '' : '⌃ + ⇧ + S',
+                    justifyLeft: isMac ? '⌘ + L' : 'Ctrl + L',
+                    justifyCenter: isMac ? '⌘ + E' : 'Ctrl + E',
+                    justifyRight: isMac ? '⌘ + R' : 'Ctrl + R',
+                    justifyFull: isMac ? '⌘ + J' : 'Ctrl + J',
+                    insertUnorderedList: isMac ? '⌘ + ⇧ + L' : '',
+                    insertOrderedList: isMac ? '⌘ + ⇧ + 7' : '',
+                    indent: isMac ? '⌘ + ]' : 'Ctrl + ]',
+                    outdent: isMac ? '⌘ + [' : 'Ctrl + [',
+                    // Add more shortcuts as needed
+                };
+
+                document.querySelector('button[onclick="formatText(\'undo\')"]').title = `Undo (${shortcuts.undo})`;
+                document.querySelector('button[onclick="formatText(\'redo\')"]').title = `Redo (${shortcuts.redo})`;
+                document.querySelector('button[onclick="formatText(\'bold\')"]').title = `Bold (${shortcuts.bold})`;
+                document.querySelector('button[onclick="formatText(\'italic\')"]').title = `Italic (${shortcuts.italic})`;
+                document.querySelector('button[onclick="formatText(\'underline\')"]').title = `Underline (${shortcuts.underline})`;
+                document.querySelector('button[onclick="formatText(\'strikeThrough\')"]').title = `Strikethrough (${shortcuts.strikeThrough})`;
+                document.querySelector('button[onclick="formatText(\'justifyLeft\')"]').title = `Strikethrough (${shortcuts.justifyLeft})`;
+                document.querySelector('button[onclick="formatText(\'justifyCenter\')"]').title = `Strikethrough (${shortcuts.justifyCenter})`;
+                document.querySelector('button[onclick="formatText(\'justifyRight\')"]').title = `Strikethrough (${shortcuts.justifyRight})`;
+                document.querySelector('button[onclick="formatText(\'justifyFull\')"]').title = `Strikethrough (${shortcuts.justifyFull})`;
+                document.querySelector('button[onclick="formatText(\'insertUnorderedList\')"]').title = `Strikethrough (${shortcuts.insertUnorderedList})`;
+                document.querySelector('button[onclick="formatText(\'insertOrderedList\')"]').title = `Strikethrough (${shortcuts.insertOrderedList})`;
+                document.querySelector('button[onclick="formatText(\'indent\')"]').title = `Strikethrough (${shortcuts.indent})`;
+                document.querySelector('button[onclick="formatText(\'outdent\')"]').title = `Strikethrough (${shortcuts.outdent})`;
+            }
+
+            updateToolTitles();
+        });
+    </script>
+
+    <!-- common -->
+    <script>
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+            updateActiveButtons();
+            document.querySelector('.editor').focus();
+        }
+
+        const handle = document.querySelector('.resize-handle');
+        let startY, startHeight;
+
+        handle.addEventListener('mousedown', (e) => {
+            startY = e.clientY;
+            startHeight = parseInt(document.defaultView.getComputedStyle(document.querySelector('.editor')).height, 10);
+
+            document.documentElement.addEventListener('mousemove', doDrag);
+            document.documentElement.addEventListener('mouseup', stopDrag);
+        });
+
+        function doDrag(e) {
+            document.querySelector('.editor').style.height = (startHeight + e.clientY - startY) + 'px';
+        }
+
+        function stopDrag() {
+            document.documentElement.removeEventListener('mousemove', doDrag);
+            document.documentElement.removeEventListener('mouseup', stopDrag);
+        }
+
+        function toggleExpand() {
+            const editorContainer = document.querySelector('.editor-container');
+            editorContainer.classList.toggle('expanded');
+            const button = document.querySelector('.expand-editor');
+            if(document.querySelector('.expanded')){
+                height = document.querySelector('.toolbar').clientHeight + document.querySelector('.resize-handle').clientHeight -8;
+                document.querySelector('.editor').style.height = `calc(100% - ${height}px)`;
+            }else{
+                document.querySelector('.editor').style.height = `200px`;
+            }
+            document.querySelector('.editor').focus();
+        }
+
+        function updateActiveButtons() {
+            const boldButton = document.querySelector('button[title="Bold"]');
+            const italicButton = document.querySelector('button[title="Italic"]');
+            const underlineButton = document.querySelector('button[title="Underline"]');
+
+            // Toggle active class based on command state
+            boldButton.classList.toggle('active', document.queryCommandState('bold'));
+            italicButton.classList.toggle('active', document.queryCommandState('italic'));
+            underlineButton.classList.toggle('active', document.queryCommandState('underline'));
+
+            document.querySelector('.editor').focus();
+        }
+        document.querySelector('.editor').addEventListener('mouseup', updateActiveButtons);
+    </script>
+    
+    <!-- help modal -->
+    <script>
+        function openHelpModal() {
+            document.getElementById('helpModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+    </script>
+
+    <!-- image modal -->
+    <script>
+        function openImageModal() {
+            document.getElementById('imageModal').style.display = 'block';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function insertImage() {
+            const url = document.getElementById('imageURL').value;
+            const fileInput = document.getElementById('imageFile');
+            const width = document.getElementById('imageWidth').value;
+            const height = document.getElementById('imageHeight').value;
+
+            let imageUrl = url;
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageUrl = e.target.result;
+                    insertImageIntoEditor(imageUrl, width, height);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (url) {
+                insertImageIntoEditor(imageUrl, width, height);
+            }
+
+            closeImageModal();
+            document.querySelector('.editor').focus();
+        }
+
+        function insertImageIntoEditor(url, width, height) {
+            let style = `width:`;
+            if (width){
+                style += ` ${width}px`
+            }else{
+                style += ` 100%;`
+            }
+            if (height) {
+                style += ` height: ${height}px;`;
+            }
+
+            const imgTag = `<img src="${url}" style="${style}">`;
+            document.execCommand('insertHTML', false, imgTag);
+        }
+
+    </script>
+
+    <!-- link modal -->
+    <script>
+        function openLinkModal() {
+            document.getElementById('linkModal').style.display = 'block';
+        }
+
+        function closeLinkModal() {
+            document.getElementById('linkModal').style.display = 'none';
+        }
+
+        function insertLink() {
+            const url = document.getElementById('linkURL').value;
+            const text = document.getElementById('linkText').value;
+
+            if (url) {
+                const linkTag = `<a href="${url}" target="_blank">${text || url}</a>`;
+                document.execCommand('insertHTML', false, linkTag);
+            }
+
+            closeLinkModal();
+            document.querySelector('.editor').focus();
+        }
+
+    </script>
+
+    <!-- table modal -->
+    <script>
+        function openTableModal() {
+            document.getElementById('tableModal').style.display = 'block';
+        }
+
+        function closeTableModal() {
+            document.getElementById('tableModal').style.display = 'none';
+        }
+
+        function insertTable() {
+            const rows = document.getElementById('tableRows').value;
+            const cols = document.getElementById('tableCols').value;
+            const width = document.getElementById('tableWidth').value || '100%';
+            const height = document.getElementById('tableHeight').value || 'auto';
+            const headers = document.getElementById('tableHeaders').value;
+            console.log(height, '.')
+            console.log(width, '.')
+            if (rows > 0 && cols > 0) {
+                let table = `<table style="width: ${width}; height: ${height}; border-collapse: collapse; resize: both;">`;
+
+                if (headers === 'row' || headers === 'both') {
+                    table += '<tr>';
+                    for (let j = 0; j < cols; j++) {
+                        table += '<th style="border: 1px solid #ccc; padding: 8px; background-color: #f2f2f2;"></th>';
+                    }
+                    table += '</tr>';
+                }
+
+                for (let i = 0; i < rows; i++) {
+                    table += '<tr>';
+                    for (let j = 0; j < cols; j++) {
+                        if ((headers === 'col' || headers === 'both') && j === 0) {
+                            table += '<th style="border: 1px solid #ccc; padding: 8px; background-color: #f2f2f2;"></th>';
+                        } else {
+                            table += '<td style="border: 1px solid #ccc; padding: 8px; resize: both;">&nbsp;</td>';
+                        }
+                    }
+                    table += '</tr>';
+                }
+
+                table += '</table><br>';
+                document.querySelector('.editor').focus();
+                document.execCommand('insertHTML', false, table);
+            }
+
+            closeTableModal();
+        }
+
+    </script>
+
+    <!-- modal controll -->
+    <script>
+        window.onclick = function(event) {
+            var modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                closeImageModal();
+                document.querySelector('.editor').focus();
+            }
+            modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                closeModal();
+                document.querySelector('.editor').focus();
+            }
+            modal = document.getElementById('linkModal');
+            if (event.target === modal) {
+                closeLinkModal();
+                document.querySelector('.editor').focus();
+            }
+            modal = document.getElementById('tableModal');
+            if (event.target === modal) {
+                closeTableModal();
+                document.querySelector('.editor').focus();
+            }
+        }
+    </script>
+{% endblock WFReditor %}

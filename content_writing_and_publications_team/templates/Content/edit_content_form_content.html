@@ -7,6 +7,14 @@
         bottom: 30px;
         left: 95%;
       }
+      .update_cancel{
+        text-align: center;
+        position: sticky;
+        top: 88px;
+        background: white;
+        padding-top: 16px;
+        z-index: 9999;
+    }
 </style>
 <div class="container">
   <div class="box" style="border-radius: 6px;">
@@ -20,6 +28,13 @@
         <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="box-body">
+          {% if has_content_access %}
+          <!--save button-->
+          <div class="form-group text-center update_cancel">
+            <button type="submit" name="update" class="btn btn-outline-success mb-2">Update Changes</button>
+            <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="btn btn-outline-danger mb-2">Cancel</a>
+          </div>
+          {% endif %}
             <!--title-->
             <div class="form-group">
                 <label>Title: <span style="color:red">*<span></label> 
@@ -89,16 +104,8 @@
               </div>
               {% endfor %}
           </div>
-
-           <hr>
        
-          {% if has_content_access %}
-          <!--save button-->
-          <div class="form-group text-center">
-            <button type="submit" name="update" class="btn btn-outline-success mb-2">Update Changes</button>
-            <a href="{% url 'content_writing_and_publications_team:content_page' %}" class="btn btn-outline-danger mb-2">Cancel</a>
-          </div>
-          {% endif %}
+
           
         </div>
         </form>
