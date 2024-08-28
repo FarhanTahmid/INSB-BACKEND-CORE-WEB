@@ -875,37 +875,72 @@
 
       //showing starred emails
       function showStarredEmails(element){
-      //getting the inbox emails
-      const inbox = document.querySelector('.inbox');
-      const inboxed = document.querySelector('.inboxed');
-
-      //hiding other inboxes
-      const links = document.querySelectorAll('.email_box');
-      links.forEach(link => link.classList.remove('active'));  
-
-      const sections = document.querySelectorAll('.email_inner_container');
-      sections.forEach(sec => sec.classList.remove('show'));
 
       //changing star icon
       if (element.classList.contains('fa-star-o')) {
         element.classList.remove('fa-star-o');
         element.classList.add('fa-star');
-        //showing starred emails
-        document.querySelector('.starred').classList.add('show');
       } 
       else{
         element.classList.add('fa-star-o');
         element.classList.remove('fa-star');
-        //hiding starred emails
-        document.querySelector('.starred').classList.remove('show');
-        //showing inbox emails
-        inbox.classList.add('show');
-        inboxed.classList.add('active');
       }
 
+      // Tanvir's parts starts
 
+      const emailRows = document.querySelectorAll('.email_row');
+    
+      // Loop through all email rows and show only starred emails
+      emailRows.forEach(row => {
+        const starIcon = row.querySelector('.fa-star');
+        if (element.classList.contains('fa-star')){
+          if (starIcon && starIcon.classList.contains('fa-star')) {
+            row.style.display = 'flex';  // Show starred email
+          } 
+          else {
+            row.style.display = 'none';  // Hide non-starred email
+          }
+        }
+        else{
+          row.style.display = 'flex';  // Show all emails
+        }
+        
+    });
+    }
+    
+
+    // Select All functionality
+    document.getElementById('select_all').addEventListener('change', function() {
+      const checkboxes = document.querySelectorAll('.email_row_left input[type="checkbox"]');
+      checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    });
+
+    // Delete Selected Emails functionality
+    document.querySelector('.fa-trash-o').addEventListener('click', function() {
+      const checkboxes = document.querySelectorAll('.email_row_left input[type="checkbox"]:checked');
+      checkboxes.forEach(checkbox => {
+        const emailRow = checkbox.closest('.email_row');
+        emailRow.remove();
+      });
+    });
+
+    function showStarredEmailInbox(){
+      const emailRows = document.querySelectorAll('.email_row');
+    
+      // Loop through all email rows and show only starred emails
+      emailRows.forEach(row => {
+        const starIcon = row.querySelector('.fa-star, .fa-star-o');
+        if (starIcon && starIcon.classList.contains('fa-star')) {
+          row.style.display = 'flex';  // Show starred email
+        } else {
+          row.style.display = 'none';  // Hide non-starred email
+        }
+      });
     }
 
+
+
+    // Tanvir's parts ends
 
   </script>
       {% block common_js %}
