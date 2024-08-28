@@ -14,10 +14,9 @@ from django.contrib import messages
 from system_administration.models import adminUsers
 from users.models import Members
 
-
 class GmailHandler:
 
-    def get_credentials(request):
+    def get_credentials(request=None):
     
         creds = None
         if settings.GOOGLE_CLOUD_TOKEN:
@@ -31,15 +30,17 @@ class GmailHandler:
             },scopes=settings.SCOPES)
 
         if not creds or not creds.valid:
-            user = request.user.username
-            try:
-                member = Members.objects.get(ieee_id = user)
-            except:
-                member = adminUsers.objects.get(username = user)
-            
-            if(type(member) == Members):
-                messages.info(request, "Google Authorization Required! Please contact Web Team")
-                return 'Invalid'
+            if request:
+                user = request.user.username
+
+                try:
+                    member = Members.objects.get(ieee_id = user)
+                except:
+                    member = adminUsers.objects.get(username = user)
+                
+                if(type(member) == Members):
+                    messages.info(request, "Google Authorization Required! Please contact Web Team")
+                    return 'Invalid'
             
             if creds and creds.expired and creds.refresh_token:
                 try:

@@ -31,6 +31,7 @@ from functools import wraps
 from django.contrib.auth.models import User,auth
 from django.shortcuts import render,redirect
 from django.utils.dateformat import format
+from insb_port import settings
 
 class LoggedinUser:
     
@@ -79,7 +80,14 @@ class LoggedinUser:
             'unread_notification_count':unread_notification_count,
             'media_url':settings.MEDIA_URL,
             'admin':admin,
-            'blood_group':get_Member_details.blood_group
+            'blood_group':get_Member_details.blood_group,
+            'FIREBASE_API_KEY':settings.FIREBASE_API_KEY,
+            'FIREBASE_AUTH_DOMAIN':settings.FIREBASE_AUTH_DOMAIN,
+            'FIREBASE_PROJECT_ID':settings.FIREBASE_PROJECT_ID,
+            'FIREBASE_STORAGE_BUCKET':settings.FIREBASE_STORAGE_BUCKET,
+            'FIREBASE_MESSAGING_SENDER_ID':settings.FIREBASE_MESSAGING_SENDER_ID,
+            'FIREBASE_APP_ID':settings.FIREBASE_APP_ID,
+            'FIREBASE_MEASUREMENT_ID':settings.FIREBASE_MEASUREMENT_ID
         }
         except Members.DoesNotExist:
             try:
