@@ -264,8 +264,14 @@
     .email_wrapper{
       background: white;
       margin: 0px 15px;
+      /* position: sticky; */
     }
     
+    .email_container{
+      position: fixed;
+      width: 84%;
+      top: 115px;
+    }
     .email_container input[type="checkbox"]{
       position: relative;
       top: -1px;
@@ -273,6 +279,7 @@
     
     .email_boxes{
       position: sticky;
+      top: 56px;
       display: flex;
       gap: 10px;
       /* margin: 15px; */
@@ -308,6 +315,8 @@
       align-items: center;
       justify-content: space-between;
       padding-top: 15px;
+      position: sticky;
+      top: 112px;
     }
 
     .email_options_left > label{
@@ -320,14 +329,24 @@
     }
     .email_inner_container{
       box-shadow: 0px 0px 5px 0px gray;
-      border-radius: 13px;
+      border-radius: 8px;
       position: relative;
       top: -45px;
       display: none;
       background-color: white;
       padding: 2px;
+      max-height: 550px;
+      overflow-y: auto;
     }
 
+    .email_inner_container::-webkit-scrollbar{
+      width: 4px;
+    }
+
+    .email_inner_container::-webkit-scrollbar-thumb{
+      background-color: #137aac;
+      border-radius: 12px;
+    }
     .show{
       display: block;
     }
@@ -454,7 +473,7 @@
                           <div class="subject">Subject</div>
                           <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
                       </div>
-                      <div class="email_date">25th August, 2024 9:00 AM</div>
+                      <div class="email_date">1st August, 2024 9:00 AM</div>
                   </div>
                   <div class="email_row">
                       <div class="email_row_left">
@@ -608,7 +627,7 @@
                           <div class="subject">Subject</div>
                           <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum.</div>
                       </div>
-                      <div class="email_date">25th August, 2024 9:00 AM</div>
+                      <div class="email_date">15th August, 2024 9:00 AM</div>
                   </div>
                   <!-- More inbox rows -->
               </div>
