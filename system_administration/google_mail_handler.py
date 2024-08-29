@@ -64,7 +64,7 @@ class GmailHandler:
             set_key('.env', 'GOOGLE_CLOUD_EXPIRY', credentials.expiry.isoformat())
             settings.GOOGLE_CLOUD_EXPIRY = credentials.expiry.isoformat()
     
-    def test_gmail(request):
+    def test_html_gmail(request):
         credentials = GmailHandler.get_credentials(request)
         if not credentials:
             print("NOT OK")
@@ -97,6 +97,35 @@ class GmailHandler:
 
             print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
             # draft = service.users().drafts().send(userId='me', body={'id': draft['id']}).execute()
+
+        except Exception as e:
+            print(e)
+            print(f'Failed to create service instance for gmail')
+            return None
+        
+    def test_gmail(request):
+        credentials = GmailHandler.get_credentials(request)
+        if not credentials:
+            print("NOT OK")
+            return None
+        try:
+            service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+
+            results = service.users().threads().list(userId='me', maxResults=10, labelIds=['INBOX'], q="category:primary",pageToken='').execute()
+            print(results['nextPageToken'])
+            print(len(results['threads']))
+            for msg in results['threads']:
+                print(msg['snippet'])
+
+            # for msg in messages:
+            #     msg_id = msg['id']
+            #     # message = service.users().messages().get(userId='me', id=msg_id).execute()
+            #     print(msg)
+
+
+            # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
 
         except Exception as e:
             print(e)

@@ -6,6 +6,7 @@ from central_events.models import SuperEvents,Events,InterBranchCollaborations,I
 from central_branch.renderData import Branch
 from django.contrib import messages
 from events_and_management_team.renderData import Events_And_Management_Team
+from system_administration.google_mail_handler import GmailHandler
 from .renderData import PRT_Data
 from system_administration.render_access import Access_Render
 from system_administration.models import system
@@ -441,6 +442,7 @@ def manageWebsiteHome(request):
 @member_login_permission
 def send_email(request):
     try:
+        GmailHandler.test_gmail(request)
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
