@@ -429,6 +429,10 @@
       opacity: 0;
     }
 
+    .more_options .fa-envelope-open-o{
+      position: relative;
+      bottom: 1px;
+    }
     .checkbox_star{
       background: aliceblue;
       display: flex;
@@ -1723,13 +1727,19 @@
     //showing emails according to selected email box
     function activeInbox(element, section) {
       const emailRows = document.querySelectorAll('.email_row');
-    
-      // Loop through all email rows and show only starred emails
-      emailRows.forEach(row => {
-        const starIcon = row.querySelector('.fa-star');
+      const screenWidth = window.innerWidth;
+
+      if(screenWidth >= 768){
+        emailRows.forEach(row => {
+          const starIcon = row.querySelector('.fa-star');
           row.style.display = 'grid';  // Show all emails
-        
-    });
+        });
+      }else{
+        emailRows.forEach(row => {
+          const starIcon = row.querySelector('.fa-star');
+          row.style.display = 'flex';  // Show all emails
+        });
+      }
       const starEmailIcon = document.querySelector('.more_options .starInbox');
       if(starEmailIcon.classList.contains('fa-star')){
         starEmailIcon.classList.remove('fa-star');
