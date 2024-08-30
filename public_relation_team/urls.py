@@ -29,6 +29,7 @@ urlpatterns = [
     #Send Email
     path('send_email',views.send_email,name="send_email"),
     path('view_email',views.view_email,name="view_email"),
+    path('test/', views.TestAjax.as_view(),name='test'),
 
     #Task
     path('create_task/<int:team_primary>/',create_task,name="create_task_team"),

@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.conf import settings
+from django.views import View
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
 from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
@@ -606,4 +607,7 @@ def view_email(request):
 
     return render(request,'public_relation_team/email/view_email.html')
     
-
+class TestAjax(View):
+    def post(self, request):
+        print(request.POST)
+        return HttpResponse("OK")

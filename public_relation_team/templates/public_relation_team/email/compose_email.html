@@ -1037,6 +1037,7 @@
             <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
               Compose</button>
               <form method="POST">
+                {% csrf_token %}
               </div>
                 <div class="compose hidden">
                     <div class="compose_email">
@@ -1697,17 +1698,34 @@
           var cc = document.querySelector('input[name="cc"]').value;
           var bcc = document.querySelector('input[name="bcc"]').value;
           var subject = document.querySelector('input[name="subject"]').value;
+          var body = getEditorContent();
           var dateTime = document.querySelector('input[name="datetime-local"]').value
+          var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value
 
-          // Store the values in variables (if needed)
-          var emailData = {
-              to: to,
-              from: from,
-              cc: cc,
-              bcc: bcc,
-              subject: subject,
-              dateTime: dateTime
-          };
+          $.ajax({
+              url: "{% url 'public_relation_team:test' %}",
+              type: "POST",
+              data: {
+                to: to,
+                from: from,
+                cc: cc,
+                bcc: bcc,
+                subject: subject,
+                body: body,
+                dateTime: dateTime
+              },
+              headers: {
+                "X-CSRFToken": csrf
+              },
+              success: function(response) {
+                  // Handle the response
+                  console.log(response);
+              },
+              error: function(error) {
+                  console.error("Error:", error);
+              }
+          });
+        
 
           var modal1 = document.getElementById("modal1");
           modal1.style.zIndex = '-100';
