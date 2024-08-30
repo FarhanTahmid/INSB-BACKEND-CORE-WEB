@@ -32,11 +32,13 @@ class PRT_Email_System:
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
         
-        substrings = single_emails.split(',')
+        # substrings = single_emails.split(',')
         
-        for email in substrings:
-            # Trim leading and trailing whitespaces
-            single_emails_final_list.extend(email.split())
+        # for email in substrings:
+        #     # Trim leading and trailing whitespaces
+        #     single_emails_final_list.extend(email.split())
+
+        single_emails_final_list.extend(single_emails)
  
         
         # Get the emails of to_email_list 
@@ -331,7 +333,7 @@ class PRT_Email_System:
                     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
 
-                    message = MIMEText(mail_body, 'plain')
+                    message = MIMEText(mail_body, 'html')
 
                     message["From"] = "ieeensusb.portal@gmail.com"
                     message["To"] = ','.join(to_email_list_final)
