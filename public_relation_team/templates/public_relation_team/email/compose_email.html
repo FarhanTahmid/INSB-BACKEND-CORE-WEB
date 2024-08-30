@@ -30,6 +30,8 @@
       background: white;
       border-radius: 5px;
       z-index: 1020;
+      max-height: 600px;
+      overflow-y: auto;
     }
 
     .child-body {
@@ -407,14 +409,6 @@
       line-clamp: 1;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
-    }
-    .email_date{
-      /* overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      line-clamp: 1;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical; */
     }
 
     .hidden{
@@ -962,7 +956,42 @@
         right: 1rem;
       }
     }
-    
+    .tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        /* border: 1px solid #ccc; */
+        padding: 5px;
+        /* border-radius: 4px; */
+        min-height: 40px;
+        cursor: text;
+        align-items: center;
+    }
+    .tag {
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 30px;
+        padding: 0 .75rem;
+        margin: 2px;
+        display: flex;
+        align-items: center;
+    }
+    .tag span {
+        margin-right: 5px;
+    }
+    .tag .remove-tag {
+        cursor: pointer;
+        padding: 2px;
+        color: #888;
+    }
+    .tag .remove-tag:hover {
+        color: #000;
+    }
+    .tag-input {
+        border: none;
+        outline: none;
+        flex: 1;
+        padding: 5px;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1007,7 +1036,10 @@
               </div>
                 <div class="compose hidden">
                     <div class="compose_email">
-                        <input type="text" name="to" placeholder="To" required>
+                      <div class="tag-container" id="tagContainer">
+                        <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+                        <input type="text" name="to" class="tag-input" id="tagInput" required>
+                    </div>
                         <hr>
                         <input type="text" name="from" placeholder="From" required>
                         <hr>
@@ -2271,6 +2303,41 @@
             document.querySelector('.editor').focus();
         }
     }
+</script>
+
+<!--input tags-->
+<script>
+  const tagContainer = document.getElementById('tagContainer');
+  const tagInput = document.getElementById('tagInput');
+
+  tagInput.addEventListener('keydown', function(event) {
+      if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+          event.preventDefault(); // Prevent the space/comma from being typed
+          addTag(tagInput.value.trim());
+          tagInput.value = ''; // Clear the input field
+      }
+  });
+
+  function addTag(tagText) {
+      if (tagText === '') return;
+
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+
+      const span = document.createElement('span');
+      span.textContent = tagText;
+
+      const removeButton = document.createElement('span');
+      removeButton.className = 'remove-tag';
+      removeButton.innerHTML = '&times;'; // Unicode for a multiplication sign (X)
+      removeButton.onclick = () => {
+          tagContainer.removeChild(tag);
+      };
+
+      tag.appendChild(span);
+      tag.appendChild(removeButton);
+      tagContainer.insertBefore(tag, tagInput); // Add the tag before the input field
+  }
 </script>
       {% block common_js %}
           {% include "common_js.html" %}
