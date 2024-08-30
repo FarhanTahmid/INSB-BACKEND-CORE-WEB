@@ -996,6 +996,168 @@
         flex: 1;
         padding: 5px;
     }
+    .custom-dropdown-container {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .custom-dropdown-input {
+        width: 100%;
+        /* padding: 8px; */
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .custom-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .custom-dropdown-content div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .custom-dropdown-content div:hover {
+        background-color: #ddd;
+    }
+
+    .custom-tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .custom-tag {
+        background-color: #007bff;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .custom-remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .alt-dropdown-container {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .alt-dropdown-input {
+        width: 100%;
+        /* padding: 8px; */
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .alt-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .alt-dropdown-content div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .alt-dropdown-content div:hover {
+        background-color: #ddd;
+    }
+
+    .alt-tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .alt-tag {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .alt-remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .unique-dropdown-container {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .unique-dropdown-input {
+        width: 100%;
+        /* padding: 8px; */
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .unique-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .unique-dropdown-content div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .unique-dropdown-content div:hover {
+        background-color: #ddd;
+    }
+
+    .unique-tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .unique-tag {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .unique-remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1036,7 +1198,7 @@
           <div class="child-body">
             <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
               Compose</button>
-              <form method="POST">
+              <form>
               </div>
                 <div class="compose hidden">
                     <div class="compose_email">
@@ -1045,11 +1207,42 @@
                         <input type="text" name="to" class="tag-input" id="tagInput">
                     </div>
                         <hr>
-                        <input type="text" name="from" placeholder="From" required>
+                        <!-- <input type="text" name="sendemail" placeholder="Send Email to" required> -->
+                        <div class="unique-dropdown-container">
+                          <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send Email To" readonly onclick="uniqueToggleDropdown()">
+                          <div class="unique-dropdown-content" id="uniqueDropdown">
+                              <div onclick="uniqueSelectOption('Item 1')">Item 1</div>
+                              <div onclick="uniqueSelectOption('Item 2')">Item 2</div>
+                              <div onclick="uniqueSelectOption('Item 3')">Item 3</div>
+                              <div onclick="uniqueSelectOption('Item 4')">Item 4</div>
+                          </div>
+                      </div>
+                      
+                      <div class="unique-tag-container" id="uniqueTagContainer"></div>
                         <hr>
-                        <input type="text" name="cc" placeholder="CC">
+                        <!-- <input type="text" name="cc" placeholder="CC"> -->
+                        <div class="custom-dropdown-container">
+                          <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly onclick="customToggleDropdown()">
+                          <div class="custom-dropdown-content" id="customDropdown">
+                              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered Members of IEEE</div>
+                              <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+                              <div onclick="customSelectOption('Option 3')">Option 3</div>
+                              <div onclick="customSelectOption('Option 4')">Option 4</div>
+                          </div>
+                        </div>
+                        <div class="custom-tag-container" id="customTagContainer"></div>
                         <hr>
-                        <input type="text" name="bcc" placeholder="BCC">
+                        <div class="alt-dropdown-container">
+                          <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly onclick="altToggleDropdown()">
+                          <div class="alt-dropdown-content" id="altDropdown">
+                              <div onclick="altSelectOption('Choice 1')">Choice 1</div>
+                              <div onclick="altSelectOption('Choice 2')">Choice 2</div>
+                              <div onclick="altSelectOption('Choice 3')">Choice 3</div>
+                              <div onclick="altSelectOption('Choice 4')">Choice 4</div>
+                          </div>
+                      </div>
+                      
+                      <div class="alt-tag-container" id="altTagContainer"></div>
                         <hr>
                         <input type="text" name="subject" placeholder="Subject" required>
                     </div>
@@ -1282,7 +1475,7 @@
                       background: #b0cfff;
                       padding: 0 10px;
                       border-radius: 5px;
-                      margin: .25rem;" required>
+                      margin: .25rem;">
                       <input type="submit" class="scadule-send" value="Send">
                       <!-- <button class="scadule-send">Send</button> -->
                     </div>
@@ -1991,22 +2184,19 @@
 
     function EmailSent(){
           // Capture values from input fields
-          var to = document.querySelector('input[name="to"]').value;
-          var from = document.querySelector('input[name="from"]').value;
-          var cc = document.querySelector('input[name="cc"]').value;
-          var bcc = document.querySelector('input[name="bcc"]').value;
           var subject = document.querySelector('input[name="subject"]').value;
           var dateTime = document.querySelector('input[name="datetime-local"]').value
 
           // Store the values in variables (if needed)
           var emailData = {
-              to: to,
-              from: from,
-              cc: cc,
-              bcc: bcc,
+              to: getAllSelectedTags(),
+              sendTo: getUniqueSelectedTags(),
+              cc: getCustomSelectedTags(),
+              bcc: getAltSelectedTags(),
               subject: subject,
               dateTime: dateTime
           };
+          console.log(emailData)
 
           var modal1 = document.getElementById("modal1");
           modal1.style.zIndex = '-100';
@@ -2367,6 +2557,143 @@
       tag.appendChild(span);
       tag.appendChild(removeButton);
       tagContainer.insertBefore(tag, tagInput); // Add the tag before the input field
+  }
+
+  function getAllSelectedTags() {
+    const tags = tagContainer.querySelectorAll('.tag span:first-child');
+    return Array.from(tags).map(tag => tag.textContent);
+  }
+</script>
+<script>
+  let customSelectedTags = [];
+
+  function customToggleDropdown() {
+      const dropdown = document.getElementById("customDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  function customSelectOption(option) {
+      if (!customSelectedTags.includes(option)) {
+          customSelectedTags.push(option);
+          customUpdateTagContainer();
+      }
+  }
+
+  function customRemoveTag(index) {
+      customSelectedTags.splice(index, 1);
+      customUpdateTagContainer();
+  }
+
+  function customUpdateTagContainer() {
+      const tagContainer = document.getElementById('customTagContainer');
+      tagContainer.innerHTML = ''; // Clear existing tags
+
+      customSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'custom-tag';
+          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+      });
+  }
+
+  // Close dropdown when clicking outside of it
+  window.onclick = function(event) {
+      if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+          document.getElementById("customDropdown").style.display = "none";
+      }
+  };
+
+  // Function to get selected tags
+  function getCustomSelectedTags() {
+      return customSelectedTags;
+  }
+</script>
+<script>
+  let altSelectedTags = [];
+
+  function altToggleDropdown() {
+      const dropdown = document.getElementById("altDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  function altSelectOption(option) {
+      if (!altSelectedTags.includes(option)) {
+          altSelectedTags.push(option);
+          altUpdateTagContainer();
+      }
+  }
+
+  function altRemoveTag(index) {
+      altSelectedTags.splice(index, 1);
+      altUpdateTagContainer();
+  }
+
+  function altUpdateTagContainer() {
+      const tagContainer = document.getElementById('altTagContainer');
+      tagContainer.innerHTML = ''; // Clear existing tags
+
+      altSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'alt-tag';
+          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+      });
+  }
+
+  // Close dropdown when clicking outside of it
+  window.onclick = function(event) {
+      if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+          document.getElementById("altDropdown").style.display = "none";
+      }
+  };
+
+  // Function to get selected tags
+  function getAltSelectedTags() {
+      return altSelectedTags;
+  }
+</script>
+<script>
+  let uniqueSelectedTags = [];
+
+  function uniqueToggleDropdown() {
+      const dropdown = document.getElementById("uniqueDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  function uniqueSelectOption(option) {
+      if (!uniqueSelectedTags.includes(option)) {
+          uniqueSelectedTags.push(option);
+          uniqueUpdateTagContainer();
+      }
+  }
+
+  function uniqueRemoveTag(index) {
+      uniqueSelectedTags.splice(index, 1);
+      uniqueUpdateTagContainer();
+  }
+
+  function uniqueUpdateTagContainer() {
+      const tagContainer = document.getElementById('uniqueTagContainer');
+      tagContainer.innerHTML = ''; // Clear existing tags
+
+      uniqueSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'unique-tag';
+          tagElement.innerHTML = `${tag} <span class="unique-remove-tag" onclick="uniqueRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+      });
+  }
+
+  // Close dropdown when clicking outside of it
+  window.onclick = function(event) {
+      if (!event.target.matches('.unique-dropdown-input') && !event.target.closest('.unique-dropdown-content')) {
+          document.getElementById("uniqueDropdown").style.display = "none";
+      }
+  };
+
+  // Function to get selected tags
+  function getUniqueSelectedTags() {
+      return uniqueSelectedTags;
   }
 </script>
       {% block common_js %}
