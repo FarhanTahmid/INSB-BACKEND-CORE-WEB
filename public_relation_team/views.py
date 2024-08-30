@@ -17,7 +17,7 @@ from .models import Manage_Team
 from datetime import datetime
 from users import renderData
 import json
-from django.core.files.base import ContentFile
+from googleapiclient.discovery import build
 from django.core.files.storage import default_storage
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
@@ -442,7 +442,6 @@ def manageWebsiteHome(request):
 @member_login_permission
 def send_email(request):
     try:
-        GmailHandler.test_gmail(request)
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
@@ -536,8 +535,55 @@ def send_email(request):
                                     messages.success(request,"Email sent successfully!")
                                 else:
                                     messages.error(request,"Email sending failed! Try again Later")
-                                
-                            
+
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OK")
+                return None
+            try:
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+
+                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=['INBOX'], q="category:primary",pageToken='').execute()
+                thread_data = []
+
+                for thread in threads['threads']:
+                    thread_id = thread['id']
+
+                    # Fetch the required details for each message
+                    thread_details = service.users().threads().get(
+                        userId='me',
+                        id=thread_id,
+                        format='metadata',
+                        metadataHeaders=['From', 'Subject', 'Date']
+                    ).execute()
+                    
+                    messages = thread_details.get('messages', [])
+
+                    if messages:
+                        last_message = messages[len(messages)-1]  # Get the last message in the thread
+                        headers = last_message['payload'].get('headers', [])
+                        snippet = last_message.get('snippet', '')
+                        labels = last_message.get('labelIds', [])
+
+                        # Extract relevant fields from headers
+                        sender = next(header['value'] for header in headers if header['name'] == 'From')
+                        subject = next(header['value'] for header in headers if header['name'] == 'Subject')
+                        date = next(header['value'] for header in headers if header['name'] == 'Date')
+
+                        thread_data.append({
+                            'sender': sender,
+                            'subject': subject,
+                            'date': date,
+                            'labels': labels,
+                            'snippet': snippet,
+                        })
+
+            except Exception as e:
+                print(e)
+                print(f'Failed to create service instance for gmail')
+                                               
                 
             context={
                 'all_sc_ag':sc_ag,
@@ -545,6 +591,7 @@ def send_email(request):
                 'media_url':settings.MEDIA_URL,
                 'recruitment_sessions':recruitment_sessions,
                 'under_maintenance':under_maintainance,
+                'threads':thread_data
             }
             return render(request,'public_relation_team/email/compose_email.html',context)
         else:
@@ -558,3 +605,5 @@ def send_email(request):
 def view_email(request):
 
     return render(request,'public_relation_team/email/view_email.html')
+    
+
