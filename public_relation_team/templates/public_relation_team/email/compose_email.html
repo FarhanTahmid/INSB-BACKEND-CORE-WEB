@@ -1042,7 +1042,7 @@
                     <div class="compose_email">
                       <div class="tag-container" id="tagContainer">
                         <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
-                        <input type="text" name="to" class="tag-input" id="tagInput" required>
+                        <input type="text" name="to" class="tag-input" id="tagInput">
                     </div>
                         <hr>
                         <input type="text" name="from" placeholder="From" required>
@@ -1228,13 +1228,65 @@
                             <input type="file" id="myfile" name="myfile" hidden>
                         </div>
                         <div class="buttonsEmail">
-                            <button class="btnClose button1">Close</button>
-                            <button class="btnSend button2 send_notification_btn">Send</button>
+                            <h6 class="btnClose button1">Close</h6>
+                            <h6 class="btnSend button2 send_notification_btn">Send</h6>
+                            <!-- <button class="btnClose button1">Close</button> -->
+                            <!-- <button class="btnSend button2 send_notification_btn">Send</button> -->
                         </div>
                     </div>
                 </div>
                 
                 <!-- Farhana Compose Code end-->
+              </div>
+              <div id="modal1" class="send_confirm_modal">
+                <!-- Modal content -->
+                <div class="modal-1-content">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
+                        <h5 style="position: relative;
+                        top: 9px">Want to Schedule the Email?</h5>
+                        <span class="close1">&times;</span>
+                    </div>
+                    <hr>
+                    <div class="scadule-yes-no">
+                      <input type="submit" class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
+                        <!-- <h6 class="scadule-no" onclick="EmailSent()">No, send without schedule</h6> -->
+                        <h6 class="scadule-yes" onclick="ScheduleEmail()">Yes</h6>
+                    </div>
+                </div>
+              </div>
+              <div id="modal2" class="email_sent_confirm_modal">
+                <!-- Modal content -->
+                <div class="modal-2-content">
+                  <div style="display: flex;
+                    justify-content: flex-end;
+                    padding: 10px 20px 0;
+                ">
+                        <span class="close2">&times;</span>
+                      </div>
+                      <h5 style="position: relative;
+                        text-align: center;
+                        bottom: 15px;">Email sent successfully</h5>
+                </div>
+              </div>
+              <div id="modal3" class="pick_date_modal">
+                <!-- Modal content -->
+                <div class="modal-3-content">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
+                        <h5 style="position: relative;
+                        top: 9px">Set the time and date:</h5>
+                        <span class="close3">&times;</span>
+                    </div>
+                    <hr>
+                    <div class="pick_date_time">
+                      <input type="datetime-local" name="datetime-local" style="border: 0;
+                      background: #b0cfff;
+                      padding: 0 10px;
+                      border-radius: 5px;
+                      margin: .25rem;" required>
+                      <input type="submit" class="scadule-send" value="Send">
+                      <!-- <button class="scadule-send">Send</button> -->
+                    </div>
+                </div>
               </div>
             </form>
   
@@ -1654,56 +1706,6 @@
           </div>
       </div>
       <!--Email Section End-->
-      <div id="modal1" class="send_confirm_modal">
-        <!-- Modal content -->
-        <div class="modal-1-content">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
-                <h5 style="position: relative;
-                top: 9px">Want to Schedule the Email?</h5>
-                <span class="close1">&times;</span>
-            </div>
-            <hr>
-            <div class="scadule-yes-no">
-                <h6 class="scadule-no" onclick="EmailSent()">No, send without schedule</h6>
-                <h6 class="scadule-yes" onclick="ScheduleEmail()">Yes</h6>
-            </div>
-        </div>
-      </div>
-      <div id="modal2" class="email_sent_confirm_modal">
-        <!-- Modal content -->
-        <div class="modal-2-content">
-          <div style="display: flex;
-            justify-content: flex-end;
-            padding: 10px 20px 0;
-        ">
-                <span class="close2">&times;</span>
-              </div>
-              <h5 style="position: relative;
-                text-align: center;
-                bottom: 15px;">Email sent successfully</h5>
-        </div>
-      </div>
-      <form>
-      <div id="modal3" class="pick_date_modal">
-        <!-- Modal content -->
-        <div class="modal-3-content">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
-                <h5 style="position: relative;
-                top: 9px">Set the time and date</h5>
-                <span class="close3">&times;</span>
-            </div>
-            <hr>
-            <div class="pick_date_time">
-              <input type="datetime-local" style="border: 0;
-              background: #b0cfff;
-              padding: 0 10px;
-              border-radius: 5px;
-              margin: .25rem;" required>
-              <button class="scadule-send">Send</button>
-            </div>
-        </div>
-      </div>
-    </form>
   </div>
   <!-- ############ PAGE END-->
   <!-- ############ LAYOUT END-->
@@ -1988,6 +1990,24 @@
     }
 
     function EmailSent(){
+          // Capture values from input fields
+          var to = document.querySelector('input[name="to"]').value;
+          var from = document.querySelector('input[name="from"]').value;
+          var cc = document.querySelector('input[name="cc"]').value;
+          var bcc = document.querySelector('input[name="bcc"]').value;
+          var subject = document.querySelector('input[name="subject"]').value;
+          var dateTime = document.querySelector('input[name="datetime-local"]').value
+
+          // Store the values in variables (if needed)
+          var emailData = {
+              to: to,
+              from: from,
+              cc: cc,
+              bcc: bcc,
+              subject: subject,
+              dateTime: dateTime
+          };
+
           var modal1 = document.getElementById("modal1");
           modal1.style.zIndex = '-100';
           modal1.style.opacity = '0';
