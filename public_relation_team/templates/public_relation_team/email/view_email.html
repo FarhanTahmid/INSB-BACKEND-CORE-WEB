@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Email | IEEE NSU Student Branch</title>
+  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+
+  {% block common_css %}
+    {% include "common_css.html" %}
+  {% endblock common_css %}
+
+  <!--Internal CSS-->
+  <style>
+    body{
+      background-color: white;
+    }
+  </style>
+  <!--Internal CSS End-->
+</head>
+
+<body>
+  <div class="app" id="app">
+
+    <!-- ############ LAYOUT START-->
+
+    <!-- aside -->
+    <div id="aside" class="app-aside modal nav-dropdown">
+      {% block sidebar %}
+      {% include 'users/sidebar.html' %}
+      {% endblock %}
+    </div>
+    <!-- / -->
+    <!-- navbar content -->
+    <div id="content" class="app-content box-shadow-z0" role="main">
+      {% block navbar %}
+      {% include 'navbar.html' %}
+      {% endblock navbar %}
+
+    </div>
+    <!--navbar content-->
+
+    <div ui-view class="app-body" id="view" style="justify-content:center;">
+      <!-- ############ PAGE START-->
+      <h2>HELLO WORLD</h2>
+  
+      <!-- ############ PAGE END-->
+  </div>
+  <!-- ############ LAYOUT END-->
+
+      {% block common_js %}
+          {% include "common_js.html" %}
+      {% endblock common_js %}
+</body>
+
+</html>

@@ -554,3 +554,7 @@ def send_email(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
         return redirect('public_relation_team:send_email')
+
+def view_email(request):
+
+    return render(request,'public_relation_team/email/view_email.html')

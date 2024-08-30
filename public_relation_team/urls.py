@@ -28,6 +28,7 @@ urlpatterns = [
     path('manage_website/',views.manageWebsiteHome,name="manage_website_home"),
     #Send Email
     path('send_email',views.send_email,name="send_email"),
+    path('view_email',views.view_email,name="view_email"),
 
     #Task
     path('create_task/<int:team_primary>/',create_task,name="create_task_team"),
