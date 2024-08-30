@@ -11,11 +11,68 @@
     {% include "common_css.html" %}
   {% endblock common_css %}
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <!--Internal CSS-->
   <style>
     body{
-      background-color: white;
+      background: linear-gradient(135deg,white,#00629b, #00619d);
     }
+
+    .central_body{
+      margin: 50px;
+      padding: 50px;
+      background-color: white;
+      border-radius: 10px;
+    }
+
+    .central_body h1{
+      font-size: 30px;
+      font-weight: 100;
+      border-bottom: 1px solid gray;
+      padding-bottom: 10px;
+    }
+
+    .heading{
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 0px 30px 0px;
+    }
+
+    .heading h2{
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 0px;
+      padding-right: 10px;
+    }
+
+    .heading_col1{
+      display: flex;
+      justify-content: space-between;
+      flex-basis: 20%;
+      align-items: center;
+    }
+
+    .buttons{
+      padding-top: 20px;
+    }
+
+    .reply_button, .forward_button{
+      border: 1px solid gray;
+      border-radius: 20px;
+      padding: 10px 30px;
+      font-size: 15px;
+      transition: 0.1s;
+      color: gray;
+      margin-right: 10px;
+    }
+
+    .reply_button:hover, .forward_button:hover{
+      border-color: black;
+      color: black;
+    }
+
+  
   </style>
   <!--Internal CSS End-->
 </head>
@@ -42,9 +99,43 @@
     <!--navbar content-->
 
     <div ui-view class="app-body" id="view" style="justify-content:center;">
+
       <!-- ############ PAGE START-->
-      <h2>HELLO WORLD</h2>
+
+      <section class="central_body"> 
+
+      <h1>(Subject)</h1>
+
+      <div class="heading">
+        <div class="heading_col1"> 
+          <h2>(Sender_name)</h2>
+          <address style="margin: 0px;">
+          <a href="mailto:07marsaad@gmail.com">(Sender_email)</a>
+          </address>
+        </div>
+        <p style="margin: 0px;">(Date_sent)</p>
+      </div>
+      
+
+      <p>(Email_content)>>><br> 
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare, ipsum eget varius rhoncus, augue dui rutrum leo, ac dictum tortor nulla quis turpis. Aenean tempor tellus facilisis orci porttitor pretium at ac dui. Aenean eget bibendum eros, eget gravida quam. Maecenas ullamcorper metus eget purus placerat consequat. Nullam dui velit, placerat vel est at, facilisis consectetur massa. Aliquam porttitor augue id mollis pretium. Fusce vestibulum tempus dictum. Nunc pretium, sapien a feugiat consequat, erat neque tempor justo, id malesuada dui lectus vel lacus.
+      </p>
+
+      <div class="attachment">
+        <p>Attachments:</p>
+        <ul>
+          <li>#</li>
+        </ul>
+      </div>
+
+      <div class="buttons">
+        <a class="reply_button" href="#">Reply</a>
+        <a class="forward_button" href="#">Forward</a>
+      </div>
   
+
+      </section>
+    
       <!-- ############ PAGE END-->
   </div>
   <!-- ############ LAYOUT END-->
