@@ -5,10 +5,10 @@
 <head>
   <meta charset="utf-8" />
   <title>Email | IEEE NSU Student Branch</title>
-  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
   {% block common_css %}
-    {% include "common_css.html" %}
+  {% include "common_css.html" %}
   {% endblock common_css %}
 
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -18,9 +18,10 @@
 
   <!--Internal CSS-->
   <style>
-    body{
+    body {
       background-color: white;
     }
+
     .compose {
       position: fixed;
       bottom: 10px;
@@ -35,8 +36,8 @@
     }
 
     .child-body {
-      position: relative;
-      left: 1rem;
+      /* position: relative;
+      left: 1rem; */
     }
 
     .fa-pen {
@@ -60,12 +61,14 @@
       border: 2px solid #137aac;
     }
 
-    .compose_btn:hover{
+    .compose_btn:hover {
       color: #137aac;
       background-color: white;
-    } {
-      display: none;
     }
+
+    /* {
+      display: none;
+    } */
 
     .compose_email {
       /* position: fixed;
@@ -118,12 +121,13 @@
       color: #646464;
     }
 
-    .fa-paperclip{
+    .fa-paperclip {
       padding: 6px 9px;
       border-radius: 50%;
       transition: all .3sec ease-in-out;
     }
-    .fa-paperclip:hover{
+
+    .fa-paperclip:hover {
       background-color: #f0f0f0;
     }
 
@@ -143,7 +147,7 @@
       transition: all .3s ease-in-out;
       border: 1px solid #dc2c2c;
     }
-    
+
     .button2 {
       background-color: #0bb652;
       border: none;
@@ -161,21 +165,22 @@
       border: 1px solid #0bb652;
     }
 
-    .button1:hover{
+    .button1:hover {
       background-color: white;
       color: #dc2c2c;
     }
-    
-    .button2:hover{
+
+    .button2:hover {
       background-color: white;
       color: #0bb652;
     }
+
     textarea::placeholder {
       color: black;
       padding-left: 7px;
     }
 
-    .send-modal{
+    .send-modal {
       display: none;
       width: 100%;
       height: -webkit-fill-available;
@@ -185,12 +190,15 @@
       top: 0;
       left: 0;
     }
-    .send-modal h3{
+
+    .send-modal h3 {
       font-size: 23px;
     }
 
     /*  */
-    .schedule-conf-modal, .schedule-modal, .confirm-modal {
+    .schedule-conf-modal,
+    .schedule-modal,
+    .confirm-modal {
       display: block;
       background: white;
       width: 450px;
@@ -200,7 +208,8 @@
       border-radius: 10px;
       position: relative;
     }
-    .scadule-yes{
+
+    .scadule-yes {
       background: #098840;
       border: 1px solid #098840;
       border-radius: .25rem;
@@ -210,40 +219,42 @@
       cursor: pointer;
       transition: all .3s ease-in-out;
     }
-    .scadule-yes:hover{
+
+    .scadule-yes:hover {
       background: white;
       color: #098840;
     }
 
-    .scadule-send{
+    .scadule-send {
       background: #098840;
       border: 0;
       border-radius: 5px;
       padding: 5px 10px;
       margin: 5px 0 0 5px;
     }
-    .scadule-send:hover{
+
+    .scadule-send:hover {
       background: #00f400;
       transition: .3s;
       cursor: pointer;
     }
 
 
-    .compose_email hr{
+    .compose_email hr {
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
       border: 0;
       border-top: 1px solid rgba(0, 0, 0, .1);
       width: 99%;
     }
-    
-    .email_wrapper{
+
+    .email_wrapper {
       background: white;
       margin: 0 1rem;
       /* position: sticky; */
     }
 
-    .email_wrapper_2{
+    .email_wrapper_2 {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -251,23 +262,24 @@
       align-items: center;
     }
 
-    .email_container{
-      position: fixed;
+    .email_container {
+      /* position: fixed; */
       /* top: 115px; */
       margin: 0 1rem 0 0;
     }
-    .email_container input[type="checkbox"]{
+
+    .email_container input[type="checkbox"] {
       position: relative;
       top: -1px;
     }
-    
-    .email_boxes{
+
+    .email_boxes {
       display: flex;
       gap: 10px;
       margin-left: -10px;
     }
 
-    .email_box{
+    .email_box {
       text-decoration: none;
       /* font-weight: bold; */
       /* font-size: large; */
@@ -277,18 +289,19 @@
       margin: 15px 0;
       border: 1px solid white;
     }
-    .email_boxes .active{
+
+    .email_boxes .active {
       background-color: white;
       color: #137aac;
       border: 1px solid #137aac;
     }
 
-    .email_box:hover{
+    .email_box:hover {
       /* background-color: #137aac; */
       color: #137aac;
     }
 
-    .email_options{
+    .email_options {
       border-radius: 12px;
       box-shadow: 0px 2px 5px 0px gray;
       padding: .5rem 1.5rem 1rem;
@@ -296,41 +309,45 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
+      /* position: sticky; */
       top: 112px;
       flex-wrap: wrap;
       gap: .5rem;
     }
 
-    .email_options_left{
+    .email_options_left {
       display: flex;
       align-items: flex-start;
       gap: 2rem;
     }
-    .select_all_option > label{
+
+    .select_all_option>label {
       margin: 0;
       margin-left: 5px;
       width: max-content;
     }
 
-    .select_all_option{
+    .select_all_option {
       position: relative;
       top: 5px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
-    .more_options i{
+
+    .more_options i {
       /* background-color: aqua; */
       padding: .5rem;
       border-radius: 50%;
       margin-right: .5rem;
       /* transition: all .3s ease-in-out; */
     }
-    .more_options i:hover{
+
+    .more_options i:hover {
       background-color: #f0f0f0;
     }
-    .email_content{
+
+    .email_content {
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -338,7 +355,8 @@
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
     }
-    .email_outer_container{
+
+    .email_outer_container {
       box-shadow: 0px 2px 5px 0px gray;
       border-radius: 8px;
       position: relative;
@@ -348,27 +366,30 @@
       max-height: 575px;
       overflow-y: clip;
     }
-    .email_inner_container{
+
+    .email_inner_container {
       display: none;
       /* margin: 8px; */
       border-radius: 8px;
       overflow-y: scroll;
       max-height: 555px;
-      
+
     }
 
-    .email_inner_container::-webkit-scrollbar{
+    .email_inner_container::-webkit-scrollbar {
       width: 4px;
     }
 
-    .email_inner_container::-webkit-scrollbar-thumb{
+    .email_inner_container::-webkit-scrollbar-thumb {
       background-color: #ccc;
       border-radius: 12px;
     }
-    .show{
+
+    .show {
       display: block;
     }
-    .email_row{
+
+    .email_row {
       display: grid;
       align-items: center;
       margin: 0px 0px 3px 0px;
@@ -380,27 +401,27 @@
       grid-gap: 50px;
     }
 
-    .subject{
+    .subject {
       font-weight: bold;
     }
 
-    .email_row_left{
+    .email_row_left {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: .5rem;
     }
 
-    .email_row_left > i{
+    .email_row_left>i {
       border-radius: 50%;
       padding: .25rem;
     }
-    
-    .email_row_left > i:hover{
+
+    .email_row_left>i:hover {
       background-color: #f0f0f0;
     }
 
-    .sender{
+    .sender {
       margin: 0;
       margin-left: 5px;
       overflow: hidden;
@@ -411,29 +432,31 @@
       -webkit-box-orient: vertical;
     }
 
-    .hidden{
+    .hidden {
       display: none;
     }
-    .select_all_option input[type="checkbox"]{
+
+    .select_all_option input[type="checkbox"] {
       position: relative;
       top: 0px;
     }
 
-    .email_wrapper .fa-star{
+    .email_wrapper .fa-star {
       color: goldenrod;
     }
 
     .more_options .fa-envelope-open-o,
     .more_options .fa-envelope-o,
-    .more_options .fa-trash-o{
+    .more_options .fa-trash-o {
       opacity: 0;
     }
 
-    .more_options .fa-envelope-open-o{
+    .more_options .fa-envelope-open-o {
       position: relative;
       bottom: 1px;
     }
-    .checkbox_star{
+
+    .checkbox_star {
       background: aliceblue;
       display: flex;
       justify-content: center;
@@ -444,557 +467,609 @@
       border-radius: 6px 0 0 6px;
     }
 
-    .email_row_wrap{
+    .email_row_wrap {
       display: flex;
     }
 
-    .modal-1-content::-webkit-scrollbar{
-        width: 6px;
-        height: 6px;
-    }
-    .modal-1-content::-webkit-scrollbar-thumb{
-        background-color: #e7eeef;
-        transition: all .4s ease-in-out;
-        border-radius: 4px;
-    }
-    .modal-1-content::-webkit-scrollbar-thumb:hover{
-        background-color: rgb(169, 170, 170);
-    }
-    .send_confirm_modal{
-        opacity: 0;
-        position: fixed;
-        z-index: -1;
-        padding-top: 250px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 120%;
-        background-color: rgb(0,0,0); 
-        background-color: rgba(0,0,0,0.5);
-        transition: all .3s ease-in-out;
-        transform: translateY(-20px);
-        overflow: auto;
-    }
-    .modal-1-content{
-        background-color: #fefefe;
-        margin: auto;
-        border: 1px solid rgb(136, 136, 136);
-        max-width: 550px;
-        max-height: 70vh;
-        overflow-y: scroll;
-        border-radius: 6px;
-        box-shadow: 2px 2px 5px 0px #80808054;
-        position: relative;
-        left: 100px;
-        padding-bottom: 5px;
+    .modal-1-content::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
 
-    .close1{
-        color: #000;
-        font-size: 28px;
-        font-weight: bold;
-        display: flex;
-        justify-content: flex-end;
+    .modal-1-content::-webkit-scrollbar-thumb {
+      background-color: #e7eeef;
+      transition: all .4s ease-in-out;
+      border-radius: 4px;
     }
+
+    .modal-1-content::-webkit-scrollbar-thumb:hover {
+      background-color: rgb(169, 170, 170);
+    }
+
+    .send_confirm_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .modal-1-content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 550px;
+      max-height: 70vh;
+      overflow-y: scroll;
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      left: 100px;
+      padding-bottom: 5px;
+    }
+
+    .close1 {
+      color: #000;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      justify-content: flex-end;
+    }
+
     .close1:hover,
-    .close1:focus{
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
+    .close1:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
     }
-    .scadule-yes-no{
+
+    .scadule-yes-no {
       margin: 0px 12px;
       display: flex;
       justify-content: flex-end;
     }
-    .scadule-no{
-        color: white;
-        background-color: #a91c1c;
-        display: inline;
-        padding: 6px 25px;
-        margin: .25rem;
-        border: 1px;
-        border-style: solid;
-        border-color: #a91c1c;
-        border-radius: 4px;
-        transition: all .3s ease-in-out;
-        position: relative;
-        cursor: pointer;
-    }
-    .scadule-no:hover{
-        color: #a91c1c;
-        background-color: white;
-    }
-    .email_sent_confirm_modal{
-        opacity: 0;
-        position: fixed;
-        z-index: -1;
-        padding-top: 250px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 120%;
-        background-color: rgb(0,0,0); 
-        background-color: rgba(0,0,0,0.5);
-        transition: all .3s ease-in-out;
-        transform: translateY(-20px);
-        overflow: auto;
-    }
-    .modal-2-content{
-        background-color: #fefefe;
-        margin: auto;
-        border: 1px solid rgb(136, 136, 136);
-        max-width: 550px;
-        height: 100px;
-        border-radius: 6px;
-        box-shadow: 2px 2px 5px 0px #80808054;
-        position: relative;
-        left: 100px;
-        padding-bottom: 5px;
+
+    .scadule-no {
+      color: white;
+      background-color: #a91c1c;
+      display: inline;
+      padding: 6px 25px;
+      margin: .25rem;
+      border: 1px;
+      border-style: solid;
+      border-color: #a91c1c;
+      border-radius: 4px;
+      transition: all .3s ease-in-out;
+      position: relative;
+      cursor: pointer;
     }
 
-    .close2{
-        color: #000;
-        font-size: 28px;
-        font-weight: bold;
-        display: flex;
-        justify-content: flex-end;
+    .scadule-no:hover {
+      color: #a91c1c;
+      background-color: white;
     }
+
+    .email_sent_confirm_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .modal-2-content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 550px;
+      height: 100px;
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      left: 100px;
+      padding-bottom: 5px;
+    }
+
+    .close2 {
+      color: #000;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      justify-content: flex-end;
+    }
+
     .close2:hover,
-    .close2:focus{
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    .pick_date_modal{
-        opacity: 0;
-        position: fixed;
-        z-index: -1;
-        padding-top: 250px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 120%;
-        background-color: rgb(0,0,0); 
-        background-color: rgba(0,0,0,0.5);
-        transition: all .3s ease-in-out;
-        transform: translateY(-20px);
-        overflow: auto;
-    }
-    .modal-3-content{
-        background-color: #fefefe;
-        margin: auto;
-        border: 1px solid rgb(136, 136, 136);
-        max-width: 550px;
-        max-height: 70vh;
-        overflow-y: scroll;
-        border-radius: 6px;
-        box-shadow: 2px 2px 5px 0px #80808054;
-        position: relative;
-        left: 100px;
-        padding-bottom: 5px;
+    .close2:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
     }
 
-    .close3{
-        color: #000;
-        font-size: 28px;
-        font-weight: bold;
-        display: flex;
-        justify-content: flex-end;
+    .pick_date_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
     }
+
+    .modal-3-content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 550px;
+      max-height: 70vh;
+      overflow-y: scroll;
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      left: 100px;
+      padding-bottom: 5px;
+    }
+
+    .close3 {
+      color: #000;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      justify-content: flex-end;
+    }
+
     .close3:hover,
-    .close3:focus{
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
+    .close3:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
     }
-    .pick_date_time{
+
+    .pick_date_time {
       margin: 0px 12px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
     }
-    .scadule-send{
-        color: white;
-        background-color: #a91c1c;
-        display: inline;
-        padding: 6px 25px;
-        margin: .25rem;
-        border: 1px;
-        border-style: solid;
-        border-color: #a91c1c;
-        border-radius: 4px;
-        transition: all .3s ease-in-out;
-        position: relative;
-        cursor: pointer;
-    }
-    .scadule-send:hover{
-        color: #a91c1c;
-        background-color: white;
+
+    .scadule-send {
+      color: white;
+      background-color: #a91c1c;
+      display: inline;
+      padding: 6px 25px;
+      margin: .25rem;
+      border: 1px;
+      border-style: solid;
+      border-color: #a91c1c;
+      border-radius: 4px;
+      transition: all .3s ease-in-out;
+      position: relative;
+      cursor: pointer;
     }
 
-    /*ckeditor start*/
+    .scadule-send:hover {
+      color: #a91c1c;
+      background-color: white;
+    }
+
+  </style>
+  <style>
+    /*WFRditor start*/
     .editor-container {
-            border: 1px solid #ccc;
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 5px;
-            overflow: hidden; 
-            max-height: 100vh; 
-            position: relative;
-        }
+      border: 1px solid #ccc;
+      width: 100%;
+      margin: 0 auto;
+      border-radius: 5px;
+      overflow: hidden;
+      max-height: 100vh;
+      position: relative;
+    }
 
-        .toolbar {
-            background-color: #f5f5f5;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-            text-align: left;
-            border-radius: 5px 5px 0 0;
-            display: flex;
-            flex-wrap: wrap;
-        }
+    .toolbar {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      text-align: left;
+      border-radius: 5px 5px 0 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
 
-        .toolbar button, .toolbar select {
-            font-size: 12px;
-            padding: 5px 10px;
-            /* margin-right: 5px;
+    .toolbar button,
+    .toolbar select {
+      font-size: 12px;
+      padding: 5px 10px;
+      /* margin-right: 5px;
             margin-bottom: 5px; */
-            border: 0 solid #ccc;
-            background-color: #f5f5f500;
-            cursor: pointer;
-            height: 100%;
-            color: #333;
-        }
+      border: 0 solid #ccc;
+      background-color: #f5f5f500;
+      cursor: pointer;
+      height: 100%;
+      color: #333;
+    }
 
-        .toolbar button:hover, .toolbar select:hover {
-            background: #a4d5ff69;
-            border-radius: 5px;
-        }
+    .toolbar button:hover,
+    .toolbar select:hover {
+      background: #a4d5ff69;
+      border-radius: 5px;
+    }
 
-        .editor {
-            padding: 10px;
-            height: 150px;
-            border: none;
-            outline: none;
-            overflow: auto;
-            background: #fff;
-            /* resize: both; */
-        }
+    .editor {
+      padding: 10px;
+      height: 150px;
+      border: none;
+      outline: none;
+      overflow: auto;
+      background: #fff;
+      /* resize: both; */
+    }
 
-        .resize-handle {
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            height: 10px; 
-            background-color: #eee; 
-            cursor: ns-resize; 
-            border-top: 1px solid #ccc;
-        }
+    .resize-handle {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      height: 10px;
+      background-color: #eee;
+      cursor: ns-resize;
+      border-top: 1px solid #ccc;
+    }
 
-        .dots {
-            height: 2px;
-            width: 2px;
-            background-color: #aaa;
-            margin: .5px 2px;
-        }
+    .dots {
+      height: 2px;
+      width: 2px;
+      background-color: #aaa;
+      margin: .5px 2px;
+    }
 
-        .expanded {    
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: calc(100% - 40px);
-            height: calc(100% - 40px);
-            z-index: 1099;
-            background-color: #fff;
-            margin: 20px;
-            border-radius: 5px;
-        }
+    .expanded {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: calc(100% - 40px);
+      height: calc(100% - 40px);
+      z-index: 1099;
+      background-color: #fff;
+      margin: 20px;
+      border-radius: 5px;
+    }
 
-        .tool-sec{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 25px;
-            margin: 0 3px 0 0;
-            padding-right: 5px;
-        }
+    .tool-sec {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 25px;
+      margin: 0 3px 0 0;
+      padding-right: 5px;
+    }
 
-        .toolbar button.active {
-            background-color: #ffadad;
-            /* border: 1px solid #bbb; */
-            border-radius: 5px;
-            margin: 0 1px;
-            padding: 5px 9px;
-        }
+    .toolbar button.active {
+      background-color: #ffadad;
+      /* border: 1px solid #bbb; */
+      border-radius: 5px;
+      margin: 0 1px;
+      padding: 5px 9px;
+    }
 
-        .modal-bg {
-            position: fixed;
-            z-index: 100; 
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: rgba(0,0,0,0.4); 
-        }
+    .modal-bg {
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
 
-        .modal-bg h2{
-            /* background-image: linear-gradient(90deg, #0073ffba, #c000ffba); */
-            margin: 0;
-            padding: 0 20px;
-            position: relative;
-            left: -20px;
-            width: 100%;
-            border-radius: 5px 5px 0 0;
-            font-size: 25px;
-        }
-        
-        .modal-content {
-            font-family: sans-serif;
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 550px;
-            border-radius: 8px;
-            transform: translateY(-50%); /* Adjust for vertical centering */
-            position: relative;
-            top: 50%; /* Move content down by 50% */
-            max-height: 400px;
-            overflow-y: auto;
-        }
+    .modal-bg h2 {
+      /* background-image: linear-gradient(90deg, #0073ffba, #c000ffba); */
+      margin: 0;
+      padding: 0 20px;
+      position: relative;
+      left: -20px;
+      width: 100%;
+      border-radius: 5px 5px 0 0;
+      font-size: 25px;
+    }
 
-        .modal-content li{
-            font-size: 14px;
-        }
+    .modal-content {
+      font-family: sans-serif;
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 550px;
+      border-radius: 8px;
+      transform: translateY(-50%);
+      /* Adjust for vertical centering */
+      position: relative;
+      top: 50%;
+      /* Move content down by 50% */
+      max-height: 400px;
+      overflow-y: auto;
+    }
 
-        .modal-img{
-            width: 300px;
-            height: fit-content;
-            font-family: sans-serif;
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px 20px;
-            border: 1px solid #888;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
+    .modal-content li {
+      font-size: 14px;
+    }
 
-        .modal-img label{
-            padding: 10px 0 3px 0;
-            margin: 0;
-        }
+    .modal-img {
+      width: 300px;
+      height: fit-content;
+      font-family: sans-serif;
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px 20px;
+      border: 1px solid #888;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .modal-img input{
-            padding: 3px;
-            border: 1px solid;
-            border-radius: 5px;
-            /* margin-bottom: 10px; */
-            width: 100%;
-        }
+    .modal-img label {
+      padding: 10px 0 3px 0;
+      margin: 0;
+    }
 
-        .modal-img button{
-            position: relative;
-            /* top: 78px; */
-            /* width: 100px; */
-            width: 100%;
-            /* left: 200px; */
-            padding: 5px;
-            border: none;
-            border-radius: 5px;
-            background: #5450ff;
-            color: white;
-            margin-top: 10px;
-        }
+    .modal-img input {
+      padding: 3px;
+      border: 1px solid;
+      border-radius: 5px;
+      /* margin-bottom: 10px; */
+      width: 100%;
+    }
 
-        .modal-link {
-            width: 300px;
-            height: fit-content;
-            font-family: sans-serif;
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px 20px;
-            border: 1px solid #888;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
+    .modal-img button {
+      position: relative;
+      /* top: 78px; */
+      /* width: 100px; */
+      width: 100%;
+      /* left: 200px; */
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      background: #5450ff;
+      color: white;
+      margin-top: 10px;
+    }
 
-        .modal-link label {
-            padding: 10px 0 3px 0;
-            margin: 0;
-        }
+    .modal-link {
+      width: 300px;
+      height: fit-content;
+      font-family: sans-serif;
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px 20px;
+      border: 1px solid #888;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .modal-link input {
-            padding: 3px;
-            border: 1px solid;
-            border-radius: 5px;
-            /* margin-bottom: 10px; */
-            width: 100%;
-        }
+    .modal-link label {
+      padding: 10px 0 3px 0;
+      margin: 0;
+    }
 
-        .modal-link button {
-            position: relative;
-            /* top: 97px; */
-            /* width: 100px; */
-            width: 100%;
-            align-self: flex-end;
-            padding: 5px;
-            border: none;
-            border-radius: 5px;
-            background: #5450ff;
-            color: white;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+    .modal-link input {
+      padding: 3px;
+      border: 1px solid;
+      border-radius: 5px;
+      /* margin-bottom: 10px; */
+      width: 100%;
+    }
 
-        .modal-table {
-            width: 300px;
-            height: auto;
-            font-family: sans-serif;
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px 20px;
-            border: 1px solid #888;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-        }
+    .modal-link button {
+      position: relative;
+      /* top: 97px; */
+      /* width: 100px; */
+      width: 100%;
+      align-self: flex-end;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      background: #5450ff;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-        .modal-table label {
-            padding: 10px 0 3px 0;
-            margin: 0;
-        }
+    .modal-table {
+      width: 300px;
+      height: auto;
+      font-family: sans-serif;
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px 20px;
+      border: 1px solid #888;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
 
-        .modal-table input, .modal-table select {
-            padding: 3px;
-            border: 1px solid;
-            border-radius: 5px;
-            /* margin-bottom: 10px; */
-            width: 100%;
-        }
+    .modal-table label {
+      padding: 10px 0 3px 0;
+      margin: 0;
+    }
 
-        .modal-table button {
-            position: relative;
-            /* width: 100px; */
-            width: 100%;
-            align-self: flex-end;
-            padding: 5px;
-            border: none;
-            border-radius: 5px;
-            background: #5450ff;
-            color: white;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        /*ckeditor ends*/
+    .modal-table input,
+    .modal-table select {
+      padding: 3px;
+      border: 1px solid;
+      border-radius: 5px;
+      /* margin-bottom: 10px; */
+      width: 100%;
+    }
+
+    .modal-table button {
+      position: relative;
+      /* width: 100px; */
+      width: 100%;
+      align-self: flex-end;
+      padding: 5px;
+      border: none;
+      border-radius: 5px;
+      background: #5450ff;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /*ckeditor ends*/
     @media screen and (max-width: 1024px) {
-        .modal-1-content,
-        .modal-2-content,
-        .modal-3-content {
-            left: 0px;
-            margin: 10%;
-        }
+
+      .modal-1-content,
+      .modal-2-content,
+      .modal-3-content {
+        left: 0px;
+        margin: 10%;
+      }
     }
 
     @media screen and (max-width: 500px) {
-        .modal-1-content,
-        .modal-2-content,
-        .modal-3-content{
-            margin: 5%;
-        }
+
+      .modal-1-content,
+      .modal-2-content,
+      .modal-3-content {
+        margin: 5%;
+      }
     }
 
     /* responsive code for tablet and small screens */
-    
+
     @media screen and (max-width: 768px) {
       .compose {
         width: 90%;
         bottom: 20px;
         right: 5%;
       }
-    
+
       input[type="text"],
       textarea {
         width: 100%;
       }
-    
+
       .send {
         /* flex-direction: column; */
         align-items: flex-start;
       }
-    
+
       .attach_file {
         margin-bottom: 10px;
       }
 
-      .email_row{
+      .email_row {
         display: flex;
         grid-gap: .75rem;
         flex-wrap: wrap;
       }
     }
-    
+
     @media screen and (max-width: 480px) {
       .compose {
         width: 95%;
         bottom: 10px;
         right: 2.5%;
       }
-    
+
       input[type="text"],
       textarea {
         width: 100%;
         font-size: 14px;
       }
-    
+
       .button,
       .button1 {
         padding: 10px;
         font-size: 14px;
       }
-      .child-body{
-        left: auto;
-        right: 1rem;
+
+      .child-body {
+        /* left: auto;
+        right: 1rem; */
+      }
+
+      .select_all_option{
+        display: none;
+      }
+
+      .more_options i{
+        /* padding: .25rem; */
+        scale: 1.4;
+      }
+      .email_outer_container i
+      {
+        padding: .25rem;
+        scale: 1.4;
+      }
+
+      .email_container input[type='checkbox']{
+        scale: 1.4;
       }
     }
+
     .tag-container {
-        display: flex;
-        flex-wrap: wrap;
-        /* border: 1px solid #ccc; */
-        padding: 5px;
-        /* border-radius: 4px; */
-        min-height: 40px;
-        cursor: text;
-        align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      /* border: 1px solid #ccc; */
+      padding: 5px;
+      /* border-radius: 4px; */
+      min-height: 40px;
+      cursor: text;
+      align-items: center;
     }
+
     .tag {
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 30px;
-        padding: 0 .75rem;
-        margin: 2px;
-        display: flex;
-        align-items: center;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 30px;
+      padding: 0 .75rem;
+      margin: 2px;
+      display: flex;
+      align-items: center;
     }
+
     .tag span {
-        margin-right: 5px;
+      margin-right: 5px;
     }
+
     .tag .remove-tag {
-        cursor: pointer;
-        padding: 2px;
-        color: #888;
+      cursor: pointer;
+      padding: 2px;
+      color: #888;
     }
+
     .tag .remove-tag:hover {
-        color: #000;
+      color: #000;
     }
+
     .tag-input {
-        border: none;
-        outline: none;
-        flex: 1;
-        padding: 5px;
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 5px;
     }
     .custom-dropdown-container {
         position: relative;
@@ -1158,6 +1233,133 @@
         cursor: pointer;
         font-weight: bold;
     }
+
+    /* {% comment %} Pagination {% endcomment %} */
+    
+    
+    .pagination {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin: .25rem 0;
+    }
+    
+    .pagination button {
+      background-color: white;
+      border: 0px solid #dfe1e5;
+      /* padding: 5px 10px; */
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    
+    .pagination button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+    
+    .page-info {
+        font-size: 14px;
+    }
+  
+  /* {% comment %} for attachments {% endcomment %} */
+  /* File Attachment Section */
+.attach_file {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  cursor: pointer;
+  position: relative;
+  bottom: .5rem;
+}
+
+.attach_file label {
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.attach_file label:hover {
+  color: #007bff;
+}
+
+#filePreviewContainer {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: white;
+  margin:5px 0 5px 5px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.file-preview:hover {
+  background-color: #f1f1f1;
+}
+
+.file-icon {
+  font-size: 18px;
+  margin-left: 5px;
+  margin-right: 5px;
+  color: #555;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #333;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove-file {
+  font-size: 14px;
+  margin-left: 10px;
+  color: black;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.remove-file:hover {
+  color: black;
+}
+
+#myfile {
+  display: none;
+}
+    .label-ops{
+      display: none;
+      position: absolute;
+      top: 40px;
+      left: 170px;
+      min-width: 150px;
+      background: white;
+      box-shadow: 0 0 4px 0px #999;
+      padding: 5px;
+      border-radius: 5px;
+    }
+    .label-ops div:hover{
+      background-color: rgb(207, 232, 255);
+      border-radius: 5px;
+    }
+    .label-mail-cnt{
+      width: 15px;
+      height: 15px;
+      display: flex;
+      background: #e0f2ff;
+      border-radius: 50%;
+      font-size: 10px;
+      justify-content: center;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1287,6 +1489,7 @@
                             </div>
                         </div>
                         <div contenteditable="true" class="editor"></div>
+                        <div id="filePreviewContainer"></div> <!-- Container for file previews -->
                         <div class="resize-handle">
                             <div style="display: flex; justify-content: center; align-items: center;">
                                 <div class="dots"></div>
@@ -1417,17 +1620,18 @@
                     </div>
                     </div>
                     <div class="send">
-                        <div class="attach_file">
-                            <label for="myfile"><i class="fa fa-paperclip" for="myfile" ></i></label>
-                            <input type="file" id="myfile" name="myfile" multiple hidden>
-                        </div>
-                        <div class="buttonsEmail">
-                            <h6 class="btnClose button1">Close</h6>
-                            <h6 class="btnSend button2 send_notification_btn">Send</h6>
-                            <!-- <button class="btnClose button1">Close</button> -->
-                            <!-- <button class="btnSend button2 send_notification_btn">Send</button> -->
-                        </div>
+                      <div class="attach_file">
+                          <label for="myfile"><i class="fa fa-paperclip"></i></label>
+                          <input type="file" id="myfile" name="myfile" hidden multiple>
+                      </div>
+                     
+                      <div class="buttonsEmail">
+                          <h6 class="btnClose button1">Close</h6>
+                          <h6 class="btnSend button2 send_notification_btn">Send</h6>
+                      </div>
                     </div>
+                  
+                  
                 </div>
                 
                 <!-- Farhana Compose Code end-->
@@ -1500,14 +1704,22 @@
 
                       </div>
                     </div>
-                  <div class="email_options_right">Pagination</div>
+
+                    {% comment %} Pagination {% endcomment %}
+                    <div class="pagination">
+                      <button class="prev-page" disabled>◄</button>
+                      <span class="page-info">1-50 of 150</span>
+                      <button class="next-page">►</button>
+                    </div>
+                  
+                  
               </div>
   
               <!-- Inbox Section -->
               <div class="email_outer_container">
               <div class="email_inner_container inbox show">
                 {% for thread in threads %}
-                <div class="email_row_wrap">
+                <div class="email_row_wrap" title="event">
                   <div class="checkbox_star">
                     <input type="checkbox" id="select" name="select" class="bold">
                     <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
@@ -1527,121 +1739,180 @@
                   <!-- More inbox rows -->
               </div>
 
-              <!-- Sent Section -->
-              <div class="email_inner_container sent">
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">2nd August, 2024 9:00 AM</div>
-                  </div>
+            <!-- Sent Section -->
+            <div class="email_inner_container sent">
+              <div class="email_row_wrap" title="event">
+                <div class="checkbox_star">
+                  <input type="checkbox" id="select" name="select" class="bold">
+                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
                 </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+                <div class="email_row" onclick="markRead(this)">
+                  <div class="email_row_left">
+                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
                   </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">1st August, 2024 9:00 AM</div>
+                  <div class="email_content">
+                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
+                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
+                      elit. Quam, facere!</div>
                   </div>
-                </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">1st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                  <!-- More sent rows -->
-              </div>
-              <!-- Dev Mail Section -->
-              <div class="email_inner_container dev_mail">
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">1st August, 2024 9:00 AM</div>
-                  </div>
+                  <div class="email_date">2nd August, 2024 9:00 AM</div>
                 </div>
               </div>
-              <!-- Starred Mail Section -->
-              <div class="email_inner_container starred">
+              <div class="email_row_wrap" title="event">
+                <div class="checkbox_star">
+                  <input type="checkbox" id="select" name="select" class="bold">
+                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+                </div>
+                <div class="email_row" onclick="markRead(this)">
+                  <div class="email_row_left">
+                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                  </div>
+                  <div class="email_content">
+                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
+                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
+                      elit. Quam, facere!</div>
+                  </div>
+                  <div class="email_date">1st August, 2024 9:00 AM</div>
+                </div>
+              </div>
+              <div class="email_row_wrap" title="task">
+                <div class="checkbox_star">
+                  <input type="checkbox" id="select" name="select" class="bold">
+                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+                </div>
+                <div class="email_row" onclick="markRead(this)">
+                  <div class="email_row_left">
+                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                  </div>
+                  <div class="email_content">
+                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
+                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
+                      elit. Quam, facere!</div>
+                  </div>
+                  <div class="email_date">1st August, 2024 9:00 AM</div>
+                </div>
+              </div>
+              <!-- More sent rows -->
+            </div>
+
+            <!-- Dev Mail Section -->
+            <div class="email_inner_container dev_mail">
+              <div class="email_row_wrap" title="announsment">
+                <div class="checkbox_star">
+                  <input type="checkbox" id="select" name="select" class="bold">
+                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+                </div>
+                <div class="email_row" onclick="markRead(this)">
+                  <div class="email_row_left">
+                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                  </div>
+                  <div class="email_content">
+                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
+                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
+                      elit. Quam, facere!</div>
+                  </div>
+                  <div class="email_date">1st August, 2024 9:00 AM</div>
+                </div>
               </div>
             </div>
+            <!-- Starred Mail Section -->
+            <div class="email_inner_container starred">
+            </div>
           </div>
+
+          <div class="label-ops">
+            <div style="display: flex; justify-content: space-between; padding: 5px;">
+              <div style="display: flex;">
+                <input type="checkbox">
+                <div title="event" style="padding-left: 5px;">Event</div>
+              </div>
+              <div class="label-mail-cnt" title="mail-count">0</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 5px;">
+              <div style="display: flex;">
+                <input type="checkbox">
+                <div title="task" style="padding-left: 5px;">Task</div>
+              </div>
+              <div class="label-mail-cnt" title="mail-count">0</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 5px;">
+              <div style="display: flex;">
+                <input type="checkbox">
+                <div title="announsment" style="padding-left: 5px;">Announsment</div>
+              </div>
+              <div class="label-mail-cnt" title="mail-count">0</div>
+            </div>
+          </div>
+        </div>
       </div>
       <!--Email Section End-->
   </div>
   <!-- ############ PAGE END-->
   <!-- ############ LAYOUT END-->
 
-  <script>
-    // showing and hiding compose email button
-    const composeBtn = document.querySelector('.child-body');
-    const composeBody = document.querySelector('.compose');
-    const btnClose = document.querySelector('.btnClose');
-    composeBtn.addEventListener('click', function () {
-      composeBtn.classList.add('hidden');
-      composeBody.classList.remove('hidden');
-    })
+    <script>
+      // count the mails
+      function updateMailCounts() {
+        // Identify the currently active container
+        const activeContainer = document.querySelector('.email_inner_container.show');
 
-    btnClose.addEventListener('click', function () {
-      composeBtn.classList.remove('hidden');
-      composeBody.classList.add('hidden');
-    })  
+        if (!activeContainer) return;
 
-
-    //showing emails according to selected email box
-    function activeInbox(element, section) {
-      const emailRows = document.querySelectorAll('.email_row');
-      const screenWidth = window.innerWidth;
-
-      if(screenWidth >= 768){
-        emailRows.forEach(row => {
-          const starIcon = row.querySelector('.fa-star');
-          row.style.display = 'grid';  // Show all emails
-        });
-      }else{
-        emailRows.forEach(row => {
-          const starIcon = row.querySelector('.fa-star');
-          row.style.display = 'flex';  // Show all emails
+        // Get all label elements
+        const labels = document.querySelectorAll('.label-ops div[title]');
+        labels.forEach(labelElement => {
+          if(!(labelElement.className === 'label-mail-cnt')){
+            const label = labelElement.getAttribute('title');
+            const countElement = labelElement.parentElement.nextElementSibling;
+            
+            // Count the number of emails with this label in the active container
+            const count = activeContainer.querySelectorAll(`.email_row_wrap[title="${label}"]`).length;
+            
+            // Update the label-mail-cnt with the count
+            countElement.textContent = count;
+          }
         });
       }
-      const starEmailIcon = document.querySelector('.more_options .starInbox');
-      if(starEmailIcon.classList.contains('fa-star')){
-        starEmailIcon.classList.remove('fa-star');
-        starEmailIcon.classList.add('fa-star-o');
-      }
+
+      // Initial call to set counts based on the initially visible container
+      updateMailCounts();
+
+      // showing and hiding compose email button
+      const composeBtn = document.querySelector('.child-body');
+      const composeBody = document.querySelector('.compose');
+      const btnClose = document.querySelector('.btnClose');
+      composeBtn.addEventListener('click', function () {
+        composeBtn.classList.add('hidden');
+        composeBody.classList.remove('hidden');
+      })
+
+      btnClose.addEventListener('click', function () {
+        composeBtn.classList.remove('hidden');
+        composeBody.classList.add('hidden');
+      })
+
+
+      //showing emails according to selected email box
+      function activeInbox(element, section) {
+        const emailRows = document.querySelectorAll('.email_row');
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth >= 768) {
+          emailRows.forEach(row => {
+            const starIcon = row.querySelector('.fa-star');
+            row.style.display = 'grid';  // Show all emails
+          });
+        } else {
+          emailRows.forEach(row => {
+            const starIcon = row.querySelector('.fa-star');
+            row.style.display = 'flex';  // Show all emails
+          });
+        }
+        const starEmailIcon = document.querySelector('.more_options .starInbox');
+        if (starEmailIcon.classList.contains('fa-star')) {
+          starEmailIcon.classList.remove('fa-star');
+          starEmailIcon.classList.add('fa-star-o');
+        }
         // Hide all sections
         const sections = document.querySelectorAll('.email_inner_container');
         sections.forEach(sec => sec.classList.remove('show'));
@@ -1655,234 +1926,249 @@
 
         // Add 'active' class to the clicked link
         element.classList.add('active');
-    }
-
-
-    //starring an email
-    function starEmail(element){
-      if (element.classList.contains('fa-star-o')) {
-        element.classList.remove('fa-star-o');
-        element.classList.add('fa-star');
-      } 
-      else{
-        element.classList.add('fa-star-o');
-        element.classList.remove('fa-star');
+        // Update mail counts based on the selected container
+        updateMailCounts();
       }
 
-    }
+
+      //starring an email
+      function starEmail(element) {
+        if (element.classList.contains('fa-star-o')) {
+          element.classList.remove('fa-star-o');
+          element.classList.add('fa-star');
+        }
+        else {
+          element.classList.add('fa-star-o');
+          element.classList.remove('fa-star');
+        }
+
+      }
 
 
       //showing starred emails
-      function showStarredEmails(element){
+      function showStarredEmails(element) {
 
-      //changing star icon
-      if (element.classList.contains('fa-star-o')) {
-        element.classList.remove('fa-star-o');
-        element.classList.add('fa-star');
-      } 
-      else{
-        element.classList.add('fa-star-o');
-        element.classList.remove('fa-star');
-      }
-
-      // Tanvir's parts starts
-
-      const emailRows = document.querySelectorAll('.email_row_wrap');
-    
-      // Loop through all email rows and show only starred emails
-      emailRows.forEach(row => {
-        const starIcon = row.querySelector('.fa-star');
-        if (element.classList.contains('fa-star')){
-          if (starIcon && starIcon.classList.contains('fa-star')) {
-            row.style.display = 'flex';  // Show starred email
-          } 
-          else {
-            row.style.display = 'none';  // Hide non-starred email
-          }
+        //changing star icon
+        if (element.classList.contains('fa-star-o')) {
+          element.classList.remove('fa-star-o');
+          element.classList.add('fa-star');
         }
-        else{
-          row.style.display = 'flex';  // Show all emails
-        }
-        
-    });
-    }
-    
-    
-    // Select All functionality
-    document.getElementById('select_all').addEventListener('change', function() {
-      const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]');
-      checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-    });
-
-    // Delete Selected Emails functionality
-    document.querySelector('.fa-trash-o').addEventListener('click', function() {
-      const selectAllCheck = document.getElementById('select_all');
-      if (selectAllCheck.checked){
-        if (document.querySelector('.inbox').classList.contains('show')) {
-          const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const emailRow = checkbox.closest('.email_row_wrap');
-          emailRow.remove();
-        });
-        } else if(document.querySelector('.sent').classList.contains('show')){
-          const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const emailRow = checkbox.closest('.email_row_wrap');
-          emailRow.remove();
-        });
-        } else if(document.querySelector('.dev_mail').classList.contains('show')){
-          const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const emailRow = checkbox.closest('.email_row_wrap');
-          emailRow.remove();
-        });
+        else {
+          element.classList.add('fa-star-o');
+          element.classList.remove('fa-star');
         }
 
-      }
-      else{const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
-      checkboxes.forEach(checkbox => {
-        const emailRow = checkbox.closest('.email_row_wrap');
-        emailRow.remove();
-      });
-    }
-    });
-    // Tanvir's parts ends
-    //Mark as read on click
-    function markRead(element){
-      element.previousElementSibling.style.backgroundColor = 'white';
-      element.style.backgroundColor = 'white';
+        // Tanvir's parts starts
 
-  }
-    
-    // Mark as Read Selected Emails functionality
-    document.querySelector('.fa-envelope-open-o').addEventListener('click', function() {
-      const selectAllCheck = document.getElementById('select_all');
-      if (selectAllCheck.checked){
-        if (document.querySelector('.inbox').classList.contains('show')) {
-          const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'white';
-          checkBoxStar.style.backgroundColor = 'white';
-        });
-        } else if(document.querySelector('.sent').classList.contains('show')){
-          const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'white';
-          checkBoxStar.style.backgroundColor = 'white';
-        });
-        } else if(document.querySelector('.dev_mail').classList.contains('show')){
-          const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'white';
-          checkBoxStar.style.backgroundColor = 'white';
-        });
-        }
+        const emailRows = document.querySelectorAll('.email_row_wrap');
 
-      }else{
-        const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
-        checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'white';
-          checkBoxStar.style.backgroundColor = 'white';
-        });
-      }
-    });
-    
-    // Mark as unread Selected Emails functionality
-    document.querySelector('.fa-envelope-o').addEventListener('click', function() {
-      const selectAllCheck = document.getElementById('select_all');
-      if (selectAllCheck.checked){
-        if (document.querySelector('.inbox').classList.contains('show')) {
-          const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'aliceblue';
-          checkBoxStar.style.backgroundColor = 'aliceblue';
-        });
-        } else if(document.querySelector('.sent').classList.contains('show')){
-          const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'aliceblue';
-          checkBoxStar.style.backgroundColor = 'aliceblue';
-        });
-        } else if(document.querySelector('.dev_mail').classList.contains('show')){
-          const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
-          checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'aliceblue';
-          checkBoxStar.style.backgroundColor = 'aliceblue';
-        });
-        }
-
-      }else{
-        const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
-        checkboxes.forEach(checkbox => {
-          const checkBoxStar = checkbox.closest('.checkbox_star');
-          const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-          emailRow.style.backgroundColor = 'aliceblue';
-          checkBoxStar.style.backgroundColor = 'aliceblue';
-        });
-      }
-    });
-
-    // show icons when checkbox is checked
-    const checkedBoxes = document.querySelectorAll('input[type="checkbox"]');
-    const markAsRead = document.querySelector('.fa-envelope-open-o');
-    const markAsUnread = document.querySelector('.fa-envelope-o');
-    const deleteEmail = document.querySelector('.fa-trash-o');
-    
-
-    checkedBoxes.forEach(box => {
-      box.addEventListener('click', () => {
-            // Check if any checkbox is checked
-            const isAnyChecked = Array.from(checkedBoxes).some(checkbox => checkbox.checked);
-
-            if (isAnyChecked) {
-                markAsRead.style.opacity='1';
-                markAsUnread.style.opacity='1';
-                deleteEmail.style.opacity='1';
-              } else {
-                markAsRead.style.opacity='0';
-                markAsUnread.style.opacity='0';
-                deleteEmail.style.opacity='0';
+        // Loop through all email rows and show only starred emails
+        emailRows.forEach(row => {
+          const starIcon = row.querySelector('.fa-star');
+          if (element.classList.contains('fa-star')) {
+            if (starIcon && starIcon.classList.contains('fa-star')) {
+              row.style.display = 'flex';  // Show starred email
             }
+            else {
+              row.style.display = 'none';  // Hide non-starred email
+            }
+          }
+          else {
+            row.style.display = 'flex';  // Show all emails
+          }
+
         });
-    }); 
+      }
 
 
-    // Get the modal
-    var modal1 = document.getElementById("modal1");
-    
-    // Get the button that opens the modal
-    var btn1 = document.querySelector(".send_notification_btn");
-    
-    // Get the <span> element that closes the modal
-    var span1 = document.getElementsByClassName("close1")[0];
-    
-    // When the user clicks the button, open the modal 
-    btn1.onclick = function() {
-    modal1.style.transform = 'translateY(0px)';
-    modal1.style.zIndex = '103100';
-    modal1.style.opacity = '1';
-    }
+      // Select All functionality
+      document.getElementById('select_all').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+      });
 
-    // When the user clicks on <span> (x), close the modal
-    span1.onclick = function() {
-    modal1.style.transform = 'translateY(-50px)';
-    modal1.style.zIndex = '-100';
-    modal1.style.opacity = '0';
-    }
+      // Delete Selected Emails functionality
+      document.querySelector('.fa-trash-o').addEventListener('click', function () {
+        const selectAllCheck = document.getElementById('select_all');
+        if (selectAllCheck.checked) {
+          if (document.querySelector('.inbox').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const emailRow = checkbox.closest('.email_row_wrap');
+              emailRow.remove();
+            });
+          } else if (document.querySelector('.sent').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const emailRow = checkbox.closest('.email_row_wrap');
+              emailRow.remove();
+            });
+          } else if (document.querySelector('.dev_mail').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const emailRow = checkbox.closest('.email_row_wrap');
+              emailRow.remove();
+            });
+          }
+
+        }
+        else {
+          const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
+          checkboxes.forEach(checkbox => {
+            const emailRow = checkbox.closest('.email_row_wrap');
+            emailRow.remove();
+          });
+        }
+      });
+      // Tanvir's parts ends
+      //Mark as read on click
+      function markRead(element) {
+        element.previousElementSibling.style.backgroundColor = 'white';
+        element.style.backgroundColor = 'white';
+
+      }
+
+      // Mark as Read Selected Emails functionality
+      document.querySelector('.fa-envelope-open-o').addEventListener('click', function () {
+        const selectAllCheck = document.getElementById('select_all');
+        if (selectAllCheck.checked) {
+          if (document.querySelector('.inbox').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'white';
+              checkBoxStar.style.backgroundColor = 'white';
+            });
+          } else if (document.querySelector('.sent').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'white';
+              checkBoxStar.style.backgroundColor = 'white';
+            });
+          } else if (document.querySelector('.dev_mail').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'white';
+              checkBoxStar.style.backgroundColor = 'white';
+            });
+          }
+
+        } else {
+          const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
+          checkboxes.forEach(checkbox => {
+            const checkBoxStar = checkbox.closest('.checkbox_star');
+            const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+            emailRow.style.backgroundColor = 'white';
+            checkBoxStar.style.backgroundColor = 'white';
+          });
+        }
+      });
+
+      // Mark as unread Selected Emails functionality
+      document.querySelector('.fa-envelope-o').addEventListener('click', function () {
+        const selectAllCheck = document.getElementById('select_all');
+        if (selectAllCheck.checked) {
+          if (document.querySelector('.inbox').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'aliceblue';
+              checkBoxStar.style.backgroundColor = 'aliceblue';
+            });
+          } else if (document.querySelector('.sent').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'aliceblue';
+              checkBoxStar.style.backgroundColor = 'aliceblue';
+            });
+          } else if (document.querySelector('.dev_mail').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'aliceblue';
+              checkBoxStar.style.backgroundColor = 'aliceblue';
+            });
+          }
+
+        } else {
+          const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
+          checkboxes.forEach(checkbox => {
+            const checkBoxStar = checkbox.closest('.checkbox_star');
+            const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+            emailRow.style.backgroundColor = 'aliceblue';
+            checkBoxStar.style.backgroundColor = 'aliceblue';
+          });
+        }
+      });
+
+      // show icons when checkbox is checked
+      const checkedBoxes = document.querySelectorAll('.checkbox_star input[type="checkbox"]');
+      const markAsRead = document.querySelector('.fa-envelope-open-o');
+      const markAsUnread = document.querySelector('.fa-envelope-o');
+      const deleteEmail = document.querySelector('.fa-trash-o');
+
+      // for individual check box 
+      checkedBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+          // Check if any checkbox is checked
+          const isAnyChecked = Array.from(checkedBoxes).some(checkbox => checkbox.checked);
+
+          if (isAnyChecked) {
+            markAsRead.style.opacity = '1';
+            markAsUnread.style.opacity = '1';
+            deleteEmail.style.opacity = '1';
+          } else {
+            markAsRead.style.opacity = '0';
+            markAsUnread.style.opacity = '0';
+            deleteEmail.style.opacity = '0';
+          }
+        });
+      });
+      // for select all checkbox
+      document.querySelector('.select_all_option input[type="checkbox"]').addEventListener('click', () => {
+        if (document.querySelector('.select_all_option input[type="checkbox"]').checked) {
+          markAsRead.style.opacity = '1';
+          markAsUnread.style.opacity = '1';
+          deleteEmail.style.opacity = '1';
+        } else {
+          markAsRead.style.opacity = '0';
+          markAsUnread.style.opacity = '0';
+          deleteEmail.style.opacity = '0';
+        }
+      });
+
+
+      // Get the modal
+      var modal1 = document.getElementById("modal1");
+
+      // Get the button that opens the modal
+      var btn1 = document.querySelector(".send_notification_btn");
+
+      // Get the <span> element that closes the modal
+      var span1 = document.getElementsByClassName("close1")[0];
+
+      // When the user clicks the button, open the modal 
+      btn1.onclick = function () {
+        modal1.style.transform = 'translateY(0px)';
+        modal1.style.zIndex = '103100';
+        modal1.style.opacity = '1';
+      }
+
+      // When the user clicks on <span> (x), close the modal
+      span1.onclick = function () {
+        modal1.style.transform = 'translateY(-50px)';
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
+      }
 
     function EmailSent(){
           // Capture values from input fields
@@ -1948,137 +2234,209 @@
           var span2 = document.getElementsByClassName("close2")[0];
           
 
-          // When the user clicks on <span> (x), close the modal
-          span2.onclick = function() {
+        // When the user clicks on <span> (x), close the modal
+        span2.onclick = function () {
           modal2.style.transform = 'translateY(-50px)';
           modal2.style.zIndex = '-100';
           modal2.style.opacity = '0';
-          }
-    }
+        }
+      }
 
-    function ScheduleEmail(){
-          var modal1 = document.getElementById("modal1");
-          modal1.style.zIndex = '-100';
-          modal1.style.opacity = '0';
-          // Get the modal
-          var modal3 = document.getElementById("modal3");
-          modal3.style.transform = 'translateY(0px)';
-          modal3.style.zIndex = '103100';
-          modal3.style.opacity = '1';
-          
-          // Get the send button
-          var btn3 = document.querySelector(".scadule-send");
-          
-          btn3.onclick = function() {
-            EmailSent();
-          }
-          // Get the <span> element that closes the modal
-          var span3 = document.getElementsByClassName("close3")[0];
-          
-          // When the user clicks on <span> (x), close the modal
-          span3.onclick = function() {
+      function ScheduleEmail() {
+        var modal1 = document.getElementById("modal1");
+        modal1.style.zIndex = '-100';
+        modal1.style.opacity = '0';
+        // Get the modal
+        var modal3 = document.getElementById("modal3");
+        modal3.style.transform = 'translateY(0px)';
+        modal3.style.zIndex = '103100';
+        modal3.style.opacity = '1';
+
+        // Get the send button
+        var btn3 = document.querySelector(".scadule-send");
+
+        btn3.onclick = function () {
+          EmailSent();
+        }
+        // Get the <span> element that closes the modal
+        var span3 = document.getElementsByClassName("close3")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span3.onclick = function () {
           modal3.style.transform = 'translateY(-50px)';
           modal3.style.zIndex = '-100';
           modal3.style.opacity = '0';
+        }
+      }
+    </script>
+
+    <!-- mail soet using label -->
+    <script>
+      // Select the elements
+      const labelIcon = document.querySelector('.fa-folder-o[title="Label"]');
+      const labelOps = document.querySelector('.label-ops');
+
+      // Function to show or hide the selection box
+      function toggleLabelOps(event) {
+          // Toggle the display property
+          if (labelOps.style.display === 'none' || labelOps.style.display === '') {
+              labelOps.style.display = 'block';
+          } else {
+              labelOps.style.display = 'none';
           }
-    }
-  </script>
-  <!--ckeditor js-->
-  <!-- getEditorContent() function to get the content of this editor -->
-  <script>
-    function getEditorContent() {
+          event.stopPropagation(); // Prevent the event from bubbling up to the document
+      }
+
+      // Function to hide the selection box if clicked outside
+      function hideLabelOps(event) {
+          if (!labelOps.contains(event.target) && event.target !== labelIcon) {
+              labelOps.style.display = 'none';
+          }
+      }
+
+      // Attach event listeners
+      labelIcon.addEventListener('click', toggleLabelOps);
+      document.addEventListener('click', hideLabelOps);
+
+      function filterEmails() {
+        // Get all checkboxes and their associated labels
+        const checkboxes = document.querySelectorAll('.label-ops input[type="checkbox"]');
+        
+        // Initialize an array to store selected labels
+        const selectedLabels = [];
+
+        // Loop through the checkboxes and add the selected ones to the array
+        checkboxes.forEach(checkbox => {
+          if (checkbox.checked) {
+            // Get the associated label title
+            const label = checkbox.nextElementSibling.getAttribute('title');
+            selectedLabels.push(label);
+          }
+        });
+
+        // Get all email containers
+        const inboxEmails = document.querySelectorAll('.email_inner_container.inbox .email_row_wrap');
+        const sentEmails = document.querySelectorAll('.email_inner_container.sent .email_row_wrap');
+        const devMailEmails = document.querySelectorAll('.email_inner_container.dev_mail .email_row_wrap');
+
+        // Combine all emails into one list
+        const allEmails = [...inboxEmails, ...sentEmails, ...devMailEmails];
+
+        // Show or hide emails based on selected labels
+        allEmails.forEach(email => {
+          const emailLabel = email.getAttribute('title');
+
+          if (selectedLabels.length === 0 || selectedLabels.includes(emailLabel)) {
+            email.style.display = ''; // Show email
+          } else {
+            email.style.display = 'none'; // Hide email
+          }
+        });
+      }
+
+      // Attach event listeners to checkboxes to trigger filtering on change
+      document.querySelectorAll('.label-ops input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', filterEmails);
+      });
+
+
+    </script>
+    <!--WFReditor js-->
+    <!-- getEditorContent() function to get the content of this editor -->
+    <script>
+      function getEditorContent() {
         const editor = document.querySelector('.editor');
         return editor.innerHTML;
-    }
-</script>
+      }
+    </script>
 
-<!-- shortcut title selector -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
+    <!-- shortcut title selector -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
         const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
         const isLinux = navigator.platform.toUpperCase().indexOf('LINUX') >= 0;
 
         function updateToolTitles() {
-            const shortcuts = {
-                undo: isMac ? '⌘ + Z' : 'Ctrl + Z',
-                redo: isMac ? '⌘ + ⇧ + Z' : 'Ctrl + Y',
-                bold: isMac ? '⌘ + B' : 'Ctrl + B',
-                italic: isMac ? '⌘ + I' : 'Ctrl + I',
-                underline: isMac ? '⌘ + U' : 'Ctrl + U',
-                strikeThrough: isLinux ? '' : '⌃ + ⇧ + S',
-                justifyLeft: isMac ? '⌘ + L' : 'Ctrl + L',
-                justifyCenter: isMac ? '⌘ + E' : 'Ctrl + E',
-                justifyRight: isMac ? '⌘ + R' : 'Ctrl + R',
-                justifyFull: isMac ? '⌘ + J' : 'Ctrl + J',
-                insertUnorderedList: isMac ? '⌘ + ⇧ + L' : '',
-                insertOrderedList: isMac ? '⌘ + ⇧ + 7' : '',
-                indent: isMac ? '⌘ + ]' : 'Ctrl + ]',
-                outdent: isMac ? '⌘ + [' : 'Ctrl + [',
-                // Add more shortcuts as needed
-            };
+          const shortcuts = {
+            undo: isMac ? '⌘ + Z' : 'Ctrl + Z',
+            redo: isMac ? '⌘ + ⇧ + Z' : 'Ctrl + Y',
+            bold: isMac ? '⌘ + B' : 'Ctrl + B',
+            italic: isMac ? '⌘ + I' : 'Ctrl + I',
+            underline: isMac ? '⌘ + U' : 'Ctrl + U',
+            strikeThrough: isLinux ? '' : '⌃ + ⇧ + S',
+            justifyLeft: isMac ? '⌘ + L' : 'Ctrl + L',
+            justifyCenter: isMac ? '⌘ + E' : 'Ctrl + E',
+            justifyRight: isMac ? '⌘ + R' : 'Ctrl + R',
+            justifyFull: isMac ? '⌘ + J' : 'Ctrl + J',
+            insertUnorderedList: isMac ? '⌘ + ⇧ + L' : '',
+            insertOrderedList: isMac ? '⌘ + ⇧ + 7' : '',
+            indent: isMac ? '⌘ + ]' : 'Ctrl + ]',
+            outdent: isMac ? '⌘ + [' : 'Ctrl + [',
+            // Add more shortcuts as needed
+          };
 
-            document.querySelector('button[onclick="formatText(\'undo\')"]').title = `Undo (${shortcuts.undo})`;
-            document.querySelector('button[onclick="formatText(\'redo\')"]').title = `Redo (${shortcuts.redo})`;
-            document.querySelector('button[onclick="formatText(\'bold\')"]').title = `Bold (${shortcuts.bold})`;
-            document.querySelector('button[onclick="formatText(\'italic\')"]').title = `Italic (${shortcuts.italic})`;
-            document.querySelector('button[onclick="formatText(\'underline\')"]').title = `Underline (${shortcuts.underline})`;
-            document.querySelector('button[onclick="formatText(\'strikeThrough\')"]').title = `Strikethrough (${shortcuts.strikeThrough})`;
-            document.querySelector('button[onclick="formatText(\'justifyLeft\')"]').title = `Strikethrough (${shortcuts.justifyLeft})`;
-            document.querySelector('button[onclick="formatText(\'justifyCenter\')"]').title = `Strikethrough (${shortcuts.justifyCenter})`;
-            document.querySelector('button[onclick="formatText(\'justifyRight\')"]').title = `Strikethrough (${shortcuts.justifyRight})`;
-            document.querySelector('button[onclick="formatText(\'justifyFull\')"]').title = `Strikethrough (${shortcuts.justifyFull})`;
-            document.querySelector('button[onclick="formatText(\'insertUnorderedList\')"]').title = `Strikethrough (${shortcuts.insertUnorderedList})`;
-            document.querySelector('button[onclick="formatText(\'insertOrderedList\')"]').title = `Strikethrough (${shortcuts.insertOrderedList})`;
-            document.querySelector('button[onclick="formatText(\'indent\')"]').title = `Strikethrough (${shortcuts.indent})`;
-            document.querySelector('button[onclick="formatText(\'outdent\')"]').title = `Strikethrough (${shortcuts.outdent})`;
+          document.querySelector('button[onclick="formatText(\'undo\')"]').title = `Undo (${shortcuts.undo})`;
+          document.querySelector('button[onclick="formatText(\'redo\')"]').title = `Redo (${shortcuts.redo})`;
+          document.querySelector('button[onclick="formatText(\'bold\')"]').title = `Bold (${shortcuts.bold})`;
+          document.querySelector('button[onclick="formatText(\'italic\')"]').title = `Italic (${shortcuts.italic})`;
+          document.querySelector('button[onclick="formatText(\'underline\')"]').title = `Underline (${shortcuts.underline})`;
+          document.querySelector('button[onclick="formatText(\'strikeThrough\')"]').title = `Strikethrough (${shortcuts.strikeThrough})`;
+          document.querySelector('button[onclick="formatText(\'justifyLeft\')"]').title = `Strikethrough (${shortcuts.justifyLeft})`;
+          document.querySelector('button[onclick="formatText(\'justifyCenter\')"]').title = `Strikethrough (${shortcuts.justifyCenter})`;
+          document.querySelector('button[onclick="formatText(\'justifyRight\')"]').title = `Strikethrough (${shortcuts.justifyRight})`;
+          document.querySelector('button[onclick="formatText(\'justifyFull\')"]').title = `Strikethrough (${shortcuts.justifyFull})`;
+          document.querySelector('button[onclick="formatText(\'insertUnorderedList\')"]').title = `Strikethrough (${shortcuts.insertUnorderedList})`;
+          document.querySelector('button[onclick="formatText(\'insertOrderedList\')"]').title = `Strikethrough (${shortcuts.insertOrderedList})`;
+          document.querySelector('button[onclick="formatText(\'indent\')"]').title = `Strikethrough (${shortcuts.indent})`;
+          document.querySelector('button[onclick="formatText(\'outdent\')"]').title = `Strikethrough (${shortcuts.outdent})`;
         }
 
         updateToolTitles();
-    });
-</script>
+      });
+    </script>
 
-<!-- common -->
-<script>
-    function formatText(command, value = null) {
+    <!-- common -->
+    <script>
+      function formatText(command, value = null) {
         document.execCommand(command, false, value);
         updateActiveButtons();
         document.querySelector('.editor').focus();
-    }
+      }
 
-    const handle = document.querySelector('.resize-handle');
-    let startY, startHeight;
+      const handle = document.querySelector('.resize-handle');
+      let startY, startHeight;
 
-    handle.addEventListener('mousedown', (e) => {
+      handle.addEventListener('mousedown', (e) => {
         startY = e.clientY;
         startHeight = parseInt(document.defaultView.getComputedStyle(document.querySelector('.editor')).height, 10);
 
         document.documentElement.addEventListener('mousemove', doDrag);
         document.documentElement.addEventListener('mouseup', stopDrag);
-    });
+      });
 
-    function doDrag(e) {
+      function doDrag(e) {
         document.querySelector('.editor').style.height = (startHeight + e.clientY - startY) + 'px';
-    }
+      }
 
-    function stopDrag() {
+      function stopDrag() {
         document.documentElement.removeEventListener('mousemove', doDrag);
         document.documentElement.removeEventListener('mouseup', stopDrag);
-    }
+      }
 
-    function toggleExpand() {
+      function toggleExpand() {
         const editorContainer = document.querySelector('.editor-container');
         editorContainer.classList.toggle('expanded');
         const button = document.querySelector('.expand-editor');
-        if(document.querySelector('.expanded')){
-            height = document.querySelector('.toolbar').clientHeight + document.querySelector('.resize-handle').clientHeight -8;
-            document.querySelector('.editor').style.height = `calc(100% - ${height}px)`;
-        }else{
-            document.querySelector('.editor').style.height = `200px`;
+        if (document.querySelector('.expanded')) {
+          height = document.querySelector('.toolbar').clientHeight + document.querySelector('.resize-handle').clientHeight - 8;
+          document.querySelector('.editor').style.height = `calc(100% - ${height}px)`;
+        } else {
+          document.querySelector('.editor').style.height = `200px`;
         }
         document.querySelector('.editor').focus();
-    }
+      }
 
-    function updateActiveButtons() {
+      function updateActiveButtons() {
         const boldButton = document.querySelector('button[title="Bold"]');
         const italicButton = document.querySelector('button[title="Italic"]');
         const underlineButton = document.querySelector('button[title="Underline"]');
@@ -2089,32 +2447,32 @@
         underlineButton.classList.toggle('active', document.queryCommandState('underline'));
 
         document.querySelector('.editor').focus();
-    }
-    document.querySelector('.editor').addEventListener('mouseup', updateActiveButtons);
-</script>
+      }
+      document.querySelector('.editor').addEventListener('mouseup', updateActiveButtons);
+    </script>
 
-<!-- help modal -->
-<script>
-    function openHelpModal() {
+    <!-- help modal -->
+    <script>
+      function openHelpModal() {
         document.getElementById('helpModal').style.display = 'block';
-    }
+      }
 
-    function closeModal() {
+      function closeModal() {
         document.getElementById('helpModal').style.display = 'none';
-    }
-</script>
+      }
+    </script>
 
-<!-- image modal -->
-<script>
-    function openImageModal() {
+    <!-- image modal -->
+    <script>
+      function openImageModal() {
         document.getElementById('imageModal').style.display = 'block';
-    }
+      }
 
-    function closeImageModal() {
+      function closeImageModal() {
         document.getElementById('imageModal').style.display = 'none';
-    }
+      }
 
-    function insertImage() {
+      function insertImage() {
         const url = document.getElementById('imageURL').value;
         const fileInput = document.getElementById('imageFile');
         const width = document.getElementById('imageWidth').value;
@@ -2123,73 +2481,73 @@
         let imageUrl = url;
 
         if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imageUrl = e.target.result;
-                insertImageIntoEditor(imageUrl, width, height);
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        } else if (url) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            imageUrl = e.target.result;
             insertImageIntoEditor(imageUrl, width, height);
+          };
+          reader.readAsDataURL(fileInput.files[0]);
+        } else if (url) {
+          insertImageIntoEditor(imageUrl, width, height);
         }
 
         closeImageModal();
         document.querySelector('.editor').focus();
-    }
+      }
 
-    function insertImageIntoEditor(url, width, height) {
+      function insertImageIntoEditor(url, width, height) {
         let style = `width:`;
-        if (width){
-            style += ` ${width}px`
-        }else{
-            style += ` 100%;`
+        if (width) {
+          style += ` ${width}px`
+        } else {
+          style += ` 100%;`
         }
         if (height) {
-            style += ` height: ${height}px;`;
+          style += ` height: ${height}px;`;
         }
 
         const imgTag = `<img src="${url}" style="${style}">`;
         document.execCommand('insertHTML', false, imgTag);
-    }
+      }
 
-</script>
+    </script>
 
-<!-- link modal -->
-<script>
-    function openLinkModal() {
+    <!-- link modal -->
+    <script>
+      function openLinkModal() {
         document.getElementById('linkModal').style.display = 'block';
-    }
+      }
 
-    function closeLinkModal() {
+      function closeLinkModal() {
         document.getElementById('linkModal').style.display = 'none';
-    }
+      }
 
-    function insertLink() {
+      function insertLink() {
         const url = document.getElementById('linkURL').value;
         const text = document.getElementById('linkText').value;
 
         if (url) {
-            const linkTag = `<a href="${url}" target="_blank">${text || url}</a>`;
-            document.execCommand('insertHTML', false, linkTag);
+          const linkTag = `<a href="${url}" target="_blank">${text || url}</a>`;
+          document.execCommand('insertHTML', false, linkTag);
         }
 
         closeLinkModal();
         document.querySelector('.editor').focus();
-    }
+      }
 
-</script>
+    </script>
 
-<!-- table modal -->
-<script>
-    function openTableModal() {
+    <!-- table modal -->
+    <script>
+      function openTableModal() {
         document.getElementById('tableModal').style.display = 'block';
-    }
+      }
 
-    function closeTableModal() {
+      function closeTableModal() {
         document.getElementById('tableModal').style.display = 'none';
-    }
+      }
 
-    function insertTable() {
+      function insertTable() {
         const rows = document.getElementById('tableRows').value;
         const cols = document.getElementById('tableCols').value;
         const width = document.getElementById('tableWidth').value || '100%';
@@ -2198,97 +2556,227 @@
         console.log(height, '.')
         console.log(width, '.')
         if (rows > 0 && cols > 0) {
-            let table = `<table style="width: ${width}; height: ${height}; border-collapse: collapse; resize: both;">`;
+          let table = `<table style="width: ${width}; height: ${height}; border-collapse: collapse; resize: both;">`;
 
-            if (headers === 'row' || headers === 'both') {
-                table += '<tr>';
-                for (let j = 0; j < cols; j++) {
-                    table += '<th style="border: 1px solid #ccc; padding: 8px; background-color: #f2f2f2;"></th>';
-                }
-                table += '</tr>';
+          if (headers === 'row' || headers === 'both') {
+            table += '<tr>';
+            for (let j = 0; j < cols; j++) {
+              table += '<th style="border: 1px solid #ccc; padding: 8px; background-color: #f2f2f2;"></th>';
             }
+            table += '</tr>';
+          }
 
-            for (let i = 0; i < rows; i++) {
-                table += '<tr>';
-                for (let j = 0; j < cols; j++) {
-                    if ((headers === 'col' || headers === 'both') && j === 0) {
-                        table += '<th style="border: 1px solid #ccc; padding: 8px; background-color: #f2f2f2;"></th>';
-                    } else {
-                        table += '<td style="border: 1px solid #ccc; padding: 8px; resize: both;">&nbsp;</td>';
-                    }
-                }
-                table += '</tr>';
+          for (let i = 0; i < rows; i++) {
+            table += '<tr>';
+            for (let j = 0; j < cols; j++) {
+              if ((headers === 'col' || headers === 'both') && j === 0) {
+                table += '<th style="border: 1px solid #ccc; padding: 8px; background-color: #f2f2f2;"></th>';
+              } else {
+                table += '<td style="border: 1px solid #ccc; padding: 8px; resize: both;">&nbsp;</td>';
+              }
             }
+            table += '</tr>';
+          }
 
-            table += '</table><br>';
-            document.querySelector('.editor').focus();
-            document.execCommand('insertHTML', false, table);
+          table += '</table><br>';
+          document.querySelector('.editor').focus();
+          document.execCommand('insertHTML', false, table);
         }
 
         closeTableModal();
-    }
+      }
 
-</script>
+    </script>
 
-<!-- modal controll -->
-<script>
-    window.onclick = function(event) {
+    <!-- modal controll -->
+    <script>
+      window.onclick = function (event) {
         var modal = document.getElementById('imageModal');
         if (event.target === modal) {
-            closeImageModal();
-            document.querySelector('.editor').focus();
+          closeImageModal();
+          document.querySelector('.editor').focus();
         }
         modal = document.getElementById('helpModal');
         if (event.target === modal) {
-            closeModal();
-            document.querySelector('.editor').focus();
+          closeModal();
+          document.querySelector('.editor').focus();
         }
         modal = document.getElementById('linkModal');
         if (event.target === modal) {
-            closeLinkModal();
-            document.querySelector('.editor').focus();
+          closeLinkModal();
+          document.querySelector('.editor').focus();
         }
         modal = document.getElementById('tableModal');
         if (event.target === modal) {
-            closeTableModal();
-            document.querySelector('.editor').focus();
+          closeTableModal();
+          document.querySelector('.editor').focus();
         }
-    }
-</script>
+      }
+    </script>
 
-<!--input tags-->
-<script>
-  const tagContainer = document.getElementById('tagContainer');
-  const tagInput = document.getElementById('tagInput');
+    <!--input tags-->
+    <script>
+      const tagContainer = document.getElementById('tagContainer');
+      const tagInput = document.getElementById('tagInput');
 
-  tagInput.addEventListener('keydown', function(event) {
-      if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+      tagInput.addEventListener('keydown', function (event) {
+        if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
           event.preventDefault(); // Prevent the space/comma from being typed
           addTag(tagInput.value.trim());
           tagInput.value = ''; // Clear the input field
-      }
-  });
+        }
+      });
 
-  function addTag(tagText) {
-      if (tagText === '') return;
+      function addTag(tagText) {
+        if (tagText === '') return;
 
-      const tag = document.createElement('div');
-      tag.className = 'tag';
+        const tag = document.createElement('div');
+        tag.className = 'tag';
 
-      const span = document.createElement('span');
-      span.textContent = tagText;
+        const span = document.createElement('span');
+        span.textContent = tagText;
 
-      const removeButton = document.createElement('span');
-      removeButton.className = 'remove-tag';
-      removeButton.innerHTML = '&times;'; // Unicode for a multiplication sign (X)
-      removeButton.onclick = () => {
+        const removeButton = document.createElement('span');
+        removeButton.className = 'remove-tag';
+        removeButton.innerHTML = '&times;'; // Unicode for a multiplication sign (X)
+        removeButton.onclick = () => {
           tagContainer.removeChild(tag);
-      };
+        };
 
       tag.appendChild(span);
       tag.appendChild(removeButton);
       tagContainer.insertBefore(tag, tagInput); // Add the tag before the input field
   }
+</script>
+<script>
+    //pagination
+    const emailsPerPage = 50;
+    let currentPage = 1;
+    let totalEmails = document.querySelectorAll('.email_row_wrap').length;
+
+    // Update Pagination Info Function
+    function updatePaginationInfo() {
+        const startEmail = (currentPage - 1) * emailsPerPage + 1;
+        const endEmail = Math.min(currentPage * emailsPerPage, totalEmails);
+        document.querySelector('.page-info').textContent = `${startEmail}-${endEmail} of ${totalEmails}`;
+
+        // Enable/Disable buttons based on page
+        document.querySelector('.prev-page').disabled = currentPage === 1;
+        document.querySelector('.next-page').disabled = endEmail >= totalEmails;
+    }
+
+    // Show Emails for the Current Page
+    function showEmailsForPage() {
+        const emailRows = document.querySelectorAll('.email_row_wrap');
+        emailRows.forEach((row, index) => {
+            if (index >= (currentPage - 1) * emailsPerPage && index < currentPage * emailsPerPage) {
+              row.style.display = 'flex'; // Show the email row
+            } else {
+                row.style.display = 'none'; // Hide the email row
+            }
+        });
+    }
+
+    // Event Listeners for Pagination Buttons
+    document.querySelector('.prev-page').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showEmailsForPage();
+            updatePaginationInfo();
+        }
+    });
+
+    document.querySelector('.next-page').addEventListener('click', () => {
+        if (currentPage * emailsPerPage < totalEmails) {
+            currentPage++;
+            showEmailsForPage();
+            updatePaginationInfo();
+        }
+    });
+
+    showEmailsForPage();
+    updatePaginationInfo();
+
+
+</script>
+
+<script>
+  //for attachments
+  document.getElementById('myfile').addEventListener('change', function(e) {
+    const filePreviewContainer = document.getElementById('filePreviewContainer');
+    Array.from(e.target.files).forEach(file => {
+        const filePreview = document.createElement('div');
+        filePreview.className = 'file-preview';
+        
+        const fileIcon = document.createElement('i');
+        fileIcon.className = 'fa fa-file file-icon';
+        
+        const fileName = document.createElement('span');
+        fileName.className = 'file-name';
+        fileName.textContent = file.name;
+        
+        const removeFile = document.createElement('span');
+        removeFile.className = 'remove-file';
+        removeFile.innerHTML = '&times;';
+        
+        removeFile.addEventListener('click', () => {
+            filePreview.remove(); 
+            // Optional: remove file from the input element as well
+        });
+        
+        filePreview.appendChild(fileIcon);
+        filePreview.appendChild(fileName);
+        filePreview.appendChild(removeFile);
+        filePreviewContainer.appendChild(filePreview);
+    });
+  });
+
+  // Send Button click event
+  document.querySelector('.btnSend').addEventListener('click', function() {
+      const files = document.getElementById('myfile').files;
+      if (files.length === 0) {
+          alert("No files attached.");
+          return;
+      }
+
+      
+      alert(`${files.length} file(s) attached.`);
+  });
+
+  function handleFileSelect(event) {
+      const fileInput = event.target;
+      const filePreviewContainer = document.getElementById('filePreviewContainer');
+      
+      // Clear previous previews
+      //filePreviewContainer.innerHTML = '';
+  
+      const files = fileInput.files;
+      for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const filePreview = document.createElement('div');
+          filePreview.className = 'file-preview';
+          filePreview.innerHTML = `
+              <span>${file.name}</span>
+              <button onclick="removeFile(${i})">Remove</button>
+          `;
+          filePreviewContainer.appendChild(filePreview);
+      }
+  }
+  
+  function removeFile(index) {
+      const fileInput = document.getElementById('myfile');
+      const dt = new DataTransfer();
+  
+      const files = fileInput.files;
+      for (let i = 0; i < files.length; i++) {
+          if (i !== index) {
+              dt.items.add(files[i]);
+          }
+      }
+  
+      fileInput.files = dt.files;
+      handleFileSelect({ target: fileInput });
+    }
 
   function getAllSelectedTags() {
     const tags = tagContainer.querySelectorAll('.tag span:first-child');
@@ -2384,7 +2872,7 @@
   }
 </script>
 <script>
-  let uniqueSelectedTags = [];
+  // let uniqueSelectedTags = [];
 
   function uniqueToggleDropdown() {
       const dropdown = document.getElementById("uniqueDropdown");
@@ -2426,6 +2914,164 @@
   function getUniqueSelectedTags() {
       return uniqueSelectedTags;
   }
+</script>
+<script>
+  // For the first dropdown
+// let customSelectedTags = [];
+let customAvailableOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+
+function customToggleDropdown() {
+    const dropdown = document.getElementById("customDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function customSelectOption(option) {
+    if (!customSelectedTags.includes(option)) {
+        customSelectedTags.push(option);
+        customAvailableOptions = customAvailableOptions.filter(item => item !== option);
+        customUpdateDropdown();
+        customUpdateTagContainer();
+    }
+}
+
+function customRemoveTag(index) {
+    const removedTag = customSelectedTags.splice(index, 1)[0];
+    customAvailableOptions.push(removedTag);
+    customUpdateDropdown();
+    customUpdateTagContainer();
+}
+
+function customUpdateDropdown() {
+    const dropdown = document.getElementById("customDropdown");
+    dropdown.innerHTML = '';
+    customAvailableOptions.forEach(option => {
+        const div = document.createElement('div');
+        div.textContent = option;
+        div.onclick = () => customSelectOption(option);
+        dropdown.appendChild(div);
+    });
+}
+
+function customUpdateTagContainer() {
+    const tagContainer = document.getElementById('customTagContainer');
+    tagContainer.innerHTML = ''; // Clear existing tags
+
+    customSelectedTags.forEach((tag, index) => {
+        const tagElement = document.createElement('div');
+        tagElement.className = 'custom-tag';
+        tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
+        tagContainer.appendChild(tagElement);
+    });
+}
+
+// For the second dropdown
+// let altSelectedTags = [];
+let altAvailableOptions = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
+
+function altToggleDropdown() {
+    const dropdown = document.getElementById("altDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function altSelectOption(option) {
+    if (!altSelectedTags.includes(option)) {
+        altSelectedTags.push(option);
+        altAvailableOptions = altAvailableOptions.filter(item => item !== option);
+        altUpdateDropdown();
+        altUpdateTagContainer();
+    }
+}
+
+function altRemoveTag(index) {
+    const removedTag = altSelectedTags.splice(index, 1)[0];
+    altAvailableOptions.push(removedTag);
+    altUpdateDropdown();
+    altUpdateTagContainer();
+}
+
+function altUpdateDropdown() {
+    const dropdown = document.getElementById("altDropdown");
+    dropdown.innerHTML = '';
+    altAvailableOptions.forEach(option => {
+        const div = document.createElement('div');
+        div.textContent = option;
+        div.onclick = () => altSelectOption(option);
+        dropdown.appendChild(div);
+    });
+}
+
+function altUpdateTagContainer() {
+    const tagContainer = document.getElementById('altTagContainer');
+    tagContainer.innerHTML = ''; // Clear existing tags
+
+    altSelectedTags.forEach((tag, index) => {
+        const tagElement = document.createElement('div');
+        tagElement.className = 'alt-tag';
+        tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
+        tagContainer.appendChild(tagElement);
+    });
+}
+
+// For the third dropdown
+let uniqueSelectedTags = [];
+let uniqueAvailableOptions = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+
+function uniqueToggleDropdown() {
+    const dropdown = document.getElementById("uniqueDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function uniqueSelectOption(option) {
+    if (!uniqueSelectedTags.includes(option)) {
+        uniqueSelectedTags.push(option);
+        uniqueAvailableOptions = uniqueAvailableOptions.filter(item => item !== option);
+        uniqueUpdateDropdown();
+        uniqueUpdateTagContainer();
+    }
+}
+
+function uniqueRemoveTag(index) {
+    const removedTag = uniqueSelectedTags.splice(index, 1)[0];
+    uniqueAvailableOptions.push(removedTag);
+    uniqueUpdateDropdown();
+    uniqueUpdateTagContainer();
+}
+
+function uniqueUpdateDropdown() {
+    const dropdown = document.getElementById("uniqueDropdown");
+    dropdown.innerHTML = '';
+    uniqueAvailableOptions.forEach(option => {
+        const div = document.createElement('div');
+        div.textContent = option;
+        div.onclick = () => uniqueSelectOption(option);
+        dropdown.appendChild(div);
+    });
+}
+
+function uniqueUpdateTagContainer() {
+    const tagContainer = document.getElementById('uniqueTagContainer');
+    tagContainer.innerHTML = ''; // Clear existing tags
+
+    uniqueSelectedTags.forEach((tag, index) => {
+        const tagElement = document.createElement('div');
+        tagElement.className = 'unique-tag';
+        tagElement.innerHTML = `${tag} <span class="unique-remove-tag" onclick="uniqueRemoveTag(${index})">×</span>`;
+        tagContainer.appendChild(tagElement);
+    });
+}
+
+// Close dropdown when clicking outside of it for all three dropdowns
+window.onclick = function(event) {
+    if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+        document.getElementById("customDropdown").style.display = "none";
+    }
+    if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+        document.getElementById("altDropdown").style.display = "none";
+    }
+    if (!event.target.matches('.unique-dropdown-input') && !event.target.closest('.unique-dropdown-content')) {
+        document.getElementById("uniqueDropdown").style.display = "none";
+    }
+};
 </script>
       {% block common_js %}
           {% include "common_js.html" %}
