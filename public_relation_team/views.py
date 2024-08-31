@@ -549,8 +549,8 @@ class TestAjax(View):
         '''
         
         email_single_email = ''
-        if request.POST.getlist('to[]'):
-            email_single_email=request.POST.getlist('to[]')
+        if request.POST.get('to[]'):
+            email_single_email=request.POST.get('to[]')
         email_to_list = ['']
         if request.POST.getlist('sendTo[]'):
             email_to_list=request.POST.getlist('sendTo[]')
@@ -567,7 +567,6 @@ class TestAjax(View):
         email_schedule_date_time = request.POST['dateTime']
 
         msg = 'Test'
-
         print(request.POST)
         
         if email_schedule_date_time != "":
@@ -578,7 +577,7 @@ class TestAjax(View):
             else:
                 try:
                 # If there is a file 
-                    email_attachment=request.FILES.getlist('attachment')                       
+                    email_attachment=request.FILES.getlist('attachments')                       
                     to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
                         email_single_email,email_to_list,email_cc_list,email_bcc_list,request
                     )
@@ -607,7 +606,7 @@ class TestAjax(View):
                 # messages.error(request,"Select atleast one recipient")
             else:
 
-                email_attachment=request.FILES.getlist('attachment')
+                email_attachment=request.FILES.getlist('attachments')
 
                 if email_attachment:
 

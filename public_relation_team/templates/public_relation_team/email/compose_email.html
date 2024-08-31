@@ -1419,7 +1419,7 @@
                     <div class="send">
                         <div class="attach_file">
                             <label for="myfile"><i class="fa fa-paperclip" for="myfile" ></i></label>
-                            <input type="file" id="myfile" name="myfile" hidden>
+                            <input type="file" id="myfile" name="myfile" multiple hidden>
                         </div>
                         <div class="buttonsEmail">
                             <h6 class="btnClose button1">Close</h6>
@@ -1888,25 +1888,36 @@
           // Capture values from input fields
           var subject = document.querySelector('input[name="subject"]').value;
           var body = getEditorContent();
-          var dateTime = document.querySelector('input[name="datetime-local"]').value
-          var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value
-          var mssg = document.querySelector('h5[name="msg"]')
-          mssg.innerHTML = 'Sending...'
+          var dateTime = document.querySelector('input[name="datetime-local"]').value;
+          var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+          var mssg = document.querySelector('h5[name="msg"]');
+          var attachments = document.querySelector('input[name="myfile"]');
+          mssg.innerHTML = 'Sending...';
+
+          var formData = new FormData();
+          formData.append('to[]', getAllSelectedTags());
+          formData.append('sendTo[]', getUniqueSelectedTags());
+          formData.append('cc[]', getCustomSelectedTags());
+          formData.append('bcc[]', getAltSelectedTags());
+          formData.append('subject', subject);
+          formData.append('dateTime', dateTime);
+          formData.append('body', body);
+          formData.append('csrfmiddlewaretoken', csrf);
+
+          // Append each file from the attachments input
+          for (var i = 0; i < attachments.files.length; i++) {
+              console.log('OK');
+              formData.append('attachments', attachments.files[i]);
+          }
 
           $.ajax({
               url: "{% url 'public_relation_team:test' %}",
               type: "POST",
-              data: {
-                to: getAllSelectedTags(),
-                sendTo: getUniqueSelectedTags(),
-                cc: getCustomSelectedTags(),
-                bcc: getAltSelectedTags(),
-                subject: subject,
-                dateTime: dateTime,
-                body: body,
-              },
+              data: formData,
+              processData: false,  // Important!
+              contentType: false,  // Important!
               headers: {
-                "X-CSRFToken": csrf
+                  "X-CSRFToken": csrf
               },
               success: function(response) {
                   // Handle the response

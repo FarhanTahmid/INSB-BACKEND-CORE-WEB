@@ -32,13 +32,13 @@ class PRT_Email_System:
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
         
-        # substrings = single_emails.split(',')
+        substrings = single_emails.split(',')
         
-        # for email in substrings:
-        #     # Trim leading and trailing whitespaces
-        #     single_emails_final_list.extend(email.split())
+        for email in substrings:
+            # Trim leading and trailing whitespaces
+            single_emails_final_list.extend(email.split())
 
-        single_emails_final_list.extend(single_emails)
+        # single_emails_final_list.extend(single_emails)
  
         
         # Get the emails of to_email_list 
@@ -365,26 +365,6 @@ class PRT_Email_System:
                 try:
                     if is_scheduled:
                         pass
-                        # email=EmailMultiAlternatives(subject,mail_body,
-                        #         email_from,
-                        #         to_email_list_final,
-                        #         bcc=bcc_email_list_final,
-                        #         cc=cc_email_list_final
-                        #         )
-                        # email_name=None
-                        # for i in attachment:
-                        #     email.attach_file(settings.MEDIA_ROOT+str(i.email_content))
-                        #     email_name = i.email_name
-                        # email.send()
-
-                        # #Removing those file and deleting the object from database after sending email
-                        # email_attachements = Email_Attachements.objects.filter(email_name = email_name)
-                        # if len(email_attachements)>0:
-                        #     for i in email_attachements:
-                        #         path = settings.MEDIA_ROOT+str(i.email_content)
-                        #         i.delete()
-                        #         os.remove(path)          
-                        # return True
 
                     else:
                         try:
@@ -405,7 +385,7 @@ class PRT_Email_System:
                             message["Subject"] = subject
 
                             # Attach the main message body
-                            message.attach(MIMEText(mail_body, 'plain'))
+                            message.attach(MIMEText(mail_body, 'html'))
                 
                             for attachment in attachment:
                                 content_file = ContentFile(attachment.read())
@@ -541,7 +521,7 @@ class PRT_Email_System:
             message["Subject"] = subject
 
             # Attach the main message body
-            message.attach(MIMEText(mail_body, 'plain'))
+            message.attach(MIMEText(mail_body, 'html'))
 
             if attachment:
                 for attachment in attachment:
