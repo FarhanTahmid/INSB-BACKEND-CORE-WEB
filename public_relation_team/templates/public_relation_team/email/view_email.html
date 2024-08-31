@@ -77,7 +77,7 @@
     .heading h2{
       font-size: 20px;
       font-weight: bold;
-      margin-bottom: 0px;
+      margin-bottom: 5px;
       padding-right: 10px;
     }
 
@@ -215,16 +215,64 @@
     }
 
     .email_dp{
-      width: 25%;
-      margin-right: 10px;
+      width: 30%;
+      margin-right: 15px;
     }
 
     .return_inbox{
       font-size: 25px;
       color: #00629b;
       margin: -20px 0px 20px -20px;
+      transition: 0.1s;
     }
     
+    .return_inbox:hover{
+      color: #004770;
+    }
+
+
+
+    @media screen and (max-width:480px) {
+
+      .central_body {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .return_inbox{
+        margin: -10px 0px 10px -10px;
+        font-size: 20px;
+    }
+
+    .heading_col1{
+      flex-basis: 50%;
+    }
+
+    .heading_col2{
+      flex-basis: 30%;
+    }
+
+    .attachments{
+      width: 100%;
+    }
+
+    .email_dp{
+      margin-right: 10px;
+    }
+      
+    }
+
+    @media screen and (max-width:768px) {
+
+      .attachments{
+        width: 60%;
+      }
+      
+      .heading_col2{
+      flex-basis: 20%;
+    }
+    }
+
 
 
 
@@ -268,15 +316,17 @@
       <div class="heading">
         <div class="heading_col1"> 
           <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
-          <h2>(Sender_name)</h2>
-          <address style="margin: 0px;">
-          <a href="mailto:07marsaad@gmail.com">(Sender_email)</a>
-          </address>
+          <div class="col1_inner">
+            <h2>(Sender_name)</h2>
+            <address style="margin: 0px; color: gray;">
+              <a href="mailto:07marsaad@gmail.com">(Sender_email)</a>
+            </address>
+          </div>
         </div>
 
 
         <div class="heading_col2">
-        <p style="margin: 0px;">(Date_sent)</p>
+        <p style="margin: 0px; color: gray;">(Date_sent)</p>
 
 
         <div class="dropdown">
@@ -284,6 +334,9 @@
           <div class="dropdown_content">
             <a href="#">Reply</a>
             <a href="#">Forward</a>
+            <a href="#">Extra1</a>
+            <a href="#">Extra2</a>
+            <a href="#">Extra3</a>
           </div>
         </div>
 
