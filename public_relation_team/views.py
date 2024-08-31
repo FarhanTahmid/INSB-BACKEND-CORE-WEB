@@ -443,17 +443,18 @@ def manageWebsiteHome(request):
 @member_login_permission
 def mail(request):
     try:
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
-
         user = request.user
         has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
                 or PRT_Data.prt_manage_email_access(user.username))
         
-        if(has_access):
-            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
-            under_maintainance = system.objects.all().first()
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            section = request.GET.get('section')
+
+            label = 'INBOX'
+            if section == 'inbox':
+                label = 'INBOX'
+            elif section == 'sent':
+                label = 'SENT'
 
             credentials = GmailHandler.get_credentials(request)
             if not credentials:
@@ -464,7 +465,83 @@ def mail(request):
                 print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
 
-                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=['INBOX'], q="category:primary",pageToken='').execute()
+                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=[label], q="category:primary",pageToken='').execute()
+                thread_data = []
+
+                for thread in threads['threads']:
+                    thread_id = thread['id']
+
+                    # Fetch the required details for each message
+                    thread_details = service.users().threads().get(
+                        userId='me',
+                        id=thread_id,
+                        format='metadata',
+                        metadataHeaders=['From', 'Subject', 'Date']
+                    ).execute()
+                    
+                    messagess = thread_details.get('messages', [])
+
+                    if messagess:
+                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                        headers = last_message['payload'].get('headers', [])
+                        snippet = last_message.get('snippet', '')
+                        labels = last_message.get('labelIds', [])
+
+                        # Extract relevant fields from headers
+                        sender = next(header['value'] for header in headers if header['name'] == 'From')
+                        subject = next(header['value'] for header in headers if header['name'] == 'Subject')
+                        date = next(header['value'] for header in headers if header['name'] == 'Date')
+
+                        thread_data.append({
+                            'sender': sender,
+                            'subject': subject,
+                            'date': date,
+                            'labels': labels,
+                            'snippet': snippet,
+                        })
+
+            except Exception as e:
+                print(e)
+                print(f'Failed to create service instance for gmail')
+                                               
+                
+            context={
+                'threads':thread_data
+            }
+            
+            # Render the row.html template with the data
+            html = render(request, 'public_relation_team/email/email_row.html', context).content.decode('utf-8')
+            
+            # Return the HTML as a JSON response
+            return JsonResponse({'html': html})
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+                
+        if(has_access):
+
+            recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
+            under_maintainance = system.objects.all().first()
+
+            section = request.GET.get('section')
+
+            label = 'INBOX'
+            if section == 'inbox':
+                label = 'INBOX'
+            elif section == 'sent':
+                label = 'SENT'
+
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OK")
+                return None
+            try:
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+
+                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=[label], q="category:primary",pageToken='').execute()
                 thread_data = []
 
                 for thread in threads['threads']:

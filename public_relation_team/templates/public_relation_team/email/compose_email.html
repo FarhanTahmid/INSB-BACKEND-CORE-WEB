@@ -1392,9 +1392,9 @@
       <div class="email_wrapper">
         <div class="email_wrapper_2">
           <div class="email_boxes">
-            <a href="#" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
-            <a href="#" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
-            <a href="#" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev Mail</a>
+            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
+            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev Mail</a>
           </div>
           <!-- Farhana Compose Code -->
           <div class="child-body">
@@ -1716,7 +1716,7 @@
               </div>
   
               <!-- Inbox Section -->
-              <div class="email_outer_container">
+              <div id="inbox" class="email_outer_container">
               <div class="email_inner_container inbox show">
                 {% for thread in threads %}
                 <div class="email_row_wrap" title="event">
@@ -1740,7 +1740,7 @@
               </div>
 
             <!-- Sent Section -->
-            <div class="email_inner_container sent">
+            <div id="sent" class="email_inner_container sent">
               <div class="email_row_wrap" title="event">
                 <div class="checkbox_star">
                   <input type="checkbox" id="select" name="select" class="bold">
@@ -1748,7 +1748,7 @@
                 </div>
                 <div class="email_row" onclick="markRead(this)">
                   <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                    <p class="sender">[SENT MAIL SAMPLE]</p>
                   </div>
                   <div class="email_content">
                     <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
@@ -1758,45 +1758,11 @@
                   <div class="email_date">2nd August, 2024 9:00 AM</div>
                 </div>
               </div>
-              <div class="email_row_wrap" title="event">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <div class="email_row" onclick="markRead(this)">
-                  <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                  </div>
-                  <div class="email_content">
-                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
-                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
-                      elit. Quam, facere!</div>
-                  </div>
-                  <div class="email_date">1st August, 2024 9:00 AM</div>
-                </div>
-              </div>
-              <div class="email_row_wrap" title="task">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <div class="email_row" onclick="markRead(this)">
-                  <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                  </div>
-                  <div class="email_content">
-                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
-                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
-                      elit. Quam, facere!</div>
-                  </div>
-                  <div class="email_date">1st August, 2024 9:00 AM</div>
-                </div>
-              </div>
               <!-- More sent rows -->
             </div>
 
             <!-- Dev Mail Section -->
-            <div class="email_inner_container dev_mail">
+            <div id="dev_mail" class="email_inner_container dev_mail">
               <div class="email_row_wrap" title="announsment">
                 <div class="checkbox_star">
                   <input type="checkbox" id="select" name="select" class="bold">
@@ -1851,6 +1817,26 @@
   <!-- ############ LAYOUT END-->
 
     <script>
+      // Optionally, you can also run loadContent on initial load as before
+      document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let section = urlParams.get('section') || 'inbox';
+        window.history.replaceState(null, '', '?section='+section);
+
+        {% comment %} // Hide all sections
+        const sections = document.querySelectorAll('.email_inner_container');
+        sections.forEach(sec => sec.classList.remove('show'));
+
+        // Remove 'active' class from all links
+        const links = document.querySelectorAll('.email_box');
+        links.forEach(link => link.classList.remove('active'));
+
+        // Show the selected section
+        document.querySelector(`.${section}`).classList.add('show');
+
+        // Add 'active' class to the clicked link
+        $().classList.add('active'); {% endcomment %}
+      });
       // count the mails
       function updateMailCounts() {
         // Identify the currently active container
@@ -1894,6 +1880,9 @@
 
       //showing emails according to selected email box
       function activeInbox(element, section) {
+        event.preventDefault();
+        window.history.pushState(null, '', "?section="+section);
+
         const emailRows = document.querySelectorAll('.email_row');
         const screenWidth = window.innerWidth;
 
@@ -1926,6 +1915,25 @@
 
         // Add 'active' class to the clicked link
         element.classList.add('active');
+
+        $.ajax({
+          url: "{% url 'public_relation_team:mail' %}",  // URL pointing to your Django view
+          method: 'GET',
+          success: function(response) {
+              // Append the returned HTML to the table body
+              if(section === 'inbox')
+              {
+                $('#'+section+' div').html("");
+                $('#'+section+' div').append(response.html);
+              }
+              else 
+              {
+                $('#'+section).html("");
+                $('#'+section).append(response.html);
+              }
+          }
+        });
+
         // Update mail counts based on the selected container
         updateMailCounts();
       }

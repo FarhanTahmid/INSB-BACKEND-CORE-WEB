@@ -27,7 +27,7 @@ urlpatterns = [
     #Manage website Homepage
     path('manage_website/',views.manageWebsiteHome,name="manage_website_home"),
     #Send Email
-    path('mail',views.mail,name="mail"),
+    path('mail/',views.mail,name="mail"),
     path('view_email',views.view_email,name="view_email"),
     path('send_mail_request/', views.TestAjax.as_view(),name='send_mail_request'),
 
