@@ -13,10 +13,45 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+  <script>
+    function myFunction1() {
+      var x = document.getElementById("textarea1");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+
+      var x = document.getElementById("textarea2");
+        if (x.style.display === "none") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function myFunction2() {
+      var x = document.getElementById("textarea2");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+
+      var x = document.getElementById("textarea1");
+        if (x.style.display === "none") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "none";
+        }
+    }
+    </script>
+
+
   <!--Internal CSS-->
   <style>
     body{
-      background: linear-gradient(135deg,white,#00629b, #00619d);
+      background: linear-gradient(135deg,white,#00629b,#00629b);
     }
 
     .central_body{
@@ -53,8 +88,16 @@
       align-items: center;
     }
 
+    .heading_col2{
+      display: flex;
+      justify-content: space-between;
+      flex-basis: 12%;
+      align-items: center;
+    }
+
     .buttons{
       padding-top: 20px;
+      margin-bottom: 30px;
     }
 
     .reply_button, .forward_button{
@@ -65,6 +108,7 @@
       transition: 0.1s;
       color: gray;
       margin-right: 10px;
+      background-color: white;
     }
 
     .reply_button:hover, .forward_button:hover{
@@ -72,7 +116,118 @@
       color: black;
     }
 
-  
+    .attachments{
+            margin-top: 20px;
+            padding: 15px 15px 5px 15px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            background-color: rgb(240, 240, 240);
+            width: 40%;
+        }
+
+    .attachments ul {
+            list-style-type: none;
+            padding: 0px;
+            padding-left: 10px;
+    }
+
+    .attachments ul li {
+            margin-bottom: 10px;
+    }
+
+    .attachments ul li a {
+            color: #00629b;
+            text-decoration: none;
+            transition: 0.1s;
+    }
+
+    .attachments ul li a:hover {
+            color: #004770;
+    }
+
+    .attachments p{
+      margin-bottom: 10px;
+    }
+
+    .desc{
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            resize: vertical;
+            margin-bottom: 20px;
+            min-height: 200px;
+        }
+
+    .textarea{
+      display: none;
+    }
+
+    .textarea h3{
+      font-size: 15px;
+      margin-bottom: 0px;
+    }
+
+    .dropbtn {
+      color: #00629b;
+      background-color: white;
+      padding: 0px;
+      border: none;
+      border-radius: 50%;
+      height: 30px;
+      width: 30px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown_content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 10px 15px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      margin-left: -120px;
+    }
+
+    .dropdown_content a {
+      color: black;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown_content a:hover {
+      background-color: #ddd;
+    }
+
+    .dropdown:hover .dropdown_content {
+      display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+      background-color: #00629b;
+      color: white;
+    }
+
+    .email_dp{
+      width: 25%;
+      margin-right: 10px;
+    }
+
+    .return_inbox{
+      font-size: 25px;
+      color: #00629b;
+      margin: -20px 0px 20px -20px;
+    }
+    
+
+
+
   </style>
   <!--Internal CSS End-->
 </head>
@@ -104,16 +259,38 @@
 
       <section class="central_body"> 
 
+      <div class="return_inbox">
+        <a href="#"><i class="fa fa-arrow-left"></i></a>
+      </div>
+
       <h1>(Subject)</h1>
 
       <div class="heading">
         <div class="heading_col1"> 
+          <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
           <h2>(Sender_name)</h2>
           <address style="margin: 0px;">
           <a href="mailto:07marsaad@gmail.com">(Sender_email)</a>
           </address>
         </div>
+
+
+        <div class="heading_col2">
         <p style="margin: 0px;">(Date_sent)</p>
+
+
+        <div class="dropdown">
+          <button class="dropbtn"><i class="fa fa-bars"></i></button>
+          <div class="dropdown_content">
+            <a href="#">Reply</a>
+            <a href="#">Forward</a>
+          </div>
+        </div>
+
+      
+
+      </div>
+        
       </div>
       
 
@@ -121,17 +298,54 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare, ipsum eget varius rhoncus, augue dui rutrum leo, ac dictum tortor nulla quis turpis. Aenean tempor tellus facilisis orci porttitor pretium at ac dui. Aenean eget bibendum eros, eget gravida quam. Maecenas ullamcorper metus eget purus placerat consequat. Nullam dui velit, placerat vel est at, facilisis consectetur massa. Aliquam porttitor augue id mollis pretium. Fusce vestibulum tempus dictum. Nunc pretium, sapien a feugiat consequat, erat neque tempor justo, id malesuada dui lectus vel lacus.
       </p>
 
-      <div class="attachment">
+      <div class="attachments">
         <p>Attachments:</p>
         <ul>
-          <li>#</li>
+          <li><a href="#">(Attachments1)</a></li>
+          <li><a href="#">(Attachments2)</a></li>
+          <li><a href="#">(Attachments3)</a></li>
         </ul>
       </div>
 
       <div class="buttons">
-        <a class="reply_button" href="#">Reply</a>
-        <a class="forward_button" href="#">Forward</a>
+        <button class="reply_button" onclick="myFunction1()">Reply</button>
+        <button class="forward_button" onclick="myFunction2()">Forward</button>
       </div>
+
+      <div class="textarea" id="textarea2">
+
+        <div class="from_and_to">
+          <h3>From:</h3>
+          <address style="color: gray;">
+            <a href="mailto:07marsaad@gmail.com">(My_email)</a>
+            </address>
+          <h3>Forward to:</h3>
+          <address style="color: gray;">
+            <a href="mailto:07marsaad@gmail.com">(Receiver_email)</a>
+            </address>
+        </div>
+
+        <textarea name="description" class="desc" placeholder="Write your email here..."></textarea>
+
+      </div>
+
+      <div class="textarea" id="textarea1">
+
+        <div class="from_and_to">
+          <h3>From:</h3>
+          <address style="color: gray;">
+            <a href="mailto:07marsaad@gmail.com">(My_email)</a>
+            </address>
+          <h3>Reply to:</h3>
+          <address style="color: gray;">
+            <a href="mailto:07marsaad@gmail.com">(Receiver_email)</a>
+            </address>
+        </div>
+
+        <textarea name="description" class="desc" placeholder="Write your email here..."></textarea>
+
+      </div>
+  
   
 
       </section>
