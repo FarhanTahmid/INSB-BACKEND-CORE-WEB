@@ -27,9 +27,9 @@ urlpatterns = [
     #Manage website Homepage
     path('manage_website/',views.manageWebsiteHome,name="manage_website_home"),
     #Send Email
-    path('send_email',views.send_email,name="send_email"),
+    path('mail',views.mail,name="mail"),
     path('view_email',views.view_email,name="view_email"),
-    path('test/', views.TestAjax.as_view(),name='test'),
+    path('send_mail_request/', views.TestAjax.as_view(),name='send_mail_request'),
 
     #Task
     path('create_task/<int:team_primary>/',create_task,name="create_task_team"),

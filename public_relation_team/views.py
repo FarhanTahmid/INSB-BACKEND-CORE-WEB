@@ -441,7 +441,7 @@ def manageWebsiteHome(request):
 
 @login_required
 @member_login_permission
-def send_email(request):
+def mail(request):
     try:
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -454,11 +454,6 @@ def send_email(request):
         if(has_access):
             recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
             under_maintainance = system.objects.all().first()
-            
-            if(request.method=="POST"):
-                if(request.POST.get('send_email')):
-                    
-                    pass
 
             credentials = GmailHandler.get_credentials(request)
             if not credentials:
@@ -483,10 +478,10 @@ def send_email(request):
                         metadataHeaders=['From', 'Subject', 'Date']
                     ).execute()
                     
-                    messages = thread_details.get('messages', [])
+                    messagess = thread_details.get('messages', [])
 
-                    if messages:
-                        last_message = messages[len(messages)-1]  # Get the last message in the thread
+                    if messagess:
+                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
                         headers = last_message['payload'].get('headers', [])
                         snippet = last_message.get('snippet', '')
                         labels = last_message.get('labelIds', [])
@@ -524,7 +519,7 @@ def send_email(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
-        return redirect('public_relation_team:send_email')
+        return cv.custom_500(request)
 
 def view_email(request):
 

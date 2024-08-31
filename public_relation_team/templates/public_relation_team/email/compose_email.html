@@ -2197,7 +2197,7 @@
           }
 
           $.ajax({
-              url: "{% url 'public_relation_team:test' %}",
+              url: "{% url 'public_relation_team:send_mail_request' %}",
               type: "POST",
               data: formData,
               processData: false,  // Important!
