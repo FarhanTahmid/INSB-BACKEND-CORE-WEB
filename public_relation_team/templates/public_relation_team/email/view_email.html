@@ -15,14 +15,14 @@
 
   <script>
     function myFunction1() {
-      var x = document.getElementById("textarea1");
+      var x = document.getElementById("ck_view_reply");
       if (x.style.display === "none") {
         x.style.display = "block";
       } else {
         x.style.display = "none";
       }
 
-      var x = document.getElementById("textarea2");
+      var x = document.getElementById("ck_view_forward");
         if (x.style.display === "none") {
             x.style.display = "none";
         } else {
@@ -31,14 +31,14 @@
     }
 
     function myFunction2() {
-      var x = document.getElementById("textarea2");
+      var x = document.getElementById("ck_view_forward");
       if (x.style.display === "none") {
         x.style.display = "block";
       } else {
         x.style.display = "none";
       }
 
-      var x = document.getElementById("textarea1");
+      var x = document.getElementById("ck_view_reply");
         if (x.style.display === "none") {
             x.style.display = "none";
         } else {
@@ -100,7 +100,7 @@
       margin-bottom: 30px;
     }
 
-    .reply_button, .forward_button{
+    .reply_button, .forward_button, .send_button{
       border: 1px solid gray;
       border-radius: 20px;
       padding: 10px 30px;
@@ -111,10 +111,16 @@
       background-color: white;
     }
 
-    .reply_button:hover, .forward_button:hover{
+    .reply_button:hover, .forward_button:hover, .send_button:hover{
       border-color: black;
       color: black;
+      cursor: pointer;
     }
+
+    .send_button{
+      margin-top: 20px;
+    }
+
 
     .attachments{
             margin-top: 20px;
@@ -228,6 +234,330 @@
     
     .return_inbox:hover{
       color: #004770;
+    }
+
+
+
+
+
+    /*ckeditor start*/
+    .editor-container {
+            border: 1px solid #ccc;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 5px;
+            overflow: hidden; 
+            max-height: 100vh; 
+            position: relative;
+        }
+
+        .toolbar {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button, .toolbar select {
+            font-size: 12px;
+            padding: 5px 10px;
+            /* margin-right: 5px;
+            margin-bottom: 5px; */
+            border: 0 solid #ccc;
+            background-color: #f5f5f500;
+            cursor: pointer;
+            height: 100%;
+            color: #333;
+        }
+
+        .toolbar button:hover, .toolbar select:hover {
+            background: #a4d5ff69;
+            border-radius: 5px;
+        }
+
+        .editor {
+            padding: 10px;
+            height: 150px;
+            border: none;
+            outline: none;
+            overflow: auto;
+            background: #fff;
+            /* resize: both; */
+        }
+
+        .resize-handle {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            height: 10px; 
+            background-color: #eee; 
+            cursor: ns-resize; 
+            border-top: 1px solid #ccc;
+        }
+
+        .dots {
+            height: 2px;
+            width: 2px;
+            background-color: #aaa;
+            margin: .5px 2px;
+        }
+
+        .expanded {    
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: calc(100% - 40px);
+            height: calc(100% - 40px);
+            z-index: 1099;
+            background-color: #fff;
+            margin: 20px;
+            border-radius: 5px;
+        }
+
+        .tool-sec{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 25px;
+            margin: 0 3px 0 0;
+            padding-right: 5px;
+        }
+
+        .toolbar button.active {
+            background-color: #ffadad;
+            /* border: 1px solid #bbb; */
+            border-radius: 5px;
+            margin: 0 1px;
+            padding: 5px 9px;
+        }
+
+        .modal-bg {
+            position: fixed;
+            z-index: 100; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-bg h2{
+            /* background-image: linear-gradient(90deg, #0073ffba, #c000ffba); */
+            margin: 0;
+            padding: 0 20px;
+            position: relative;
+            left: -20px;
+            width: 100%;
+            border-radius: 5px 5px 0 0;
+            font-size: 25px;
+        }
+        
+        .modal-content {
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 550px;
+            border-radius: 8px;
+            transform: translateY(-50%); /* Adjust for vertical centering */
+            position: relative;
+            top: 50%; /* Move content down by 50% */
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-content li{
+            font-size: 14px;
+        }
+
+        .modal-img{
+            width: 300px;
+            height: fit-content;
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-img label{
+            padding: 10px 0 3px 0;
+            margin: 0;
+        }
+
+        .modal-img input{
+            padding: 3px;
+            border: 1px solid;
+            border-radius: 5px;
+            /* margin-bottom: 10px; */
+            width: 100%;
+        }
+
+        .modal-img button{
+            position: relative;
+            /* top: 78px; */
+            /* width: 100px; */
+            width: 100%;
+            /* left: 200px; */
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #5450ff;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .modal-link {
+            width: 300px;
+            height: fit-content;
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-link label {
+            padding: 10px 0 3px 0;
+            margin: 0;
+        }
+
+        .modal-link input {
+            padding: 3px;
+            border: 1px solid;
+            border-radius: 5px;
+            /* margin-bottom: 10px; */
+            width: 100%;
+        }
+
+        .modal-link button {
+            position: relative;
+            /* top: 97px; */
+            /* width: 100px; */
+            width: 100%;
+            align-self: flex-end;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #5450ff;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal-table {
+            width: 300px;
+            height: auto;
+            font-family: sans-serif;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-table label {
+            padding: 10px 0 3px 0;
+            margin: 0;
+        }
+
+        .modal-table input, .modal-table select {
+            padding: 3px;
+            border: 1px solid;
+            border-radius: 5px;
+            /* margin-bottom: 10px; */
+            width: 100%;
+        }
+
+        .modal-table button {
+            position: relative;
+            /* width: 100px; */
+            width: 100%;
+            align-self: flex-end;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background: #5450ff;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        /*ckeditor ends*/
+
+
+
+        .compose_email {
+      /* position: fixed;
+      bottom: 70px;
+      right: 10px; */
+      margin: 10px;
+    }
+
+    .compose_email input[type="text"] {
+      width: 100%;
+      /* padding: 10px 12px; */
+      margin: 3px 0;
+      display: inline-block;
+      border: 0px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .compose_email input::placeholder {
+      color: #4f4f4f;
+    }
+
+    textarea {
+      resize: none;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      width: 100%;
+      padding: 10px;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #e0e0e0;
+      height: 100px;
+      /* color: black; */
+      box-sizing: border-box;
+    }
+
+    .send {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 10px;
+    }
+
+    .attach_file {
+      margin-left: -6px;
+      font-weight: bold;
+      font-size: 1.25rem;
+      transform: rotate(90deg);
+      color: #646464;
+    }
+
+
+    .ckeditor_view_email{
+      border: 1px solid gray;
+      border-radius: 10px;
+      padding: 20px;
+      display: none;
+      box-shadow: 0px 10px 15px 0px rgba(0,0,0,0.2);
     }
 
 
@@ -398,6 +728,181 @@
         <textarea name="description" class="desc" placeholder="Write your email here..."></textarea>
 
       </div>
+
+      <section class="ckeditor_view_email" id="ck_view_reply">
+
+
+          <div class="form">
+          <form method="POST">
+          </div>
+            <div class="compose hidden">
+                <div class="compose_email">
+                  <div class="tag-container" id="tagContainer">
+                    <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+                    <input type="text" name="to" class="tag-input" id="tagInput">
+                </div>
+                    <hr>
+                    <input type="text" name="from" placeholder="From" required>
+                    <hr>
+                    
+                    
+              
+                    <input type="text" name="subject" placeholder="Subject" required>
+                    <hr>
+                </div>
+                <div style="margin: 10px;">
+                </div>
+
+
+
+          <!--ckeditor-->
+          <div class="editor-container">
+            <div class="toolbar">
+                <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                    <button onclick="formatText('undo')" title="Undo"><i class="fa fa-rotate-left"></i></button>
+                    <button onclick="formatText('redo')" title="Redo"><i class="fa fa-rotate-right"></i></button>
+                </div>
+                <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                    <button onclick="formatText('bold')" title="Bold"><b style="font-size: 13px;">B</b></button>
+                    <button onclick="formatText('italic')" title="Italic"><i style="font-family: auto; font-size: 14px;">I</i></button>
+                    <button onclick="formatText('underline')" title="Underline"><u>U</u></button>
+                    <button onclick="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
+                    <select onchange="formatText('fontSize', this.value)" title="Font Size">
+                        <option value="1">Small</option>
+                        <option value="3" selected>Normal</option>
+                        <option value="5">Large</option>
+                        <option value="7">Huge</option>
+                    </select>
+                </div>
+                <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                    <button onclick="formatText('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
+                    <button onclick="formatText('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
+                    <button onclick="formatText('justifyRight')" title="Align Right"><i class="fa fa-align-right"></i></button>
+                    <button onclick="formatText('justifyFull')" title="Justify"><i class="fa fa-align-justify"></i></button>
+                </div>
+                <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                    <button onclick="formatText('insertUnorderedList')" title="Bulleted List"><i class="fa fa-list-ul"></i></button>
+                    <button onclick="formatText('insertOrderedList')" title="Numbered List"><i class="fa fa-list-ol"></i></button>
+                    <button onclick="formatText('indent')" title="Increase Indent"><i class="fa fa-indent"></i></button>
+                    <button onclick="formatText('outdent')" title="Decrease Indent"><i class="fa fa-outdent"></i></button>
+                </div>
+                <div class="tool-sec">
+                    <button onclick="openLinkModal()" title="Insert Link"><i class="fa fa-link"></i></button>
+                    <button onclick="openTableModal()" title="Insert Table"><i class="fa fa-table"></i></button>
+                    <button class="expand-editor" onclick="toggleExpand()" title="Expand Editor"><i class="fa fa-expand"></i></button>
+                    <button onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%; font-size: 9.5px;"></i></button>
+                </div>
+            </div>
+            <div contenteditable="true" class="editor"></div>
+            <div class="resize-handle">
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                    <div class="dots"></div>
+                </div>
+            </div>
+        </div>
+
+        <input type="button" class="send_button" value="Send">
+
+      </section>
+
+      <section class="ckeditor_view_email" id="ck_view_forward">
+
+
+        <div class="form">
+        <form method="POST">
+        </div>
+          <div class="compose hidden">
+              <div class="compose_email">
+                <div class="tag-container" id="tagContainer">
+                  <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+                  <input type="text" name="to" class="tag-input" id="tagInput">
+              </div>
+                  <hr>
+                  <input type="text" name="from" placeholder="From" required>
+                  <hr>
+                  <input type="text" name="cc" placeholder="CC">
+                  <hr>
+                  <input type="text" name="bcc" placeholder="BCC">
+                  <hr>
+                  <input type="text" name="subject" placeholder="Subject" required>
+                  <hr>
+              </div>
+              <div style="margin: 10px;">
+              </div>
+
+
+
+        <!--ckeditor-->
+        <div class="editor-container">
+          <div class="toolbar">
+              <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                  <button onclick="formatText('undo')" title="Undo"><i class="fa fa-rotate-left"></i></button>
+                  <button onclick="formatText('redo')" title="Redo"><i class="fa fa-rotate-right"></i></button>
+              </div>
+              <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                  <button onclick="formatText('bold')" title="Bold"><b style="font-size: 13px;">B</b></button>
+                  <button onclick="formatText('italic')" title="Italic"><i style="font-family: auto; font-size: 14px;">I</i></button>
+                  <button onclick="formatText('underline')" title="Underline"><u>U</u></button>
+                  <button onclick="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
+                  <select onchange="formatText('fontSize', this.value)" title="Font Size">
+                      <option value="1">Small</option>
+                      <option value="3" selected>Normal</option>
+                      <option value="5">Large</option>
+                      <option value="7">Huge</option>
+                  </select>
+              </div>
+              <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                  <button onclick="formatText('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
+                  <button onclick="formatText('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
+                  <button onclick="formatText('justifyRight')" title="Align Right"><i class="fa fa-align-right"></i></button>
+                  <button onclick="formatText('justifyFull')" title="Justify"><i class="fa fa-align-justify"></i></button>
+              </div>
+              <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
+                  <button onclick="formatText('insertUnorderedList')" title="Bulleted List"><i class="fa fa-list-ul"></i></button>
+                  <button onclick="formatText('insertOrderedList')" title="Numbered List"><i class="fa fa-list-ol"></i></button>
+                  <button onclick="formatText('indent')" title="Increase Indent"><i class="fa fa-indent"></i></button>
+                  <button onclick="formatText('outdent')" title="Decrease Indent"><i class="fa fa-outdent"></i></button>
+              </div>
+              <div class="tool-sec">
+                  <button onclick="openLinkModal()" title="Insert Link"><i class="fa fa-link"></i></button>
+                  <button onclick="openTableModal()" title="Insert Table"><i class="fa fa-table"></i></button>
+                  <button class="expand-editor" onclick="toggleExpand()" title="Expand Editor"><i class="fa fa-expand"></i></button>
+                  <button onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%; font-size: 9.5px;"></i></button>
+              </div>
+          </div>
+          <div contenteditable="true" class="editor"></div>
+          <div class="resize-handle">
+              <div style="display: flex; justify-content: center; align-items: center;">
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+              </div>
+              <div style="display: flex; justify-content: center; align-items: center;">
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+                  <div class="dots"></div>
+              </div>
+          </div>
+      </div>
+
+      <input type="button" class="send_button" value="Send">
+
+    </section>
+      
+      
   
   
 
@@ -406,6 +911,16 @@
       <!-- ############ PAGE END-->
   </div>
   <!-- ############ LAYOUT END-->
+
+</script>
+<!--ckeditor js-->
+<!-- getEditorContent() function to get the content of this editor -->
+<script>
+  function getEditorContent() {
+      const editor = document.querySelector('.editor');
+      return editor.innerHTML;
+  }
+</script>
 
       {% block common_js %}
           {% include "common_js.html" %}
