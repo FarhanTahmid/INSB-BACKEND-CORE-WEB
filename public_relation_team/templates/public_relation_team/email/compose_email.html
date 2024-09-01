@@ -1414,10 +1414,11 @@
                         <div class="unique-dropdown-container">
                           <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send Email To" readonly onclick="uniqueToggleDropdown()">
                           <div class="unique-dropdown-content" id="uniqueDropdown">
-                              <div onclick="uniqueSelectOption('Item 1')">Item 1</div>
-                              <div onclick="uniqueSelectOption('Item 2')">Item 2</div>
-                              <div onclick="uniqueSelectOption('Item 3')">Item 3</div>
-                              <div onclick="uniqueSelectOption('Item 4')">Item 4</div>
+                              <div onclick="uniqueSelectOption('Item 1')">All Registered General Members of IEEE NSU SB</div>
+                              <div onclick="uniqueSelectOption('Item 2')">All Officers of IEEE NSU SB</div>
+                              <div onclick="uniqueSelectOption('Item 3')">Executive Panel (Branch Only)</div>
+                              <div onclick="uniqueSelectOption('Item 4')">Branch Ex-Com Members</div>
+                              <div onclick="uniqueSelectOption('Item 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
                           </div>
                       </div>
                       
@@ -1427,10 +1428,11 @@
                         <div class="custom-dropdown-container">
                           <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly onclick="customToggleDropdown()">
                           <div class="custom-dropdown-content" id="customDropdown">
-                              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered Members of IEEE</div>
+                              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of IEEE NSU SB</div>
                               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
-                              <div onclick="customSelectOption('Option 3')">Option 3</div>
-                              <div onclick="customSelectOption('Option 4')">Option 4</div>
+                              <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
+                              <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
+                              <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
                           </div>
                         </div>
                         <div class="custom-tag-container" id="customTagContainer"></div>
@@ -1715,9 +1717,9 @@
                   
               </div>
   
-              <!-- Inbox Section -->
-              <div id="inbox" class="email_outer_container">
-              <div class="email_inner_container inbox show">
+              <div class="email_outer_container">
+                <!-- Inbox Section -->
+              <div id="inbox" class="email_inner_container inbox show">
                 {% for thread in threads %}
                 <div class="email_row_wrap" title="event">
                   <div class="checkbox_star">
@@ -1917,20 +1919,12 @@
         element.classList.add('active');
 
         $.ajax({
-          url: "{% url 'public_relation_team:mail' %}",  // URL pointing to your Django view
+          url: "{% url 'public_relation_team:mail' %}?section="+section,  // URL pointing to your Django view
           method: 'GET',
           success: function(response) {
               // Append the returned HTML to the table body
-              if(section === 'inbox')
-              {
-                $('#'+section+' div').html("");
-                $('#'+section+' div').append(response.html);
-              }
-              else 
-              {
-                $('#'+section).html("");
-                $('#'+section).append(response.html);
-              }
+              $('#'+section).html("");
+              $('#'+section).append(response.html);
           }
         });
 

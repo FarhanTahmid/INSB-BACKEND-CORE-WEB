@@ -449,6 +449,7 @@ def mail(request):
         
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             section = request.GET.get('section')
+            print(section)
 
             label = 'INBOX'
             if section == 'inbox':
