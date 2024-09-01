@@ -490,7 +490,7 @@ def mail(request):
 
                     # Extract relevant fields from headers
                     sender = next(header['value'] for header in headers if header['name'] == 'From')
-                    subject = next(header['value'] for header in headers if header['name'] == 'Subject')
+                    subject = next((header['value'] for header in headers if header['name'] == 'Subject'), '(No Subject)')
                     date = next(header['value'] for header in headers if header['name'] == 'Date')
 
                     thread_data.append({
