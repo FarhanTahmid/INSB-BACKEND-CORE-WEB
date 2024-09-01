@@ -251,7 +251,7 @@
     .email_wrapper {
       background: white;
       margin: 0 1rem;
-      /* position: sticky; */
+      position: sticky;
     }
 
     .email_wrapper_2 {
@@ -937,99 +937,7 @@
       margin-top: 10px;
     }
 
-    /*ckeditor ends*/
-    @media screen and (max-width: 1024px) {
-
-      .modal-1-content,
-      .modal-2-content,
-      .modal-3-content {
-        left: 0px;
-        margin: 10%;
-      }
-    }
-
-    @media screen and (max-width: 500px) {
-
-      .modal-1-content,
-      .modal-2-content,
-      .modal-3-content {
-        margin: 5%;
-      }
-    }
-
-    /* responsive code for tablet and small screens */
-
-    @media screen and (max-width: 768px) {
-      .compose {
-        width: 90%;
-        bottom: 20px;
-        right: 5%;
-      }
-
-      input[type="text"],
-      textarea {
-        width: 100%;
-      }
-
-      .send {
-        /* flex-direction: column; */
-        align-items: flex-start;
-      }
-
-      .attach_file {
-        margin-bottom: 10px;
-      }
-
-      .email_row {
-        display: flex;
-        grid-gap: .75rem;
-        flex-wrap: wrap;
-      }
-    }
-
-    @media screen and (max-width: 480px) {
-      .compose {
-        width: 95%;
-        bottom: 10px;
-        right: 2.5%;
-      }
-
-      input[type="text"],
-      textarea {
-        width: 100%;
-        font-size: 14px;
-      }
-
-      .button,
-      .button1 {
-        padding: 10px;
-        font-size: 14px;
-      }
-
-      .child-body {
-        /* left: auto;
-        right: 1rem; */
-      }
-
-      .select_all_option{
-        display: none;
-      }
-
-      .more_options i{
-        /* padding: .25rem; */
-        scale: 1.4;
-      }
-      .email_outer_container i
-      {
-        padding: .25rem;
-        scale: 1.4;
-      }
-
-      .email_container input[type='checkbox']{
-        scale: 1.4;
-      }
-    }
-
+    
     .tag-container {
       display: flex;
       flex-wrap: wrap;
@@ -1339,7 +1247,7 @@
     .label-ops{
       display: none;
       position: absolute;
-      top: 40px;
+      top: 94px;
       left: 170px;
       min-width: 150px;
       background: white;
@@ -1360,6 +1268,109 @@
       font-size: 10px;
       justify-content: center;
     }
+    /*ckeditor ends*/
+    @media screen and (max-width: 1024px) {
+
+      .modal-1-content,
+      .modal-2-content,
+      .modal-3-content {
+        left: 0px;
+        margin: 10%;
+      }
+    }
+
+    @media screen and (max-width: 500px) {
+
+      .modal-1-content,
+      .modal-2-content,
+      .modal-3-content {
+        margin: 5%;
+      }
+    }
+
+    /* responsive code for tablet and small screens */
+
+    @media screen and (max-width: 768px) {
+      .compose {
+        width: 90%;
+        bottom: 20px;
+        right: 5%;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+      }
+
+      .send {
+        /* flex-direction: column; */
+        align-items: flex-start;
+      }
+
+      .attach_file {
+        margin-bottom: 10px;
+      }
+
+      .email_row {
+        display: flex;
+        grid-gap: .75rem;
+        flex-wrap: wrap;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .compose {
+        width: 95%;
+        bottom: 10px;
+        right: 2.5%;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        font-size: 14px;
+      }
+
+      .button,
+      .button1 {
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .child-body {
+        /* left: auto;
+        right: 1rem; */
+      }
+
+      .select_all_option{
+        display: none;
+      }
+
+      .more_options i{
+        /* padding: .25rem; */
+        scale: 1.4;
+      }
+      .email_outer_container i
+      {
+        padding: .25rem;
+        scale: 1.4;
+      }
+
+      .email_container input[type='checkbox']{
+        scale: 1.4;
+      }
+
+      .label-ops{
+        left: 67px;
+      }
+    }
+
+    @media screen and (max-width:427px){
+      .label-ops{
+        top: 137px;
+      }
+    }
+
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1642,11 +1653,14 @@
                 <!-- Modal content -->
                 <div class="modal-1-content">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
-                        <h5 style="position: relative;
-                        top: 9px">Want to Schedule the Email?</h5>
-                        <span class="close1">&times;</span>
+                      <span class="close1">&times;</span>
                     </div>
                     <hr>
+                    <div>
+                      <h6>Label as:</h6>  
+                      <h6 style="position: relative;
+                        top: 9px">Want to Schedule the Email?</h6>
+                      </div>
                     <div class="scadule-yes-no">
                       <input class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
                         <!-- <h6 class="scadule-no" onclick="EmailSent()">No, send without schedule</h6> -->
@@ -2740,7 +2754,6 @@
           alert("No files attached.");
           return;
       }
-
       
       alert(`${files.length} file(s) attached.`);
   });
