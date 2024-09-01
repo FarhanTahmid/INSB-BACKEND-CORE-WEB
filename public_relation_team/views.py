@@ -463,8 +463,8 @@ def mail(request):
                     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
                 elif section == 'sent':
                     threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent",pageToken='').execute()
-                # else:
-                #     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
+                else:
+                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
                 
                 thread_data = []
 
@@ -539,8 +539,8 @@ def mail(request):
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
                     elif section == 'sent':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent",pageToken='').execute()
-                    # else:
-                    #     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
 
                     thread_data = []
 
