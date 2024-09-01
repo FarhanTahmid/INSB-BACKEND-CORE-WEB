@@ -488,9 +488,11 @@ def mail(request):
                         labels = last_message.get('labelIds', [])
 
                         # Extract relevant fields from headers
-                        sender = next(header['value'] for header in headers if header['name'] == 'From')
-                        subject = next((header['value'] for header in headers if header['name'] == 'Subject'), '(No Subject)')
-                        date = next(header['value'] for header in headers if header['name'] == 'Date')
+                        header_dict = {header['name']: header['value'] for header in headers}
+                        sender = header_dict.get('From')
+                        subject = header_dict.get('Subject', '(No Subject)')
+                        subject = '(No Subject)' if subject == '' else subject
+                        date = header_dict.get('Date')
 
                         thread_data.append({
                             'sender': sender,
@@ -562,9 +564,11 @@ def mail(request):
                             labels = last_message.get('labelIds', [])
 
                             # Extract relevant fields from headers
-                            sender = next(header['value'] for header in headers if header['name'] == 'From')
-                            subject = next((header['value'] for header in headers if header['name'] == 'Subject'), '(No Subject)')
-                            date = next(header['value'] for header in headers if header['name'] == 'Date')
+                            header_dict = {header['name']: header['value'] for header in headers}
+                            sender = header_dict.get('From')
+                            subject = header_dict.get('Subject', '(No Subject)')
+                            subject = '(No Subject)' if subject == '' else subject
+                            date = header_dict.get('Date')
 
                             thread_data.append({
                                 'sender': sender,
