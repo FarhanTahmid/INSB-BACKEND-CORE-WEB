@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.conf import settings
+from django.views import View
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
 from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
@@ -12,12 +13,12 @@ from system_administration.render_access import Access_Render
 from system_administration.models import system
 from users.models import Members
 from port.models import Roles_and_Position
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Manage_Team
 from datetime import datetime
 from users import renderData
 import json
-from django.core.files.base import ContentFile
+from googleapiclient.discovery import build
 from django.core.files.storage import default_storage
 from users.renderData import LoggedinUser
 from django.utils.datastructures import MultiValueDictKeyError
@@ -440,104 +441,145 @@ def manageWebsiteHome(request):
 
 @login_required
 @member_login_permission
-def send_email(request):
+def mail(request):
     try:
-        GmailHandler.test_gmail(request)
-        sc_ag=PortData.get_all_sc_ag(request=request)
-        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-        user_data=current_user.getUserData() #getting user data as dictionary file
-
         user = request.user
         has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
                 or PRT_Data.prt_manage_email_access(user.username))
         
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            section = request.GET.get('section')
+
+            label = 'INBOX'
+            if section == 'inbox':
+                label = 'INBOX'
+            elif section == 'sent':
+                label = 'SENT'
+
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OK")
+                return None
+            try:
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+
+                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=[label], q="category:primary",pageToken='').execute()
+                thread_data = []
+
+                for thread in threads['threads']:
+                    thread_id = thread['id']
+
+                    # Fetch the required details for each message
+                    thread_details = service.users().threads().get(
+                        userId='me',
+                        id=thread_id,
+                        format='metadata',
+                        metadataHeaders=['From', 'Subject', 'Date']
+                    ).execute()
+                    
+                    messagess = thread_details.get('messages', [])
+
+                    if messagess:
+                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                        headers = last_message['payload'].get('headers', [])
+                        snippet = last_message.get('snippet', '')
+                        labels = last_message.get('labelIds', [])
+
+                        # Extract relevant fields from headers
+                        sender = next(header['value'] for header in headers if header['name'] == 'From')
+                        subject = next(header['value'] for header in headers if header['name'] == 'Subject')
+                        date = next(header['value'] for header in headers if header['name'] == 'Date')
+
+                        thread_data.append({
+                            'sender': sender,
+                            'subject': subject,
+                            'date': date,
+                            'labels': labels,
+                            'snippet': snippet,
+                        })
+
+            except Exception as e:
+                print(e)
+                print(f'Failed to create service instance for gmail')
+                                               
+                
+            context={
+                'threads':thread_data
+            }
+            
+            # Render the row.html template with the data
+            html = render(request, 'public_relation_team/email/email_row.html', context).content.decode('utf-8')
+            
+            # Return the HTML as a JSON response
+            return JsonResponse({'html': html})
+
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+                
         if(has_access):
+
             recruitment_sessions=PRT_Data.getAllRecruitmentSessions()
             under_maintainance = system.objects.all().first()
-            
-            if(request.method=="POST"):
-                if(request.POST.get('send_email')):
-                    
-                    '''
-                    The recruitment sessions "option value" from html comes
-                    as "recruits_{session_id}. Applied an algorithm that will retrieve
-                    session_id from this.
-                    
-                    If no option is selected, backend will recieve an empty string as value.
-                    
-                    Settled value for the options in HTML:
-                        All Registered Members - "general_members"
-                        ALL officers of IEEE NSU SB - "all_officers",
-                        Executive Panel (Branch Only) - "eb_panel",
-                        Branch Ex-Com Members - "excom_branch",
-                        All, Society, Chapters, Affinity Group Ebs - "scag_eb"
-                    
-                    '''
-                    
-                    
-                    email_single_email=request.POST['email_to']
-                    email_to_list=request.POST.getlist('to')
-                    email_cc_list=request.POST.getlist('cc')
-                    email_bcc_list=request.POST.getlist('bcc')
-                    email_subject=request.POST['subject']
-                    email_body=request.POST['body']
-                    email_schedule_date_time = request.POST['date_time']
 
+            section = request.GET.get('section')
+
+            label = 'INBOX'
+            if section == 'inbox':
+                label = 'INBOX'
+            elif section == 'sent':
+                label = 'SENT'
+
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OK")
+                return None
+            try:
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+
+                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=[label], q="category:primary",pageToken='').execute()
+                thread_data = []
+
+                for thread in threads['threads']:
+                    thread_id = thread['id']
+
+                    # Fetch the required details for each message
+                    thread_details = service.users().threads().get(
+                        userId='me',
+                        id=thread_id,
+                        format='metadata',
+                        metadataHeaders=['From', 'Subject', 'Date']
+                    ).execute()
                     
-                    if email_schedule_date_time != "":
-                        
-                        if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                            messages.error(request,"Select atleast one recipient")
-                        else:
-                            try:
-                            # If there is a file 
-                                email_attachment=request.FILES.getlist('attachment')                       
-                                to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                    email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                                )
-                                
-                                if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
-                                    messages.success(request,"Email scheduled successfully!")
-                                else:
-                                    messages.error(request,"Email could not be scheduled! Try again Later") 
-                            except MultiValueDictKeyError:
-                                to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                    email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                                )
-                                if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
-                                    messages.success(request,"Email scheduled successfully!")
-                                else:
-                                    messages.error(request,"Email could not be scheduled! Try again Later")
-                                            
-                    else:   
+                    messagess = thread_details.get('messages', [])
 
-                        if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                            messages.error(request,"Select atleast one recipient")
-                        else:
+                    if messagess:
+                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                        headers = last_message['payload'].get('headers', [])
+                        snippet = last_message.get('snippet', '')
+                        labels = last_message.get('labelIds', [])
 
-                            email_attachment=request.FILES.getlist('attachment')
+                        # Extract relevant fields from headers
+                        sender = next(header['value'] for header in headers if header['name'] == 'From')
+                        subject = next(header['value'] for header in headers if header['name'] == 'Subject')
+                        date = next(header['value'] for header in headers if header['name'] == 'Date')
 
-                            if email_attachment:
+                        thread_data.append({
+                            'sender': sender,
+                            'subject': subject,
+                            'date': date,
+                            'labels': labels,
+                            'snippet': snippet,
+                        })
 
-                                # If there is a file 
-                                to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                    email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                                )
-                                if PRT_Email_System.send_email(request, to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
-                                    messages.success(request,"Email sent successfully!")
-                                else:
-                                    messages.error(request,"Email sending failed! Try again Later")
-
-                            else:
-                                to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                                    email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                                )
-                                if PRT_Email_System.send_email(request, to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
-                                    messages.success(request,"Email sent successfully!")
-                                else:
-                                    messages.error(request,"Email sending failed! Try again Later")
-                                
-                            
+            except Exception as e:
+                print(e)
+                print(f'Failed to create service instance for gmail')
+                                               
                 
             context={
                 'all_sc_ag':sc_ag,
@@ -545,6 +587,7 @@ def send_email(request):
                 'media_url':settings.MEDIA_URL,
                 'recruitment_sessions':recruitment_sessions,
                 'under_maintenance':under_maintainance,
+                'threads':thread_data
             }
             return render(request,'public_relation_team/email/compose_email.html',context)
         else:
@@ -553,8 +596,111 @@ def send_email(request):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
-        return redirect('public_relation_team:send_email')
+        return cv.custom_500(request)
 
 def view_email(request):
 
     return render(request,'public_relation_team/email/view_email.html')
+    
+class TestAjax(View):
+    def post(self, request):
+        '''
+        The recruitment sessions "option value" from html comes
+        as "recruits_{session_id}. Applied an algorithm that will retrieve
+        session_id from this.
+        
+        If no option is selected, backend will recieve an empty string as value.
+        
+        Settled value for the options in HTML:
+            All Registered Members - "general_members"
+            ALL officers of IEEE NSU SB - "all_officers",
+            Executive Panel (Branch Only) - "eb_panel",
+            Branch Ex-Com Members - "excom_branch",
+            All, Society, Chapters, Affinity Group Ebs - "scag_eb"
+        
+        '''
+        
+        email_single_email = ''
+        if request.POST.get('to[]'):
+            email_single_email=request.POST.get('to[]')
+        email_to_list = ['']
+        if request.POST.getlist('sendTo[]'):
+            email_to_list=request.POST.getlist('sendTo[]')
+
+        email_cc_list = ['']
+        if request.POST.getlist('cc[]'): 
+            email_cc_list=request.POST.getlist('cc[]')
+        
+        email_bcc_list = ['']
+        if request.POST.getlist('bcc[]'):
+            email_bcc_list=request.POST.getlist('bcc[]')
+        email_subject=request.POST['subject']
+        email_body=request.POST['body']
+        email_schedule_date_time = request.POST['dateTime']
+
+        msg = 'Test'
+        print(request.POST)
+        
+        if email_schedule_date_time != "":
+            
+            if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                msg = 'Select atleast one recipient'
+                # messages.error(request,"Select atleast one recipient")
+            else:
+                try:
+                # If there is a file 
+                    email_attachment=request.FILES.getlist('attachments')                       
+                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
+                    )
+                    
+                    if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
+                        msg = 'Email scheduled successfully!'
+                        # messages.success(request,"Email scheduled successfully!")
+                    else:
+                        msg = 'Email could not be scheduled! Try again Later'
+                        # messages.error(request,"Email could not be scheduled! Try again Later") 
+                except MultiValueDictKeyError:
+                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
+                    )
+                    if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
+                        msg = 'Email scheduled successfully!'
+                        # messages.success(request,"Email scheduled successfully!")
+                    else:
+                        msg = 'Email could not be scheduled! Try again Later'
+                        # messages.error(request,"Email could not be scheduled! Try again Later")
+                                
+        else:   
+
+            if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
+                msg = 'Select atleast one recipient'
+                # messages.error(request,"Select atleast one recipient")
+            else:
+
+                email_attachment=request.FILES.getlist('attachments')
+
+                if email_attachment:
+
+                    # If there is a file 
+                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
+                    )
+                    if PRT_Email_System.send_email(request, to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
+                        msg = 'Email sent successfully!'
+                        # messages.success(request,"Email sent successfully!")
+                    else:
+                        msg = 'Email sending failed! Try again Later'
+                        # messages.error(request,"Email sending failed! Try again Later")
+
+                else:
+                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
+                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
+                    )
+                    if PRT_Email_System.send_email(request, to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
+                        msg = 'Email sent successfully!'
+                        # messages.success(request,"Email sent successfully!")
+                    else:
+                        msg = 'Email sending failed! Try again Later'
+                        # messages.error(request,"Email sending failed! Try again Later")
+        return JsonResponse({'message':msg})

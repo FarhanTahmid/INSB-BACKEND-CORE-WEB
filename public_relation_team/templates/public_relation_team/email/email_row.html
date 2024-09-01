@@ -1,0 +1,17 @@
+{% for thread in threads %}
+<div class="email_row_wrap" title="event">
+    <div class="checkbox_star">
+    <input type="checkbox" id="select" name="select" class="bold">
+    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+    </div>
+    <div class="email_row" onclick="markRead(this)">
+    <div class="email_row_left">
+        <p class="sender">{{thread.sender}}</p>
+    </div>
+    <div class="email_content">
+        <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
+    </div>
+    <div class="email_date">{{thread.date}}</div>
+    </div>
+</div> 
+{% endfor %}

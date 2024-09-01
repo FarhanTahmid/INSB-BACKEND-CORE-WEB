@@ -1403,15 +1403,16 @@
       <div class="email_wrapper">
         <div class="email_wrapper_2">
           <div class="email_boxes">
-            <a href="#" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
-            <a href="#" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
-            <a href="#" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev Mail</a>
+            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
+            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev Mail</a>
           </div>
           <!-- Farhana Compose Code -->
           <div class="child-body">
             <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
               Compose</button>
-              <form>
+              <form method="POST">
+                {% csrf_token %}
               </div>
                 <div class="compose hidden">
                     <div class="compose_email">
@@ -1659,7 +1660,7 @@
                         top: 9px">Want to Schedule the Email?</h6>
                       </div>
                     <div class="scadule-yes-no">
-                      <input type="submit" class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
+                      <input class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
                         <!-- <h6 class="scadule-no" onclick="EmailSent()">No, send without schedule</h6> -->
                         <h6 class="scadule-yes" onclick="ScheduleEmail()">Yes</h6>
                     </div>
@@ -1674,9 +1675,9 @@
                 ">
                         <span class="close2">&times;</span>
                       </div>
-                      <h5 style="position: relative;
+                      <h5 name='msg' style="position: relative;
                         text-align: center;
-                        bottom: 15px;">Email sent successfully</h5>
+                        bottom: 15px;"></h5>
                 </div>
               </div>
               <div id="modal3" class="pick_date_modal">
@@ -1694,7 +1695,7 @@
                       padding: 0 10px;
                       border-radius: 5px;
                       margin: .25rem;">
-                      <input type="submit" class="scadule-send" value="Send">
+                      <input type="button" class="scadule-send" value="Send">
                       <!-- <button class="scadule-send">Send</button> -->
                     </div>
                 </div>
@@ -1729,8 +1730,9 @@
               </div>
   
               <!-- Inbox Section -->
-              <div class="email_outer_container">
+              <div id="inbox" class="email_outer_container">
               <div class="email_inner_container inbox show">
+                {% for thread in threads %}
                 <div class="email_row_wrap" title="event">
                   <div class="checkbox_star">
                     <input type="checkbox" id="select" name="select" class="bold">
@@ -1738,696 +1740,21 @@
                   </div>
                   <div class="email_row" onclick="markRead(this)">
                     <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                      <p class="sender">{{thread.sender}}</p>
                     </div>
                     <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
                     </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
+                    <div class="email_date">{{thread.date}}</div>
                   </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender"></p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject"></span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit </p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject"></span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="task">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> -</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="task">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem </span> - Lorem ipsum dolor sit amet</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="task">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="task">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap" title="event">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">10st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                <div class="email_row_wrap">
-                  <div class="checkbox_star">
-                    <input type="checkbox" id="select" name="select" class="bold">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                  </div>
-                  <div class="email_row" onclick="markRead(this)">
-                    <div class="email_row_left">
-                      <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                    </div>
-                    <div class="email_date">1st August, 2024 9:00 AM</div>
-                  </div>
-                </div>
-                  
+                </div> 
+                {% endfor %}                
         
                   <!-- More inbox rows -->
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
-                  <div class="email_row_wrap">
-                    <div class="checkbox_star">
-                      <input type="checkbox" id="select" name="select" class="bold">
-                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                    </div>
-                    <div class="email_row" onclick="markRead(this)">
-                      <div class="email_row_left">
-                        <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                      </div>
-                      <div class="email_content">
-                        <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam, facere!</div>
-                      </div>
-                      <div class="email_date">10st August, 2024 9:00 AM</div>
-                    </div>
-                  </div>
               </div>
 
             <!-- Sent Section -->
-            <div class="email_inner_container sent">
+            <div id="sent" class="email_inner_container sent">
               <div class="email_row_wrap" title="event">
                 <div class="checkbox_star">
                   <input type="checkbox" id="select" name="select" class="bold">
@@ -2435,7 +1762,7 @@
                 </div>
                 <div class="email_row" onclick="markRead(this)">
                   <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                    <p class="sender">[SENT MAIL SAMPLE]</p>
                   </div>
                   <div class="email_content">
                     <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
@@ -2445,45 +1772,11 @@
                   <div class="email_date">2nd August, 2024 9:00 AM</div>
                 </div>
               </div>
-              <div class="email_row_wrap" title="event">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <div class="email_row" onclick="markRead(this)">
-                  <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                  </div>
-                  <div class="email_content">
-                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
-                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
-                      elit. Quam, facere!</div>
-                  </div>
-                  <div class="email_date">1st August, 2024 9:00 AM</div>
-                </div>
-              </div>
-              <div class="email_row_wrap" title="task">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <div class="email_row" onclick="markRead(this)">
-                  <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
-                  </div>
-                  <div class="email_content">
-                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
-                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
-                      elit. Quam, facere!</div>
-                  </div>
-                  <div class="email_date">1st August, 2024 9:00 AM</div>
-                </div>
-              </div>
               <!-- More sent rows -->
             </div>
 
             <!-- Dev Mail Section -->
-            <div class="email_inner_container dev_mail">
+            <div id="dev_mail" class="email_inner_container dev_mail">
               <div class="email_row_wrap" title="announsment">
                 <div class="checkbox_star">
                   <input type="checkbox" id="select" name="select" class="bold">
@@ -2538,6 +1831,26 @@
   <!-- ############ LAYOUT END-->
 
     <script>
+      // Optionally, you can also run loadContent on initial load as before
+      document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let section = urlParams.get('section') || 'inbox';
+        window.history.replaceState(null, '', '?section='+section);
+
+        {% comment %} // Hide all sections
+        const sections = document.querySelectorAll('.email_inner_container');
+        sections.forEach(sec => sec.classList.remove('show'));
+
+        // Remove 'active' class from all links
+        const links = document.querySelectorAll('.email_box');
+        links.forEach(link => link.classList.remove('active'));
+
+        // Show the selected section
+        document.querySelector(`.${section}`).classList.add('show');
+
+        // Add 'active' class to the clicked link
+        $().classList.add('active'); {% endcomment %}
+      });
       // count the mails
       function updateMailCounts() {
         // Identify the currently active container
@@ -2581,6 +1894,9 @@
 
       //showing emails according to selected email box
       function activeInbox(element, section) {
+        event.preventDefault();
+        window.history.pushState(null, '', "?section="+section);
+
         const emailRows = document.querySelectorAll('.email_row');
         const screenWidth = window.innerWidth;
 
@@ -2613,6 +1929,25 @@
 
         // Add 'active' class to the clicked link
         element.classList.add('active');
+
+        $.ajax({
+          url: "{% url 'public_relation_team:mail' %}",  // URL pointing to your Django view
+          method: 'GET',
+          success: function(response) {
+              // Append the returned HTML to the table body
+              if(section === 'inbox')
+              {
+                $('#'+section+' div').html("");
+                $('#'+section+' div').append(response.html);
+              }
+              else 
+              {
+                $('#'+section).html("");
+                $('#'+section).append(response.html);
+              }
+          }
+        });
+
         // Update mail counts based on the selected container
         updateMailCounts();
       }
@@ -2860,19 +2195,48 @@
     function EmailSent(){
           // Capture values from input fields
           var subject = document.querySelector('input[name="subject"]').value;
-          var dateTime = document.querySelector('input[name="datetime-local"]').value
+          var body = getEditorContent();
+          var dateTime = document.querySelector('input[name="datetime-local"]').value;
+          var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+          var mssg = document.querySelector('h5[name="msg"]');
+          var attachments = document.querySelector('input[name="myfile"]');
+          mssg.innerHTML = 'Sending...';
 
-          // Store the values in variables (if needed)
-          var emailData = {
-              to: getAllSelectedTags(),
-              sendTo: getUniqueSelectedTags(),
-              cc: getCustomSelectedTags(),
-              bcc: getAltSelectedTags(),
-              subject: subject,
-              dateTime: dateTime
-          };
-          console.log(emailData)
+          var formData = new FormData();
+          formData.append('to[]', getAllSelectedTags());
+          formData.append('sendTo[]', getUniqueSelectedTags());
+          formData.append('cc[]', getCustomSelectedTags());
+          formData.append('bcc[]', getAltSelectedTags());
+          formData.append('subject', subject);
+          formData.append('dateTime', dateTime);
+          formData.append('body', body);
+          formData.append('csrfmiddlewaretoken', csrf);
 
+          // Append each file from the attachments input
+          for (var i = 0; i < attachments.files.length; i++) {
+              console.log('OK');
+              formData.append('attachments', attachments.files[i]);
+          }
+
+          $.ajax({
+              url: "{% url 'public_relation_team:send_mail_request' %}",
+              type: "POST",
+              data: formData,
+              processData: false,  // Important!
+              contentType: false,  // Important!
+              headers: {
+                  "X-CSRFToken": csrf
+              },
+              success: function(response) {
+                  // Handle the response
+                  console.log(response);
+                  mssg.innerHTML = response['message'];
+              },
+              error: function(error) {
+                  console.error("Error:", error);
+              }
+          });
+        
           var modal1 = document.getElementById("modal1");
           modal1.style.zIndex = '-100';
           modal1.style.opacity = '0';
