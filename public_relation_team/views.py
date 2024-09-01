@@ -442,7 +442,7 @@ def manageWebsiteHome(request):
 @login_required
 @member_login_permission
 def mail(request):
-    try:
+    # try:
         user = request.user
         has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
                 or PRT_Data.prt_manage_email_access(user.username))
@@ -461,49 +461,49 @@ def mail(request):
             if not credentials:
                 print("NOT OK")
                 return None
-            try:
-                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+            # try:
+            service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
 
-                threads = service.users().threads().list(userId='me', maxResults=10, labelIds=[label], q="category:primary",pageToken='').execute()
-                thread_data = []
+            threads = service.users().threads().list(userId='me', maxResults=10, labelIds=[label], q="category:primary",pageToken='').execute()
+            thread_data = []
 
-                for thread in threads['threads']:
-                    thread_id = thread['id']
+            for thread in threads['threads']:
+                thread_id = thread['id']
 
-                    # Fetch the required details for each message
-                    thread_details = service.users().threads().get(
-                        userId='me',
-                        id=thread_id,
-                        format='metadata',
-                        metadataHeaders=['From', 'Subject', 'Date']
-                    ).execute()
-                    
-                    messagess = thread_details.get('messages', [])
+                # Fetch the required details for each message
+                thread_details = service.users().threads().get(
+                    userId='me',
+                    id=thread_id,
+                    format='metadata',
+                    metadataHeaders=['From', 'Subject', 'Date']
+                ).execute()
+                
+                messagess = thread_details.get('messages', [])
 
-                    if messagess:
-                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-                        headers = last_message['payload'].get('headers', [])
-                        snippet = last_message.get('snippet', '')
-                        labels = last_message.get('labelIds', [])
+                if messagess:
+                    last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                    headers = last_message['payload'].get('headers', [])
+                    snippet = last_message.get('snippet', '')
+                    labels = last_message.get('labelIds', [])
 
-                        # Extract relevant fields from headers
-                        sender = next(header['value'] for header in headers if header['name'] == 'From')
-                        subject = next(header['value'] for header in headers if header['name'] == 'Subject')
-                        date = next(header['value'] for header in headers if header['name'] == 'Date')
+                    # Extract relevant fields from headers
+                    sender = next(header['value'] for header in headers if header['name'] == 'From')
+                    subject = next(header['value'] for header in headers if header['name'] == 'Subject')
+                    date = next(header['value'] for header in headers if header['name'] == 'Date')
 
-                        thread_data.append({
-                            'sender': sender,
-                            'subject': subject,
-                            'date': date,
-                            'labels': labels,
-                            'snippet': snippet,
-                        })
+                    thread_data.append({
+                        'sender': sender,
+                        'subject': subject,
+                        'date': date,
+                        'labels': labels,
+                        'snippet': snippet,
+                    })
 
-            except Exception as e:
-                print(e)
-                print(f'Failed to create service instance for gmail')
+            # except Exception as e:
+            #     print(e)
+            #     print(f'Failed to create service instance for gmail')
                                                
                 
             context={
@@ -593,11 +593,11 @@ def mail(request):
             return render(request,'public_relation_team/email/compose_email.html',context)
         else:
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
-        return cv.custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
+    #     return cv.custom_500(request)
 
 def view_email(request):
 
