@@ -221,7 +221,7 @@
       /* position: fixed;
       bottom: 70px;
       right: 10px; */
-      margin: 10px;
+      /* margin: 10px; */
     }
 
     .compose_email input[type="text"] {
@@ -270,7 +270,7 @@
 
 
     .ckeditor_view_email {
-      border: 1px solid gray;
+      border: 1px solid #e0e0e0;
       border-radius: 10px;
       padding: .5rem 1rem 1rem;
       display: none;
@@ -556,10 +556,10 @@
 
         <form method="POST">
         <div class="compose_email ckeditor_view_email" id="ck_view_reply">
-                      <div class="tag-container" id="tagContainer">
-                        <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
-                        <input type="text" name="to" class="tag-input" id="tagInput">
-                    </div>
+                <div class="tag-container" id="tagContainer1">
+                  <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+                  <input type="text" name="to" class="tag-input" id="tagInput1">
+              </div>
                 <!--ckeditor-->
                 {% block WFReditor %}
                 {% include 'WFReditor.html' %}
@@ -594,7 +594,7 @@
                 </div>
             </div>
             
-            <div class="alt-tag-container" id="altTagContainer"></div>       
+            <div class="alt-tag-container" id="altTagContainer" style="margin-bottom: 1rem;"></div>      
               <!--ckeditor-->
               {% include 'WFReditor.html' %}
               {% endblock WFReditor %}
@@ -679,6 +679,39 @@
       tag.appendChild(span);
       tag.appendChild(removeButton);
       tagContainer.insertBefore(tag, tagInput); // Add the tag before the input field
+  }
+</script>
+<script>
+  const tagContainer1 = document.getElementById('tagContainer1');
+  const tagInput1 = document.getElementById('tagInput1');
+
+  tagInput1.addEventListener('keydown', function (event) {
+    if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+      event.preventDefault();
+      addTag1(tagInput1.value.trim());
+      tagInput1.value = '';
+    }
+  });
+
+  function addTag1(tagText) {
+    if (tagText === '') return;
+
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+
+    const span = document.createElement('span');
+    span.textContent = tagText;
+
+    const removeButton = document.createElement('span');
+    removeButton.className = 'remove-tag';
+    removeButton.innerHTML = '&times;';
+    removeButton.onclick = () => {
+      tagContainer1.removeChild(tag);
+    };
+
+    tag.appendChild(span);
+    tag.appendChild(removeButton);
+    tagContainer1.insertBefore(tag, tagInput1);
   }
 </script>
 <script>
