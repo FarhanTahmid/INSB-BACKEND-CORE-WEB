@@ -323,7 +323,7 @@
 
     .select_all_option>label {
       margin: 0;
-      margin-left: 5px;
+      margin-left: 0.75rem;
       width: max-content;
     }
 
@@ -384,7 +384,21 @@
       background-color: #ccc;
       border-radius: 12px;
     }
+    .unique-dropdown-content::-webkit-scrollbar,
+    .custom-dropdown-content::-webkit-scrollbar,
+    .alt-dropdown-content::-webkit-scrollbar
+     {
+      width: 4px;
+    }
 
+    .unique-dropdown-content::-webkit-scrollbar-thumb,
+    .custom-dropdown-content::-webkit-scrollbar-thumb,
+    .alt-dropdown-content::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 12px;
+    }
+
+    
     .show {
       display: block;
     }
@@ -410,6 +424,12 @@
       justify-content: center;
       align-items: center;
       gap: .5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      line-clamp: 1;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
     }
 
     .email_row_left>i {
@@ -623,7 +643,7 @@
       border: 1px solid rgb(136, 136, 136);
       max-width: 550px;
       max-height: 70vh;
-      overflow-y: scroll;
+      /* overflow-y: scroll; */
       border-radius: 6px;
       box-shadow: 2px 2px 5px 0px #80808054;
       position: relative;
@@ -998,9 +1018,9 @@
         background-color: #f9f9f9;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
-        width: 100%;
         max-height: 200px;
         overflow-y: auto;
+        width: 550px;
     }
 
     .custom-dropdown-content div {
@@ -1052,9 +1072,9 @@
         background-color: #f9f9f9;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
-        width: 100%;
         max-height: 200px;
         overflow-y: auto;
+        width: 550px;
     }
 
     .alt-dropdown-content div {
@@ -1106,9 +1126,9 @@
         background-color: #f9f9f9;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
-        width: 100%;
         max-height: 200px;
         overflow-y: auto;
+        width: 550px;
     }
 
     .unique-dropdown-content div {
@@ -1268,6 +1288,20 @@
       font-size: 10px;
       justify-content: center;
     }
+
+    .more_options i{
+        /* padding: .25rem; */
+        scale: 1.2;
+      }
+      .email_outer_container i
+      {
+        padding: .25rem;
+        scale: 1.2;
+      }
+
+      .email_container input[type='checkbox']{
+        scale: 1.2;
+      }
     /*ckeditor ends*/
     @media screen and (max-width: 1024px) {
 
@@ -1312,9 +1346,20 @@
       }
 
       .email_row {
-        display: flex;
+        /* display: flex; */
         grid-gap: .75rem;
-        flex-wrap: wrap;
+        /* flex-wrap: wrap;
+        flex-direction: column; */
+        /* align-items: flex-start; */
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
+      .alt-dropdown-content,
+      .custom-dropdown-content,
+      .unique-dropdown-content{
+        width: 100%;
       }
     }
 
@@ -1371,6 +1416,10 @@
       }
     }
 
+    .labels{
+      display: flex;
+      flex-direction: column;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1652,14 +1701,28 @@
               <div id="modal1" class="send_confirm_modal">
                 <!-- Modal content -->
                 <div class="modal-1-content">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
                       <span class="close1">&times;</span>
                     </div>
-                    <hr>
-                    <div>
-                      <h6>Label as:</h6>  
+                    <!-- <hr> -->
+                    <div style="padding: .5rem 1.25rem .75rem;">
+                      <h6 style="font-weight: bold;">Label as: (Optional)</h6> 
+                      <div class="labels">
+                        <div>
+                          <input type="checkbox" name="event">
+                          <label for="event">Event</label>
+                        </div>
+                        <div>
+                          <input type="checkbox" name="task">
+                          <label for="task">Task</label>
+                        </div>
+                        <div>
+                          <input type="checkbox" name="announcement">
+                          <label for="announcement">Announcement</label>
+                        </div>
+                      </div> 
                       <h6 style="position: relative;
-                        top: 9px">Want to Schedule the Email?</h6>
+                        top: 9px; font-weight: bold;">Want to Schedule the Email?</h6>
                       </div>
                     <div class="scadule-yes-no">
                       <input class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
@@ -2748,15 +2811,15 @@
   });
 
   // Send Button click event
-  document.querySelector('.btnSend').addEventListener('click', function() {
-      const files = document.getElementById('myfile').files;
-      if (files.length === 0) {
-          alert("No files attached.");
-          return;
-      }
+  // document.querySelector('.btnSend').addEventListener('click', function() {
+  //     const files = document.getElementById('myfile').files;
+  //     if (files.length === 0) {
+  //         alert("No files attached.");
+  //         return;
+  //     }
       
-      alert(`${files.length} file(s) attached.`);
-  });
+  //     alert(`${files.length} file(s) attached.`);
+  // });
 
   function handleFileSelect(event) {
       const fileInput = event.target;
