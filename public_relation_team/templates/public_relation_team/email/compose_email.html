@@ -2784,7 +2784,8 @@
           type: "GET",
           success: function(response) {
               // Handle the response
-              console.log(response);
+              $('#'+urlParams.get('section')).html("");
+              $('#'+urlParams.get('section')).append(response.html);
           },
           error: function(error) {
               console.error("Error:", error);

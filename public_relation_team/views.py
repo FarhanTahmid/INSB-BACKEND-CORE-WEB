@@ -1,5 +1,7 @@
+from urllib.parse import urlencode
 from django.shortcuts import render,redirect
 from django.conf import settings
+from django.urls import reverse
 from django.views import View
 import requests
 from central_branch import renderData
@@ -527,7 +529,6 @@ def mail(request):
                 context={
                     'threads':thread_data,
                 }
-                print(request.session.get('pg_token'))
                 
                 # Render the row.html template with the data
                 html = render(request, 'public_relation_team/email/email_row.html', context).content.decode('utf-8')
@@ -614,8 +615,6 @@ def mail(request):
                     'under_maintenance':under_maintainance,
                     'threads':thread_data
                 }
-                print(request.session.get('pg_token'))
-
                 return render(request,'public_relation_team/email/compose_email.html',context)
         else:
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
@@ -745,12 +744,15 @@ class PaginationAjax(View):
                 if pg_token:
                     
                     if navigate_to == 'next_page':
-                        response = requests.get('http://127.0.0.1:8000/portal/public_relation_team/mail/', params=request.GET, headers=request.headers)
-                        response = response.json()
-                        print(response)
+                        response = mail(request)
+                        # Redirect with the URL containing custom params
+                        response = json.loads(response.content)
                         request.session['pg_token'].append(response['nextPageToken'])
+                        request.session.modified = True
+                        return JsonResponse(response)
                     elif navigate_to == 'prev_page':
                         prev_token = request.session['pg_token'].pop()
+                        request.session.modified = True
                     else:
                         return JsonResponse({'message':'error'})
 
