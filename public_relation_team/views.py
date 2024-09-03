@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.conf import settings
 from django.views import View
+import requests
 from central_branch import renderData
 from django.contrib.auth.decorators import login_required
 from central_events.models import SuperEvents,Events,InterBranchCollaborations,IntraBranchCollaborations,Event_Venue
@@ -448,8 +449,17 @@ def mail(request):
                 or PRT_Data.prt_manage_email_access(user.username))
         
         if has_access:
+            if request.session.get('pg_token') and not request.GET.get('navigate_to'):
+                del request.session['pg_token']
+                request.session.modified = True
+
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 section = request.GET.get('section')
+                tokens = request.session.get('pg_token')
+                if tokens:
+                    pg_token = tokens[-1]
+                else:
+                    pg_token = ''
 
                 credentials = GmailHandler.get_credentials(request)
                 if not credentials:
@@ -460,12 +470,19 @@ def mail(request):
                 print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                 if section == 'inbox':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
+                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section == 'sent':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent",pageToken='').execute()
+                    threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
+                elif section =='dev_mail':
+                    threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
                 else:
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
+                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 
+                
+                if not request.session.get('pg_token'):
+                    request.session['pg_token'] = [threads['nextPageToken']]
+                    request.session.modified = True
+
                 thread_data = []
 
                 for thread in threads['threads']:
@@ -508,14 +525,15 @@ def mail(request):
                                                 
                     
                 context={
-                    'threads':thread_data
+                    'threads':thread_data,
                 }
+                print(request.session.get('pg_token'))
                 
                 # Render the row.html template with the data
                 html = render(request, 'public_relation_team/email/email_row.html', context).content.decode('utf-8')
                 
                 # Return the HTML as a JSON response
-                return JsonResponse({'html': html})
+                return JsonResponse({'html': html,'nextPageToken':threads['nextPageToken']})
             
             else:
                 
@@ -536,13 +554,18 @@ def mail(request):
                     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                     if section == 'inbox':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
                     elif section == 'sent':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent",pageToken='').execute()
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken='').execute()
+                    elif section =='dev_mail':
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
                     else:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary",pageToken='').execute()
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
 
                     thread_data = []
+
+                    request.session['pg_token'] = [threads['nextPageToken']]
+                    request.session.modified = True
 
                     for thread in threads['threads']:
                         thread_id = thread['id']
@@ -591,6 +614,8 @@ def mail(request):
                     'under_maintenance':under_maintainance,
                     'threads':thread_data
                 }
+                print(request.session.get('pg_token'))
+
                 return render(request,'public_relation_team/email/compose_email.html',context)
         else:
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
@@ -708,3 +733,29 @@ class TestAjax(View):
                         msg = 'Email sending failed! Try again Later'
                         # messages.error(request,"Email sending failed! Try again Later")
         return JsonResponse({'message':msg})
+    
+class PaginationAjax(View):
+    def get(self, request):
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            navigate_to = request.GET.get('navigate_to')
+            section = request.GET.get('section')
+
+            if navigate_to and section:
+                pg_token = request.session.get('pg_token')
+                if pg_token:
+                    
+                    if navigate_to == 'next_page':
+                        response = requests.get('http://127.0.0.1:8000/portal/public_relation_team/mail/', params=request.GET, headers=request.headers)
+                        response = response.json()
+                        print(response)
+                        request.session['pg_token'].append(response['nextPageToken'])
+                    elif navigate_to == 'prev_page':
+                        prev_token = request.session['pg_token'].pop()
+                    else:
+                        return JsonResponse({'message':'error'})
+
+                    return JsonResponse({'message':'OK'})
+                else:
+                    return JsonResponse({'message':'error'})
+        else:
+            return HttpResponse('Access Denied!')

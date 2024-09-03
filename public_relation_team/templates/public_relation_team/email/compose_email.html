@@ -1723,7 +1723,7 @@
 
                     {% comment %} Pagination {% endcomment %}
                     <div class="pagination">
-                      <button class="prev-page" disabled>◄</button>
+                      <button class="prev-page">◄</button>
                       <span class="page-info">1-50 of 150</span>
                       <button class="next-page">►</button>
                     </div>
@@ -1859,6 +1859,7 @@
         const activeContainer = document.querySelector('.email_inner_container.show');
 
         if (!activeContainer) return;
+        console.log(activeContainer);
 
         // Get all label elements
         const labels = document.querySelectorAll('.label-ops div[title]');
@@ -1868,8 +1869,8 @@
             const countElement = labelElement.parentElement.nextElementSibling;
             
             // Count the number of emails with this label in the active container
-            const count = activeContainer.querySelectorAll(`.email_row_wrap[title="${label}"]`).length;
-            
+            //const count = activeContainer.querySelectorAll(`.email_row_wrap[title="${label}"]`).length;
+            const count = activeContainer.querySelectorAll(`.email_row_wrap`).length;
             // Update the label-mail-cnt with the count
             countElement.textContent = count;
           }
@@ -2695,23 +2696,46 @@
 
     // Event Listeners for Pagination Buttons
     document.querySelector('.prev-page').addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            showEmailsForPage();
-            updatePaginationInfo();
-        }
+        $.ajax({
+            url: "{% url 'public_relation_team:navigate' %}?navigate_to=prev_page",
+            type: "GET",
+            success: function(response) {
+                // Handle the response
+                console.log(response);
+            },
+            error: function(error) {
+                console.error("Error:", error);
+            }
+        });
+        // if (currentPage > 1) {
+        //     currentPage--;
+        //     showEmailsForPage();
+        //     updatePaginationInfo();
+        // }
     });
 
     document.querySelector('.next-page').addEventListener('click', () => {
-        if (currentPage * emailsPerPage < totalEmails) {
-            currentPage++;
-            showEmailsForPage();
-            updatePaginationInfo();
-        }
+      const urlParams = new URLSearchParams(window.location.search);
+      $.ajax({
+          url: "{% url 'public_relation_team:navigate' %}?navigate_to=next_page&section="+urlParams.get('section'),
+          type: "GET",
+          success: function(response) {
+              // Handle the response
+              console.log(response);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+          }
+      });
+        // if (currentPage * emailsPerPage < totalEmails) {
+        //     currentPage++;
+        //     showEmailsForPage();
+        //     updatePaginationInfo();
+        // }
     });
 
     showEmailsForPage();
-    updatePaginationInfo();
+    {% comment %} updatePaginationInfo(); {% endcomment %}
 
 
 </script>
