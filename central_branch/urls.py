@@ -145,4 +145,10 @@ urlpatterns = [
     path('task_history/team/<int:team_primary>',views.team_task_history,name="team_task_history"),
     ##
     path('task_leaderboard/',views.task_leaderboard,name="task_leaderboard"),
+
+    #Send Email
+    path('mail/',views.mail,name="mail"),
+    path('view_email',views.view_email,name="view_email"),
+    path('send_mail_request/', views.SendMailAjax.as_view(),name='send_mail_request'),
+    path('navigate/', views.PaginationAjax.as_view(),name='navigate'),
 ]

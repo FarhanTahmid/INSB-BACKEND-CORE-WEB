@@ -1997,7 +1997,7 @@
         element.classList.add('active');
 
         $.ajax({
-          url: "{% url 'public_relation_team:mail' %}?section="+section,  // URL pointing to your Django view
+          url: "{% url 'central_branch:mail' %}?section="+section,  // URL pointing to your Django view
           method: 'GET',
           success: function(response) {
               // Append the returned HTML to the table body
@@ -2277,7 +2277,7 @@
           }
 
           $.ajax({
-              url: "{% url 'public_relation_team:send_mail_request' %}",
+              url: "{% url 'central_branch:send_mail_request' %}",
               type: "POST",
               data: formData,
               processData: false,  // Important!
@@ -2760,7 +2760,7 @@
     // Event Listeners for Pagination Buttons
     document.querySelector('.prev-page').addEventListener('click', () => {
         $.ajax({
-            url: "{% url 'public_relation_team:navigate' %}?navigate_to=prev_page",
+            url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page",
             type: "GET",
             success: function(response) {
                 // Handle the response
@@ -2780,12 +2780,15 @@
     document.querySelector('.next-page').addEventListener('click', () => {
       const urlParams = new URLSearchParams(window.location.search);
       $.ajax({
-          url: "{% url 'public_relation_team:navigate' %}?navigate_to=next_page&section="+urlParams.get('section'),
+          url: "{% url 'central_branch:navigate' %}?navigate_to=next_page&section="+urlParams.get('section'),
           type: "GET",
           success: function(response) {
               // Handle the response
-              $('#'+urlParams.get('section')).html("");
-              $('#'+urlParams.get('section')).append(response.html);
+              if(response.message == 'success')
+              {
+                  $('#'+urlParams.get('section')).html("");
+                  $('#'+urlParams.get('section')).append(response.html);
+              }
           },
           error: function(error) {
               console.error("Error:", error);
