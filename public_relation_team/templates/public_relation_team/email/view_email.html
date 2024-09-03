@@ -5,74 +5,471 @@
 <head>
   <meta charset="utf-8" />
   <title>Email | IEEE NSU Student Branch</title>
-  <link rel="icon" href="{% static 'logos/logo.gif' %}"/>
+  <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
   {% block common_css %}
-    {% include "common_css.html" %}
+  {% include "common_css.html" %}
   {% endblock common_css %}
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!--Internal CSS-->
   <style>
-    body{
-      background: linear-gradient(135deg,white,#00629b, #00619d);
+    body {
+      background: white;
     }
 
-    .central_body{
-      margin: 50px;
-      padding: 50px;
+    .central_body {
+      margin: 3rem;
+      padding: 2rem;
       background-color: white;
       border-radius: 10px;
+      box-shadow: 0px 0px 6px 0px gray;
+      margin-bottom: 100px;
     }
 
-    .central_body h1{
+    .central_body h1 {
       font-size: 30px;
       font-weight: 100;
       border-bottom: 1px solid gray;
       padding-bottom: 10px;
+      flex-grow: 1;
     }
 
-    .heading{
+    .heading {
       display: flex;
       justify-content: space-between;
       padding: 20px 0px 30px 0px;
     }
 
-    .heading h2{
+    .heading h2 {
       font-size: 20px;
       font-weight: bold;
-      margin-bottom: 0px;
+      margin-bottom: 5px;
       padding-right: 10px;
     }
 
-    .heading_col1{
+    .heading_col1 {
       display: flex;
       justify-content: space-between;
       flex-basis: 20%;
       align-items: center;
     }
 
-    .buttons{
-      padding-top: 20px;
+    .heading_col2 {
+      display: flex;
+      justify-content: space-between;
+      flex-basis: 12%;
+      align-items: center;
     }
 
-    .reply_button, .forward_button{
+    .buttons {
+      padding-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .reply_button,
+    .forward_button,
+    .send_button {
       border: 1px solid gray;
       border-radius: 20px;
-      padding: 10px 30px;
+      padding: .25rem 1rem;
       font-size: 15px;
       transition: 0.1s;
       color: gray;
       margin-right: 10px;
+      background-color: white;
     }
 
-    .reply_button:hover, .forward_button:hover{
+    .reply_button:hover,
+    .forward_button:hover,
+    .send_button:hover {
       border-color: black;
       color: black;
+      cursor: pointer;
     }
 
-  
+    .send_button {
+      margin-top: 20px;
+    }
+
+
+    .attachments {
+      /* margin-top: 20px;
+            padding: 15px 15px 5px 15px;
+            border: 1px solid gray;
+            border-radius: 5px;
+            background-color: rgb(240, 240, 240);
+            width: 40%; */
+    }
+
+    .attachments ul {
+      list-style-type: none;
+      padding: 0px;
+      padding-left: 10px;
+    }
+
+    .attachments ul li {
+      margin-bottom: 10px;
+    }
+
+    .attachments ul li a {
+      color: #00629b;
+      text-decoration: none;
+      transition: 0.1s;
+    }
+
+    .attachments ul li a:hover {
+      color: #004770;
+    }
+
+    .attachments p {
+      margin-bottom: 10px;
+    }
+
+    .desc {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1em;
+      resize: vertical;
+      margin-bottom: 20px;
+      min-height: 200px;
+    }
+
+    /* .textarea{
+      display: none;
+    }
+
+    .textarea h3{
+      font-size: 15px;
+      margin-bottom: 0px;
+    } */
+
+    .dropbtn {
+      color: #00629b;
+      background-color: white;
+      padding: 0px;
+      border: none;
+      border-radius: 50%;
+      height: 30px;
+      width: 30px;
+      transition: all .3s ease-in-out;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown_content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 10px 15px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      /* margin-left: -130px; */
+      border-radius: 0.25rem;
+      right: 0px;
+    }
+
+    .dropdown_content a {
+      color: black;
+      padding: 10px 20px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown_content a:hover {
+      background-color: #ddd;
+    }
+
+    .dropdown:hover .dropdown_content {
+      display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+      background-color: #00629b;
+      color: white;
+    }
+
+    .email_dp {
+      width: 30%;
+      margin-right: 15px;
+    }
+
+    .return_inbox {
+      font-size: 25px;
+      padding: 0rem 0rem 1rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .fa-arrow-left:hover {
+      color: #004770;
+    }
+
+    .fa-arrow-left {
+      transition: all 0.3s ease-in-out;
+      color: #00629b;
+    }
+
+
+    .compose_email {
+      /* position: fixed;
+      bottom: 70px;
+      right: 10px; */
+      /* margin: 10px; */
+    }
+
+    .compose_email input[type="text"] {
+      width: 100%;
+      /* padding: 10px 12px; */
+      margin: 3px 0;
+      display: inline-block;
+      border: 0px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .compose_email input::placeholder {
+      color: #4f4f4f;
+    }
+
+    textarea {
+      resize: none;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      width: 100%;
+      padding: 10px;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #e0e0e0;
+      height: 100px;
+      /* color: black; */
+      box-sizing: border-box;
+    }
+
+    .send {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin: 10px;
+    }
+
+    .attach_file {
+      margin-left: -6px;
+      font-weight: bold;
+      font-size: 1.25rem;
+      transform: rotate(90deg);
+      color: #646464;
+    }
+
+
+    .ckeditor_view_email {
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: .5rem 1rem 1rem;
+      display: none;
+    }
+
+
+
+    @media screen and (max-width:480px) {
+
+      .central_body {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .return_inbox {
+        margin: -10px 0px 10px -10px;
+        font-size: 20px;
+      }
+
+      .heading_col1 {
+        flex-basis: 50%;
+      }
+
+      .heading_col2 {
+        flex-basis: 30%;
+      }
+
+      .attachments {
+        width: 100%;
+      }
+
+      .email_dp {
+        margin-right: 10px;
+      }
+
+    }
+
+    @media screen and (max-width:768px) {
+
+      .attachments {
+        width: 60%;
+      }
+
+      .heading_col2 {
+        flex-basis: 20%;
+      }
+    }
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      /* border: 1px solid #ccc; */
+      padding: 5px;
+      /* border-radius: 4px; */
+      min-height: 40px;
+      cursor: text;
+      align-items: center;
+    }
+
+    
+    .tag {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 30px;
+      padding: 0 .75rem;
+      margin: 2px;
+      display: flex;
+      align-items: center;
+    }
+
+    .tag span {
+      margin-right: 5px;
+    }
+
+    .tag .remove-tag {
+      cursor: pointer;
+      padding: 2px;
+      color: #888;
+    }
+
+    .tag .remove-tag:hover {
+      color: #000;
+    }
+
+    .tag-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      padding: 5px;
+    }
+
+    .custom-dropdown-container {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .custom-dropdown-input {
+        width: 100%;
+        /* padding: 8px; */
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .custom-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        max-height: 200px;
+        overflow-y: auto;
+        width: 550px;
+    }
+
+    .custom-dropdown-content div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .custom-dropdown-content div:hover {
+        background-color: #ddd;
+    }
+
+    .custom-tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .custom-tag {
+        background-color: #007bff;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .custom-remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .alt-dropdown-container {
+        position: relative;
+        display: inline-block;
+        width: 300px;
+    }
+
+    .alt-dropdown-input {
+        width: 100%;
+        /* padding: 8px; */
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+
+    .alt-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        max-height: 200px;
+        overflow-y: auto;
+        width: 550px;
+    }
+
+    .alt-dropdown-content div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .alt-dropdown-content div:hover {
+        background-color: #ddd;
+    }
+
+    .alt-tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+
+    .alt-tag {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .alt-remove-tag {
+        margin-left: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -101,48 +498,420 @@
     <div ui-view class="app-body" id="view" style="justify-content:center;">
 
       <!-- ############ PAGE START-->
+      <div class="central_body">
 
-      <section class="central_body"> 
-
-      <h1>(Subject)</h1>
-
-      <div class="heading">
-        <div class="heading_col1"> 
-          <h2>(Sender_name)</h2>
-          <address style="margin: 0px;">
-          <a href="mailto:07marsaad@gmail.com">(Sender_email)</a>
-          </address>
+        <div class="return_inbox">
+          <a href="#"><i class="fa fa-arrow-left"></i></a>
+          <h1>(Subject)</h1>
         </div>
-        <p style="margin: 0px;">(Date_sent)</p>
+
+        <div class="heading">
+          <div class="heading_col1">
+            <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
+            <div class="col1_inner">
+              <h2>(Sender_name)</h2>
+              <address style="margin: 0px; color: gray;">
+                <a href="#">(Sender_email)</a>
+              </address>
+            </div>
+          </div>
+          <div class="heading_col2">
+            <p style="margin: 0px; color: gray;">(Date_sent)</p>
+            <div class="dropdown">
+              <button class="dropbtn"><i class="fa fa-bars"></i></button>
+              <div class="dropdown_content">
+                <a href="#" onclick="myFunction1()">Reply</a>
+                <a href="#" onclick="myFunction2()">Forward</a>
+                <a href="#">Extra1</a>
+                <a href="#">Extra2</a>
+                <a href="#">Extra3</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <p>(Email_content)>>><br>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare, ipsum eget varius rhoncus, augue
+          dui rutrum leo, ac dictum tortor nulla quis turpis. Aenean tempor tellus facilisis orci porttitor pretium at
+          ac dui. Aenean eget bibendum eros, eget gravida quam. Maecenas ullamcorper metus eget purus placerat
+          consequat. Nullam dui velit, placerat vel est at, facilisis consectetur massa. Aliquam porttitor augue id
+          mollis pretium. Fusce vestibulum tempus dictum. Nunc pretium, sapien a feugiat consequat, erat neque tempor
+          justo, id malesuada dui lectus vel lacus.
+        </p>
+
+        <div class="attachments">
+          <p>Attachments:</p>
+          <ul>
+            <li><a href="#">(Attachments1)</a></li>
+            <li><a href="#">(Attachments2)</a></li>
+            <li><a href="#">(Attachments3)</a></li>
+          </ul>
+        </div>
+
+        <div class="buttons">
+          <button class="reply_button" onclick="myFunction1()">Reply</button>
+          <button class="forward_button" onclick="myFunction2()">Forward</button>
+        </div>
+
+        <form method="POST">
+        <div class="compose_email ckeditor_view_email" id="ck_view_reply">
+                <div class="tag-container" id="tagContainer1">
+                  <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+                  <input type="text" name="to" class="tag-input" id="tagInput1">
+              </div>
+                <!--ckeditor-->
+                {% block WFReditor %}
+                {% include 'WFReditor.html' %}
+                <input type="button" class="send_button" value="Send">
+        </div>
+
+        <div class="compose_email ckeditor_view_email" id="ck_view_forward">
+              <div class="tag-container" id="tagContainer">
+                <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+                <input type="text" name="to" class="tag-input" id="tagInput">
+              </div>
+              <hr>
+              <div class="custom-dropdown-container">
+                <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly onclick="customToggleDropdown()">
+                <div class="custom-dropdown-content" id="customDropdown">
+                    <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of IEEE NSU SB</div>
+                    <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+                    <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
+                    <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
+                    <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+                </div>
+              </div>
+              <div class="custom-tag-container" id="customTagContainer"></div>
+              <hr>
+              <div class="alt-dropdown-container">
+                <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly onclick="altToggleDropdown()">
+                <div class="alt-dropdown-content" id="altDropdown">
+                    <div onclick="altSelectOption('Choice 1')">Choice 1</div>
+                    <div onclick="altSelectOption('Choice 2')">Choice 2</div>
+                    <div onclick="altSelectOption('Choice 3')">Choice 3</div>
+                    <div onclick="altSelectOption('Choice 4')">Choice 4</div>
+                </div>
+            </div>
+            
+            <div class="alt-tag-container" id="altTagContainer" style="margin-bottom: 1rem;"></div>      
+              <!--ckeditor-->
+              {% include 'WFReditor.html' %}
+              {% endblock WFReditor %}
+              <input type="button" class="send_button" value="Send">
+        </div>
+        </form>
       </div>
-      
-
-      <p>(Email_content)>>><br> 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare, ipsum eget varius rhoncus, augue dui rutrum leo, ac dictum tortor nulla quis turpis. Aenean tempor tellus facilisis orci porttitor pretium at ac dui. Aenean eget bibendum eros, eget gravida quam. Maecenas ullamcorper metus eget purus placerat consequat. Nullam dui velit, placerat vel est at, facilisis consectetur massa. Aliquam porttitor augue id mollis pretium. Fusce vestibulum tempus dictum. Nunc pretium, sapien a feugiat consequat, erat neque tempor justo, id malesuada dui lectus vel lacus.
-      </p>
-
-      <div class="attachment">
-        <p>Attachments:</p>
-        <ul>
-          <li>#</li>
-        </ul>
-      </div>
-
-      <div class="buttons">
-        <a class="reply_button" href="#">Reply</a>
-        <a class="forward_button" href="#">Forward</a>
-      </div>
-  
-
-      </section>
-    
       <!-- ############ PAGE END-->
-  </div>
-  <!-- ############ LAYOUT END-->
+    </div>
+    <!-- ############ LAYOUT END-->
 
-      {% block common_js %}
-          {% include "common_js.html" %}
-      {% endblock common_js %}
+    <!--ckeditor js-->
+    <!-- getEditorContent() function to get the content of this editor -->
+    <script>
+      function getEditorContent() {
+        const editor = document.querySelector('.editor');
+        return editor.innerHTML;
+      }
+    </script>
+    <script>
+      function myFunction1() {
+        var x = document.getElementById("ck_view_reply");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+
+        var x = document.getElementById("ck_view_forward");
+        if (x.style.display === "none") {
+          x.style.display = "none";
+        } else {
+          x.style.display = "none";
+        }
+      }
+
+      function myFunction2() {
+        var x = document.getElementById("ck_view_forward");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+
+        var x = document.getElementById("ck_view_reply");
+        if (x.style.display === "none") {
+          x.style.display = "none";
+        } else {
+          x.style.display = "none";
+        }
+      }
+    </script>
+    <!--input tags-->
+    <script>
+      const tagContainer = document.getElementById('tagContainer');
+      const tagInput = document.getElementById('tagInput');
+
+      tagInput.addEventListener('keydown', function (event) {
+        if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+          event.preventDefault(); // Prevent the space/comma from being typed
+          addTag(tagInput.value.trim());
+          tagInput.value = ''; // Clear the input field
+        }
+      });
+
+      function addTag(tagText) {
+        if (tagText === '') return;
+
+        const tag = document.createElement('div');
+        tag.className = 'tag';
+
+        const span = document.createElement('span');
+        span.textContent = tagText;
+
+        const removeButton = document.createElement('span');
+        removeButton.className = 'remove-tag';
+        removeButton.innerHTML = '&times;'; // Unicode for a multiplication sign (X)
+        removeButton.onclick = () => {
+          tagContainer.removeChild(tag);
+        };
+
+      tag.appendChild(span);
+      tag.appendChild(removeButton);
+      tagContainer.insertBefore(tag, tagInput); // Add the tag before the input field
+  }
+</script>
+<script>
+  const tagContainer1 = document.getElementById('tagContainer1');
+  const tagInput1 = document.getElementById('tagInput1');
+
+  tagInput1.addEventListener('keydown', function (event) {
+    if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+      event.preventDefault();
+      addTag1(tagInput1.value.trim());
+      tagInput1.value = '';
+    }
+  });
+
+  function addTag1(tagText) {
+    if (tagText === '') return;
+
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+
+    const span = document.createElement('span');
+    span.textContent = tagText;
+
+    const removeButton = document.createElement('span');
+    removeButton.className = 'remove-tag';
+    removeButton.innerHTML = '&times;';
+    removeButton.onclick = () => {
+      tagContainer1.removeChild(tag);
+    };
+
+    tag.appendChild(span);
+    tag.appendChild(removeButton);
+    tagContainer1.insertBefore(tag, tagInput1);
+  }
+</script>
+<script>
+  let customSelectedTags = [];
+
+  function customToggleDropdown() {
+      const dropdown = document.getElementById("customDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  function customSelectOption(option) {
+      if (!customSelectedTags.includes(option)) {
+          customSelectedTags.push(option);
+          customUpdateTagContainer();
+      }
+  }
+
+  function customRemoveTag(index) {
+      customSelectedTags.splice(index, 1);
+      customUpdateTagContainer();
+  }
+
+  function customUpdateTagContainer() {
+      const tagContainer = document.getElementById('customTagContainer');
+      tagContainer.innerHTML = ''; // Clear existing tags
+
+      customSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'custom-tag';
+          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+      });
+  }
+
+  // Close dropdown when clicking outside of it
+  window.onclick = function(event) {
+      if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+          document.getElementById("customDropdown").style.display = "none";
+      }
+  };
+
+  // Function to get selected tags
+  function getCustomSelectedTags() {
+      return customSelectedTags;
+  }
+</script>
+<script>
+  let altSelectedTags = [];
+
+  function altToggleDropdown() {
+      const dropdown = document.getElementById("altDropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+  }
+
+  function altSelectOption(option) {
+      if (!altSelectedTags.includes(option)) {
+          altSelectedTags.push(option);
+          altUpdateTagContainer();
+      }
+  }
+
+  function altRemoveTag(index) {
+      altSelectedTags.splice(index, 1);
+      altUpdateTagContainer();
+  }
+
+  function altUpdateTagContainer() {
+      const tagContainer = document.getElementById('altTagContainer');
+      tagContainer.innerHTML = ''; // Clear existing tags
+
+      altSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'alt-tag';
+          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+      });
+  }
+
+  // Close dropdown when clicking outside of it
+  window.onclick = function(event) {
+      if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+          document.getElementById("altDropdown").style.display = "none";
+      }
+  };
+
+  // Function to get selected tags
+  function getAltSelectedTags() {
+      return altSelectedTags;
+  }
+</script>
+<script>
+  // For the first dropdown
+// let customSelectedTags = [];
+let customAvailableOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+
+function customToggleDropdown() {
+    const dropdown = document.getElementById("customDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function customSelectOption(option) {
+    if (!customSelectedTags.includes(option)) {
+        customSelectedTags.push(option);
+        customAvailableOptions = customAvailableOptions.filter(item => item !== option);
+        customUpdateDropdown();
+        customUpdateTagContainer();
+    }
+}
+
+function customRemoveTag(index) {
+    const removedTag = customSelectedTags.splice(index, 1)[0];
+    customAvailableOptions.push(removedTag);
+    customUpdateDropdown();
+    customUpdateTagContainer();
+}
+
+function customUpdateDropdown() {
+    const dropdown = document.getElementById("customDropdown");
+    dropdown.innerHTML = '';
+    customAvailableOptions.forEach(option => {
+        const div = document.createElement('div');
+        div.textContent = option;
+        div.onclick = () => customSelectOption(option);
+        dropdown.appendChild(div);
+    });
+}
+
+function customUpdateTagContainer() {
+    const tagContainer = document.getElementById('customTagContainer');
+    tagContainer.innerHTML = ''; // Clear existing tags
+
+    customSelectedTags.forEach((tag, index) => {
+        const tagElement = document.createElement('div');
+        tagElement.className = 'custom-tag';
+        tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
+        tagContainer.appendChild(tagElement);
+    });
+}
+
+// For the second dropdown
+// let altSelectedTags = [];
+let altAvailableOptions = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
+
+function altToggleDropdown() {
+    const dropdown = document.getElementById("altDropdown");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+
+function altSelectOption(option) {
+    if (!altSelectedTags.includes(option)) {
+        altSelectedTags.push(option);
+        altAvailableOptions = altAvailableOptions.filter(item => item !== option);
+        altUpdateDropdown();
+        altUpdateTagContainer();
+    }
+}
+
+function altRemoveTag(index) {
+    const removedTag = altSelectedTags.splice(index, 1)[0];
+    altAvailableOptions.push(removedTag);
+    altUpdateDropdown();
+    altUpdateTagContainer();
+}
+
+function altUpdateDropdown() {
+    const dropdown = document.getElementById("altDropdown");
+    dropdown.innerHTML = '';
+    altAvailableOptions.forEach(option => {
+        const div = document.createElement('div');
+        div.textContent = option;
+        div.onclick = () => altSelectOption(option);
+        dropdown.appendChild(div);
+    });
+}
+
+function altUpdateTagContainer() {
+    const tagContainer = document.getElementById('altTagContainer');
+    tagContainer.innerHTML = ''; // Clear existing tags
+
+    altSelectedTags.forEach((tag, index) => {
+        const tagElement = document.createElement('div');
+        tagElement.className = 'alt-tag';
+        tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
+        tagContainer.appendChild(tagElement);
+    });
+}
+
+// Close dropdown when clicking outside of it for all three dropdowns
+window.onclick = function(event) {
+    if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+        document.getElementById("customDropdown").style.display = "none";
+    }
+    if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+        document.getElementById("altDropdown").style.display = "none";
+    }
+};
+</script>
+    {% block common_js %}
+    {% include "common_js.html" %}
+    {% endblock common_js %}
 </body>
 
 </html>
