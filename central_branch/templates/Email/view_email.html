@@ -538,7 +538,7 @@
             </div>
           </div>
           <div class="heading_col2">
-            <p style="margin: 0px; color: gray;">(Date_sent)</p>
+            <p style="margin: 0px; color: gray;">{{thread.date}}</p>
             <div class="dropdown">
               <button class="dropbtn"><i class="fa fa-bars"></i></button>
               <div class="dropdown_content">
@@ -551,9 +551,8 @@
           </div>
         </div>
 
-
-        <div>
-          {{thread.body|safe}}
+        <div id="shadow-host">
+          {% comment %} {{thread.body|safe}} {% endcomment %}
         </div>
 
         <div class="attachments">
@@ -938,6 +937,15 @@ function toggleDisplay() {
         ccBccFields.style.opacity = "0";  // Hide the fields
     }
 }
+</script>
+
+<script>
+  const shadowHost = document.getElementById('shadow-host');
+  const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+
+  shadowRoot.innerHTML = `
+    {{thread.body|safe}}
+  `;
 </script>
     {% block common_js %}
     {% include "common_js.html" %}
