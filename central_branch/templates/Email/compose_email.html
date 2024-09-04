@@ -2759,12 +2759,17 @@
 
     // Event Listeners for Pagination Buttons
     document.querySelector('.prev-page').addEventListener('click', () => {
+      const urlParams = new URLSearchParams(window.location.search);
         $.ajax({
-            url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page",
+            url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page&section="+urlParams.get('section'),
             type: "GET",
             success: function(response) {
                 // Handle the response
-                console.log(response);
+                if(response.message == 'success')
+                {
+                    $('#'+urlParams.get('section')).html("");
+                    $('#'+urlParams.get('section')).append(response.html);
+                }
             },
             error: function(error) {
                 console.error("Error:", error);

@@ -5759,7 +5759,8 @@ class PaginationAjax(View):
 
             if navigate_to and section:
                 pg_token = request.session.get('pg_token')
-                if pg_token:
+                print(pg_token)
+                if pg_token and len(pg_token) != 0:
                     
                     if navigate_to == 'next_page':
                         response = mail(request)
@@ -5769,8 +5770,16 @@ class PaginationAjax(View):
                         request.session.modified = True
                         return JsonResponse(response)
                     elif navigate_to == 'prev_page':
-                        prev_token = request.session['pg_token'].pop()
-                        request.session.modified = True
+                        if len(pg_token) == 1:
+                            request.session['pg_token'].pop()
+                            request.session.modified = True
+                            response = mail(request)
+                        else:
+                            request.session['pg_token'].pop()
+                            request.session['pg_token'].pop()
+                            request.session.modified = True
+                            response = mail(request)
+                        return response
                     else:
                         return JsonResponse({'message':'error'})
 
