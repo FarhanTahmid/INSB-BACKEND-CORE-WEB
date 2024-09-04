@@ -1460,7 +1460,6 @@
           <div class="child-body">
             <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
               Compose</button>
-              <form method="POST">
                 {% csrf_token %}
               </div>
                 <div class="compose hidden">
@@ -1765,7 +1764,6 @@
                     </div>
                 </div>
               </div>
-            </form>
   
           <div class="email_container">
               <div class="email_options">
@@ -1803,6 +1801,7 @@
                     <input type="checkbox" id="select" name="select" class="bold">
                     <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
+                  <a href="/view_email">
                   <div class="email_row" onclick="markRead(this)">
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
@@ -1812,6 +1811,7 @@
                     </div>
                     <div class="email_date">{{thread.date}}</div>
                   </div>
+                </a>
                 </div> 
                 {% endfor %}                
         
