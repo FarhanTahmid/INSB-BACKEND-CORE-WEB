@@ -1,4 +1,5 @@
 import base64
+from django.template.loader import render_to_string
 import json
 import logging
 import traceback
@@ -5669,70 +5670,83 @@ def view_mail(request, mail_id):
     if not credentials:
         print("NOT OK")
         return None
-    try:
-        service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-        print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+    # try:
+    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
-        thread_data = []
+    thread_data = []
 
-        thread_id = mail_id
+    thread_id = mail_id
 
-        # Fetch the required details for each message
-        thread_details = service.users().threads().get(
-            userId='me',
-            id=thread_id,
-            format='metadata',
-            metadataHeaders=['From', 'Subject', 'Date']
-        ).execute()
+    # Fetch the required details for each message
+    thread_details = service.users().threads().get(
+        userId='me',
+        id=thread_id,
+        format='full',
+    ).execute()
+    
+    messagess = thread_details.get('messages', [])
+
+    if messagess:
+        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+        headers = last_message['payload'].get('headers', [])
+        body = ''
+        # Check if the message has a 'payload' and 'parts'
+        if 'parts' in last_message['payload']:
+            def extract_parts(part):
+                """ Recursively extract parts from a message """
+                parts = []
+                mime_type = part['mimeType']
+                print(mime_type)
+                
+                if mime_type == 'text/plain' or mime_type == 'text/html':
+                    data = part['body'].get('data')
+                    if data:
+                        decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
+                        parts.append({'mimeType': mime_type, 'content': decoded_data})
+                elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
+                    for subpart in part.get('parts', []):
+                        parts.extend(extract_parts(subpart))
+
+                return parts
+            
         
-        messagess = thread_details.get('messages', [])
+            #Start extraction from the root message part
+            email_parts = extract_parts(last_message['payload'])
+            
+            # Separate HTML and plain text
+            body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
+            # plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
+            
+        else:
+            # If there are no 'parts', it means the message is simple and not multipart
+            if last_message['payload']['mimeType'] == 'text/plain':
+                body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+            elif last_message['payload']['mimeType'] == 'text/html':
+                body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+        labels = last_message.get('labelIds', [])
 
-        if messagess:
-            last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-            headers = last_message['payload'].get('headers', [])
-            body = ''
-            # Check if the message has a 'payload' and 'parts'
-            if 'parts' in last_message['payload']:
-                for part in last_message['payload']['parts']:
-                    if part['mimeType'] == 'text/plain':
-                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
-                        break
-                    elif part['mimeType'] == 'text/html':
-                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
-                        break
-            else:
-                # If there are no 'parts', it means the message is simple and not multipart
-                if last_message['payload']['mimeType'] == 'text/plain':
-                    body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-                elif last_message['payload']['mimeType'] == 'text/html':
-                    print(last_message['payload'])
-                    body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+        # Extract relevant fields from headers
+        header_dict = {header['name']: header['value'] for header in headers}
+        sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+        subject = header_dict.get('Subject', '(No Subject)')
+        subject = '(No Subject)' if subject == '' else subject
+        date = header_dict.get('Date')
 
-            # snippet = last_message.get('snippet', '')
-            labels = last_message.get('labelIds', [])
-            # message_id = thread['id']
+        thread_data.append({
+            # 'message_id':message_id,
+            'sender_name': sender_name,
+            'sender_email': sender_email,
+            'subject': subject,
+            'date': date,
+            'labels': labels,
+            'body':body
+            # 'snippet': snippet,
+        })
 
-            # Extract relevant fields from headers
-            header_dict = {header['name']: header['value'] for header in headers}
-            sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
-            subject = header_dict.get('Subject', '(No Subject)')
-            subject = '(No Subject)' if subject == '' else subject
-            date = header_dict.get('Date')
-
-            thread_data.append({
-                # 'message_id':message_id,
-                'sender_name': sender_name,
-                'sender_email': sender_email,
-                'subject': subject,
-                'date': date,
-                'labels': labels,
-                'body':body
-                # 'snippet': snippet,
-            })
-
-    except Exception as e:
-        print(e)
-        print(f'Failed to create service instance for gmail')
+    # except Exception as e:
+    #     print(thread_data)
+    #     print(f'Failed to create service instance for gmail')
 
     context = {
         'thread':thread_data[0]
