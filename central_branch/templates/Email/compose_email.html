@@ -1955,6 +1955,7 @@
 
       btnClose.addEventListener('click', function () {
         closeCompose();
+        clearExistingData();
       })
 
       function closeCompose(){
@@ -2297,9 +2298,11 @@
                   // Handle the response
                   console.log(response);
                   mssg.innerHTML = response['message'];
+                  setTimeout(hideModal, 3000);
               },
               error: function(error) {
                   console.error("Error:", error);
+                  setTimeout(hideModal, 3000);
               }
           });
         
@@ -3192,20 +3195,13 @@ function clearExistingData(){
   subjectEmail.value = '';
   const dateTimeEmail = document.querySelector('input[name="datetime-local"]');
   dateTimeEmail.value = '';
-  const bodyEmail = getEditorContent();
+  const bodyEmail = document.querySelector('.editor');
   bodyEmail.innerHTML = '';
-  const attachmentsEmail = document.querySelector('input[name="myfile"]');
-  attachmentsEmail.value = '';
-  const to = document.getElementById('tagInput');
-  to.value = '';
+  const attachmentsEmail = document.getElementById('filePreviewContainer');
+  attachmentsEmail.innerHTML = '';
+  const to = removeAllDivsWithClassTags();
+  to.innerHTML = '';
   console.log(to);
-  console.log(uniqueTagContainer)
-  console.log(altTagContainer)
-  console.log(customTagContainer)
-  console.log(subjectEmail)
-  console.log(dateTimeEmail)
-  console.log(bodyEmail)
-  console.log(attachmentsEmail)
 }
 // Close dropdown when clicking outside of it for all three dropdowns
 window.onclick = function(event) {
@@ -3219,6 +3215,24 @@ window.onclick = function(event) {
         document.getElementById("uniqueDropdown").style.display = "none";
     }
 };
+
+function removeAllDivsWithClassTags() {
+    // Get all div elements with the class 'tags'
+    var divsToRemove = document.querySelectorAll('div.tag');
+
+    // Loop through the NodeList and remove each div
+    divsToRemove.forEach(function(div) {
+        div.parentNode.removeChild(div);
+    });
+}
+
+function hideModal(){
+  var modal2 = document.getElementById("modal2");
+
+  modal2.style.transform = 'translateY(-50px)';
+  modal2.style.zIndex = '-100';
+  modal2.style.opacity = '0';
+}
 </script>
       {% block common_js %}
           {% include "common_js.html" %}
