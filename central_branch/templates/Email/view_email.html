@@ -40,6 +40,7 @@
       display: flex;
       justify-content: space-between;
       padding: 20px 0px 30px 0px;
+      align-items: flex-start;
     }
 
     .heading h2 {
@@ -53,7 +54,7 @@
       display: flex;
       justify-content: space-between;
       flex-basis: 20%;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .heading_col2 {
@@ -470,6 +471,16 @@
         cursor: pointer;
         font-weight: bold;
     }
+    .fa-arrow-right{
+      color: #888;
+    }
+    .fa-arrow-right:hover{
+      color: #b1b0b0;
+    }
+    #ccBccFields h6{
+      margin-left: .5rem;
+      font-style: italic;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -513,6 +524,17 @@
               <address style="margin: 0px; color: gray;">
                 <a href="#">(Sender_email)</a>
               </address>
+              <div style="display: flex;">
+                <!-- Arrow Element -->
+                <div id="arrow"onclick="toggleDisplay()"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </div>
+            
+                <!-- CC and BCC Fields (Initially Hidden) -->
+                <div id="ccBccFields" style="opacity: 0;">
+                  <h6>CC:</h6>
+                  <h6>BCC:</h6>
+                </div>
+            </div>
             </div>
           </div>
           <div class="heading_col2">
@@ -909,6 +931,18 @@ window.onclick = function(event) {
         document.getElementById("altDropdown").style.display = "none";
     }
 };
+</script>
+<script>
+function toggleDisplay() {
+    var ccBccFields = document.getElementById("ccBccFields");
+
+    // Toggle the display of the CC and BCC fields
+    if (ccBccFields.style.opacity === "0" || ccBccFields.style.opacity === "") {
+        ccBccFields.style.opacity = "1"; // Show the fields
+    } else {
+        ccBccFields.style.opacity = "0";  // Hide the fields
+    }
+}
 </script>
     {% block common_js %}
     {% include "common_js.html" %}
