@@ -132,7 +132,7 @@
     }
 
     .button1 {
-      background-color: #dc2c2c;
+      background-color: #e63946;
       border: none;
       color: white;
       padding: 8px 20px;
@@ -145,11 +145,11 @@
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
-      border: 1px solid #dc2c2c;
+      border: 1px solid #e63946;
     }
 
     .button2 {
-      background-color: #0bb652;
+      background-color: #57cc99;
       border: none;
       color: white;
       padding: 8px 20px;
@@ -162,17 +162,17 @@
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
-      border: 1px solid #0bb652;
+      border: 1px solid #57cc99;
     }
 
     .button1:hover {
       background-color: white;
-      color: #dc2c2c;
+      color: #e63946;
     }
 
     .button2:hover {
       background-color: white;
-      color: #0bb652;
+      color: #57cc99;
     }
 
     textarea::placeholder {
@@ -210,8 +210,8 @@
     }
 
     .scadule-yes {
-      background: #098840;
-      border: 1px solid #098840;
+      background: #57cc99;
+      border: 1px solid #57cc99;
       border-radius: .25rem;
       padding: .25rem 1rem;
       margin: .25rem;
@@ -222,11 +222,11 @@
 
     .scadule-yes:hover {
       background: white;
-      color: #098840;
+      color: #57cc99;
     }
 
     .scadule-send {
-      background: #098840;
+      background: #57cc99;
       border: 0;
       border-radius: 5px;
       padding: 5px 10px;
@@ -234,7 +234,7 @@
     }
 
     .scadule-send:hover {
-      background: #00f400;
+      background: #57cc99;
       transition: .3s;
       cursor: pointer;
     }
@@ -559,13 +559,13 @@
 
     .scadule-no {
       color: white;
-      background-color: #a91c1c;
+      background-color: #e9c46a;
       display: inline;
       padding: 6px 25px;
       margin: .25rem;
       border: 1px;
       border-style: solid;
-      border-color: #a91c1c;
+      border-color: #e9c46a;
       border-radius: 4px;
       transition: all .3s ease-in-out;
       position: relative;
@@ -573,7 +573,7 @@
     }
 
     .scadule-no:hover {
-      color: #a91c1c;
+      color: #e9c46a;
       background-color: white;
     }
 
@@ -675,13 +675,13 @@
 
     .scadule-send {
       color: white;
-      background-color: #a91c1c;
+      background-color: #57cc99;
       display: inline;
       padding: 6px 25px;
       margin: .25rem;
       border: 1px;
       border-style: solid;
-      border-color: #a91c1c;
+      border-color: #57cc99;
       border-radius: 4px;
       transition: all .3s ease-in-out;
       position: relative;
@@ -689,7 +689,7 @@
     }
 
     .scadule-send:hover {
-      color: #a91c1c;
+      color: #57cc99;
       background-color: white;
     }
 
@@ -1419,6 +1419,10 @@
     .labels{
       display: flex;
       flex-direction: column;
+      font-size: large;
+    }
+    .labels input[type="checkbox"]{
+      scale: 1.4;
     }
   </style>
   <!--Internal CSS End-->
@@ -1809,12 +1813,12 @@
       <div id="modal1" class="send_confirm_modal">
         <!-- Modal content -->
         <div class="modal-1-content">
-            <div style="display: flex; justify-content: flex-end; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
+              <h4 style="font-weight: bold;">Label and schedule the email?</h4> 
               <span class="close1">&times;</span>
             </div>
             <!-- <hr> -->
             <div style="padding: .5rem 1.25rem .75rem;">
-              <h6 style="font-weight: bold;">Label as: (Optional)</h6> 
               <div class="labels">
                 <div>
                   <input type="checkbox" name="event">
@@ -1829,8 +1833,8 @@
                   <label for="announcement">Announcement</label>
                 </div>
               </div> 
-              <h6 style="position: relative;
-                top: 9px; font-weight: bold;">Want to Schedule the Email?</h6>
+              <!-- <h6 style="position: relative;
+                top: 9px; font-weight: bold;">Want to Schedule the Email?</h6> -->
               </div>
             <div class="scadule-yes-no">
               <input class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
@@ -1864,7 +1868,7 @@
             <hr>
             <div class="pick_date_time">
               <input type="datetime-local" name="datetime-local" style="border: 0;
-              background: #b0cfff;
+              background: #c7ddff;
               padding: 0 10px;
               border-radius: 5px;
               margin: .25rem;">
@@ -1937,6 +1941,7 @@
 
       btnClose.addEventListener('click', function () {
         closeCompose();
+        clearExistingData();
       })
 
       function closeCompose(){
@@ -2279,9 +2284,11 @@
                   // Handle the response
                   console.log(response);
                   mssg.innerHTML = response['message'];
+                  setTimeout(hideModal, 3000);
               },
               error: function(error) {
                   console.error("Error:", error);
+                  setTimeout(hideModal, 3000);
               }
           });
         
@@ -3174,20 +3181,12 @@ function clearExistingData(){
   subjectEmail.value = '';
   const dateTimeEmail = document.querySelector('input[name="datetime-local"]');
   dateTimeEmail.value = '';
-  const bodyEmail = getEditorContent();
+  const bodyEmail = document.querySelector('.editor');
   bodyEmail.innerHTML = '';
-  const attachmentsEmail = document.querySelector('input[name="myfile"]');
-  attachmentsEmail.value = '';
-  const to = document.getElementById('tagInput');
-  to.value = '';
-  console.log(to);
-  console.log(uniqueTagContainer)
-  console.log(altTagContainer)
-  console.log(customTagContainer)
-  console.log(subjectEmail)
-  console.log(dateTimeEmail)
-  console.log(bodyEmail)
-  console.log(attachmentsEmail)
+  const attachmentsEmail = document.getElementById('filePreviewContainer');
+  attachmentsEmail.innerHTML = '';
+  const to = removeAllDivsWithClassTags();
+  to.innerHTML = '';
 }
 // Close dropdown when clicking outside of it for all three dropdowns
 window.onclick = function(event) {
@@ -3201,6 +3200,24 @@ window.onclick = function(event) {
         document.getElementById("uniqueDropdown").style.display = "none";
     }
 };
+
+function removeAllDivsWithClassTags() {
+    // Get all div elements with the class 'tags'
+    var divsToRemove = document.querySelectorAll('div.tag');
+
+    // Loop through the NodeList and remove each div
+    divsToRemove.forEach(function(div) {
+        div.parentNode.removeChild(div);
+    });
+}
+
+function hideModal(){
+  var modal2 = document.getElementById("modal2");
+
+  modal2.style.transform = 'translateY(-50px)';
+  modal2.style.zIndex = '-100';
+  modal2.style.opacity = '0';
+}
 </script>
       {% block common_js %}
           {% include "common_js.html" %}
