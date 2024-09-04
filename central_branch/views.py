@@ -5467,6 +5467,7 @@ def mail(request):
                 or PRT_Data.prt_manage_email_access(user.username))
         
         if has_access:
+
             if request.session.get('pg_token') and not request.GET.get('navigate_to'):
                 del request.session['pg_token']
                 request.session.modified = True
@@ -5759,7 +5760,6 @@ class PaginationAjax(View):
 
             if navigate_to and section:
                 pg_token = request.session.get('pg_token')
-                print(pg_token)
                 if pg_token and len(pg_token) != 0:
                     
                     if navigate_to == 'next_page':
@@ -5772,13 +5772,12 @@ class PaginationAjax(View):
                     elif navigate_to == 'prev_page':
                         if len(pg_token) == 1:
                             request.session['pg_token'].pop()
-                            request.session.modified = True
-                            response = mail(request)
                         else:
                             request.session['pg_token'].pop()
                             request.session['pg_token'].pop()
-                            request.session.modified = True
-                            response = mail(request)
+
+                        request.session.modified = True
+                        response = mail(request)
                         return response
                     else:
                         return JsonResponse({'message':'error'})
