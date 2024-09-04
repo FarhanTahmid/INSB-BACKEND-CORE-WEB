@@ -1735,7 +1735,7 @@
                     <input type="checkbox" id="select" name="select" class="bold">
                     <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
-                  <a href="/view_email" target="_blank" onclick="markRead(this)">
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
                   <div class="email_row" >
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
@@ -1754,23 +1754,7 @@
 
             <!-- Sent Section -->
             <div id="sent" class="email_inner_container sent">
-              <div class="email_row_wrap" title="event">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <div class="email_row" onclick="markRead(this)">
-                  <div class="email_row_left">
-                    <p class="sender">[SENT MAIL SAMPLE]</p>
-                  </div>
-                  <div class="email_content">
-                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
-                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
-                      elit. Quam, facere!</div>
-                  </div>
-                  <div class="email_date">2nd August, 2024 9:00 AM</div>
-                </div>
-              </div>
+              
               <!-- More sent rows -->
             </div>
 
@@ -1786,9 +1770,7 @@
                     <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
                   </div>
                   <div class="email_content">
-                    <div><span class="subject">Subject Lorem ipsum dolor sit amet.</span> - Lorem ipsum dolor sit amet,
-                      consectetur adipisicing elit. Eius, nostrum. Lorem ipsum dolor sit amet consectetur, adipisicing
-                      elit. Quam, facere!</div>
+                    <div><span class="subject">[DEV Mail Sample]</div>
                   </div>
                   <div class="email_date">1st August, 2024 9:00 AM</div>
                 </div>

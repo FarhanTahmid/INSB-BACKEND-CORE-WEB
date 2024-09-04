@@ -148,7 +148,7 @@ urlpatterns = [
 
     #Send Email
     path('mail/',views.mail,name="mail"),
-    path('view_email',views.view_email,name="view_email"),
+    path('view/<str:mail_id>',views.view_mail,name="view_mail"),
     path('send_mail_request/', views.SendMailAjax.as_view(),name='send_mail_request'),
     path('navigate/', views.PaginationAjax.as_view(),name='navigate'),
 ]

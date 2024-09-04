@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import traceback
@@ -5523,6 +5524,7 @@ def mail(request):
                         headers = last_message['payload'].get('headers', [])
                         snippet = last_message.get('snippet', '')
                         labels = last_message.get('labelIds', [])
+                        message_id = thread['id']
 
                         # Extract relevant fields from headers
                         header_dict = {header['name']: header['value'] for header in headers}
@@ -5532,6 +5534,7 @@ def mail(request):
                         date = header_dict.get('Date')
 
                         thread_data.append({
+                            'message_id':message_id,
                             'sender': sender,
                             'subject': subject,
                             'date': date,
@@ -5605,6 +5608,7 @@ def mail(request):
                             headers = last_message['payload'].get('headers', [])
                             snippet = last_message.get('snippet', '')
                             labels = last_message.get('labelIds', [])
+                            message_id = thread['id']
 
                             # Extract relevant fields from headers
                             header_dict = {header['name']: header['value'] for header in headers}
@@ -5614,6 +5618,7 @@ def mail(request):
                             date = header_dict.get('Date')
 
                             thread_data.append({
+                                'message_id':message_id,
                                 'sender': sender,
                                 'subject': subject,
                                 'date': date,
@@ -5645,9 +5650,95 @@ def mail(request):
     #     messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
     #     return cv.custom_500(request)
 
-def view_email(request):
+def extract_name_and_email(from_header):
+    # Use regular expression to extract name and email
+    match = re.match(r'(.*)\s<(.+)>', from_header)
+    if match:
+        name = match.group(1)
+        email = match.group(2)
+    else:
+        # If no match, it's possible that the name part is missing and only the email is provided
+        name = None
+        email = from_header
+    
+    return name, email
 
-    return render(request,'Email/view_email.html')
+def view_mail(request, mail_id):
+
+    credentials = GmailHandler.get_credentials(request)
+    if not credentials:
+        print("NOT OK")
+        return None
+    try:
+        service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+        print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+        thread_data = []
+
+        thread_id = mail_id
+
+        # Fetch the required details for each message
+        thread_details = service.users().threads().get(
+            userId='me',
+            id=thread_id,
+            format='metadata',
+            metadataHeaders=['From', 'Subject', 'Date']
+        ).execute()
+        
+        messagess = thread_details.get('messages', [])
+
+        if messagess:
+            last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+            headers = last_message['payload'].get('headers', [])
+            body = ''
+            # Check if the message has a 'payload' and 'parts'
+            if 'parts' in last_message['payload']:
+                for part in last_message['payload']['parts']:
+                    if part['mimeType'] == 'text/plain':
+                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                        break
+                    elif part['mimeType'] == 'text/html':
+                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                        break
+            else:
+                # If there are no 'parts', it means the message is simple and not multipart
+                if last_message['payload']['mimeType'] == 'text/plain':
+                    body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+                elif last_message['payload']['mimeType'] == 'text/html':
+                    print(last_message['payload'])
+                    body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+
+            # snippet = last_message.get('snippet', '')
+            labels = last_message.get('labelIds', [])
+            # message_id = thread['id']
+
+            # Extract relevant fields from headers
+            header_dict = {header['name']: header['value'] for header in headers}
+            sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+            subject = header_dict.get('Subject', '(No Subject)')
+            subject = '(No Subject)' if subject == '' else subject
+            date = header_dict.get('Date')
+
+            thread_data.append({
+                # 'message_id':message_id,
+                'sender_name': sender_name,
+                'sender_email': sender_email,
+                'subject': subject,
+                'date': date,
+                'labels': labels,
+                'body':body
+                # 'snippet': snippet,
+            })
+
+    except Exception as e:
+        print(e)
+        print(f'Failed to create service instance for gmail')
+
+    context = {
+        'thread':thread_data[0]
+    }
+
+    return render(request,'Email/view_email.html',context)
     
 class SendMailAjax(View):
     def post(self, request):

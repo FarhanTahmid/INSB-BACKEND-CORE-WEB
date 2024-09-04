@@ -502,16 +502,16 @@
 
         <div class="return_inbox">
           <a href="#"><i class="fa fa-arrow-left"></i></a>
-          <h1>(Subject)</h1>
+          <h1>{{thread.subject}}</h1>
         </div>
 
         <div class="heading">
           <div class="heading_col1">
             <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
             <div class="col1_inner">
-              <h2>(Sender_name)</h2>
+              <h2>{{thread.sender_name}}</h2>
               <address style="margin: 0px; color: gray;">
-                <a href="#">(Sender_email)</a>
+                <a href="#">{{thread.sender_email}}</a>
               </address>
             </div>
           </div>
@@ -531,13 +531,8 @@
         </div>
 
 
-        <p>(Email_content)>>><br>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ornare, ipsum eget varius rhoncus, augue
-          dui rutrum leo, ac dictum tortor nulla quis turpis. Aenean tempor tellus facilisis orci porttitor pretium at
-          ac dui. Aenean eget bibendum eros, eget gravida quam. Maecenas ullamcorper metus eget purus placerat
-          consequat. Nullam dui velit, placerat vel est at, facilisis consectetur massa. Aliquam porttitor augue id
-          mollis pretium. Fusce vestibulum tempus dictum. Nunc pretium, sapien a feugiat consequat, erat neque tempor
-          justo, id malesuada dui lectus vel lacus.
+        <p>
+          {{thread.body}}
         </p>
 
         <div class="attachments">
