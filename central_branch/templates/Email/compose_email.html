@@ -277,6 +277,7 @@
       display: flex;
       gap: 10px;
       margin-left: -10px;
+      align-items: center;
     }
 
     .email_box {
@@ -288,6 +289,7 @@
       border-radius: 35px;
       margin: 15px 0;
       border: 1px solid white;
+      text-align: center;
     }
 
     .email_boxes .active {
@@ -1458,7 +1460,8 @@
           <div class="email_boxes">
             <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
             <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
-            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev Mail</a>
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev</a>
+            <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')" class="email_box">Scheduled</a>
           </div>
           <!-- Farhana Compose Code -->
           <div class="child-body">
@@ -1764,22 +1767,48 @@
 
             <!-- Dev Mail Section -->
             <div id="dev_mail" class="email_inner_container dev_mail">
-              <div class="email_row_wrap" title="announsment">
+              <div class="email_row_wrap" title="announcement">
                 <div class="checkbox_star">
                   <input type="checkbox" id="select" name="select" class="bold">
                   <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
                 </div>
-                <div class="email_row" onclick="markRead(this)">
+                <a href="#" onclick="markRead(this)">
+                <div class="email_row">
                   <div class="email_row_left">
-                    <p class="sender">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi, error.</p>
+                    <p class="sender"></p>
                   </div>
                   <div class="email_content">
-                    <div><span class="subject">[DEV Mail Sample]</div>
+                    <div><span class="subject"><span style="opacity: 0;">We appreciate your .....</span>Your emails are loading.....This may take a while....<span style="opacity: 0;">We appreciate your patience patience........</span></span></div>
                   </div>
-                  <div class="email_date">1st August, 2024 9:00 AM</div>
+                  <div class="email_date"></div>
                 </div>
+              </a>
               </div>
             </div>
+
+                <!-- Scheduled Section -->
+                <div id="scheduled_mail" class="email_inner_container scheduled_mail">
+                  <div class="email_row_wrap" title="event">
+                    <div class="checkbox_star">
+                      <input type="checkbox" id="select" name="select" class="bold">
+                      <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+                    </div>
+                    <a href="#" target="_blank" onclick="markRead(this)">
+                    <div class="email_row" >
+                      <div class="email_row_left">
+                        <p class="sender"></p>
+                      </div>
+                      <div class="email_content">
+                        <div><span class="subject"><span style="opacity: 0;">We appreciate your .....</span>Your emails are loading.....This may take a while....<span style="opacity: 0;">We appreciate your patience patience........</span></span></div>
+                      </div>
+                      <div class="email_date"></div>
+                    </div>
+                  </a>
+                  </div> 
+          
+                    <!-- More scheduled rows -->
+                </div>
+
             <!-- Starred Mail Section -->
             <div class="email_inner_container starred">
             </div>
@@ -1803,7 +1832,7 @@
             <div style="display: flex; justify-content: space-between; padding: 5px;">
               <div style="display: flex;">
                 <input type="checkbox">
-                <div title="announsment" style="padding-left: 5px;">Announsment</div>
+                <div title="announcement" style="padding-left: 5px;">announcement</div>
               </div>
               <div class="label-mail-cnt" title="mail-count">0</div>
             </div>
@@ -1954,12 +1983,15 @@
 
       //showing emails according to selected email box
       function activeInbox(element, section) {
+        //prevent refresh
         event.preventDefault();
         window.history.pushState(null, '', "?section="+section);
 
+        //get all email rows and screen width
         const emailRows = document.querySelectorAll('.email_row');
         const screenWidth = window.innerWidth;
 
+        //row ajustments for different screen size
         if (screenWidth >= 768) {
           emailRows.forEach(row => {
             const starIcon = row.querySelector('.fa-star');
@@ -1971,6 +2003,8 @@
             row.style.display = 'flex';  // Show all emails
           });
         }
+
+        //reset star icon to default
         const starEmailIcon = document.querySelector('.more_options .starInbox');
         if (starEmailIcon.classList.contains('fa-star')) {
           starEmailIcon.classList.remove('fa-star');
@@ -2083,6 +2117,12 @@
               const emailRow = checkbox.closest('.email_row_wrap');
               emailRow.remove();
             });
+          }  else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const emailRow = checkbox.closest('.email_row_wrap');
+              emailRow.remove();
+            });
           }
 
         }
@@ -2130,6 +2170,14 @@
               emailRow.style.backgroundColor = 'white';
               checkBoxStar.style.backgroundColor = 'white';
             });
+          } else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'white';
+              checkBoxStar.style.backgroundColor = 'white';
+            });
           }
 
         } else {
@@ -2165,6 +2213,14 @@
             });
           } else if (document.querySelector('.dev_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
+              emailRow.style.backgroundColor = 'aliceblue';
+              checkBoxStar.style.backgroundColor = 'aliceblue';
+            });
+          } else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
+            const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
@@ -2397,9 +2453,10 @@
         const inboxEmails = document.querySelectorAll('.email_inner_container.inbox .email_row_wrap');
         const sentEmails = document.querySelectorAll('.email_inner_container.sent .email_row_wrap');
         const devMailEmails = document.querySelectorAll('.email_inner_container.dev_mail .email_row_wrap');
+        const scheduledMailEmails = document.querySelectorAll('.email_inner_container.scheduled_mail .email_row_wrap');
 
         // Combine all emails into one list
-        const allEmails = [...inboxEmails, ...sentEmails, ...devMailEmails];
+        const allEmails = [...inboxEmails, ...sentEmails, ...devMailEmails , ...scheduledMailEmails];
 
         // Show or hide emails based on selected labels
         allEmails.forEach(email => {
