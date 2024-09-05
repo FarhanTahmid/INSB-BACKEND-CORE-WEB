@@ -70,28 +70,38 @@
     }
 
     .reply_button,
-    .forward_button,
-    .send_button {
+    .forward_button{
       border: 1px solid gray;
       border-radius: 20px;
       padding: .25rem 1rem;
       font-size: 15px;
       transition: 0.1s;
-      color: gray;
       margin-right: 10px;
       background-color: white;
     }
-
+    
     .reply_button:hover,
-    .forward_button:hover,
-    .send_button:hover {
+    .forward_button:hover {
       border-color: black;
       color: black;
       cursor: pointer;
     }
-
+    
     .send_button {
+      background-color: white;
+      color: #57cc99;
+      border: 1px solid #57cc99;
       margin-top: 20px;
+      border-radius: 20px;
+      padding: .25rem 1rem;
+      font-size: 15px;
+      transition: 0.1s;
+      margin-right: 10px;
+    }
+
+    .send_button:hover{
+      background-color: #57cc99;
+      color: white;
     }
 
 
@@ -167,12 +177,13 @@
     .dropdown_content {
       display: none;
       position: absolute;
-      background-color: #f1f1f1;
+      background-color: white;
       min-width: 160px;
-      box-shadow: 0px 10px 15px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 0px 7px 0px gray;
       z-index: 1;
       /* margin-left: -130px; */
       border-radius: 0.25rem;
+      transition: all .5s ease-in-out;
       right: 0px;
     }
 
@@ -208,12 +219,7 @@
       gap: 1rem;
     }
 
-    .fa-arrow-left:hover {
-      color: #004770;
-    }
-
     .fa-arrow-left {
-      transition: all 0.3s ease-in-out;
       color: #00629b;
     }
 
@@ -274,6 +280,12 @@
       border: 1px solid #e0e0e0;
       border-radius: 10px;
       padding: .5rem 1rem 1rem;
+    }
+
+    #ck_view_reply{
+      display: none;
+    }
+    #ck_view_forward{
       display: none;
     }
 
@@ -480,6 +492,7 @@
     #ccBccFields h6{
       margin-left: .5rem;
       font-style: italic;
+      color: #888;
     }
   </style>
   <!--Internal CSS End-->
@@ -512,7 +525,7 @@
       <div class="central_body">
 
         <div class="return_inbox">
-          <a href="#"><i class="fa fa-arrow-left"></i></a>
+          <a href="#" title="Back"><i class="fa fa-arrow-left"></i></a>
           <h1>{{thread.subject}}</h1>
         </div>
 
@@ -633,34 +646,35 @@
     </script>
     <script>
       function myFunction1() {
-        var x = document.getElementById("ck_view_reply");
-        if (x.style.display === "none") {
+        const x = document.getElementById("ck_view_reply");
+        const y = document.getElementById("ck_view_forward");
+        if (x.style.display == "none") {
           x.style.display = "block";
         } else {
           x.style.display = "none";
         }
 
-        var x = document.getElementById("ck_view_forward");
-        if (x.style.display === "none") {
-          x.style.display = "none";
+        if (y.style.display == "none") {
+          y.style.display = "none";
         } else {
-          x.style.display = "none";
+          y.style.display = "none";
         }
       }
 
       function myFunction2() {
-        var x = document.getElementById("ck_view_forward");
-        if (x.style.display === "none") {
+        const x = document.getElementById("ck_view_forward");
+        const y = document.getElementById("ck_view_reply");
+        
+        if (x.style.display == "none") {
           x.style.display = "block";
         } else {
           x.style.display = "none";
         }
 
-        var x = document.getElementById("ck_view_reply");
-        if (x.style.display === "none") {
-          x.style.display = "none";
+        if (y.style.display == "none") {
+          y.style.display = "none";
         } else {
-          x.style.display = "none";
+          y.style.display = "none";
         }
       }
     </script>
