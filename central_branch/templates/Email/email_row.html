@@ -1,11 +1,12 @@
 {% for thread in threads %}
 <div class="email_row_wrap" title="event">
-    <div class="checkbox_star">
+    <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
       <input type="checkbox" id="select" name="select" class="bold">
+      <input type="hidden" class="msg_id" value="{{thread.message_id}}">
       <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
     </div>
     <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
-    <div class="email_row" >
+    <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
       <div class="email_row_left">
         <p class="sender">{{thread.sender}}</p>
       </div>

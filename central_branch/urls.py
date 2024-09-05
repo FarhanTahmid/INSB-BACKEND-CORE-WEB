@@ -149,6 +149,7 @@ urlpatterns = [
     #Send Email
     path('mail/',views.mail,name="mail"),
     path('mail/view/<str:mail_id>',views.view_mail,name="view_mail"),
-    path('send_mail_request/', views.SendMailAjax.as_view(),name='send_mail_request'),
+    path('mail/send_mail_request/', views.SendMailAjax.as_view(),name='send_mail_request'),
+    path('mail/request_read_unread', views.ReadUnreadAjax.as_view(),name='request_read_unread'),
     path('navigate/', views.PaginationAjax.as_view(),name='navigate'),
 ]
