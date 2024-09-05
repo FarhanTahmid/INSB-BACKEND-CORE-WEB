@@ -5483,13 +5483,15 @@ def mail(request):
                 else:
                     pg_token = ''
 
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
-                # try:
-                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        print("NOT OK")
+                        return None
+                    # try:
+                    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                 if section == 'inbox':
                     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
