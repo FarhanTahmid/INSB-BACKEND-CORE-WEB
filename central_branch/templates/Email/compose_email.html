@@ -15,12 +15,49 @@
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
 
   <!--Internal CSS-->
   <style>
     body {
       background-color: white;
     }
+
+    
+    /* Search Box */
+  .search {
+    width: 450px;
+    background: #F4F2F2;
+    box-shadow: 0px 12px 26px rgba(0, 0, 0, 0.1);
+    border-radius: 11px;
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    transition: background-color 0.3s ease;
+    border-radius: 11px;
+  }
+
+  /* Hover effect on search bar */
+  .search-container:hover {
+    background-color: #FFFFFF;
+  }
+
+  .search-container input {
+    width: 100%;
+    height: 30px;
+    border: none;
+    font-size: 13px;
+    outline: none;
+    background: transparent;
+  }
+
+  .fa-search {
+    font-size: 20px;
+    color: #171718;
+  }
 
     .compose {
       position: fixed;
@@ -38,6 +75,8 @@
     .child-body {
       /* position: relative;
       left: 1rem; */
+      display: flex;
+      justify-content: flex-end;
     }
 
     .fa-pen {
@@ -59,6 +98,7 @@
       border-radius: 4px;
       transition: all .3s ease-in-out;
       border: 2px solid #137aac;
+      
     }
 
     .compose_btn:hover {
@@ -1071,6 +1111,9 @@
     /* responsive code for tablet and small screens */
 
     @media screen and (max-width: 768px) {
+      .search {
+        width: 100%;
+      }
       .compose {
         width: 90%;
         bottom: 20px;
@@ -1156,6 +1199,13 @@
       }
     }
 
+    @media (max-width: 576px) {
+      .search {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+
     @media screen and (max-width:427px) {
       .label-ops {
         top: 137px;
@@ -1212,13 +1262,19 @@
             <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')"
               class="email_box">Scheduled</a>
           </div>
-          <!-- Farhana Compose Code -->
-          <div class="child-body">
-            <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
-              Compose</button>
-            {% csrf_token %}
+          
+          <!-- Shakil Search code -->
+          <div class="search">
+            <div class="search-container">
+              <input placeholder="Search emails" type="search">
+              <i class="fa fa-search"></i>
+            </div>
           </div>
-          <!-- Farhana Compose Code end-->
+          <!-- Search code done -->
+          
+          
+           
+          
         </div>
         
 
@@ -1334,6 +1390,15 @@
             <div class="email_inner_container starred">
             </div>
           </div>
+
+
+          <!-- Farhana Compose Code -->
+          <div class="child-body">
+            <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+              Compose</button>
+            {% csrf_token %}
+          </div>
+          <!-- Farhana Compose Code end-->
 
           <div class="label-ops">
             <div style="display: flex; justify-content: space-between; padding: 5px;">
