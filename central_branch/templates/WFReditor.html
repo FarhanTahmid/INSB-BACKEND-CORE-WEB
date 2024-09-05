@@ -73,7 +73,7 @@
             left: 0;
             width: calc(100% - 40px);
             height: calc(100% - 40px);
-            z-index: 1099;
+            z-index: 1100;
             background-color: #fff;
             margin: 20px;
             border-radius: 5px;
@@ -98,7 +98,7 @@
 
         .modal-bg {
             position: fixed;
-            z-index: 100; 
+            z-index: 1100; 
             left: 0;
             top: 0;
             width: 100%;
@@ -139,6 +139,7 @@
         }
 
         .modal-img{
+            position: relative;
             width: 300px;
             height: fit-content;
             font-family: sans-serif;
@@ -179,6 +180,7 @@
         }
 
         .modal-link {
+            position: relative;
             width: 300px;
             height: fit-content;
             font-family: sans-serif;
@@ -220,6 +222,7 @@
         }
 
         .modal-table {
+            position: relative;
             width: 300px;
             height: auto;
             font-family: sans-serif;
@@ -318,9 +321,10 @@
     </div>
 
     <!-- Help Modal -->
-    <div id="helpModal" class="modal-bg" style="display:none;">
+    <div id="helpModal" class="modal-bg" style="display:none;" onclick="closeModal()">
         <div class="modal-content">
-            <h2>User Guide</h2>
+            <span class="close-btn" onclick="closeModal()" style="position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer;">&times;</span>
+            <h2 style="padding-bottom: 10px;">User Guide</h2>
             <p>Welcome to the WFReditor! Here's how to make the most of this editor:</p>
             <ul>
                 <li><strong>Undo/Redo:</strong> Quickly revert any recent changes with the Undo button, or reapply them using Redo.</li>
@@ -367,8 +371,9 @@
 
 
     <!-- Insert Image Modal -->
-    <div id="imageModal" class="modal-bg" style="display:none;">
+    <div id="imageModal" class="modal-bg" style="display:none;" onclick="closeImageModal()">
         <div class="modal-img">
+            <span class="close-btn" onclick="closeImageModal()" style="position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer;">&times;</span>
             <h2>Insert Image</h2>
             <label for="imageURL">Image URL:</label>
             <input type="text" id="imageURL" placeholder="http://">
@@ -387,8 +392,9 @@
     </div>
 
     <!-- Insert Link Modal -->
-    <div id="linkModal" class="modal-bg" style="display:none;">
+    <div id="linkModal" class="modal-bg" style="display:none;" onclick="closeLinkModal()">
         <div class="modal-link">
+            <span class="close-btn" onclick="closeLinkModal()" style="position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer;">&times;</span>
             <h2>Insert Link</h2>
             <label for="linkURL">URL:</label>
             <input type="text" id="linkURL" placeholder="http://">
@@ -401,8 +407,9 @@
     </div>
 
     <!-- Insert Table Modal -->
-    <div id="tableModal" class="modal-bg" style="display:none;">
+    <div id="tableModal" class="modal-bg" style="display:none;" onclick="closeTableModal()">
         <div class="modal-table">
+            <span class="close-btn" onclick="closeTableModal()" style="position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer;">&times;</span>
             <h2>Insert Table</h2>
             
             <label for="tableRows">Rows:</label>
@@ -678,6 +685,7 @@
     <!-- modal controll -->
     <script>
         window.onclick = function(event) {
+            console.log("clicked...")
             var modal = document.getElementById('imageModal');
             if (event.target === modal) {
                 closeImageModal();
