@@ -5670,12 +5670,13 @@ def extract_name_and_email(from_header):
 
 def view_mail(request, mail_id):
 
+    # try:
+    # global service
+    # if not service:
     credentials = GmailHandler.get_credentials(request)
     if not credentials:
         print("NOT OK")
         return None
-    # try:
-    global service
     service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
@@ -5750,6 +5751,15 @@ def view_mail(request, mail_id):
             'body':body
             # 'snippet': snippet,
         })
+
+        # Fetch the required details for each message
+        thread_details = service.users().threads().modify(
+            userId='me',
+            id=thread_id,
+            body={
+                'removeLabelIds': ['UNREAD']
+            }
+        ).execute()
 
     # except Exception as e:
     #     print(thread_data)
