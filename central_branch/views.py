@@ -5716,7 +5716,9 @@ def view_mail(request, mail_id):
             
             # Separate HTML and plain text
             body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
-            # plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
+            plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
+            if body == None:
+                body = plain_text_body
             
         else:
             # If there are no 'parts', it means the message is simple and not multipart
