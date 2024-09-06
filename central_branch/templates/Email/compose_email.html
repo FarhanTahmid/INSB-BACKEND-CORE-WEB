@@ -30,6 +30,7 @@
     background: #F4F2F2;
     box-shadow: 0px 12px 26px rgba(0, 0, 0, 0.1);
     border-radius: 11px;
+    margin: 10px 0;
   }
 
   .search-container {
@@ -40,7 +41,7 @@
     border-radius: 11px;
   }
 
-  /* Hover effect on search bar */
+  
   .search-container:hover {
     background-color: #FFFFFF;
   }
@@ -54,9 +55,18 @@
     background: transparent;
   }
 
+  .search-container:hover .fa-search {
+  color: #000;  
+}
+
+.search-container input::placeholder {
+  color: #A9A9A9;  
+}
+
   .fa-search {
     font-size: 20px;
     color: #171718;
+    cursor: pointer; 
   }
 
     .compose {
@@ -292,6 +302,8 @@
       background: white;
       margin: 0 1rem;
       position: sticky;
+      top: 0;
+      
     }
 
     .email_wrapper_2 {
@@ -734,9 +746,6 @@
       color: #57cc99;
       background-color: white;
     }
-  </style>
-
-  <style>
     .tag-container {
       display: flex;
       flex-wrap: wrap;
@@ -1089,6 +1098,7 @@
     }
 
     /*ckeditor ends*/
+
     @media screen and (max-width: 1024px) {
 
       .modal-1-content,
@@ -1097,22 +1107,19 @@
         left: 0px;
         margin: 10%;
       }
+      .email_wrapper_2 {
+      flex-direction: column;
+      align-items: flex-start;
+    }
     }
 
-    @media screen and (max-width: 500px) {
-
-      .modal-1-content,
-      .modal-2-content,
-      .modal-3-content {
-        margin: 5%;
-      }
-    }
-
+   
     /* responsive code for tablet and small screens */
 
     @media screen and (max-width: 768px) {
       .search {
         width: 100%;
+        margin: 10px 0;
       }
       .compose {
         width: 90%;
@@ -1152,7 +1159,33 @@
       }
     }
 
+ 
+
+    @media screen and (max-width: 500px) {
+
+      .modal-1-content,
+      .modal-2-content,
+      .modal-3-content {
+        margin: 5%;
+      }
+    }
+
+
     @media screen and (max-width: 480px) {
+      .search {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .email_boxes {
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .email_box {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
       .compose {
         width: 95%;
         bottom: 10px;
@@ -1199,12 +1232,7 @@
       }
     }
 
-    @media (max-width: 576px) {
-      .search {
-        width: 100%;
-        margin: 10px 0;
-      }
-    }
+    
 
     @media screen and (max-width:427px) {
       .label-ops {
@@ -1271,9 +1299,6 @@
             </div>
           </div>
           <!-- Search code done -->
-          
-          
-           
           
         </div>
         
