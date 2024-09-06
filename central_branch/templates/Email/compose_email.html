@@ -1172,7 +1172,7 @@
       scale: 1.4;
     }
 
-    button[title="Insert Image"] {
+    button[title="Insert Image"], [title="Insert Files"] {
       display: none;
     }
   </style>
@@ -2078,32 +2078,6 @@
 
     </script>
 
-    <!-- modal controll -->
-    <script>
-      window.onclick = function (event) {
-        var modal = document.getElementById('imageModal');
-        if (event.target === modal) {
-          closeImageModal();
-          document.querySelector('.editor').focus();
-        }
-        modal = document.getElementById('helpModal');
-        if (event.target === modal) {
-          closeModal();
-          document.querySelector('.editor').focus();
-        }
-        modal = document.getElementById('linkModal');
-        if (event.target === modal) {
-          closeLinkModal();
-          document.querySelector('.editor').focus();
-        }
-        modal = document.getElementById('tableModal');
-        if (event.target === modal) {
-          closeTableModal();
-          document.querySelector('.editor').focus();
-        }
-      }
-    </script>
-
     <!--input tags-->
     <script>
       const tagContainer = document.getElementById('tagContainer');
@@ -2220,6 +2194,7 @@
 
     </script>
 
+    <!-- file attachments -->
     <script>
       //for attachments
       document.getElementById('myfile').addEventListener('change', function (e) {
@@ -2249,6 +2224,7 @@
           filePreview.appendChild(removeFile);
           filePreviewContainer.appendChild(filePreview);
         });
+        console.log(filePreviewContainer);
       });
 
       // Send Button click event
