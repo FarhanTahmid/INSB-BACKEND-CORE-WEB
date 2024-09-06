@@ -699,7 +699,7 @@
               </div>
             </div>
 
-            <div class="alt-tag-container" id="altTagContainer" style="margin-bottom: 1rem;"></div>
+            <div class="alt-tag-container fwd-only6" id="altTagContainer" style="margin-bottom: 1rem;"></div>
             <!--WFReditor-->
             {% block WFReditor %}
             {% include 'WFReditor.html' %}
@@ -738,6 +738,7 @@
           document.querySelector('.fwd-only3').style.display = 'none';
           document.querySelector('.fwd-only4').style.display = 'none';
           document.querySelector('.fwd-only5').style.display = 'none';
+          document.querySelector('.fwd-only6').style.display = 'none';
         }else if (composeType === 'fwd'){
           x.style.display = 'block';
           document.querySelector('.fwd-only1').style.display = 'block';
@@ -745,6 +746,7 @@
           document.querySelector('.fwd-only3').style.display = 'block';
           document.querySelector('.fwd-only4').style.display = 'block';
           document.querySelector('.fwd-only5').style.display = 'block';
+          document.querySelector('.fwd-only6').style.display = 'block';
         }else{
           x.style.display = 'none';
         }
