@@ -1468,8 +1468,10 @@
               <div onclick="uniqueSelectOption('Item 2')">All Officers of IEEE NSU SB</div>
               <div onclick="uniqueSelectOption('Item 3')">Executive Panel (Branch Only)</div>
               <div onclick="uniqueSelectOption('Item 4')">Branch Ex-Com Members</div>
-              <div onclick="uniqueSelectOption('Item 5')">All Society, Chapters, Affinity Group Executive Body
-                Members</div>
+              <div onclick="uniqueSelectOption('Item 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              {% for session in recruitment_sessions %}
+              <div onclick="uniqueSelectOption('Item 5')">Recruits of - {{session.session}}</div>
+              {% endfor %}
             </div>
           </div>
 
@@ -1479,13 +1481,14 @@
             <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
               onclick="customToggleDropdown()">
             <div class="custom-dropdown-content" id="customDropdown">
-              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of
-                IEEE NSU SB</div>
+              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
               <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
               <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
-              <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body
-                Members</div>
+              <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              {% for session in recruitment_sessions %}
+              <div onclick="uniqueSelectOption('Item 5')">Recruits of - {{session.session}}</div>
+              {% endfor %}
             </div>
           </div>
           <div class="custom-tag-container" id="customTagContainer"></div>
@@ -1494,10 +1497,14 @@
             <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
               onclick="altToggleDropdown()">
             <div class="alt-dropdown-content" id="altDropdown">
-              <div onclick="altSelectOption('Choice 1')">Choice 1</div>
-              <div onclick="altSelectOption('Choice 2')">Choice 2</div>
-              <div onclick="altSelectOption('Choice 3')">Choice 3</div>
-              <div onclick="altSelectOption('Choice 4')">Choice 4</div>
+              <div onclick="altSelectOption('Choice 1')">All Registered General Members of IEEE NSU SB</div>
+              <div onclick="altSelectOption('Choice 2')">All Officers of IEEE NSU SB</div>
+              <div onclick="altSelectOption('Choice 3')">Executive Panel (Branch Only)</div>
+              <div onclick="altSelectOption('Choice 4')">Branch Ex-Com Members</div>
+              <div onclick="altSelectOption('Choice 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              {% for session in recruitment_sessions %}
+              <div onclick="uniqueSelectOption('Item 5')">Recruits of - {{session.session}}</div>
+              {% endfor %}
             </div>
           </div>
 
