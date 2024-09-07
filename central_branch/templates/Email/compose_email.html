@@ -1339,7 +1339,7 @@
                   <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
                     <input type="checkbox" id="select" name="select" class="bold">
                     <input type="hidden" class="msg_id" value="{{thread.message_id}}">
-                    <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
                   <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
                   <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
@@ -1733,13 +1733,29 @@
 
       //starring an email
       function starEmail(element) {
+        email_id = element.parentElement.querySelector('.msg_id').value;
         if (element.classList.contains('fa-star-o')) {
-          element.classList.remove('fa-star-o');
-          element.classList.add('fa-star');
+
+          StarUnstar(email_id, 'STAR', function(success) {
+            if(success) {
+              element.classList.remove('fa-star-o');
+              element.classList.add('fa-star');
+            }
+            else {
+              console.log('Error while STARRING');
+            }
+          });
         }
         else {
-          element.classList.add('fa-star-o');
-          element.classList.remove('fa-star');
+          StarUnstar(email_id, 'UNSTAR', function(success) {
+            if(success) {
+              element.classList.add('fa-star-o');
+              element.classList.remove('fa-star');
+            }
+            else {
+              console.log('Error while STARRING');
+            }
+          });
         }
 
       }
@@ -2068,31 +2084,58 @@
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
       }
-      function ReadUnread(id, action, callback)
-    {
-      var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-      $.ajax({
-        url: "{% url 'central_branch:request_read_unread' %}",
-        type: "POST",
-        data: {
-          'message_id':id,
-          'action':action
-        },
-        headers: {
-            "X-CSRFToken": csrf
-        },
-        success: function(response) {
-            // Call the callback function with true
-            if (callback) callback(true);
-        },
-        error: function(error) {
-            console.error("Error:", error);
-            // Call the callback function with false
-            if (callback) callback(false);
-        }
-      });
-    }
+      function ReadUnread(id, action, callback)
+      {
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+          url: "{% url 'central_branch:request_email_read_unread' %}",
+          type: "POST",
+          data: {
+            'message_id':id,
+            'action':action
+          },
+          headers: {
+              "X-CSRFToken": csrf
+          },
+          success: function(response) {
+              // Call the callback function with true
+              if (callback) callback(true);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+              // Call the callback function with false
+              if (callback) callback(false);
+          }
+        });
+      }
+
+      function StarUnstar(id, action, callback)
+      {
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+          url: "{% url 'central_branch:request_email_star_unstar' %}",
+          type: "POST",
+          data: {
+            'message_id':id,
+            'action':action
+          },
+          headers: {
+              "X-CSRFToken": csrf
+          },
+          success: function(response) {
+              // Call the callback function with true
+              if (callback) callback(true);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+              // Call the callback function with false
+              if (callback) callback(false);
+          }
+        });
+      }
 
       function EmailSent() {
         closeCompose();

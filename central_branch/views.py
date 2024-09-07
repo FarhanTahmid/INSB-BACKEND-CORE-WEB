@@ -5694,63 +5694,81 @@ def view_mail(request, mail_id):
     messagess = thread_details.get('messages', [])
 
     if messagess:
-        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-        headers = last_message['payload'].get('headers', [])
-        body = ''
-        # Check if the message has a 'payload' and 'parts'
-        if 'parts' in last_message['payload']:
-            def extract_parts(part):
-                """ Recursively extract parts from a message """
-                parts = []
-                mime_type = part['mimeType']
-                print(mime_type)
+        for i in range(len(messagess),0,-1):
+            last_message = messagess[i-1]  # Get the last message in the thread
+            headers = last_message['payload'].get('headers', [])
+            body = ''
+            # Check if the message has a 'payload' and 'parts'
+            if 'parts' in last_message['payload']:
+                def extract_parts(part):
+                    """ Recursively extract parts from a message """
+                    parts = []
+                    mime_type = part['mimeType']
+                    print(mime_type)
+                    
+                    if mime_type == 'text/plain' or mime_type == 'text/html':
+                        data = part['body'].get('data')
+                        if data:
+                            decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
+                            parts.append({'mimeType': mime_type, 'content': decoded_data})
+                    elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
+                        for subpart in part.get('parts', []):
+                            parts.extend(extract_parts(subpart))
+
+                    return parts
                 
-                if mime_type == 'text/plain' or mime_type == 'text/html':
-                    data = part['body'].get('data')
-                    if data:
-                        decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
-                        parts.append({'mimeType': mime_type, 'content': decoded_data})
-                elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
-                    for subpart in part.get('parts', []):
-                        parts.extend(extract_parts(subpart))
-
-                return parts
             
-        
-            #Start extraction from the root message part
-            email_parts = extract_parts(last_message['payload'])
-            
-            # Separate HTML and plain text
-            body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
-            plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
-            if body == None:
-                body = plain_text_body
-            
-        else:
-            # If there are no 'parts', it means the message is simple and not multipart
-            if last_message['payload']['mimeType'] == 'text/plain':
-                body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-            elif last_message['payload']['mimeType'] == 'text/html':
-                body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-        labels = last_message.get('labelIds', [])
+                #Start extraction from the root message part
+                email_parts = extract_parts(last_message['payload'])
+                
+                # Separate HTML and plain text
+                body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
+                # Remove previous replies (common patterns to strip off replies)
+                body = re.split(r"(On\s.*wrote:)", body)[0]
 
-        # Extract relevant fields from headers
-        header_dict = {header['name']: header['value'] for header in headers}
-        sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
-        subject = header_dict.get('Subject', '(No Subject)')
-        subject = '(No Subject)' if subject == '' else subject
-        date = header_dict.get('Date')
+                # You can also strip off quoted text that starts with '>'
+                body = re.sub(r'(>.*\n)', '', body)
 
-        thread_data.append({
-            # 'message_id':message_id,
-            'sender_name': sender_name,
-            'sender_email': sender_email,
-            'subject': subject,
-            'date': date,
-            'labels': labels,
-            'body':body
-            # 'snippet': snippet,
-        })
+                plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
+                if body == None:
+                    # Remove previous replies (common patterns to strip off replies)
+                    plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
+
+                    # You can also strip off quoted text that starts with '>'
+                    plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
+                    body = plain_text_body
+                
+            else:
+                # If there are no 'parts', it means the message is simple and not multipart
+                if last_message['payload']['mimeType'] == 'text/plain':
+                    body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+                elif last_message['payload']['mimeType'] == 'text/html':
+                    body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+
+                # Remove previous replies (common patterns to strip off replies)
+                body = re.split(r"(On\s.*wrote:)", body)[0]
+
+                # You can also strip off quoted text that starts with '>'
+                body = re.sub(r'(>.*\n)', '', body)
+            labels = last_message.get('labelIds', [])
+
+            # Extract relevant fields from headers
+            header_dict = {header['name']: header['value'] for header in headers}
+            sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+            subject = header_dict.get('Subject', '(No Subject)')
+            subject = '(No Subject)' if subject == '' else subject
+            date = header_dict.get('Date')
+
+            thread_data.append({
+                # 'message_id':message_id,
+                'sender_name': sender_name,
+                'sender_email': sender_email,
+                'subject': subject,
+                'date': date,
+                'labels': labels,
+                'body':body
+                # 'snippet': snippet,
+            })
 
         # Fetch the required details for each message
         thread_details = service.users().threads().modify(
@@ -5764,9 +5782,10 @@ def view_mail(request, mail_id):
     # except Exception as e:
     #     print(thread_data)
     #     print(f'Failed to create service instance for gmail')
+    print(thread_data)
 
     context = {
-        'thread':thread_data[0]
+        'threads':thread_data
     }
 
     return render(request,'Email/view_email.html',context)
@@ -5909,13 +5928,12 @@ class PaginationAjax(View):
         else:
             return HttpResponse('Access Denied!')
 
-class ReadUnreadAjax(View):
+class ReadUnreadEmailAjax(View):
     def post(self, request):
         try:
             message_id = request.POST.get('message_id')
             action = request.POST.get('action')
             message_id = message_id.split(',')
-            print(message_id)
             
             global service
             if not service:
@@ -5939,6 +5957,68 @@ class ReadUnreadAjax(View):
                 body={'ids':message_id,'addLabelIds': ['UNREAD']}
                 ).execute()
                 return JsonResponse({'message':'Marked as Unread!'})   
+                
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+
+class StarUnstarEmailAjax(View):
+    def post(self, request):
+        try:
+            message_id = request.POST.get('message_id')
+            action = request.POST.get('action')
+            print(action)
+            
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            if action == 'STAR':
+                service.users().threads().modify(
+                userId='me',
+                id=message_id,
+                body={'addLabelIds': ['STARRED']}
+                ).execute()
+                return JsonResponse({'message':'UnStarred Succesfully!'})
+
+            elif action == 'UNSTAR':
+                service.users().threads().modify(
+                userId='me',
+                id=message_id,
+                body={'removeLabelIds': ['STARRED']}
+                ).execute()
+                return JsonResponse({'message':'UnStarred Succesfully!'})
+                
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+        
+class DeleteEmailAjax(View):
+    def post(self, request):
+        try:
+            message_id = request.POST.get('message_id')
+            message_id = message_id.split(',')
+            print(message_id)
+            
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            #############################################
+            # TODO: Make api call for deleting email(s) #
+            #############################################
+
+            return JsonResponse({'message':'Deleted Successfully!'})   
                 
         except Exception as e:
             print(e)

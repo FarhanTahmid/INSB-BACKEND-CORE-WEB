@@ -607,16 +607,16 @@
 
         <div class="return_inbox">
           <a href="#" title="Back"><i class="fa fa-arrow-left"></i></a>
-          <h1>{{thread.subject}}</h1>
+          <h1>{{threads.0.subject}}</h1>
         </div>
 
         <div class="heading">
           <div class="heading_col1">
             <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
             <div class="col1_inner">
-              <h2>{{thread.sender_name}}</h2>
+              <h2>{{threads.0.sender_name}}</h2>
               <address style="margin: 0px; color: gray;">
-                <a href="#">{{thread.sender_email}}</a>
+                <a href="#">{{threads.0.sender_email}}</a>
               </address>
               <div style="display: flex;">
                 <!-- Arrow Element -->
@@ -632,7 +632,7 @@
             </div>
           </div>
           <div class="heading_col2">
-            <p style="margin: 0px; color: gray;">{{thread.date}}</p>
+            <p style="margin: 0px; color: gray;">{{threads.0.date}}</p>
             <div class="dropdown">
               <button class="dropbtn"><i class="fa fa-bars"></i></button>
               <div class="dropdown_content">
@@ -714,6 +714,47 @@
             </div>
           </div>
         </form>
+
+        {% for thread in threads|slice:"1:" %}
+        <div class="heading">
+          <div class="heading_col1">
+            <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
+            <div class="col1_inner">
+              <h2>{{thread.sender_name}}</h2>
+              <address style="margin: 0px; color: gray;">
+                <a href="#">{{thread.sender_email}}</a>
+              </address>
+              <div style="display: flex;">
+                <!-- Arrow Element -->
+                <div id="arrow" onclick="toggleDisplay()"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </div>
+
+                <!-- CC and BCC Fields (Initially Hidden) -->
+                <div id="ccBccFields" style="opacity: 0;">
+                  <h6>CC:</h6>
+                  <h6>BCC:</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="heading_col2">
+            <p style="margin: 0px; color: gray;">{{thread.date}}</p>
+            <div class="dropdown">
+              <button class="dropbtn"><i class="fa fa-bars"></i></button>
+              <div class="dropdown_content">
+                <a href="#" onclick="myFunction('reply')">Reply</a>
+                <a href="#" onclick="myFunction('fwd')">Forward</a>
+                <a href="#">Star</a>
+                <a href="#">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="shadow-host-{{forloop.counter}}">
+          {% comment %} {{thread.body|safe}} {% endcomment %}
+        </div>
+        {% endfor %}
       </div>
       <!-- ############ PAGE END-->
     </div>
@@ -1114,10 +1155,18 @@
     <script>
       const shadowHost = document.getElementById('shadow-host');
       const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
-
       shadowRoot.innerHTML = `
-    {{thread.body|safe}}
-  `;
+      {{threads.0.body|safe}}
+      `;
+     
+      {% for thread in threads|slice:"1:" %}
+      const shadowHost{{forloop.counter}} = document.getElementById('shadow-host-{{forloop.counter}}');
+      shadowRoot{{forloop.counter}} = shadowHost{{forloop.counter}}.attachShadow({ mode: 'open' });
+      shadowRoot{{forloop.counter}}.innerHTML = `
+      {{thread.body|safe}}
+      `;
+
+      {% endfor %}
     </script>
     {% block common_js %}
     {% include "common_js.html" %}
