@@ -1722,6 +1722,7 @@
             // Append the returned HTML to the table body
             $('#' + section).html("");
             $('#' + section).append(response.html);
+            addEventListenerToCheckBox();
           }
         });
 
@@ -2002,28 +2003,35 @@
       });
 
       // show icons when checkbox is checked
-      const checkedBoxes = document.querySelectorAll('.checkbox_star input[type="checkbox"]');
+      var checkedBoxes;
       const markAsRead = document.querySelector('.fa-envelope-open-o');
       const markAsUnread = document.querySelector('.fa-envelope-o');
       const deleteEmail = document.querySelector('.fa-trash-o');
 
-      // for individual check box 
-      checkedBoxes.forEach(box => {
-        box.addEventListener('click', () => {
-          // Check if any checkbox is checked
-          const isAnyChecked = Array.from(checkedBoxes).some(checkbox => checkbox.checked);
+      addEventListenerToCheckBox();
 
-          if (isAnyChecked) {
-            markAsRead.style.opacity = '1';
-            markAsUnread.style.opacity = '1';
-            deleteEmail.style.opacity = '1';
-          } else {
-            markAsRead.style.opacity = '0';
-            markAsUnread.style.opacity = '0';
-            deleteEmail.style.opacity = '0';
-          }
+      function addEventListenerToCheckBox() {
+        checkedBoxes = document.querySelectorAll('.checkbox_star input[type="checkbox"]');
+        // for individual check box 
+        checkedBoxes.forEach(box => {
+          box.addEventListener('click', () => {
+            // Check if any checkbox is checked
+            const isAnyChecked = Array.from(checkedBoxes).some(checkbox => checkbox.checked);
+
+            if (isAnyChecked) {
+              markAsRead.style.opacity = '1';
+              markAsUnread.style.opacity = '1';
+              deleteEmail.style.opacity = '1';
+            } else {
+              markAsRead.style.opacity = '0';
+              markAsUnread.style.opacity = '0';
+              deleteEmail.style.opacity = '0';
+            }
+          });
         });
-      });
+      }
+
+      
       // for select all checkbox
       document.querySelector('.select_all_option input[type="checkbox"]').addEventListener('click', () => {
         if (document.querySelector('.select_all_option input[type="checkbox"]').checked) {
@@ -2338,7 +2346,8 @@
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
-            }
+              addEventListenerToCheckBox();
+              }
           },
           error: function (error) {
             console.error("Error:", error);
@@ -2361,6 +2370,7 @@
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
+              addEventListenerToCheckBox();            
             }
           },
           error: function (error) {
