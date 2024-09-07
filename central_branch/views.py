@@ -5914,7 +5914,9 @@ class ReadUnreadAjax(View):
         try:
             message_id = request.POST.get('message_id')
             action = request.POST.get('action')
-
+            message_id = message_id.split(',')
+            print(message_id)
+            
             global service
             if not service:
                 credentials = GmailHandler.get_credentials(request)
@@ -5925,20 +5927,19 @@ class ReadUnreadAjax(View):
                 service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
             if action == 'READ':
-                service.users().messages().modify(
+                service.users().messages().batchModify(
                 userId='me',
-                id=message_id,
-                body={'removeLabelIds': ['UNREAD']}
+                body={'ids':message_id,'removeLabelIds': ['UNREAD']}
                 ).execute()
                 return JsonResponse({'message':'Marked as Read!'})
 
             elif action == 'UNREAD':
-                service.users().messages().modify(
+                service.users().messages().batchModify(
                 userId='me',
-                id=message_id,
-                body={'addLabelIds': ['UNREAD']}
+                body={'ids':message_id,'addLabelIds': ['UNREAD']}
                 ).execute()
                 return JsonResponse({'message':'Marked as Unread!'})   
                 
-        except:
+        except Exception as e:
+            print(e)
             return JsonResponse({'message':'Something went wrong!'})
