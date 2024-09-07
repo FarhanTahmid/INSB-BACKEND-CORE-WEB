@@ -64,6 +64,7 @@ import re
 
 # Create your views here.
 logger=logging.getLogger(__name__)
+service = None
 
 @login_required
 @member_login_permission
@@ -5482,13 +5483,15 @@ def mail(request):
                 else:
                     pg_token = ''
 
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
-                # try:
-                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        print("NOT OK")
+                        return None
+                    # try:
+                    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                 if section == 'inbox':
                     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
@@ -5617,6 +5620,7 @@ def mail(request):
                             subject = header_dict.get('Subject', '(No Subject)')
                             subject = '(No Subject)' if subject == '' else subject
                             date = header_dict.get('Date')
+                            print(labels)
 
                             thread_data.append({
                                 'message_id':message_id,
@@ -5666,11 +5670,13 @@ def extract_name_and_email(from_header):
 
 def view_mail(request, mail_id):
 
+    # try:
+    # global service
+    # if not service:
     credentials = GmailHandler.get_credentials(request)
     if not credentials:
         print("NOT OK")
         return None
-    # try:
     service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
@@ -5716,7 +5722,9 @@ def view_mail(request, mail_id):
             
             # Separate HTML and plain text
             body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
-            # plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
+            plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
+            if body == None:
+                body = plain_text_body
             
         else:
             # If there are no 'parts', it means the message is simple and not multipart
@@ -5743,6 +5751,15 @@ def view_mail(request, mail_id):
             'body':body
             # 'snippet': snippet,
         })
+
+        # Fetch the required details for each message
+        thread_details = service.users().threads().modify(
+            userId='me',
+            id=thread_id,
+            body={
+                'removeLabelIds': ['UNREAD']
+            }
+        ).execute()
 
     # except Exception as e:
     #     print(thread_data)
@@ -5891,3 +5908,38 @@ class PaginationAjax(View):
                     return JsonResponse({'message':'error'})
         else:
             return HttpResponse('Access Denied!')
+
+class ReadUnreadAjax(View):
+    def post(self, request):
+        try:
+            message_id = request.POST.get('message_id')
+            action = request.POST.get('action')
+            message_id = message_id.split(',')
+            print(message_id)
+            
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            if action == 'READ':
+                service.users().messages().batchModify(
+                userId='me',
+                body={'ids':message_id,'removeLabelIds': ['UNREAD']}
+                ).execute()
+                return JsonResponse({'message':'Marked as Read!'})
+
+            elif action == 'UNREAD':
+                service.users().messages().batchModify(
+                userId='me',
+                body={'ids':message_id,'addLabelIds': ['UNREAD']}
+                ).execute()
+                return JsonResponse({'message':'Marked as Unread!'})   
+                
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
