@@ -6001,9 +6001,9 @@ class StarUnstarEmailAjax(View):
 class DeleteEmailAjax(View):
     def post(self, request):
         try:
-            message_id = request.POST.get('message_id')
-            message_id = message_id.split(',')
-            print(message_id)
+            message_ids = request.POST.get('message_id')
+            message_ids = message_ids.split(',')
+            print(message_ids)
             
             global service
             if not service:
@@ -6014,9 +6014,11 @@ class DeleteEmailAjax(View):
                 
                 service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
-            #############################################
-            # TODO: Make api call for deleting email(s) #
-            #############################################
+            for message_id in message_ids: 
+                service.users().threads().trash(
+                    userId='me',
+                    id=message_id,
+                ).execute()
 
             return JsonResponse({'message':'Deleted Successfully!'})   
                 

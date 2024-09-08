@@ -769,19 +769,22 @@
       }
     </script>
     <script>
+      let prev = 'none';
       function myFunction(composeType) {
         const x = document.getElementById("ck_view_reply_forword");
 
-        if (composeType === 'reply'){
+        if (composeType === 'reply' && (prev === 'none' || prev === 'fwd')){
           x.style.display = 'block';
+          prev = 'reply';
           document.querySelector('.fwd-only1').style.display = 'none';
           document.querySelector('.fwd-only2').style.display = 'none';
           document.querySelector('.fwd-only3').style.display = 'none';
           document.querySelector('.fwd-only4').style.display = 'none';
           document.querySelector('.fwd-only5').style.display = 'none';
           document.querySelector('.fwd-only6').style.display = 'none';
-        }else if (composeType === 'fwd'){
+        }else if (composeType === 'fwd' && (prev === 'none' || prev === 'reply')){
           x.style.display = 'block';
+          prev = 'fwd';
           document.querySelector('.fwd-only1').style.display = 'block';
           document.querySelector('.fwd-only2').style.display = 'block';
           document.querySelector('.fwd-only3').style.display = 'block';
@@ -790,6 +793,7 @@
           document.querySelector('.fwd-only6').style.display = 'block';
         }else{
           x.style.display = 'none';
+          prev = 'none';
         }
       }
     </script>
@@ -837,7 +841,7 @@
       //     alert(`${files.length} file(s) attached.`);
       // });
 
-      function handleFileSelect(event) {
+      {% comment %} function handleFileSelect(event) {
         const fileInput = event.target;
         const filePreviewContainer = document.getElementById('filePreviewContainer');
 
@@ -855,8 +859,8 @@
           `;
           filePreviewContainer.appendChild(filePreview);
         }
-      }
-
+      } {% endcomment %}
+{% comment %} 
       function removeFile(index) {
         const fileInput = document.getElementById('myfile');
         const dt = new DataTransfer();
@@ -875,7 +879,7 @@
       function getAllSelectedTags() {
         const tags = tagContainer.querySelectorAll('.tag span:first-child');
         return Array.from(tags).map(tag => tag.textContent);
-      }
+      } {% endcomment %}
     </script>
     <!--input tags-->
     <script>

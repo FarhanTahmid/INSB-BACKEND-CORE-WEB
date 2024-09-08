@@ -1813,41 +1813,82 @@
       // Delete Selected Emails functionality
       document.querySelector('.fa-trash-o').addEventListener('click', function () {
         const selectAllCheck = document.getElementById('select_all');
+        var message_ids = "";
+        var email_rows = []
+        var id = 1;
         if (selectAllCheck.checked) {
           if (document.querySelector('.inbox').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;
             });
           } else if (document.querySelector('.sent').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
-            });
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.dev_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
-            });
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
-            });
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           }
 
         }
         else {
           const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
           checkboxes.forEach(checkbox => {
-            const emailRow = checkbox.closest('.email_row_wrap');
-            emailRow.remove();
-          });
+            const checkBoxStar = checkbox.closest('.checkbox_star');
+            var msg_id = checkBoxStar.querySelector('.msg_id').value;
+            console.log(checkbox.closest('.email_row_wrap'));
+            email_rows.push(checkbox.closest('.email_row_wrap'));
+            if(id == 1)
+              message_ids += msg_id;
+            else
+              message_ids += ","+(msg_id);
+            id += 1;          });
         }
+
+        DeleteEmail(message_ids, function(success) {
+          if(success) {
+            email_rows.forEach(function(email_row) {
+              email_row.remove(); // Call remove on each DOM element
+            });
+          }
+          else {
+            console.log('Error while UNREAD');
+          }
+        });
       });
       // Tanvir's parts ends
       //Mark as read on click
@@ -2128,6 +2169,30 @@
           data: {
             'message_id':id,
             'action':action
+          },
+          headers: {
+              "X-CSRFToken": csrf
+          },
+          success: function(response) {
+              // Call the callback function with true
+              if (callback) callback(true);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+              // Call the callback function with false
+              if (callback) callback(false);
+          }
+        });
+      }
+
+      function DeleteEmail(id, callback) {
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+          url: "{% url 'central_branch:request_email_delete' %}",
+          type: "POST",
+          data: {
+            'message_id':id,
           },
           headers: {
               "X-CSRFToken": csrf
