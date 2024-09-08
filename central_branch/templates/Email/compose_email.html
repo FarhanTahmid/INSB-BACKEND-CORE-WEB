@@ -79,7 +79,7 @@
       background: white;
       border-radius: 5px;
       z-index: 1020;
-      /* max-height: 600px; */
+      max-height: 650px;
       overflow-y: auto;
     }
 
@@ -99,7 +99,7 @@
       background-color: #137aac;
       border: none;
       color: white;
-      padding: .5rem 2rem;
+      padding: .25rem 2rem;
       text-align: center;
       text-decoration: none;
       display: inline-block;
@@ -318,7 +318,7 @@
     .email_container {
       /* position: fixed; */
       /* top: 115px; */
-      margin: 0 1rem 0 0;
+      /* margin: 0 1rem 0 0; */
     }
 
     .email_container input[type="checkbox"] {
@@ -427,7 +427,7 @@
       /* margin: 8px; */
       border-radius: 8px;
       overflow-y: scroll;
-      max-height: 490px;
+      max-height: 550px;
 
     }
 
@@ -442,13 +442,15 @@
 
     .unique-dropdown-content::-webkit-scrollbar,
     .custom-dropdown-content::-webkit-scrollbar,
-    .alt-dropdown-content::-webkit-scrollbar {
+    .alt-dropdown-content::-webkit-scrollbar,
+    .compose::-webkit-scrollbar {
       width: 4px;
     }
 
     .unique-dropdown-content::-webkit-scrollbar-thumb,
     .custom-dropdown-content::-webkit-scrollbar-thumb,
-    .alt-dropdown-content::-webkit-scrollbar-thumb {
+    .alt-dropdown-content::-webkit-scrollbar-thumb,
+    .compose::-webkit-scrollbar-thumb {
       background-color: #ccc;
       border-radius: 12px;
     }
@@ -830,8 +832,9 @@
     }
 
     .custom-tag {
-      background-color: #007bff;
-      color: white;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #000000;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -885,8 +888,9 @@
     }
 
     .alt-tag {
-      background-color: #28a745;
-      color: white;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #000000;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -940,8 +944,9 @@
     }
 
     .unique-tag {
-      background-color: #dc3545;
-      color: white;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #000000;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -1109,9 +1114,15 @@
         margin: 10%;
       }
       .email_wrapper_2 {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+        margin-bottom: 0.5rem;
+        align-items: center;
+      }
+      .email_boxes{
+        margin-left: 0;
+      }
     }
 
    
@@ -1254,6 +1265,56 @@
     button[title="Insert Image"], [title="Insert Files"] {
       display: none;
     }
+        
+    div.container {
+      background-color: transparent;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 80px;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    div.caption {
+      text-align: center;
+      color: #002855;
+      font-size: 3rem;
+      font-family: "Noto Sans", sans-serif;
+    }
+    div.dot {
+      display: inline-block;
+      margin: 0px;
+      padding: 0px;
+      animation: dot 1s infinite linear;
+      font-size: 3rem;
+    }
+
+    div.dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    div.dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes dot {
+      0%,
+      100% {
+          opacity: 0;
+      }
+      50% {
+          opacity: 1;
+      }
+    }
+
+    ::selection {
+      background-color: transparent;
+    }
+    .loaderBox{
+      display: none;
+      /* box-shadow: 0px 2px 5px 0px gray; */
+      height: 555px;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1300,12 +1361,12 @@
             </div>
           </div>
           <!-- Search code done -->
-                    <!-- Farhana Compose Code -->
-                    <div class="child-body">
-                      <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
-                        Compose</button>
-                      {% csrf_token %}
-                    </div>
+          <!-- Farhana Compose Code -->
+          <div class="child-body">
+            <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+              Compose</button>
+            {% csrf_token %}
+          </div>
         </div>
         
 
@@ -1337,6 +1398,16 @@
               </div>
   
               <div class="email_outer_container">
+                <div class="loaderBox">
+                  <div class="container">
+                    <div class="caption">
+                       <p style='display:inline-block;'>Loading</p>
+                       <div class="dot">.</div>
+                       <div class="dot">.</div>
+                       <div class="dot">.</div>
+                    </div>
+                 </div>
+                 </div>
                 <!-- Inbox Section -->
               <div id="inbox" class="email_inner_container inbox show">
                 {% if section == 'inbox' or not section %}
@@ -1775,11 +1846,12 @@
 
         // Add 'active' class to the clicked link
         element.classList.add('active');
-
+        startLoader();
         $.ajax({
           url: "{% url 'central_branch:mail' %}?section=" + section,  // URL pointing to your Django view
           method: 'GET',
           success: function (response) {
+            stopLoader();
             // Append the returned HTML to the table body
             $('#' + section).html("");
             $('#' + section).append(response.html);
@@ -2924,6 +2996,22 @@
         modal2.style.transform = 'translateY(-50px)';
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
+      }
+
+      // Function to start the loader
+      function startLoader() {
+          const loaderContainer = document.querySelector('.container');
+          const box = document.querySelector('.loaderBox');
+          loaderContainer.style.display = 'block';
+          box.style.display = 'block';
+      }
+
+      // Function to stop the loader
+      function stopLoader() {
+          const loaderContainer = document.querySelector('.container');
+          const box = document.querySelector('.loaderBox');
+          loaderContainer.style.display = 'none';
+          box.style.display = 'none';
       }
     </script>
     {% block common_js %}
