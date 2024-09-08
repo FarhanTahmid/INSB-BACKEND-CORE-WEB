@@ -5496,14 +5496,27 @@ def mail(request):
                     service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
                     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
+                query = request.GET.get('query')
                 if section == 'inbox':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section == 'sent':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} in:sent -label:dev-mail",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='dev_mail':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} label:dev-mail",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
                 elif section =='starred':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken=pg_token).execute()
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} is:starred",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken=pg_token).execute()
                 else:
                     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 
@@ -5516,45 +5529,46 @@ def mail(request):
 
                 thread_data = []
 
-                for thread in threads['threads']:
-                    thread_id = thread['id']
+                if threads.get('threads'):
+                    for thread in threads['threads']:
+                        thread_id = thread['id']
 
-                    # Fetch the required details for each message
-                    thread_details = service.users().threads().get(
-                        userId='me',
-                        id=thread_id,
-                        format='metadata',
-                        metadataHeaders=['From', 'Subject', 'Date']
-                    ).execute()
-                    
-                    messagess = thread_details.get('messages', [])
+                        # Fetch the required details for each message
+                        thread_details = service.users().threads().get(
+                            userId='me',
+                            id=thread_id,
+                            format='metadata',
+                            metadataHeaders=['From', 'Subject', 'Date']
+                        ).execute()
+                        
+                        messagess = thread_details.get('messages', [])
 
-                    if messagess:
-                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-                        headers = last_message['payload'].get('headers', [])
-                        snippet = last_message.get('snippet', '')
-                        labels = last_message.get('labelIds', [])
-                        message_id = thread['id']
+                        if messagess:
+                            last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                            headers = last_message['payload'].get('headers', [])
+                            snippet = last_message.get('snippet', '')
+                            labels = last_message.get('labelIds', [])
+                            message_id = thread['id']
 
-                        # Extract relevant fields from headers
-                        header_dict = {header['name']: header['value'] for header in headers}
-                        sender = header_dict.get('From')
-                        subject = header_dict.get('Subject', '(No Subject)')
-                        subject = '(No Subject)' if subject == '' else subject
-                        date = header_dict.get('Date')
-                        if date:
-                            date = parsedate_to_datetime(date)
-                        else:
-                            date = None
+                            # Extract relevant fields from headers
+                            header_dict = {header['name']: header['value'] for header in headers}
+                            sender = header_dict.get('From')
+                            subject = header_dict.get('Subject', '(No Subject)')
+                            subject = '(No Subject)' if subject == '' else subject
+                            date = header_dict.get('Date')
+                            if date:
+                                date = parsedate_to_datetime(date)
+                            else:
+                                date = None
 
-                        thread_data.append({
-                            'message_id':message_id,
-                            'sender': sender,
-                            'subject': subject,
-                            'date': date,
-                            'labels': labels,
-                            'snippet': snippet,
-                        })
+                            thread_data.append({
+                                'message_id':message_id,
+                                'sender': sender,
+                                'subject': subject,
+                                'date': date,
+                                'labels': labels,
+                                'snippet': snippet,
+                            })
 
                 # except Exception as e:
                 #     print(e)
@@ -5596,7 +5610,7 @@ def mail(request):
                     elif section =='dev_mail':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
                     elif section =='starred':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken='').execute()
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred -label:dev-mail",pageToken='').execute()
                     else:
                         section = 'inbox'
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
@@ -6058,3 +6072,6 @@ class DeleteEmailAjax(View):
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Something went wrong!'})
+
+class GetScheduledEmailInfoAjax(View):
+    pass

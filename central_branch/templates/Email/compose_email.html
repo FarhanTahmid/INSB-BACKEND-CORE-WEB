@@ -1348,7 +1348,7 @@
           <div class="email_boxes">
             <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
             <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
-            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'sent'%}dev_mail{% endif %}">Dev</a>
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'dev_mail'%}activate{% endif %}">Dev</a>
             <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')"
               class="email_box">Scheduled</a>
           </div>
@@ -1356,8 +1356,8 @@
           <!-- Shakil Search code -->
           <div class="search">
             <div class="search-container">
-              <input placeholder="Search emails" type="search">
-              <i class="fa fa-search"></i>
+              <input id="search-input" placeholder="Search emails" type="search">
+              <i id="search-icon" class="fa fa-search" onclick="executeSearch()"></i>
             </div>
           </div>
           <!-- Search code done -->
@@ -1810,18 +1810,26 @@
         // Add 'active' class to the clicked link
         element.classList.add('active');
         startLoader();
-        $.ajax({
-          url: "{% url 'central_branch:mail' %}?section=" + section,  // URL pointing to your Django view
-          method: 'GET',
-          success: function (response) {
-            stopLoader();
-            // Append the returned HTML to the table body
-            $('#' + section).html("");
-            $('#' + section).append(response.html);
-            document.querySelector('.page-info').innerHTML = response.pg_range;
-            addEventListenerToCheckBox();
-          }
-        });
+        if(section == 'scheduled_mail')
+        {
+            //TODO: ADD SCHEDULED PAGE CODE
+        }
+        else 
+        {
+          $.ajax({
+            url: "{% url 'central_branch:mail' %}?section=" + section,  // URL pointing to your Django view
+            method: 'GET',
+            success: function (response) {
+              stopLoader();
+              // Append the returned HTML to the table body
+              $('#' + section).html("");
+              $('#' + section).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+            }
+          });
+        }
+
 
         // Update mail counts based on the selected container
         {% comment %} updateMailCounts(); {% endcomment %}
@@ -2421,16 +2429,16 @@
         event.stopPropagation(); // Prevent the event from bubbling up to the document
       }
 
-      // Function to hide the selection box if clicked outside
+      {% comment %} // Function to hide the selection box if clicked outside
       function hideLabelOps(event) {
         if (!labelOps.contains(event.target) && event.target !== labelIcon) {
           labelOps.style.display = 'none';
         }
-      }
+      } {% endcomment %}
 
       // Attach event listeners
       {% comment %} labelIcon.addEventListener('click', toggleLabelOps); {% endcomment %}
-      document.addEventListener('click', hideLabelOps);
+      {% comment %} document.addEventListener('click', hideLabelOps); {% endcomment %}
 
       function filterEmails() {
         // Get all checkboxes and their associated labels
@@ -2595,6 +2603,37 @@
       {% comment %} updatePaginationInfo(); {% endcomment %}
 
 
+    </script>
+
+    <script>
+      // Function to execute search
+      function executeSearch() {
+        const searchQuery = document.getElementById('search-input').value;
+        const section = new URLSearchParams(window.location.search).get('section');
+        if (searchQuery) {
+          startLoader();
+          $.ajax({
+            url: "{% url 'central_branch:mail' %}?section=" + section + "&query=" + searchQuery,  // URL pointing to your Django view
+            method: 'GET',
+            success: function (response) {
+              stopLoader();
+              // Append the returned HTML to the table body
+              $('#' + section).html("");
+              $('#' + section).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+            }
+          });
+        }
+      }
+      console.log("EDFS");
+    
+      // Handle Enter keypress in the input field
+      document.getElementById('search-input').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+          executeSearch();
+        }
+      });
     </script>
 
     <!-- file attachments -->
