@@ -1329,7 +1329,7 @@
                     {% comment %} Pagination {% endcomment %}
                     <div class="pagination">
                       <button class="prev-page">◄</button>
-                      <span class="page-info">1-50 of 150</span>
+                      <span class="page-info">{{request.session.pg_range}}</span>
                       <button class="next-page">►</button>
                     </div>
                   
@@ -2470,6 +2470,7 @@
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
               addEventListenerToCheckBox();
               }
           },
@@ -2494,6 +2495,7 @@
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
               addEventListenerToCheckBox();            
             }
           },

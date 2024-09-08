@@ -5474,6 +5474,7 @@ def mail(request):
 
             if request.session.get('pg_token') and not request.GET.get('navigate_to'):
                 del request.session['pg_token']
+                del request.session['pg_range']
                 request.session.modified = True
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -5507,6 +5508,7 @@ def mail(request):
                 if not request.session.get('pg_token'):
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
+                        request.session['pg_range'] = '1 - 10'
                         request.session.modified = True
 
                 thread_data = []
@@ -5564,7 +5566,7 @@ def mail(request):
                 html = render(request, 'Email/email_row.html', context).content.decode('utf-8')
                 
                 # Return the HTML as a JSON response
-                return JsonResponse({'html': html,'nextPageToken':threads.get('nextPageToken'), 'message':'success'})
+                return JsonResponse({'html': html,'nextPageToken':threads.get('nextPageToken'),'pg_range':request.session['pg_range'], 'message':'success'})
             
             else:
                 
@@ -5597,6 +5599,7 @@ def mail(request):
 
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
+                        request.session['pg_range'] = '1 - 10'
                         request.session.modified = True
 
                     for thread in threads['threads']:
@@ -5923,17 +5926,25 @@ class PaginationAjax(View):
                         # Redirect with the URL containing custom params
                         response = json.loads(response.content)
                         request.session['pg_token'].append(response['nextPageToken'])
+                        pg_range = request.session['pg_range'].split(' - ')
+                        request.session['pg_range'] = f'{int(pg_range[0])+10} - {int(pg_range[1])+10}'
                         request.session.modified = True
+                        response['pg_range'] = request.session['pg_range']
                         return JsonResponse(response)
                     elif navigate_to == 'prev_page':
                         if len(pg_token) == 1:
                             request.session['pg_token'].pop()
+                            pg_range = request.session['pg_range'].split(' - ')
+                            request.session['pg_range'] = f'{int(pg_range[0])-10} - {int(pg_range[1])-10}'
                         else:
                             request.session['pg_token'].pop()
                             request.session['pg_token'].pop()
+                            pg_range = request.session['pg_range'].split(' - ')
+                            request.session['pg_range'] = f'{int(pg_range[0])-10} - {int(pg_range[1])-10}'
 
                         request.session.modified = True
                         response = mail(request)
+                        response['pg_range'] = request.session['pg_range']
                         return response
                     else:
                         return JsonResponse({'message':'error'})
