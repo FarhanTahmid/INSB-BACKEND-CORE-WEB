@@ -13,7 +13,7 @@
       <div class="email_content">
         <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
       </div>
-      <div class="email_date">{{thread.date}}</div>
+      <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
     </div>
   </a>
 </div>

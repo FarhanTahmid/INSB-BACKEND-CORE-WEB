@@ -61,6 +61,7 @@ from django.views import View
 from users.renderData import member_login_permission
 from task_assignation.models import *
 import re
+from email.utils import parsedate_to_datetime
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -5536,6 +5537,10 @@ def mail(request):
                         subject = header_dict.get('Subject', '(No Subject)')
                         subject = '(No Subject)' if subject == '' else subject
                         date = header_dict.get('Date')
+                        if date:
+                            date = parsedate_to_datetime(date)
+                        else:
+                            date = None
 
                         thread_data.append({
                             'message_id':message_id,
@@ -5621,6 +5626,11 @@ def mail(request):
                             subject = '(No Subject)' if subject == '' else subject
                             date = header_dict.get('Date')
                             print(labels)
+
+                            if date:
+                                date = parsedate_to_datetime(date)
+                            else:
+                                date = None
 
                             thread_data.append({
                                 'message_id':message_id,
@@ -5758,6 +5768,11 @@ def view_mail(request, mail_id):
             subject = header_dict.get('Subject', '(No Subject)')
             subject = '(No Subject)' if subject == '' else subject
             date = header_dict.get('Date')
+
+            if date:
+                date = parsedate_to_datetime(date)
+            else:
+                date = None
 
             thread_data.append({
                 # 'message_id':message_id,
