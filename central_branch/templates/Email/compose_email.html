@@ -1487,48 +1487,10 @@
               </div>
               {% endfor %}
                 {% endif %}
-              <div class="email_row_wrap" title="announcement">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <a href="#" onclick="markRead(this)">
-                  <div class="email_row">
-                    <div class="email_row_left">
-                      <p class="sender"></p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject"><span style="opacity: 0;">We appreciate your .....</span>Your emails
-                          are loading.....This may take a while....<span style="opacity: 0;">We appreciate your patience
-                            patience........</span></span></div>
-                    </div>
-                    <div class="email_date"></div>
-                  </div>
-                </a>
-              </div>
             </div>
 
             <!-- Scheduled Section -->
             <div id="scheduled_mail" class="email_inner_container scheduled_mail">
-              <div class="email_row_wrap" title="event">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <a href="#" target="_blank" onclick="markRead(this)">
-                  <div class="email_row">
-                    <div class="email_row_left">
-                      <p class="sender"></p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject"><span style="opacity: 0;">We appreciate your .....</span>Your emails
-                          are loading.....This may take a while....<span style="opacity: 0;">We appreciate your patience
-                            patience........</span></span></div>
-                    </div>
-                    <div class="email_date"></div>
-                  </div>
-                </a>
-              </div>
 
               <!-- More scheduled rows -->
             </div>
@@ -1656,12 +1618,13 @@
         <div class="modal-1-content">
           <div
             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
-            <h4 style="font-weight: bold;">Label and schedule the email?</h4>
+            {% comment %} <h4 style="font-weight: bold;">Label and schedule the email?</h4> {% endcomment %}
+            <h4 style="font-weight: bold;">Want to schedule the email?</h4>
             <span class="close1">&times;</span>
           </div>
           <!-- <hr> -->
           <div style="padding: .5rem 1.25rem .75rem;">
-            <div class="labels">
+            {% comment %} <div class="labels">
               <div>
                 <input type="checkbox" name="event">
                 <label for="event">Event</label>
@@ -1674,7 +1637,7 @@
                 <input type="checkbox" name="announcement">
                 <label for="announcement">Announcement</label>
               </div>
-            </div>
+            </div> {% endcomment %}
             <!-- <h6 style="position: relative;
                 top: 9px; font-weight: bold;">Want to Schedule the Email?</h6> -->
           </div>
@@ -1746,7 +1709,7 @@
         // Add 'active' class to the clicked link
         //$().classList.add('active');
       });
-      // count the mails
+      {% comment %} // count the mails
       function updateMailCounts() {
         // Identify the currently active container
         const activeContainer = document.querySelector('.email_inner_container.show');
@@ -1768,10 +1731,10 @@
             countElement.textContent = count;
           }
         });
-      }
+      } {% endcomment %}
 
       // Initial call to set counts based on the initially visible container
-      updateMailCounts();
+      {% comment %} updateMailCounts(); {% endcomment %}
       </script>
 
 
@@ -1860,7 +1823,7 @@
         });
 
         // Update mail counts based on the selected container
-        updateMailCounts();
+        {% comment %} updateMailCounts(); {% endcomment %}
       }
 
 

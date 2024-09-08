@@ -5506,10 +5506,11 @@ def mail(request):
                 
                 
                 if not request.session.get('pg_token'):
+                    print('ok')
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
-                        request.session['pg_range'] = '1 - 10'
                         request.session.modified = True
+                    request.session['pg_range'] = '1 - 10'
 
                 thread_data = []
 
