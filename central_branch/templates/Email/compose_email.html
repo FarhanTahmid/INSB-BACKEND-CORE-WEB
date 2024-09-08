@@ -2431,7 +2431,7 @@
       }
     </script>
     <script>
-      //pagination
+      {% comment %} //pagination
       const emailsPerPage = 50;
       let currentPage = 1;
       let totalEmails = document.querySelectorAll('.email_row_wrap').length;
@@ -2457,7 +2457,7 @@
             row.style.display = 'none'; // Hide the email row
           }
         });
-      }
+      } {% endcomment %}
 
       // Event Listeners for Pagination Buttons
       document.querySelector('.prev-page').addEventListener('click', () => {
@@ -2510,8 +2510,8 @@
         // }
       });
 
-      showEmailsForPage();
-      // {% comment %} updatePaginationInfo(); {% endcomment %}
+      {% comment %} showEmailsForPage(); {% endcomment %}
+      {% comment %} updatePaginationInfo(); {% endcomment %}
 
 
     </script>
