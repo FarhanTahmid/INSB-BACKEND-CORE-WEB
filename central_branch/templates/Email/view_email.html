@@ -646,7 +646,7 @@
         </div>
 
         <div id="shadow-host">
-          {% comment %} {{thread.body|safe}} {% endcomment %}
+          {% comment %} {{threads.0.body|safe}} {% endcomment %}
         </div>
 
         <div class="attachments">
@@ -1162,10 +1162,11 @@
       shadowRoot.innerHTML = `
       {{threads.0.body|safe}}
       `;
+      console.log("POK");
      
       {% for thread in threads|slice:"1:" %}
       const shadowHost{{forloop.counter}} = document.getElementById('shadow-host-{{forloop.counter}}');
-      shadowRoot{{forloop.counter}} = shadowHost{{forloop.counter}}.attachShadow({ mode: 'open' });
+      const shadowRoot{{forloop.counter}} = shadowHost{{forloop.counter}}.attachShadow({ mode: 'open' });
       shadowRoot{{forloop.counter}}.innerHTML = `
       {{thread.body|safe}}
       `;

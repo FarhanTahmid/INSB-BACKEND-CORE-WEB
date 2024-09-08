@@ -5733,19 +5733,19 @@ def view_mail(request, mail_id):
                 
                 # Separate HTML and plain text
                 body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
-                # Remove previous replies (common patterns to strip off replies)
-                body = re.split(r"(On\s.*wrote:)", body)[0]
+                # # Remove previous replies (common patterns to strip off replies)
+                # body = re.split(r"(On\s.*wrote:)", body)[0]
 
-                # You can also strip off quoted text that starts with '>'
-                body = re.sub(r'(>.*\n)', '', body)
+                # # You can also strip off quoted text that starts with '>'
+                # body = re.sub(r'(>.*\n)', '', body)
 
                 plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
                 if body == None:
-                    # Remove previous replies (common patterns to strip off replies)
-                    plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
+                    # # Remove previous replies (common patterns to strip off replies)
+                    # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
 
-                    # You can also strip off quoted text that starts with '>'
-                    plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
+                    # # You can also strip off quoted text that starts with '>'
+                    # plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
                     body = plain_text_body
                 
             else:
@@ -5755,11 +5755,11 @@ def view_mail(request, mail_id):
                 elif last_message['payload']['mimeType'] == 'text/html':
                     body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
 
-                # Remove previous replies (common patterns to strip off replies)
-                body = re.split(r"(On\s.*wrote:)", body)[0]
+                # # Remove previous replies (common patterns to strip off replies)
+                # body = re.split(r"(On\s.*wrote:)", body)[0]
 
-                # You can also strip off quoted text that starts with '>'
-                body = re.sub(r'(>.*\n)', '', body)
+                # # You can also strip off quoted text that starts with '>'
+                # body = re.sub(r'(>.*\n)', '', body)
             labels = last_message.get('labelIds', [])
 
             # Extract relevant fields from headers
