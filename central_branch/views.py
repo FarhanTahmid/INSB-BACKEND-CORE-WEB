@@ -5480,6 +5480,7 @@ def mail(request):
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 section = request.GET.get('section')
                 tokens = request.session.get('pg_token')
+                print(tokens)
                 if tokens:
                     pg_token = tokens[-1]
                 else:
@@ -5501,12 +5502,13 @@ def mail(request):
                     threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='dev_mail':
                     threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
+                elif section =='starred':
+                    threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken=pg_token).execute()
                 else:
                     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 
                 
                 if not request.session.get('pg_token'):
-                    print('ok')
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
                         request.session.modified = True
@@ -5593,6 +5595,8 @@ def mail(request):
                         threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken='').execute()
                     elif section =='dev_mail':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
+                    elif section =='starred':
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken='').execute()
                     else:
                         section = 'inbox'
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
@@ -5649,8 +5653,6 @@ def mail(request):
                     print(e)
                     print(f'Failed to create service instance for gmail')
                                                 
-                print(section)
-
                 context={
                     'all_sc_ag':sc_ag,
                     'user_data':user_data,
@@ -5922,9 +5924,11 @@ class PaginationAjax(View):
 
             if navigate_to and section:
                 pg_token = request.session.get('pg_token')
-                if pg_token and len(pg_token) != 0:
-                    
+                if pg_token and len(pg_token) != 0:                   
                     if navigate_to == 'next_page':
+                        if pg_token[-1] == None:
+                            return JsonResponse({'message':'That\'s all'})
+                        
                         response = mail(request)
                         # Redirect with the URL containing custom params
                         response = json.loads(response.content)

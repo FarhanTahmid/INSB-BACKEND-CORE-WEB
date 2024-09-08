@@ -1378,7 +1378,7 @@
                 <label for="select_all">Select All</label>
               </div>
               <div class="more_options">
-                <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="showStarredEmails(this)"></i>
+                <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="activeInbox(this, 'starred')"></i>
                 {% comment %} <i class="fa fa-folder-o" title="Label"></i> {% endcomment %}
                 <i class="fa fa-envelope-open-o" title="Mark as read"></i>
                 <i class="fa fa-envelope-o" title="Mark as unread"></i>
@@ -1496,7 +1496,7 @@
             </div>
 
             <!-- Starred Mail Section -->
-            <div class="email_inner_container starred">
+            <div id="starred" class="email_inner_container starred">
             </div>
           </div>
 
@@ -1818,6 +1818,7 @@
             // Append the returned HTML to the table body
             $('#' + section).html("");
             $('#' + section).append(response.html);
+            document.querySelector('.page-info').innerHTML = response.pg_range;
             addEventListenerToCheckBox();
           }
         });
