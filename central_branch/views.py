@@ -5593,6 +5593,7 @@ def mail(request):
                     elif section =='dev_mail':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
                     else:
+                        section = 'inbox'
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
 
                     thread_data = []
@@ -5628,7 +5629,6 @@ def mail(request):
                             subject = header_dict.get('Subject', '(No Subject)')
                             subject = '(No Subject)' if subject == '' else subject
                             date = header_dict.get('Date')
-                            print(labels)
 
                             if date:
                                 date = parsedate_to_datetime(date)
@@ -5648,10 +5648,12 @@ def mail(request):
                     print(e)
                     print(f'Failed to create service instance for gmail')
                                                 
-                    
+                print(section)
+
                 context={
                     'all_sc_ag':sc_ag,
                     'user_data':user_data,
+                    'section':section,
                     'media_url':settings.MEDIA_URL,
                     'recruitment_sessions':recruitment_sessions,
                     'under_maintenance':under_maintainance,

@@ -1285,9 +1285,9 @@
       <div class="email_wrapper">
         <div class="email_wrapper_2">
           <div class="email_boxes">
-            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
-            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
-            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev</a>
+            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
+            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'sent'%}dev_mail{% endif %}">Dev</a>
             <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')"
               class="email_box">Scheduled</a>
           </div>
@@ -1318,7 +1318,7 @@
               </div>
               <div class="more_options">
                 <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="showStarredEmails(this)"></i>
-                <i class="fa fa-folder-o" title="Label"></i>
+                {% comment %} <i class="fa fa-folder-o" title="Label"></i> {% endcomment %}
                 <i class="fa fa-envelope-open-o" title="Mark as read"></i>
                 <i class="fa fa-envelope-o" title="Mark as unread"></i>
                 <i class="fa fa-trash-o" title="Delete"></i>
@@ -1339,6 +1339,7 @@
               <div class="email_outer_container">
                 <!-- Inbox Section -->
               <div id="inbox" class="email_inner_container inbox show">
+                {% if section == 'inbox' or not section %}
                 {% for thread in threads %}
                 <div class="email_row_wrap" title="event">
                   <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
@@ -1359,18 +1360,62 @@
                 </a>
               </div>
               {% endfor %}
+                {% endif %}
 
               <!-- More inbox rows -->
             </div>
 
             <!-- Sent Section -->
             <div id="sent" class="email_inner_container sent">
-
+              {% if section == 'sent' %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
+                    <div class="email_row_left">
+                      <p class="sender">{{thread.sender}}</p>
+                    </div>
+                    <div class="email_content">
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
+                    </div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+                {% endif %}
               <!-- More sent rows -->
             </div>
 
             <!-- Dev Mail Section -->
             <div id="dev_mail" class="email_inner_container dev_mail">
+              {% if section == 'dev_mail' %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
+                    <div class="email_row_left">
+                      <p class="sender">{{thread.sender}}</p>
+                    </div>
+                    <div class="email_content">
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
+                    </div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+                {% endif %}
               <div class="email_row_wrap" title="announcement">
                 <div class="checkbox_star">
                   <input type="checkbox" id="select" name="select" class="bold">
@@ -1617,18 +1662,18 @@
         window.history.replaceState(null, '', '?section=' + section);
 
         // Hide all sections
-        // const sections = document.querySelectorAll('.email_inner_container');
-        // sections.forEach(sec => sec.classList.remove('show'));
+        const sections = document.querySelectorAll('.email_inner_container');
+        sections.forEach(sec => sec.classList.remove('show'));
 
-        // // Remove 'active' class from all links
-        // const links = document.querySelectorAll('.email_box');
-        // links.forEach(link => link.classList.remove('active'));
+        // Remove 'active' class from all links
+        //const links = document.querySelectorAll('.email_box');
+        //links.forEach(link => link.classList.remove('active'));
 
-        // // Show the selected section
-        // document.querySelector(`.${section}`).classList.add('show');
+        // Show the selected section
+        document.querySelector(`.{{section}}`).classList.add('show');
 
-        // // Add 'active' class to the clicked link
-        // $().classList.add('active');
+        // Add 'active' class to the clicked link
+        //$().classList.add('active');
       });
       // count the mails
       function updateMailCounts() {
@@ -2326,7 +2371,7 @@
     <!-- mail soet using label -->
     <script>
       // Select the elements
-      const labelIcon = document.querySelector('.fa-folder-o[title="Label"]');
+      {% comment %} const labelIcon = document.querySelector('.fa-folder-o[title="Label"]'); {% endcomment %}
       const labelOps = document.querySelector('.label-ops');
 
       // Function to show or hide the selection box
@@ -2348,7 +2393,7 @@
       }
 
       // Attach event listeners
-      labelIcon.addEventListener('click', toggleLabelOps);
+      {% comment %} labelIcon.addEventListener('click', toggleLabelOps); {% endcomment %}
       document.addEventListener('click', hideLabelOps);
 
       function filterEmails() {
