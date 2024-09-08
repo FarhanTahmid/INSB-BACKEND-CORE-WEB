@@ -1464,13 +1464,13 @@
             <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send Email To" readonly
               onclick="uniqueToggleDropdown()">
             <div class="unique-dropdown-content" id="uniqueDropdown">
-              <div onclick="uniqueSelectOption('Item 1')">All Registered General Members of IEEE NSU SB</div>
-              <div onclick="uniqueSelectOption('Item 2')">All Officers of IEEE NSU SB</div>
-              <div onclick="uniqueSelectOption('Item 3')">Executive Panel (Branch Only)</div>
-              <div onclick="uniqueSelectOption('Item 4')">Branch Ex-Com Members</div>
-              <div onclick="uniqueSelectOption('Item 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              <div onclick="uniqueSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
+              <div onclick="uniqueSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+              <div onclick="uniqueSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+              <div onclick="uniqueSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+              <div onclick="uniqueSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               {% for session in recruitment_sessions %}
-              <div onclick="uniqueSelectOption('Item 5')">Recruits of - {{session.session}}</div>
+              <div onclick="uniqueSelectOption('Recruits of - {{session.session}}')">Recruits of - {{session.session}}</div>
               {% endfor %}
             </div>
           </div>
@@ -1481,13 +1481,13 @@
             <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
               onclick="customToggleDropdown()">
             <div class="custom-dropdown-content" id="customDropdown">
-              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of IEEE NSU SB</div>
+              <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
-              <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
-              <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
-              <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              <div onclick="customSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+              <div onclick="customSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+              <div onclick="customSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               {% for session in recruitment_sessions %}
-              <div onclick="uniqueSelectOption('Item 5')">Recruits of - {{session.session}}</div>
+              <div onclick="customSelectOption('Recruits of - {{session.session}}')">Recruits of - {{session.session}}</div>
               {% endfor %}
             </div>
           </div>
@@ -1497,13 +1497,13 @@
             <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
               onclick="altToggleDropdown()">
             <div class="alt-dropdown-content" id="altDropdown">
-              <div onclick="altSelectOption('Choice 1')">All Registered General Members of IEEE NSU SB</div>
-              <div onclick="altSelectOption('Choice 2')">All Officers of IEEE NSU SB</div>
-              <div onclick="altSelectOption('Choice 3')">Executive Panel (Branch Only)</div>
-              <div onclick="altSelectOption('Choice 4')">Branch Ex-Com Members</div>
-              <div onclick="altSelectOption('Choice 5')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
+              <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+              <div onclick="altSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+              <div onclick="altSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+              <div onclick="altSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               {% for session in recruitment_sessions %}
-              <div onclick="uniqueSelectOption('Item 5')">Recruits of - {{session.session}}</div>
+              <div onclick="uniqueSelectOption('Recruits of - {{session.session}}')">Recruits of - {{session.session}}</div>
               {% endfor %}
             </div>
           </div>
@@ -1656,7 +1656,11 @@
 
       // Initial call to set counts based on the initially visible container
       updateMailCounts();
+      </script>
 
+
+      <!-- script for compose modal -->
+      <script>
       // showing and hiding compose email button
       const composeBtn = document.querySelector('.child-body');
       const composeBody = document.querySelector('.compose');
@@ -1664,11 +1668,6 @@
       composeBtn.addEventListener('click', function () {
         composeBtn.classList.add('hidden');
         composeBody.classList.remove('hidden');
-      })
-
-      btnClose.addEventListener('click', function () {
-        closeCompose();
-        clearExistingData();
       })
 
       function closeCompose() {
@@ -1679,7 +1678,17 @@
         composeBody.classList.add('hidden');
       }
 
-      //showing emails according to selected email box
+      btnClose.addEventListener('click', function () {
+        closeCompose();
+        clearExistingData();
+      })
+      </script>
+
+
+
+      <!-- showing emails according to selected email box -->
+      <script>
+        //getting the selected box and inbox name
       function activeInbox(element, section) {
         //prevent refresh
         event.preventDefault();
@@ -2525,141 +2534,9 @@
       }
     </script>
     <script>
+      // For the CC dropdown
       let customSelectedTags = [];
-
-      function customToggleDropdown() {
-        const dropdown = document.getElementById("customDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customUpdateTagContainer();
-        }
-      }
-
-      function customRemoveTag(index) {
-        customSelectedTags.splice(index, 1);
-        customUpdateTagContainer();
-      }
-
-      function customUpdateTagContainer() {
-        const tagContainer = document.getElementById('customTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        customSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'custom-tag';
-          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getCustomSelectedTags() {
-        return customSelectedTags;
-      }
-    </script>
-    <script>
-      let altSelectedTags = [];
-
-      function altToggleDropdown() {
-        const dropdown = document.getElementById("altDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altUpdateTagContainer();
-        }
-      }
-
-      function altRemoveTag(index) {
-        altSelectedTags.splice(index, 1);
-        altUpdateTagContainer();
-      }
-
-      function altUpdateTagContainer() {
-        const tagContainer = document.getElementById('altTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        altSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'alt-tag';
-          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getAltSelectedTags() {
-        return altSelectedTags;
-      }
-    </script>
-    <script>
-      // let uniqueSelectedTags = [];
-
-      function uniqueToggleDropdown() {
-        const dropdown = document.getElementById("uniqueDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function uniqueSelectOption(option) {
-        if (!uniqueSelectedTags.includes(option)) {
-          uniqueSelectedTags.push(option);
-          uniqueUpdateTagContainer();
-        }
-      }
-
-      function uniqueRemoveTag(index) {
-        uniqueSelectedTags.splice(index, 1);
-        uniqueUpdateTagContainer();
-      }
-
-      function uniqueUpdateTagContainer() {
-        const tagContainer = document.getElementById('uniqueTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        uniqueSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'unique-tag';
-          tagElement.innerHTML = `${tag} <span class="unique-remove-tag" onclick="uniqueRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.unique-dropdown-input') && !event.target.closest('.unique-dropdown-content')) {
-          document.getElementById("uniqueDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getUniqueSelectedTags() {
-        return uniqueSelectedTags;
-      }
-    </script>
-    <script>
-      // For the first dropdown
-      // let customSelectedTags = [];
-      let customAvailableOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+      let customAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members'];
 
       function customToggleDropdown() {
         const dropdown = document.getElementById("customDropdown");
@@ -2705,9 +2582,37 @@
         });
       }
 
-      // For the second dropdown
-      // let altSelectedTags = [];
-      let altAvailableOptions = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
+            // Close dropdown when clicking outside of it
+            window.onclick = function (event) {
+        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+          document.getElementById("customDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getCustomSelectedTags() {
+
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(customSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      // For the BCC dropdown
+      let altSelectedTags = [];
+      let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members'];
 
       function altToggleDropdown() {
         const dropdown = document.getElementById("altDropdown");
@@ -2753,10 +2658,38 @@
         });
       }
 
-      // For the third dropdown
-      let uniqueSelectedTags = [];
-      let uniqueAvailableOptions = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+        // Close dropdown when clicking outside of it
+        window.onclick = function (event) {
+        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+          document.getElementById("altDropdown").style.display = "none";
+        }
+      };
 
+      // Function to get selected tags
+      function getAltSelectedTags() {
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(altSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      // For the Send Email to dropdown
+      let uniqueSelectedTags = [];
+      let uniqueAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members'];
+
+      //toggles dropdown display
       function uniqueToggleDropdown() {
         const dropdown = document.getElementById("uniqueDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
@@ -2764,7 +2697,9 @@
 
       function uniqueSelectOption(option) {
         if (!uniqueSelectedTags.includes(option)) {
+          //adds option to array
           uniqueSelectedTags.push(option);
+          //removes option from dropdown
           uniqueAvailableOptions = uniqueAvailableOptions.filter(item => item !== option);
           uniqueUpdateDropdown();
           uniqueUpdateTagContainer();
@@ -2773,6 +2708,7 @@
 
       function uniqueRemoveTag(index) {
         const removedTag = uniqueSelectedTags.splice(index, 1)[0];
+        //adds removed option to dropdown
         uniqueAvailableOptions.push(removedTag);
         uniqueUpdateDropdown();
         uniqueUpdateTagContainer();
@@ -2799,6 +2735,34 @@
           tagElement.innerHTML = `${tag} <span class="unique-remove-tag" onclick="uniqueRemoveTag(${index})">×</span>`;
           tagContainer.appendChild(tagElement);
         });
+      }
+
+            // Close dropdown when clicking outside of it
+            window.onclick = function (event) {
+        if (!event.target.matches('.unique-dropdown-input') && !event.target.closest('.unique-dropdown-content')) {
+          document.getElementById("uniqueDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getUniqueSelectedTags() {
+
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(uniqueSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
       }
 
       function clearExistingData() {
