@@ -1348,6 +1348,7 @@
           <div class="email_boxes">
             <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
             <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
+            <a href="?section=starred" onclick="activeInbox(this, 'starred')" class="email_box {% if section == 'starred'%}active{% endif %}">Starred</a>
             <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'dev_mail'%}activate{% endif %}">Dev</a>
             <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')"
               class="email_box">Scheduled</a>
@@ -1378,7 +1379,7 @@
                 <label for="select_all">Select All</label>
               </div>
               <div class="more_options">
-                <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="activeInbox(this, 'starred')"></i>
+                {% comment %} <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="activeInbox(this, 'starred')"></i> {% endcomment %}
                 {% comment %} <i class="fa fa-folder-o" title="Label"></i> {% endcomment %}
                 <i class="fa fa-envelope-open-o"></i>
                 <i class="fa fa-envelope-o"></i>
@@ -1497,6 +1498,28 @@
 
             <!-- Starred Mail Section -->
             <div id="starred" class="email_inner_container starred">
+              {% if section == 'starred' %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
+                    <div class="email_row_left">
+                      <p class="sender">{{thread.sender}}</p>
+                    </div>
+                    <div class="email_content">
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
+                    </div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+                {% endif %}
             </div>
           </div>
 
