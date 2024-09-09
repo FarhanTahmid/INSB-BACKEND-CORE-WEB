@@ -1,0 +1,19 @@
+{% for key, email in scheduled_emails.items %}
+<div class="email_row_wrap" title="event">
+    <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+      <input type="checkbox" id="select" name="select" class="bold">
+      <input type="hidden" class="msg_id" value="{{email.id}}">
+    </div>
+    <a href="#" target="_blank" onclick="markRead(this)">
+    <div class="email_row" style="background-color: white">
+      <div class="email_row_left">
+        <p class="sender">{{email.id}}</p>
+      </div>
+      <div class="email_content">
+        <div><span class="subject">{{email.subject}}</span></div>
+      </div>
+      <div class="email_date">Scheduled For {{email.schedule_datetime|date:"D, d M Y h:i:s A"}}</div>
+    </div>
+  </a>
+</div>
+{% endfor %}

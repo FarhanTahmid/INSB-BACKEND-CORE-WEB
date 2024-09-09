@@ -153,6 +153,6 @@ urlpatterns = [
     path('mail/request_read_unread/', views.ReadUnreadEmailAjax.as_view(),name='request_email_read_unread'),
     path('mail/request_delete/',views.DeleteEmailAjax.as_view(),name='request_email_delete'),
     path('mail/request_star_unstar/',views.StarUnstarEmailAjax.as_view(),name='request_email_star_unstar'),
-    path('mail/request_scheduled/',views.GetScheduledEmailInfoAjax.as_view()),
+    path('mail/request_scheduled/',views.GetScheduledEmailInfoAjax.as_view(),name='request_scheduled_email'),
     path('navigate/', views.PaginationAjax.as_view(),name='navigate'),
 ]

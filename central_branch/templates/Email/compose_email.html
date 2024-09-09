@@ -1812,7 +1812,18 @@
         startLoader();
         if(section == 'scheduled_mail')
         {
-            //TODO: ADD SCHEDULED PAGE CODE
+          $.ajax({
+            url: "{% url 'central_branch:request_scheduled_email' %}",  // URL pointing to your Django view
+            method: 'GET',
+            success: function (response) {
+              stopLoader();
+              // Append the returned HTML to the table body
+              $('#' + section).html("");
+              $('#' + section).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+            }
+          });
         }
         else 
         {
@@ -2551,9 +2562,10 @@
       // Event Listeners for Pagination Buttons
       document.querySelector('.prev-page').addEventListener('click', () => {
         startLoader();
+        const searchQuery = document.getElementById('search-input').value;
         const urlParams = new URLSearchParams(window.location.search);
         $.ajax({
-          url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page&section=" + urlParams.get('section'),
+          url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page&section=" + urlParams.get('section') + '&query=' + searchQuery,
           type: "GET",
           success: function (response) {
             // Handle the response
@@ -2579,8 +2591,9 @@
       document.querySelector('.next-page').addEventListener('click', () => {
         startLoader();
         const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = document.getElementById('search-input').value;
         $.ajax({
-          url: "{% url 'central_branch:navigate' %}?navigate_to=next_page&section=" + urlParams.get('section'),
+          url: "{% url 'central_branch:navigate' %}?navigate_to=next_page&section=" + urlParams.get('section') + '&query=' + searchQuery,
           type: "GET",
           success: function (response) {
             // Handle the response

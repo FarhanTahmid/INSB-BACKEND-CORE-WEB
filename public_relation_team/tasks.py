@@ -23,9 +23,12 @@ def send_scheduled_email(unique_task_name_json):
 
     service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
-    for value in drafts.values():
-        service.users().drafts().send(userId='me', body={'id': value}).execute()
-        print('Done')
+    try:
+        for value in drafts.values():
+            service.users().drafts().send(userId='me', body={'id': value}).execute()
+            print('Done')
 
-    email_drafts.delete()
+        email_drafts.delete()
+    except:
+        pass
     

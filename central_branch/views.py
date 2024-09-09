@@ -14,10 +14,12 @@ from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
+from django_celery_beat.models import PeriodicTask
 from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from public_relation_team.models import Email_Draft
 from public_relation_team.renderData import PRT_Data
 from public_relation_team.render_email import PRT_Email_System
 from system_administration.google_mail_handler import GmailHandler
@@ -5500,8 +5502,10 @@ def mail(request):
                 query = request.GET.get('query')
                 if section == 'inbox':
                     if query:
+                        print("OK")
                         threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
                     else:
+                        print("NOT OK")
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section == 'sent':
                     if query:
@@ -6075,4 +6079,14 @@ class DeleteEmailAjax(View):
             return JsonResponse({'message':'Something went wrong!'})
 
 class GetScheduledEmailInfoAjax(View):
-    pass
+    def get(self, request):
+        scheduled_emails = {}
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            drafts = Email_Draft.objects.all()
+            for draft in drafts:
+                task = PeriodicTask.objects.get(name=draft.email_unique_id,enabled=True)
+                scheduled_emails.update({draft.email_unique_id:{'id':draft.email_unique_id,'subject':draft.subject,'schedule_datetime':task.schedule.clocked_time}})
+        print(scheduled_emails)
+        html =  render(request, 'Email/scheduled_email_row.html', {'scheduled_emails':scheduled_emails}).content.decode('utf-8')
+        return JsonResponse({'html':html})
+
