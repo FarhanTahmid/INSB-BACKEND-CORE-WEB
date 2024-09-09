@@ -1817,12 +1817,12 @@
           });
         }
 
-        //reset star icon to default
+        {% comment %} //reset star icon to default
         const starEmailIcon = document.querySelector('.more_options .starInbox');
         if (starEmailIcon.classList.contains('fa-star')) {
           starEmailIcon.classList.remove('fa-star');
           starEmailIcon.classList.add('fa-star-o');
-        }
+        } {% endcomment %}
         // Hide all sections
         const sections = document.querySelectorAll('.email_inner_container');
         sections.forEach(sec => sec.classList.remove('show'));
