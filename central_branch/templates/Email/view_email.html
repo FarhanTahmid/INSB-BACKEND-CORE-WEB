@@ -24,14 +24,14 @@
       padding: 2rem;
       background-color: white;
       border-radius: 10px;
-      box-shadow: 0px 0px 6px 0px gray;
+      box-shadow: 0px 0px 2px 0px gray;
       margin-bottom: 100px;
     }
 
     .central_body h1 {
-      font-size: 30px;
-      font-weight: 100;
-      border-bottom: 1px solid gray;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-bottom: 2px solid gray;
       padding-bottom: 10px;
       flex-grow: 1;
     }
@@ -53,15 +53,16 @@
     .heading_col1 {
       display: flex;
       justify-content: space-between;
-      flex-basis: 20%;
+      /* flex-basis: 20%; */
       align-items: flex-start;
     }
 
     .heading_col2 {
       display: flex;
       justify-content: space-between;
-      flex-basis: 12%;
+      flex-basis: 14%;
       align-items: center;
+      margin-left: .25rem;
     }
 
     .buttons {
@@ -159,14 +160,16 @@
     } */
 
     .dropbtn {
-      color: #00629b;
+      color: black;
       background-color: white;
       padding: 0px;
-      border: none;
+      border:1px solid white;
       border-radius: 50%;
       height: 30px;
       width: 30px;
       transition: all .3s ease-in-out;
+      font-weight: bold;
+      
     }
 
     .dropdown {
@@ -203,8 +206,9 @@
     }
 
     .dropdown:hover .dropbtn {
-      background-color: #00629b;
-      color: white;
+      /* background-color: #f6f6f6; */
+      border:1px solid #f2f2f2;
+
     }
 
     .email_dp {
@@ -213,7 +217,7 @@
     }
 
     .return_inbox {
-      font-size: 25px;
+      font-size: 1.5rem;
       padding: 0rem 0rem 1rem;
       display: flex;
       gap: 1rem;
@@ -490,9 +494,8 @@
       color: #b1b0b0;
     }
 
-    #ccBccFields h6 {
+    .ccBccFields h6 {
       margin-left: .5rem;
-      font-style: italic;
       color: #888;
     }
   </style>
@@ -612,19 +615,19 @@
 
         <div class="heading">
           <div class="heading_col1">
-            <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
+            {% comment %} <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture"> {% endcomment %}
             <div class="col1_inner">
               <h2>{% if threads.0.sender_name %}{{threads.0.sender_name}}{% else %}{{threads.0.sender_email}}{% endif %}</h2>
-              <address style="margin: 0px; color: gray;">
+              <address style="margin: 0px; color: #002855; font-weight: bold;">
                 <a href="#">{{threads.0.sender_email}}</a>
               </address>
               <div style="display: flex;">
                 <!-- Arrow Element -->
-                <div id="arrow" onclick="toggleDisplay()"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                <div id="arrow" onclick="toggleDisplay(this)"><i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </div>
 
                 <!-- CC and BCC Fields (Initially Hidden) -->
-                <div id="ccBccFields" style="opacity: 0;">
+                <div class="ccBccFields" style="opacity: 0;">
                   <h6>CC: {{threads.0.cc}}</h6>
                   <h6>BCC: {{threads.0.bcc}}</h6>
                 </div>
@@ -634,7 +637,7 @@
           <div class="heading_col2">
             <p style="margin: 0px; color: gray;">{{threads.0.date|date:"D, d M Y h:i:s A"}}</p>
             <div class="dropdown">
-              <button class="dropbtn"><i class="fa fa-bars"></i></button>
+              <button class="dropbtn">...</button>
               <div class="dropdown_content">
                 <a href="#" onclick="myFunction('reply')">Reply</a>
                 <a href="#" onclick="myFunction('fwd')">Forward</a>
@@ -719,19 +722,19 @@
         {% for thread in threads|slice:"1:" %}
         <div class="heading">
           <div class="heading_col1">
-            <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
+            <!-- <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture"> -->
             <div class="col1_inner">
               <h2>{% if thread.sender_name %}{{thread.sender_name}}{% else %}{{thread.sender_email}}{% endif %}</h2>
-              <address style="margin: 0px; color: gray;">
+              <address style="margin: 0px; color: #002855; font-weight: bold;">
                 <a href="#">{{thread.sender_email}}</a>
               </address>
               <div style="display: flex;">
                 <!-- Arrow Element -->
-                <div id="arrow" onclick="toggleDisplay()"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                <div id="arrow" onclick="toggleDisplay(this)"><i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </div>
 
                 <!-- CC and BCC Fields (Initially Hidden) -->
-                <div id="ccBccFields" style="opacity: 0;">
+                <div class="ccBccFields" style="opacity: 0;">
                   <h6>CC: {{thread.cc}}</h6>
                   <h6>BCC: {{thread.bcc}}</h6>
                 </div>
@@ -741,7 +744,7 @@
           <div class="heading_col2">
             <p style="margin: 0px; color: gray;">{{thread.date|date:"D, d M Y h:i:s A"}}</p>
             <div class="dropdown">
-              <button class="dropbtn"><i class="fa fa-bars"></i></button>
+              <button class="dropbtn">...</button>
               <div class="dropdown_content">
                 <a href="#" onclick="myFunction('reply')">Reply</a>
                 <a href="#" onclick="myFunction('fwd')">Forward</a>
@@ -1144,16 +1147,18 @@
       };
     </script>
     <script>
-      function toggleDisplay() {
-        var ccBccFields = document.getElementById("ccBccFields");
-
-        // Toggle the display of the CC and BCC fields
-        if (ccBccFields.style.opacity === "0" || ccBccFields.style.opacity === "") {
-          ccBccFields.style.opacity = "1"; // Show the fields
-        } else {
-          ccBccFields.style.opacity = "0";  // Hide the fields
-        }
+    function toggleDisplay(element) {
+      // Find the next sibling div (.ccBccFields)
+      const ccBccFields = element.nextElementSibling;
+      console.log(ccBccFields)
+      // Toggle opacity and visibility
+      if (ccBccFields.style.opacity === "0") {
+        ccBccFields.style.opacity = "1";
+      } else {
+        ccBccFields.style.opacity = "0";
       }
+    }
+
     </script>
 
     <script>
