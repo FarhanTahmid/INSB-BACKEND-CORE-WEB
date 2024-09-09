@@ -5807,7 +5807,10 @@ def view_mail(request, mail_id):
 
             # Extract relevant fields from headers
             header_dict = {header['name']: header['value'] for header in headers}
+            print(header_dict)
             sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+            Cc = header_dict.get('Cc')
+            Bcc = header_dict.get('Bcc')
             subject = header_dict.get('Subject', '(No Subject)')
             subject = '(No Subject)' if subject == '' else subject
             date = header_dict.get('Date')
@@ -5821,6 +5824,8 @@ def view_mail(request, mail_id):
                 # 'message_id':message_id,
                 'sender_name': sender_name,
                 'sender_email': sender_email,
+                'cc':Cc,
+                'bcc':Bcc,
                 'subject': subject,
                 'date': date,
                 'labels': labels,
@@ -5841,7 +5846,6 @@ def view_mail(request, mail_id):
     # except Exception as e:
     #     print(thread_data)
     #     print(f'Failed to create service instance for gmail')
-    print(thread_data)
 
     context = {
         'threads':thread_data
