@@ -1278,7 +1278,7 @@
     div.caption {
       text-align: center;
       color: #002855;
-      font-size: 3rem;
+      font-size: 1.5rem;
       font-family: "Noto Sans", sans-serif;
     }
     div.dot {
@@ -1380,9 +1380,9 @@
               <div class="more_options">
                 <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="activeInbox(this, 'starred')"></i>
                 {% comment %} <i class="fa fa-folder-o" title="Label"></i> {% endcomment %}
-                <i class="fa fa-envelope-open-o" title="Mark as read"></i>
-                <i class="fa fa-envelope-o" title="Mark as unread"></i>
-                <i class="fa fa-trash-o" title="Delete"></i>
+                <i class="fa fa-envelope-open-o"></i>
+                <i class="fa fa-envelope-o"></i>
+                <i class="fa fa-trash-o"></i>
 
               </div>
             </div>
@@ -2195,10 +2195,16 @@
               markAsRead.style.opacity = '1';
               markAsUnread.style.opacity = '1';
               deleteEmail.style.opacity = '1';
+              markAsRead.title = 'Mark as Read';
+              markAsUnread.title = 'Mark as Unread';
+              deleteEmail.title = 'Delete';
             } else {
               markAsRead.style.opacity = '0';
               markAsUnread.style.opacity = '0';
               deleteEmail.style.opacity = '0';
+              markAsRead.title = '';
+              markAsUnread.title = '';
+              deleteEmail.title = '';
             }
           });
         });
@@ -2211,10 +2217,16 @@
           markAsRead.style.opacity = '1';
           markAsUnread.style.opacity = '1';
           deleteEmail.style.opacity = '1';
+          markAsRead.title = 'Mark as Read';
+          markAsUnread.title = 'Mark as Unread';
+          deleteEmail.title = 'Delete';
         } else {
           markAsRead.style.opacity = '0';
           markAsUnread.style.opacity = '0';
           deleteEmail.style.opacity = '0';
+          markAsRead.title = '';
+          markAsUnread.title = '';
+          deleteEmail.title = '';
         }
       });
 
