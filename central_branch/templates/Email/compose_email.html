@@ -1693,6 +1693,10 @@
       document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
         let section = urlParams.get('section') || 'inbox';
+        if(section == 'scheduled_mail')
+        {
+          section = 'inbox';
+        }
         window.history.replaceState(null, '', '?section=' + section);
 
         // Hide all sections
