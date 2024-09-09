@@ -1409,6 +1409,13 @@
                     </div>
                  </div>
                  </div>
+                 {% if error_message %}
+                 <p>
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <p style="margin: 0;">{{error_message}}</p>
+                  </div>
+              </p>
+                 {% endif %}
                 <!-- Inbox Section -->
               <div id="inbox" class="email_inner_container inbox show">
                 {% if section == 'inbox' or not section %}

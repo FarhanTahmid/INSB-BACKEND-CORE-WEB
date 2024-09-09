@@ -5474,6 +5474,7 @@ def mail(request):
                 or PRT_Data.prt_manage_email_access(user.username))
         
         if has_access:
+            error_message = ''
 
             if request.session.get('pg_token') and not request.GET.get('navigate_to'):
                 del request.session['pg_token']
@@ -5494,6 +5495,7 @@ def mail(request):
                 if not service:
                     credentials = GmailHandler.get_credentials(request)
                     if not credentials:
+                        error_message = 'Google Authorization Required! Please contact Web Team'
                         print("NOT OK")
                         return None
                     # try:
@@ -5501,12 +5503,12 @@ def mail(request):
                     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                 query = request.GET.get('query')
+                thread_data = []
+
                 if section == 'inbox':
                     if query:
-                        print("OK")
                         threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
                     else:
-                        print("NOT OK")
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section == 'sent':
                     if query:
@@ -5532,8 +5534,6 @@ def mail(request):
                         request.session['pg_token'] = [threads['nextPageToken']]
                         request.session.modified = True
                     request.session['pg_range'] = '1 - 10'
-
-                thread_data = []
 
                 if threads.get('threads'):
                     for thread in threads['threads']:
@@ -5583,6 +5583,7 @@ def mail(request):
                     
                 context={
                     'threads':thread_data,
+                    'error_message':error_message
                 }
                 
                 # Render the row.html template with the data
@@ -5600,11 +5601,16 @@ def mail(request):
                 under_maintainance = system.objects.all().first()
 
                 section = request.GET.get('section')
+                thread_data = []
 
                 credentials = GmailHandler.get_credentials(request)
                 if not credentials:
                     print("NOT OK")
-                    return None
+                    error_message = 'Google Authorization Required! Please contact Web Team'
+                    return render(request,'Email/compose_email.html',{'all_sc_ag':sc_ag,
+                                                                      'user_data':user_data,
+                                                                      'section':section,
+                                                                      'error_message':error_message})
                 try:
                     service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
                     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
@@ -5621,53 +5627,53 @@ def mail(request):
                         section = 'inbox'
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
 
-                    thread_data = []
 
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
                         request.session['pg_range'] = '1 - 10'
                         request.session.modified = True
 
-                    for thread in threads['threads']:
-                        thread_id = thread['id']
+                    if threads.get('threads'):
+                        for thread in threads['threads']:
+                            thread_id = thread['id']
 
-                        # Fetch the required details for each message
-                        thread_details = service.users().threads().get(
-                            userId='me',
-                            id=thread_id,
-                            format='metadata',
-                            metadataHeaders=['From', 'Subject', 'Date']
-                        ).execute()
-                        
-                        messagess = thread_details.get('messages', [])
+                            # Fetch the required details for each message
+                            thread_details = service.users().threads().get(
+                                userId='me',
+                                id=thread_id,
+                                format='metadata',
+                                metadataHeaders=['From', 'Subject', 'Date']
+                            ).execute()
+                            
+                            messagess = thread_details.get('messages', [])
 
-                        if messagess:
-                            last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-                            headers = last_message['payload'].get('headers', [])
-                            snippet = last_message.get('snippet', '')
-                            labels = last_message.get('labelIds', [])
-                            message_id = thread['id']
+                            if messagess:
+                                last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                                headers = last_message['payload'].get('headers', [])
+                                snippet = last_message.get('snippet', '')
+                                labels = last_message.get('labelIds', [])
+                                message_id = thread['id']
 
-                            # Extract relevant fields from headers
-                            header_dict = {header['name']: header['value'] for header in headers}
-                            sender = header_dict.get('From')
-                            subject = header_dict.get('Subject', '(No Subject)')
-                            subject = '(No Subject)' if subject == '' else subject
-                            date = header_dict.get('Date')
+                                # Extract relevant fields from headers
+                                header_dict = {header['name']: header['value'] for header in headers}
+                                sender = header_dict.get('From')
+                                subject = header_dict.get('Subject', '(No Subject)')
+                                subject = '(No Subject)' if subject == '' else subject
+                                date = header_dict.get('Date')
 
-                            if date:
-                                date = parsedate_to_datetime(date)
-                            else:
-                                date = None
+                                if date:
+                                    date = parsedate_to_datetime(date)
+                                else:
+                                    date = None
 
-                            thread_data.append({
-                                'message_id':message_id,
-                                'sender': sender,
-                                'subject': subject,
-                                'date': date,
-                                'labels': labels,
-                                'snippet': snippet,
-                            })
+                                thread_data.append({
+                                    'message_id':message_id,
+                                    'sender': sender,
+                                    'subject': subject,
+                                    'date': date,
+                                    'labels': labels,
+                                    'snippet': snippet,
+                                })
 
                 except Exception as e:
                     print(e)
@@ -5680,7 +5686,8 @@ def mail(request):
                     'media_url':settings.MEDIA_URL,
                     'recruitment_sessions':recruitment_sessions,
                     'under_maintenance':under_maintainance,
-                    'threads':thread_data
+                    'threads':thread_data,
+                    'error_message':error_message
                 }
                 return render(request,'Email/compose_email.html',context)
         else:
