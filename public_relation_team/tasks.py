@@ -1,7 +1,7 @@
 from celery import shared_task
 from insb_port import settings
 from insb_port.celery import app
-from public_relation_team.models import Email_Draft
+from central_branch.models import Email_Draft
 from public_relation_team.render_email import PRT_Email_System
 import json
 

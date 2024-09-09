@@ -614,7 +614,7 @@
           <div class="heading_col1">
             <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
             <div class="col1_inner">
-              <h2>{{threads.0.sender_name}}</h2>
+              <h2>{% if threads.0.sender_name %}{{threads.0.sender_name}}{% else %}{{threads.0.sender_email}}{% endif %}</h2>
               <address style="margin: 0px; color: gray;">
                 <a href="#">{{threads.0.sender_email}}</a>
               </address>
@@ -721,7 +721,7 @@
           <div class="heading_col1">
             <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
             <div class="col1_inner">
-              <h2>{{thread.sender_name}}</h2>
+              <h2>{% if thread.sender_name %}{{thread.sender_name}}{% else %}{{thread.sender_email}}{% endif %}</h2>
               <address style="margin: 0px; color: gray;">
                 <a href="#">{{thread.sender_email}}</a>
               </address>

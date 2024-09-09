@@ -49,3 +49,15 @@ event_proposal_files=FileSystemStorage(location='Event Proposals')
 #         verbose_name="Meeting Minutes Information of Societies"
 #     def __str__(self) -> str:
 #         return self.mm_branch_id
+
+class Email_Draft(models.Model):
+    email_unique_id = models.CharField(null=False,blank=False,max_length=20)
+    subject = models.TextField(blank=True,null=True)
+    drafts = models.JSONField(null=True,blank=True,default=dict)
+    timestamp = models.DateTimeField(null=False,blank=False,auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Email Draft"
+
+    def __str__(self):
+        return str(self.email_unique_id)

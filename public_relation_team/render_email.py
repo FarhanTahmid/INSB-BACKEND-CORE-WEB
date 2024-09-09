@@ -11,7 +11,7 @@ from django.core.files.base import ContentFile
 import json,os
 from datetime import datetime
 from insb_port import settings
-from public_relation_team.models import Email_Draft
+from central_branch.models import Email_Draft
 from system_administration.google_mail_handler import GmailHandler
 from googleapiclient.discovery import build
 from django.template.loader import render_to_string
