@@ -5474,7 +5474,8 @@ def mail(request):
 
             if request.session.get('pg_token') and not request.GET.get('navigate_to'):
                 del request.session['pg_token']
-                del request.session['pg_range']
+                if request.GET.get('pg_range'):
+                    del request.session['pg_range']
                 request.session.modified = True
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':

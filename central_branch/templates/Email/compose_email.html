@@ -2550,12 +2550,14 @@
 
       // Event Listeners for Pagination Buttons
       document.querySelector('.prev-page').addEventListener('click', () => {
+        startLoader();
         const urlParams = new URLSearchParams(window.location.search);
         $.ajax({
           url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page&section=" + urlParams.get('section'),
           type: "GET",
           success: function (response) {
             // Handle the response
+            stopLoader();
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
@@ -2575,12 +2577,14 @@
       });
 
       document.querySelector('.next-page').addEventListener('click', () => {
+        startLoader();
         const urlParams = new URLSearchParams(window.location.search);
         $.ajax({
           url: "{% url 'central_branch:navigate' %}?navigate_to=next_page&section=" + urlParams.get('section'),
           type: "GET",
           success: function (response) {
             // Handle the response
+            stopLoader();
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
