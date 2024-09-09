@@ -1,4 +1,5 @@
 import base64
+import mimetypes
 from django.template.loader import render_to_string
 import json
 import logging
@@ -5735,6 +5736,7 @@ def view_mail(request, mail_id):
             last_message = messagess[i-1]  # Get the last message in the thread
             headers = last_message['payload'].get('headers', [])
             body = ''
+            files = []
             # Check if the message has a 'payload' and 'parts'
             if 'parts' in last_message['payload']:
                 def extract_parts(part):
@@ -5751,6 +5753,19 @@ def view_mail(request, mail_id):
                     elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
                         for subpart in part.get('parts', []):
                             parts.extend(extract_parts(subpart))
+                            
+                    # Check if the part is an attachment
+                    elif part.get('filename'):
+                        attachment_id = part['body'].get('attachmentId')
+                        if attachment_id:
+
+                            # Add the attachment URL to parts
+                            files.append({
+                                'msg_id':last_message['id'],
+                                'mimeType': mime_type,
+                                'filename': part.get('filename'),
+                                'attachment_id': attachment_id
+                            })
 
                     return parts
                 
@@ -5759,14 +5774,15 @@ def view_mail(request, mail_id):
                 email_parts = extract_parts(last_message['payload'])
                 
                 # Separate HTML and plain text
-                body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
+                content_parts = {part['mimeType']: part.get('content') for part in email_parts}
+                body = content_parts.get('text/html')
+                plain_text_body = content_parts.get('text/plain')
                 # # Remove previous replies (common patterns to strip off replies)
                 # body = re.split(r"(On\s.*wrote:)", body)[0]
 
                 # # You can also strip off quoted text that starts with '>'
                 # body = re.sub(r'(>.*\n)', '', body)
 
-                plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
                 if body == None:
                     # # Remove previous replies (common patterns to strip off replies)
                     # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
@@ -5808,7 +5824,8 @@ def view_mail(request, mail_id):
                 'subject': subject,
                 'date': date,
                 'labels': labels,
-                'body':body
+                'body':body,
+                'files':files
                 # 'snippet': snippet,
             })
 
@@ -6090,3 +6107,28 @@ class GetScheduledEmailInfoAjax(View):
         html =  render(request, 'Email/scheduled_email_row.html', {'scheduled_emails':scheduled_emails}).content.decode('utf-8')
         return JsonResponse({'html':html})
 
+def get_attachment(request, message_id, attachment_id):
+    # Fetch the attachment from Gmail API
+    filename = request.GET.get('filename')
+    global service
+    if not service:
+        credentials = GmailHandler.get_credentials(request)
+        if not credentials:
+            print("NOT OK")
+            return None
+        
+        service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+    attachment = service.users().messages().attachments().get(
+        userId='me',
+        messageId=message_id,
+        id=attachment_id
+    ).execute()
+
+    # Decode the attachment data
+    attachment_data = base64.urlsafe_b64decode(attachment['data'].encode('utf-8'))
+
+    # Create the response
+    response = HttpResponse(attachment_data)
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response

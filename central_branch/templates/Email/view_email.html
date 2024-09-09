@@ -648,14 +648,16 @@
           {% comment %} {{threads.0.body|safe}} {% endcomment %}
         </div>
 
+        {% if threads.0.files %}
         <div class="attachments">
           <p>Attachments:</p>
           <ul>
-            <li><a href="#">(Attachments1)</a></li>
-            <li><a href="#">(Attachments2)</a></li>
-            <li><a href="#">(Attachments3)</a></li>
+            {% for attachment in threads.0.files %}
+            <li><a href="{% url 'central_branch:get_attachment' attachment.msg_id attachment.attachment_id %}?filename={{attachment.filename}}">{{attachment.filename}}</a></li>
+            {% endfor %}
           </ul>
         </div>
+        {% endif %}
 
         <div class="buttons">
           <button class="reply_button" onclick="myFunction('reply')"><i class="fa fa-reply" style='margin-right: .5rem;'

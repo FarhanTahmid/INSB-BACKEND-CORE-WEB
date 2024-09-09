@@ -155,4 +155,5 @@ urlpatterns = [
     path('mail/request_star_unstar/',views.StarUnstarEmailAjax.as_view(),name='request_email_star_unstar'),
     path('mail/request_scheduled/',views.GetScheduledEmailInfoAjax.as_view(),name='request_scheduled_email'),
     path('navigate/', views.PaginationAjax.as_view(),name='navigate'),
+    path('mail/view/attachments/<str:message_id>/<str:attachment_id>/', views.get_attachment, name='get_attachment'),
 ]
