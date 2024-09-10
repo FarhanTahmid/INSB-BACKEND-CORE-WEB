@@ -311,7 +311,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      margin: 0 1rem;
+      margin: 0;
       align-items: center;
     }
 
@@ -1096,7 +1096,8 @@
 
     .email_outer_container i {
       padding: .25rem;
-      scale: 1.2;
+      /* scale: 1.2; */
+      font-size: 1rem;
     }
 
     .email_container input[type='checkbox'] {
@@ -1314,6 +1315,181 @@
       display: none;
       /* box-shadow: 0px 2px 5px 0px gray; */
       height: 555px;
+    }
+
+    .edit_btn{
+    cursor: pointer;
+    margin-bottom: 0rem;
+  }
+  .confirm_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .confirm_modal_content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 500px;
+      /* height: 190px; */
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      /* left: 100px; */
+      padding: 10px 20px;
+    }
+
+    .confirmModalClosebtn {
+      color: rgb(86 84 84);
+      font-size: 28px;
+      /* font-weight: bold; */
+      display: flex;
+      justify-content: flex-end;
+      /* padding: 10px 20px 0; */
+      transition: all .3s ease-in-out;
+    }
+
+    .confirmModalClosebtn:hover,
+    .confirmModalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  .edit_schedule_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .schedule_content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 500px;
+      /* height: 190px; */
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      /* left: 100px; */
+      padding: 10px 20px;
+    }
+
+    .scheduleModalClosebtn {
+      color: rgb(86 84 84);
+      font-size: 28px;
+      /* font-weight: bold; */
+      display: flex;
+      justify-content: flex-end;
+      /* padding: 10px 20px 0; */
+      transition: all .3s ease-in-out;
+    }
+
+    .scheduleModalClosebtn:hover,
+    .scheduleModalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .schedule_content h6{
+      transition: all .3s ease-in-out;
+      cursor: pointer;
+      color: rgb(86 84 84);
+    }
+
+    .schedule_content h6:hover{
+      color: #000;
+    }
+
+    .schedule_content_inner{
+      display: flex;
+      /* flex-direction: column; */
+      margin-bottom: 1.5rem;
+      justify-content: space-between;
+    }
+
+    .schedule_heading{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem; 
+      align-items: center;
+    }
+
+    .save_changes{
+      border: 1px solid #51d479;
+      background: #51d479;
+      color: white;
+      padding: .25rem .75rem;
+      border-radius: .25rem;
+      transition: all .3s ease-in-out;
+    }
+
+    .save_changes:hover{
+      color: #51d479;
+      background: white;
+    }
+    .pause_btn_container,
+    .restart_btn_container,
+    .cancel_btn_container{
+      border: 1px solid #A9A9A9;
+      background: white;
+      color: white;
+      padding: 0rem .25rem;
+      border-radius: .25rem;
+      transition: all .3s ease-in-out;
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+      cursor: pointer;
+    }
+    .pause_btn,
+    .restart_btn,
+    .cancel_btn{
+      border: none;
+      background: white;
+      color: #000000c9;
+      transition: all .3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .pause_btn_container:hover,
+    .restart_btn_container:hover,
+    .cancel_btn_container:hover{
+      background: rgb(222, 222, 222);
+    }
+    
+    .pause_btn_container:hover .pause_btn,
+    .restart_btn_container:hover .restart_btn,
+    .cancel_btn_container:hover .cancel_btn{
+      background: rgb(222, 222, 222);
+    }
+    
+    .edit_btn_container{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
     }
   </style>
   <!--Internal CSS End-->
@@ -1714,6 +1890,51 @@
         </div>
       </div>
       <!--Email Section End-->
+    </div>
+    <div id="scheduleModal" class="edit_schedule_modal">
+      <!-- Modal content -->
+      <div class="schedule_content">
+        <div class="schedule_heading">
+          <h5 style="margin-bottom: 0;">Edit Scheduled Mail</h5>
+          <span class="scheduleModalClosebtn">&times;</span>
+        </div>
+
+        <div class="edit_btn_container">
+          <div class="restart_btn_container">
+            <svg width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.2577 3.50828C18.538 3.62437 18.7207 3.89785 18.7207 4.20119V8.44383C18.7207 8.85805 18.3849 9.19383 17.9707 9.19383H13.728C13.4247 9.19383 13.1512 9.0111 13.0351 8.73085C12.9191 8.45059 12.9832 8.128 13.1977 7.9135L14.8007 6.3105C12.1674 5.20912 9.01606 5.7309 6.87348 7.87348C4.04217 10.7048 4.04217 15.2952 6.87348 18.1265C9.70478 20.9578 14.2952 20.9578 17.1265 18.1265C18.7727 16.4803 19.4622 14.2401 19.1935 12.0937C19.142 11.6827 19.4335 11.3078 19.8445 11.2563C20.2555 11.2049 20.6304 11.4963 20.6819 11.9073C21.0057 14.4934 20.1746 17.1997 18.1872 19.1872C14.7701 22.6043 9.2299 22.6043 5.81282 19.1872C2.39573 15.7701 2.39573 10.2299 5.81282 6.81282C8.55119 4.07444 12.6515 3.5312 15.9309 5.18028L17.4404 3.67086C17.6549 3.45637 17.9774 3.3922 18.2577 3.50828Z" fill="#000000c9"></path> </g></svg>
+            <input class="restart_btn" type="submit" onclick="ConfirmationModal()" value="Restart Send">
+          </div>
+          <div class="pause_btn_container">
+            <svg class="pause_svg" width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2C7.88562 2 8.82843 2 9.41421 2.58579C10 3.17157 10 4.11438 10 6V18C10 19.8856 10 20.8284 9.41421 21.4142C8.82843 22 7.88562 22 6 22C4.11438 22 3.17157 22 2.58579 21.4142C2 20.8284 2 19.8856 2 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> <path d="M14 6C14 4.11438 14 3.17157 14.5858 2.58579C15.1716 2 16.1144 2 18 2C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6V18C22 19.8856 22 20.8284 21.4142 21.4142C20.8284 22 19.8856 22 18 22C16.1144 22 15.1716 22 14.5858 21.4142C14 20.8284 14 19.8856 14 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> </g></svg>
+            <input class="pause_btn" type="submit" onclick="ConfirmationModal()" value="Pause Send">
+          </div>
+          <div class="cancel_btn_container">
+            <svg width=".75rem" height=".75rem" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <style>.cls-1{fill:none;stroke:#000000c9;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style> </defs> <title></title> <g id="cross"> <line class="cls-1" x1="7" x2="25" y1="7" y2="25"></line> <line class="cls-1" x1="7" x2="25" y1="25" y2="7"></line> </g> </g></svg>
+            <input class="cancel_btn" type="submit" onclick="ConfirmationModal()" value="Cancel Send">
+          </div>
+        </div>
+        <div class="schedule_content_inner">
+          <h6 name="schedule-time" style="margin-bottom: 0;">Change Schedule Time</h6>
+          <input type="datetime-local" name="schedule-time" style="border: 0;" value="" name="" placeholder="">
+      </div>
+        <div style="display: flex; justify-content: center;">
+          <input class="save_changes" type="submit" onclick="ConfirmationModal()" value="Save Changes">
+        </div>
+      </div>
+    </div>
+    <div id="confirm_modal" class="confirm_modal">
+      <!-- Modal content -->
+      <div class="confirm_modal_content">
+        <div style="display: flex;
+          justify-content: flex-end;
+          padding: 10px 20px 0;
+      ">
+          <span class="confirmModalClosebtn">&times;</span>
+        </div>
+        <h5 style="position: relative;
+              text-align: center;
+              bottom: 15px;">Email Sent</h5>
+      </div>
     </div>
     <!-- ############ PAGE END-->
     <!-- ############ LAYOUT END-->
@@ -3115,6 +3336,52 @@
           const box = document.querySelector('.loaderBox');
           loaderContainer.style.display = 'none';
           box.style.display = 'none';
+      }
+    </script>
+    <script>
+      function scheduleEdit(element){
+      // Get the modal
+      var scheduleModal = document.getElementById("scheduleModal");
+      scheduleModal.style.transform = 'translateY(0px)';
+      scheduleModal.style.zIndex = '103100';
+      scheduleModal.style.opacity = '1';
+    
+      // Get the <span> element that closes the modal
+      var closeBtn = document.getElementsByClassName("scheduleModalClosebtn")[0];
+    
+      // When the user clicks on <span> (x), close the modal
+      closeBtn.onclick = function () {
+        scheduleModal.style.transform = 'translateY(-50px)';
+        scheduleModal.style.zIndex = '-100';
+        scheduleModal.style.opacity = '0';
+      }
+    }
+
+      function ConfirmationModal(element){
+      hideScheduleModal();
+      // Get the modal
+      var confirmModal = document.getElementById("confirm_modal");
+      confirmModal.style.transform = 'translateY(0px)';
+      confirmModal.style.zIndex = '103100';
+      confirmModal.style.opacity = '1';
+    
+      // Get the <span> element that closes the modal
+      var closeBtn = document.getElementsByClassName("confirmModalClosebtn")[0];
+    
+      // When the user clicks on <span> (x), close the modal
+      closeBtn.onclick = function () {
+        confirmModal.style.transform = 'translateY(-50px)';
+        confirmModal.style.zIndex = '-100';
+        confirmModal.style.opacity = '0';
+      }
+    }
+    
+      function hideScheduleModal() {
+      var scheduleModal = document.getElementById("scheduleModal");
+    
+      scheduleModal.style.transform = 'translateY(-50px)';
+      scheduleModal.style.zIndex = '-100';
+      scheduleModal.style.opacity = '0';
       }
     </script>
     {% block common_js %}
