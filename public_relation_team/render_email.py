@@ -48,7 +48,7 @@ class PRT_Email_System:
             for email in to_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_general_members_of_branch()
+                    general_members=Branch.load_all_active_members_of_branch()
                     for member in general_members:
                         if member.email_nsu:
                             to_email_final_list.append(member.email_nsu) 
