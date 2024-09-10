@@ -30,8 +30,8 @@
 
     .central_body h1 {
       font-size: 1.5rem;
-      font-weight: bold;
-      border-bottom: 2px solid gray;
+      /* font-weight: bold; */
+      border-bottom: 1px solid gray;
       padding-bottom: 10px;
       flex-grow: 1;
     }
@@ -225,6 +225,8 @@
 
     .fa-arrow-left {
       color: #00629b;
+      position: relative;
+      bottom: .25rem;
     }
 
 
@@ -330,6 +332,10 @@
 
       .heading_col2 {
         flex-basis: 20%;
+      }
+
+      .heading{
+        flex-direction: column;
       }
     }
 
@@ -489,10 +495,10 @@
     .fa-arrow-right {
       color: #888;
     }
-
+/* 
     .fa-arrow-right:hover {
       color: #b1b0b0;
-    }
+    } */
 
     .ccBccFields h6 {
       margin-left: .5rem;
@@ -579,6 +585,53 @@
     button[title="Insert Image"], [title="Insert Files"] {
       display: none;
     }
+
+    
+    .email_sent_confirm_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .email_sent_content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 550px;
+      height: 100px;
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      /* left: 100px; */
+      padding-bottom: 5px;
+    }
+
+    .modalClosebtn {
+      color: #000;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px 0;
+    }
+
+    .modalClosebtn:hover,
+    .modalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 
@@ -714,7 +767,7 @@
                 <input type="file" id="myfile" name="myfile" hidden multiple>
               </div>
 
-              <input type="button" class="send_button" value="Send">
+              <input type="button" class="send_button" onclick="EmailSent()" value="Send">
             </div>
           </div>
         </form>
@@ -760,6 +813,17 @@
         {% endfor %}
       </div>
       <!-- ############ PAGE END-->
+    </div>
+    <div id="sentModal" class="email_sent_confirm_modal">
+      <!-- Modal content -->
+      <div class="email_sent_content">
+        <div>
+          <span class="modalClosebtn">&times;</span>
+        </div>
+        <h5 name='msg' style="position: relative;
+              text-align: center;
+              bottom: 15px;">Email Sent Successfully</h5>
+      </div>
     </div>
     <!-- ############ LAYOUT END-->
 
@@ -1177,6 +1241,39 @@
       `;
 
       {% endfor %}
+    </script>
+    <script>
+        function EmailSent() {
+
+        // Get the modal
+        var sentModal = document.getElementById("sentModal");
+        sentModal.style.transform = 'translateY(0px)';
+        sentModal.style.zIndex = '103100';
+        sentModal.style.opacity = '1';
+
+        // Get the <span> element that closes the modal
+        var closeBtn = document.getElementsByClassName("modalClosebtn")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.onclick = function () {
+          sentModal.style.transform = 'translateY(-50px)';
+          sentModal.style.zIndex = '-100';
+          sentModal.style.opacity = '0';
+        }
+
+        //close reply and forward section
+        const x = document.getElementById("ck_view_reply_forword");
+        x.style.display = 'none';
+        prev = 'none';
+      }
+
+      function hideModal() {
+        var sentModal = document.getElementById("sentModal");
+
+        sentModal.style.transform = 'translateY(-50px)';
+        sentModal.style.zIndex = '-100';
+        sentModal.style.opacity = '0';
+      }
     </script>
     {% block common_js %}
     {% include "common_js.html" %}

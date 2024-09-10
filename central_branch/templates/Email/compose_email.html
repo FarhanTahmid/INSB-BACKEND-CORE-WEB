@@ -2860,6 +2860,17 @@
         return mappedArray;
       }
 
+      function customClearAllTags() {
+      // Add all selected tags back to the available options
+      customAvailableOptions = customAvailableOptions.concat(customSelectedTags);
+
+      // Clear the selected tags array
+      customSelectedTags = [];
+
+      // Update both the dropdown and the tag container
+      customUpdateDropdown();
+      customUpdateTagContainer();
+    }
       // For the BCC dropdown
       let altSelectedTags = [];
       let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
@@ -2933,6 +2944,18 @@
         const mappedArray = mapOptions(altSelectedTags);
         console.log(mappedArray);
         return mappedArray;
+      }
+
+      function altClearAllTags() {
+        // Add all selected tags back to the available options
+        altAvailableOptions = altAvailableOptions.concat(altSelectedTags);
+
+        // Clear the selected tags array
+        altSelectedTags = [];
+
+        // Update both the dropdown and the tag container
+        altUpdateDropdown();
+        altUpdateTagContainer();
       }
 
       // For the Send Email to dropdown
@@ -3015,7 +3038,19 @@
         return mappedArray;
       }
 
+      function uniqueClearAllTags() {
+        // Add all selected tags back to the available options
+        uniqueAvailableOptions = uniqueAvailableOptions.concat(uniqueSelectedTags);
+
+        // Clear the selected tags array
+        uniqueSelectedTags = [];
+
+        // Update both the dropdown and the tag container
+        uniqueUpdateDropdown();
+        uniqueUpdateTagContainer();
+      }
       function clearExistingData() {
+        uniqueClearAllTags();
         const uniqueTagContainer = document.getElementById('uniqueTagContainer');
         uniqueTagContainer.innerHTML = '';
         const altTagContainer = document.getElementById('altTagContainer');
