@@ -15,6 +15,7 @@ from central_events.models import Events, Google_Calendar_Attachments, InterBran
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
+from googleapiclient.http import BatchHttpRequest
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
 from django_celery_beat.models import PeriodicTask
 from graphics_team.renderData import GraphicsTeam
@@ -5536,46 +5537,62 @@ def mail(request):
                         request.session.modified = True
                     request.session['pg_range'] = '1 - 10'
 
+                # Function to handle each response from the batch request
+                def handle_batch_response(request_id, response, exception):
+                    messagess = response.get('messages', [])
+
+                    if messagess:
+                        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                        headers = last_message['payload'].get('headers', [])
+                        snippet = last_message.get('snippet', '')
+                        labels = last_message.get('labelIds', [])
+                        message_id = thread['id']
+
+                        # Extract relevant fields from headers
+                        header_dict = {header['name']: header['value'] for header in headers}
+                        sender = header_dict.get('From')
+                        subject = header_dict.get('Subject', '(No Subject)')
+                        subject = '(No Subject)' if subject == '' else subject
+                        date = header_dict.get('Date')
+
+                        if date:
+                            date = parsedate_to_datetime(date)
+                        else:
+                            date = None
+
+                        thread_data.append({
+                            'message_id':message_id,
+                            'sender': sender,
+                            'subject': subject,
+                            'date': date,
+                            'labels': labels,
+                            'snippet': snippet,
+                        })
+
+                # Create a batch request
+                batch = BatchHttpRequest(callback=handle_batch_response)
+                
+
+                    # if exception is not None:
+                    #     print(f'Failed to delete draft with ID {request_id}. Error: {exception}')
+                    # else:
+                    #     print(f'Deleted draft with ID: {request_id}')
+
                 if threads.get('threads'):
                     for thread in threads['threads']:
                         thread_id = thread['id']
 
                         # Fetch the required details for each message
-                        thread_details = service.users().threads().get(
+                        batch.add(service.users().threads().get(
                             userId='me',
                             id=thread_id,
                             format='metadata',
                             metadataHeaders=['From', 'Subject', 'Date']
-                        ).execute()
-                        
-                        messagess = thread_details.get('messages', [])
+                        ), request_id=thread_id)
 
-                        if messagess:
-                            last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-                            headers = last_message['payload'].get('headers', [])
-                            snippet = last_message.get('snippet', '')
-                            labels = last_message.get('labelIds', [])
-                            message_id = thread['id']
+                batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
 
-                            # Extract relevant fields from headers
-                            header_dict = {header['name']: header['value'] for header in headers}
-                            sender = header_dict.get('From')
-                            subject = header_dict.get('Subject', '(No Subject)')
-                            subject = '(No Subject)' if subject == '' else subject
-                            date = header_dict.get('Date')
-                            if date:
-                                date = parsedate_to_datetime(date)
-                            else:
-                                date = None
-
-                            thread_data.append({
-                                'message_id':message_id,
-                                'sender': sender,
-                                'subject': subject,
-                                'date': date,
-                                'labels': labels,
-                                'snippet': snippet,
-                            })
+                batch.execute()
 
                 # except Exception as e:
                 #     print(e)
@@ -5633,49 +5650,65 @@ def mail(request):
                         request.session['pg_token'] = [threads['nextPageToken']]
                         request.session['pg_range'] = '1 - 10'
                         request.session.modified = True
+                        
+                    # Function to handle each response from the batch request
+                    def handle_batch_response(request_id, response, exception):
+                        messagess = response.get('messages', [])
+
+                        if messagess:
+                            last_message = messagess[len(messagess)-1]  # Get the last message in the thread
+                            headers = last_message['payload'].get('headers', [])
+                            snippet = last_message.get('snippet', '')
+                            labels = last_message.get('labelIds', [])
+                            message_id = thread['id']
+
+                            # Extract relevant fields from headers
+                            header_dict = {header['name']: header['value'] for header in headers}
+                            sender = header_dict.get('From')
+                            subject = header_dict.get('Subject', '(No Subject)')
+                            subject = '(No Subject)' if subject == '' else subject
+                            date = header_dict.get('Date')
+
+                            if date:
+                                date = parsedate_to_datetime(date)
+                            else:
+                                date = None
+
+                            thread_data.append({
+                                'message_id':message_id,
+                                'sender': sender,
+                                'subject': subject,
+                                'date': date,
+                                'labels': labels,
+                                'snippet': snippet,
+                            })
+
+                    # Create a batch request
+                    batch = BatchHttpRequest(callback=handle_batch_response)
+                    
+
+                        # if exception is not None:
+                        #     print(f'Failed to delete draft with ID {request_id}. Error: {exception}')
+                        # else:
+                        #     print(f'Deleted draft with ID: {request_id}')
 
                     if threads.get('threads'):
                         for thread in threads['threads']:
                             thread_id = thread['id']
 
                             # Fetch the required details for each message
-                            thread_details = service.users().threads().get(
+                            batch.add(service.users().threads().get(
                                 userId='me',
                                 id=thread_id,
                                 format='metadata',
                                 metadataHeaders=['From', 'Subject', 'Date']
-                            ).execute()
+                            ), request_id=thread_id)
+
+                    batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
+
+                    batch.execute()
                             
-                            messagess = thread_details.get('messages', [])
-
-                            if messagess:
-                                last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-                                headers = last_message['payload'].get('headers', [])
-                                snippet = last_message.get('snippet', '')
-                                labels = last_message.get('labelIds', [])
-                                message_id = thread['id']
-
-                                # Extract relevant fields from headers
-                                header_dict = {header['name']: header['value'] for header in headers}
-                                sender = header_dict.get('From')
-                                subject = header_dict.get('Subject', '(No Subject)')
-                                subject = '(No Subject)' if subject == '' else subject
-                                date = header_dict.get('Date')
-
-                                if date:
-                                    date = parsedate_to_datetime(date)
-                                else:
-                                    date = None
-
-                                thread_data.append({
-                                    'message_id':message_id,
-                                    'sender': sender,
-                                    'subject': subject,
-                                    'date': date,
-                                    'labels': labels,
-                                    'snippet': snippet,
-                                })
-
+                        
                 except Exception as e:
                     print(e)
                     print(f'Failed to create service instance for gmail')
