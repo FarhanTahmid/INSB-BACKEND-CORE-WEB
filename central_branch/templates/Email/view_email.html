@@ -67,7 +67,7 @@
 
     .buttons {
       padding-top: 20px;
-      /* margin-bottom: 30px; */
+      margin-bottom: 1rem;
     }
 
     .reply_button,
@@ -423,8 +423,9 @@
     }
 
     .custom-tag {
-      background-color: #007bff;
-      color: white;
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -478,8 +479,9 @@
     }
 
     .alt-tag {
-      background-color: #28a745;
-      color: white;
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -734,13 +736,11 @@
               <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
                 onclick="customToggleDropdown()">
               <div class="custom-dropdown-content" id="customDropdown">
-                <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of
-                  IEEE NSU SB</div>
+                <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
                 <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
-                <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
-                <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
-                <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body
-                  Members</div>
+                <div onclick="customSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+                <div onclick="customSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+                <div onclick="customSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               </div>
             </div>
             <div class="custom-tag-container fwd-only3" id="customTagContainer"></div>
@@ -749,10 +749,11 @@
               <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
                 onclick="altToggleDropdown()">
               <div class="alt-dropdown-content" id="altDropdown">
-                <div onclick="altSelectOption('Choice 1')">Choice 1</div>
-                <div onclick="altSelectOption('Choice 2')">Choice 2</div>
-                <div onclick="altSelectOption('Choice 3')">Choice 3</div>
-                <div onclick="altSelectOption('Choice 4')">Choice 4</div>
+                <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
+                <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+                <div onclick="altSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+                <div onclick="altSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+                <div onclick="altSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               </div>
             </div>
 
@@ -854,10 +855,10 @@
           prev = 'fwd';
           document.querySelector('.fwd-only1').style.display = 'block';
           document.querySelector('.fwd-only2').style.display = 'block';
-          document.querySelector('.fwd-only3').style.display = 'block';
+          document.querySelector('.fwd-only3').style.display = 'flex';
           document.querySelector('.fwd-only4').style.display = 'block';
           document.querySelector('.fwd-only5').style.display = 'block';
-          document.querySelector('.fwd-only6').style.display = 'block';
+          document.querySelector('.fwd-only6').style.display = 'flex';
         }else{
           x.style.display = 'none';
           prev = 'none';
@@ -1016,201 +1017,6 @@
       }
     </script>
     <script>
-      let customSelectedTags = [];
-
-      function customToggleDropdown() {
-        const dropdown = document.getElementById("customDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customUpdateTagContainer();
-        }
-      }
-
-      function customRemoveTag(index) {
-        customSelectedTags.splice(index, 1);
-        customUpdateTagContainer();
-      }
-
-      function customUpdateTagContainer() {
-        const tagContainer = document.getElementById('customTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        customSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'custom-tag';
-          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getCustomSelectedTags() {
-        return customSelectedTags;
-      }
-    </script>
-    <script>
-      let altSelectedTags = [];
-
-      function altToggleDropdown() {
-        const dropdown = document.getElementById("altDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altUpdateTagContainer();
-        }
-      }
-
-      function altRemoveTag(index) {
-        altSelectedTags.splice(index, 1);
-        altUpdateTagContainer();
-      }
-
-      function altUpdateTagContainer() {
-        const tagContainer = document.getElementById('altTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        altSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'alt-tag';
-          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getAltSelectedTags() {
-        return altSelectedTags;
-      }
-    </script>
-    <script>
-      // For the first dropdown
-      // let customSelectedTags = [];
-      let customAvailableOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
-
-      function customToggleDropdown() {
-        const dropdown = document.getElementById("customDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customAvailableOptions = customAvailableOptions.filter(item => item !== option);
-          customUpdateDropdown();
-          customUpdateTagContainer();
-        }
-      }
-
-      function customRemoveTag(index) {
-        const removedTag = customSelectedTags.splice(index, 1)[0];
-        customAvailableOptions.push(removedTag);
-        customUpdateDropdown();
-        customUpdateTagContainer();
-      }
-
-      function customUpdateDropdown() {
-        const dropdown = document.getElementById("customDropdown");
-        dropdown.innerHTML = '';
-        customAvailableOptions.forEach(option => {
-          const div = document.createElement('div');
-          div.textContent = option;
-          div.onclick = () => customSelectOption(option);
-          dropdown.appendChild(div);
-        });
-      }
-
-      function customUpdateTagContainer() {
-        const tagContainer = document.getElementById('customTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        customSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'custom-tag';
-          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // For the second dropdown
-      // let altSelectedTags = [];
-      let altAvailableOptions = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
-
-      function altToggleDropdown() {
-        const dropdown = document.getElementById("altDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altAvailableOptions = altAvailableOptions.filter(item => item !== option);
-          altUpdateDropdown();
-          altUpdateTagContainer();
-        }
-      }
-
-      function altRemoveTag(index) {
-        const removedTag = altSelectedTags.splice(index, 1)[0];
-        altAvailableOptions.push(removedTag);
-        altUpdateDropdown();
-        altUpdateTagContainer();
-      }
-
-      function altUpdateDropdown() {
-        const dropdown = document.getElementById("altDropdown");
-        dropdown.innerHTML = '';
-        altAvailableOptions.forEach(option => {
-          const div = document.createElement('div');
-          div.textContent = option;
-          div.onclick = () => altSelectOption(option);
-          dropdown.appendChild(div);
-        });
-      }
-
-      function altUpdateTagContainer() {
-        const tagContainer = document.getElementById('altTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        altSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'alt-tag';
-          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it for all three dropdowns
-      window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
-    </script>
-    <script>
     function toggleDisplay(element) {
       // Find the next sibling div (.ccBccFields)
       const ccBccFields = element.nextElementSibling;
@@ -1275,6 +1081,192 @@
         sentModal.style.opacity = '0';
       }
     </script>
+    <script>
+      // For the CC dropdown
+      let customSelectedTags = [];
+      let customAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
+
+      function customToggleDropdown() {
+        const dropdown = document.getElementById("customDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      }
+
+      function customSelectOption(option) {
+        if (!customSelectedTags.includes(option)) {
+          customSelectedTags.push(option);
+          customAvailableOptions = customAvailableOptions.filter(item => item !== option);
+          customUpdateDropdown();
+          customUpdateTagContainer();
+        }
+      }
+
+      function customRemoveTag(index) {
+        const removedTag = customSelectedTags.splice(index, 1)[0];
+        customAvailableOptions.push(removedTag);
+        customUpdateDropdown();
+        customUpdateTagContainer();
+      }
+
+      function customUpdateDropdown() {
+        const dropdown = document.getElementById("customDropdown");
+        dropdown.innerHTML = '';
+        customAvailableOptions.forEach(option => {
+          const div = document.createElement('div');
+          div.textContent = option;
+          div.onclick = () => customSelectOption(option);
+          dropdown.appendChild(div);
+        });
+      }
+
+      function customUpdateTagContainer() {
+        const tagContainer = document.getElementById('customTagContainer');
+        tagContainer.innerHTML = ''; // Clear existing tags
+
+        customSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'custom-tag';
+          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+        });
+      }
+
+            // Close dropdown when clicking outside of it
+            window.onclick = function (event) {
+        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+          document.getElementById("customDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getCustomSelectedTags() {
+
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(customSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      function customClearAllTags() {
+      // Add all selected tags back to the available options
+      customAvailableOptions = customAvailableOptions.concat(customSelectedTags);
+
+      // Clear the selected tags array
+      customSelectedTags = [];
+
+      // Update both the dropdown and the tag container
+      customUpdateDropdown();
+      customUpdateTagContainer();
+    }
+      // For the BCC dropdown
+      let altSelectedTags = [];
+      let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
+
+      function altToggleDropdown() {
+        const dropdown = document.getElementById("altDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      }
+
+      function altSelectOption(option) {
+        if (!altSelectedTags.includes(option)) {
+          altSelectedTags.push(option);
+          altAvailableOptions = altAvailableOptions.filter(item => item !== option);
+          altUpdateDropdown();
+          altUpdateTagContainer();
+        }
+      }
+
+      function altRemoveTag(index) {
+        const removedTag = altSelectedTags.splice(index, 1)[0];
+        altAvailableOptions.push(removedTag);
+        altUpdateDropdown();
+        altUpdateTagContainer();
+      }
+
+      function altUpdateDropdown() {
+        const dropdown = document.getElementById("altDropdown");
+        dropdown.innerHTML = '';
+        altAvailableOptions.forEach(option => {
+          const div = document.createElement('div');
+          div.textContent = option;
+          div.onclick = () => altSelectOption(option);
+          dropdown.appendChild(div);
+        });
+      }
+
+      function altUpdateTagContainer() {
+        const tagContainer = document.getElementById('altTagContainer');
+        tagContainer.innerHTML = ''; // Clear existing tags
+
+        altSelectedTags.forEach((tag, index) => {
+          const tagElement = document.createElement('div');
+          tagElement.className = 'alt-tag';
+          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
+          tagContainer.appendChild(tagElement);
+        });
+      }
+
+        // Close dropdown when clicking outside of it
+        window.onclick = function (event) {
+        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+          document.getElementById("altDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getAltSelectedTags() {
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(altSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      function altClearAllTags() {
+        // Add all selected tags back to the available options
+        altAvailableOptions = altAvailableOptions.concat(altSelectedTags);
+
+        // Clear the selected tags array
+        altSelectedTags = [];
+
+        // Update both the dropdown and the tag container
+        altUpdateDropdown();
+        altUpdateTagContainer();
+      }
+
+          // Close dropdown when clicking outside of it for all three dropdowns
+          window.onclick = function (event) {
+      if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+        document.getElementById("customDropdown").style.display = "none";
+      }
+      if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+        document.getElementById("altDropdown").style.display = "none";
+      }
+    };
+
+      </script>
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
