@@ -6,6 +6,7 @@ import logging
 import traceback
 from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
+from django_celery_beat.models import ClockedSchedule
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
@@ -6112,9 +6113,9 @@ class GetScheduledEmailInfoAjax(View):
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             drafts = Email_Draft.objects.all()
             for draft in drafts:
-                task = PeriodicTask.objects.get(name=draft.email_unique_id,enabled=True)
+                task = PeriodicTask.objects.get(name=draft.email_unique_id)
                 scheduled_emails.update({draft.email_unique_id:{'id':draft.email_unique_id,'subject':draft.subject,'schedule_datetime':task.schedule.clocked_time}})
-        print(scheduled_emails)
+
         html =  render(request, 'Email/scheduled_email_row.html', {'scheduled_emails':scheduled_emails}).content.decode('utf-8')
         return JsonResponse({'html':html})
 
@@ -6143,3 +6144,51 @@ def get_attachment(request, message_id, attachment_id):
     response = HttpResponse(attachment_data)
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
+
+class UpdateScheduledEmailOptionsAjax(View):
+    def post(self, request):
+        message = 'test'
+
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                unique_id = request.POST.get('id')
+                new_datetime = request.POST.get('new_schedule_datetime')
+                status = request.POST.get('status')
+                print(status)
+
+                task = PeriodicTask.objects.get(name=unique_id)
+                if new_datetime:
+                    clocked_schedule, created = ClockedSchedule.objects.get_or_create(clocked_time=datetime.strptime(new_datetime, '%Y-%m-%dT%H:%M'))
+                    task.clocked = clocked_schedule
+                    task.enabled = True
+                    task.save()
+
+                    # Convert string to datetime object (including timezone info)
+                    dt = datetime.fromisoformat(str(task.schedule.clocked_time))
+                    formatted_dt = dt.strftime('%a, %d %b %Y %I:%M:%S %p')
+
+                    message = f'Email is successfully scheduled on {formatted_dt}'
+                elif status:
+                    draft = Email_Draft.objects.get(email_unique_id=unique_id)
+                    if status == 'pause_schedule':
+                        task.enabled = False
+                        draft.status = 'Paused'
+                        task.save()
+                        draft.save()
+                        message = 'Email schedule paused successfully'
+                    elif status == 'restart_schedule':
+                        task.enabled = True
+                        draft.status = 'Scheduled'
+                        task.save()
+                        draft.save()
+                        message = 'Email schedule has restarted successfully'
+                    elif status == 'cancel_schedule':
+                        task.enabled = False
+                        task.save()
+                        draft.delete()
+                        message = 'Email schedule is cancelled'
+
+            return JsonResponse({'message':message})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})

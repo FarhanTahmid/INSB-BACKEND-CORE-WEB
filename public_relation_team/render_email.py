@@ -482,7 +482,7 @@ class PRT_Email_System:
         
         unique_task_name_json = json.dumps(unique_task_name)
 
-        Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts)
+        Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts,status='Scheduled')
     
         #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
         #and clocked argument is foregined key with ClockedScheudle          

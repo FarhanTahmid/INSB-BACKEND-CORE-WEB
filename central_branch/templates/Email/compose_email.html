@@ -1902,15 +1902,15 @@
         <div class="edit_btn_container">
           <div class="restart_btn_container">
             <svg width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.2577 3.50828C18.538 3.62437 18.7207 3.89785 18.7207 4.20119V8.44383C18.7207 8.85805 18.3849 9.19383 17.9707 9.19383H13.728C13.4247 9.19383 13.1512 9.0111 13.0351 8.73085C12.9191 8.45059 12.9832 8.128 13.1977 7.9135L14.8007 6.3105C12.1674 5.20912 9.01606 5.7309 6.87348 7.87348C4.04217 10.7048 4.04217 15.2952 6.87348 18.1265C9.70478 20.9578 14.2952 20.9578 17.1265 18.1265C18.7727 16.4803 19.4622 14.2401 19.1935 12.0937C19.142 11.6827 19.4335 11.3078 19.8445 11.2563C20.2555 11.2049 20.6304 11.4963 20.6819 11.9073C21.0057 14.4934 20.1746 17.1997 18.1872 19.1872C14.7701 22.6043 9.2299 22.6043 5.81282 19.1872C2.39573 15.7701 2.39573 10.2299 5.81282 6.81282C8.55119 4.07444 12.6515 3.5312 15.9309 5.18028L17.4404 3.67086C17.6549 3.45637 17.9774 3.3922 18.2577 3.50828Z" fill="#000000c9"></path> </g></svg>
-            <input class="restart_btn" type="submit" onclick="ConfirmationModal()" value="Restart Send">
+            <input name="restart_schedule" class="restart_btn" type="submit" onclick="ConfirmationModal(this)" value="Restart Send">
           </div>
           <div class="pause_btn_container">
             <svg class="pause_svg" width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2C7.88562 2 8.82843 2 9.41421 2.58579C10 3.17157 10 4.11438 10 6V18C10 19.8856 10 20.8284 9.41421 21.4142C8.82843 22 7.88562 22 6 22C4.11438 22 3.17157 22 2.58579 21.4142C2 20.8284 2 19.8856 2 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> <path d="M14 6C14 4.11438 14 3.17157 14.5858 2.58579C15.1716 2 16.1144 2 18 2C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6V18C22 19.8856 22 20.8284 21.4142 21.4142C20.8284 22 19.8856 22 18 22C16.1144 22 15.1716 22 14.5858 21.4142C14 20.8284 14 19.8856 14 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> </g></svg>
-            <input class="pause_btn" type="submit" onclick="ConfirmationModal()" value="Pause Send">
+            <input name="pause_schedule" class="pause_btn" type="submit" onclick="ConfirmationModal(this)" value="Pause Send">
           </div>
           <div class="cancel_btn_container">
             <svg width=".75rem" height=".75rem" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <style>.cls-1{fill:none;stroke:#000000c9;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style> </defs> <title></title> <g id="cross"> <line class="cls-1" x1="7" x2="25" y1="7" y2="25"></line> <line class="cls-1" x1="7" x2="25" y1="25" y2="7"></line> </g> </g></svg>
-            <input class="cancel_btn" type="submit" onclick="ConfirmationModal()" value="Cancel Send">
+            <input name="cancel_schedule" class="cancel_btn" type="submit" onclick="ConfirmationModal(this)" value="Cancel Send">
           </div>
         </div>
         <div class="schedule_content_inner">
@@ -1918,7 +1918,8 @@
           <input type="datetime-local" name="schedule-time" style="border: 0;" value="" name="" placeholder="">
       </div>
         <div style="display: flex; justify-content: center;">
-          <input class="save_changes" type="submit" onclick="ConfirmationModal()" value="Save Changes">
+          <input type="hidden" name="change_id" value="">
+          <input name="date_change" class="save_changes" type="submit" onclick="ConfirmationModal(this)" value="Save Changes">
         </div>
       </div>
     </div>
@@ -1931,9 +1932,9 @@
       ">
           <span class="confirmModalClosebtn">&times;</span>
         </div>
-        <h5 style="position: relative;
+        <h5 name="schedule_msg" style="position: relative;
               text-align: center;
-              bottom: 15px;">Email Sent</h5>
+              bottom: 15px;"></h5>
       </div>
     </div>
     <!-- ############ PAGE END-->
@@ -3339,9 +3340,11 @@
       }
     </script>
     <script>
-      function scheduleEdit(element){
+      function scheduleEdit(element, id){
       // Get the modal
       var scheduleModal = document.getElementById("scheduleModal");
+      var id_input = scheduleModal.querySelector('input[name="change_id"]');
+      id_input.value = id;
       scheduleModal.style.transform = 'translateY(0px)';
       scheduleModal.style.zIndex = '103100';
       scheduleModal.style.opacity = '1';
@@ -3367,6 +3370,77 @@
     
       // Get the <span> element that closes the modal
       var closeBtn = document.getElementsByClassName("confirmModalClosebtn")[0];
+      var dateTime = document.querySelector('input[name="schedule-time"]').value;
+      var unique_id = document.querySelector('input[name="change_id"]').value;
+      var mssg = document.querySelector('h5[name="schedule_msg"]');
+      var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      if(element.name != 'date_change') {
+        mssg.innerHTML = 'Updating...';
+
+        $.ajax({
+          url: "{% url 'central_branch:request_update_email_schedule' %}",  // URL pointing to your Django view
+          method: 'POST',
+          data: {
+            'id':unique_id,
+            'status':element.name
+          },
+          headers: {
+            "X-CSRFToken": csrf
+          },
+          success: function (response) {
+            // Append the returned HTML to the table body
+            mssg.innerHTML = response.message;
+  
+            startLoader();
+            $.ajax({
+              url: "{% url 'central_branch:request_scheduled_email' %}",
+              method: 'GET',
+              success: function (response) {
+                stopLoader();
+                // Append the returned HTML to the table body
+                $('#scheduled_mail').html("");
+                $('#scheduled_mail').append(response.html);
+                document.querySelector('.page-info').innerHTML = response.pg_range;
+              }
+            });
+          }
+        });
+      }
+      else {
+        mssg.innerHTML = 'Scheduling...';
+
+        $.ajax({
+          url: "{% url 'central_branch:request_update_email_schedule' %}",  // URL pointing to your Django view
+          method: 'POST',
+          data: {
+            'id':unique_id,
+            'new_schedule_datetime':dateTime
+          },
+          headers: {
+            "X-CSRFToken": csrf
+          },
+          success: function (response) {
+            // Append the returned HTML to the table body
+            mssg.innerHTML = response.message;
+  
+            startLoader();
+            $.ajax({
+              url: "{% url 'central_branch:request_scheduled_email' %}",
+              method: 'GET',
+              success: function (response) {
+                stopLoader();
+                // Append the returned HTML to the table body
+                $('#scheduled_mail').html("");
+                $('#scheduled_mail').append(response.html);
+                document.querySelector('.page-info').innerHTML = response.pg_range;
+              }
+            });
+          }
+        });
+      }
+
+      
     
       // When the user clicks on <span> (x), close the modal
       closeBtn.onclick = function () {

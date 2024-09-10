@@ -9,7 +9,7 @@
     </div> {% endcomment %}
     <div style="    display: flex;
     align-items: center;">
-      <a href="#" target="_blank" onclick="markRead(this)">
+      <a onclick="scheduleEdit(this, '{{email.id}}')">
         <div class="email_row" style="background-color: white">
           <div class="email_row_left">
             <p class="sender">{{email.id}}</p>
@@ -22,7 +22,7 @@
       </div>
     </div>
   </a>
-  <p class="edit_btn" onclick="scheduleEdit(this)"><i class="fa fa-pencil-square-o" style="color: #2a89c9;" aria-hidden="true"></i>
+  <p class="edit_btn" onclick="scheduleEdit(this, '{{email.id}}')"><i class="fa fa-pencil-square-o" style="color: #2a89c9;" aria-hidden="true"></i>
 </p>
 </div>
 </div>

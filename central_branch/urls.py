@@ -146,7 +146,7 @@ urlpatterns = [
     ##
     path('task_leaderboard/',views.task_leaderboard,name="task_leaderboard"),
 
-    #Send Email
+    #Email
     path('mail/',views.mail,name="mail"),
     path('mail/view/<str:mail_id>',views.view_mail,name="view_mail"),
     path('mail/send_mail_request/', views.SendMailAjax.as_view(),name='send_mail_request'),
@@ -154,6 +154,7 @@ urlpatterns = [
     path('mail/request_delete/',views.DeleteEmailAjax.as_view(),name='request_email_delete'),
     path('mail/request_star_unstar/',views.StarUnstarEmailAjax.as_view(),name='request_email_star_unstar'),
     path('mail/request_scheduled/',views.GetScheduledEmailInfoAjax.as_view(),name='request_scheduled_email'),
+    path('mail/request_update_schedule/',views.UpdateScheduledEmailOptionsAjax.as_view(),name='request_update_email_schedule'),
     path('navigate/', views.PaginationAjax.as_view(),name='navigate'),
     path('mail/view/attachments/<str:message_id>/<str:attachment_id>/', views.get_attachment, name='get_attachment'),
 ]

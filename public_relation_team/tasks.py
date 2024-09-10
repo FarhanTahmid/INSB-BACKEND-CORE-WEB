@@ -27,8 +27,9 @@ def send_scheduled_email(unique_task_name_json):
         for value in drafts.values():
             service.users().drafts().send(userId='me', body={'id': value}).execute()
             print('Done')
-
+        
+        email_drafts.status = 'Sent'
         email_drafts.delete()
     except:
-        pass
+        email_drafts.status = 'Failed'
     
