@@ -29,7 +29,10 @@ def send_scheduled_email(unique_task_name_json):
             print('Done')
         
         email_drafts.status = 'Sent'
+        email_drafts.save()
         email_drafts.delete()
+
     except:
         email_drafts.status = 'Failed'
+        email_drafts.save()
     
