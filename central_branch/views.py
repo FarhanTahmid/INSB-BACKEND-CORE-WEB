@@ -5857,7 +5857,7 @@ def view_mail(request, mail_id):
 
                 # Extract relevant fields from headers
                 header_dict = {header['name']: header['value'] for header in headers}
-                print(header_dict)
+
                 sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
                 Cc = header_dict.get('Cc')
                 Bcc = header_dict.get('Bcc')

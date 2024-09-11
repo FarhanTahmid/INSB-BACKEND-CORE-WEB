@@ -38,15 +38,14 @@ class GmailHandler:
                     member = Members.objects.get(ieee_id = user)
                 except:
                     member = adminUsers.objects.get(username = user)
-                
-                if(type(member) == Members):
-                    messages.info(request, "Google Authorization Required! Please contact Web Team")
-                    return 'Invalid'
+
             if creds and creds.expired and creds.refresh_token:
                 try:
                     creds.refresh(Request())
                     GmailHandler.save_credentials(creds)
                 except:
+                    if(type(member) == Members):
+                        messages.info(request, "Google Authorization Required! Please contact Web Team")
                     print("NOT OK")
                     return None
             

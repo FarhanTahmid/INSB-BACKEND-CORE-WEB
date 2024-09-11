@@ -8,6 +8,7 @@ from system_administration.models import Project_leads,Project_Developers
 from django.conf import settings
 import traceback
 import logging
+from system_administration.render_access import Access_Render
 from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 from central_branch import views as cv
@@ -57,7 +58,7 @@ def developed_by(request):
         
 def authorize(request):
 
-    if(Branch_View_Access.get_event_edit_access(request)):
+    if(Access_Render.system_administrator_staffuser_access(request) or Access_Render.system_administrator_superuser_access):
         credentials = GmailHandler.get_credentials(request)
         if not credentials:
             flow = CalendarHandler.get_google_auth_flow(request)
@@ -75,7 +76,7 @@ def authorize(request):
             request.session['state'] = state
             return redirect(authorization_url)
 
-        if credentials != 'Invalid' and credentials != None:
+        if credentials != None:
             messages.success(request, "Already authorized!")    
         return redirect('central_branch:event_control')
     else:
