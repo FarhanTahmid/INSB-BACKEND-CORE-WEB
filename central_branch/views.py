@@ -1,4 +1,9 @@
 import base64
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from django.core.files.base import ContentFile
 import mimetypes
 from django.template.loader import render_to_string
 import json
@@ -5871,7 +5876,8 @@ def view_mail(request, mail_id):
                     date = None
 
                 thread_data.append({
-                    # 'message_id':message_id,
+                    'message_id':last_message['id'],
+                    'thread_id':thread_id,
                     'sender_name': sender_name,
                     'sender_email': sender_email,
                     'cc':Cc,
@@ -5881,7 +5887,6 @@ def view_mail(request, mail_id):
                     'labels': labels,
                     'body':body,
                     'files':files
-                    # 'snippet': snippet,
                 })
 
             # Fetch the required details for each message
@@ -6233,6 +6238,90 @@ class UpdateScheduledEmailOptionsAjax(View):
                         message = 'Email schedule is cancelled'
 
             return JsonResponse({'message':message})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+        
+
+class SendReplyMailAjax(View):
+    def post(self, request):
+        msg = 'test'
+
+        try:
+            body = request.POST.get('body')
+            original_message_id = request.POST.get('message_id')
+            thread_id = request.POST.get('thread_id')
+            email_attachment=request.FILES.getlist('attachments')
+
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            # Get the original email
+            original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
+            
+            # Extract original details
+            original_payload = original_message['payload']
+            headers = {h['name']: h['value'] for h in original_payload['headers']}
+
+            if email_attachment is None:
+                message = MIMEText(body, 'html')
+
+                message["From"] = "ieeensusb.portal@gmail.com"
+                message['To'] = headers.get('From')
+                message['From'] = headers.get('To')  # Original recipient becomes the sender
+                message['Cc'] = headers.get('Cc')
+                subject = headers.get('Subject', '(No Subject)')
+                if subject[:3] == 'Re:':
+                    message['Subject'] = subject
+                else:
+                    message['Subject'] = 'Re: ' + subject
+                message['In-Reply-To'] = headers.get('Message-ID')
+                message['References'] = headers.get('Message-ID')
+            else:
+                message=MIMEMultipart()
+
+                message["From"] = "ieeensusb.portal@gmail.com"
+                message['To'] = headers.get('From')
+                message['From'] = headers.get('To')  # Original recipient becomes the sender
+                message['Cc'] = headers.get('Cc')
+                subject = headers.get('Subject', '(No Subject)')
+                if subject[:3] == 'Re:':
+                    message['Subject'] = subject
+                else:
+                    message['Subject'] = 'Re: ' + subject
+                message['In-Reply-To'] = headers.get('Message-ID')
+                message['References'] = headers.get('Message-ID')
+
+                # Attach the main message body
+                message.attach(MIMEText(body, 'html'))
+    
+                for attachment in email_attachment:
+                    content_file = ContentFile(attachment.read())
+                    content_file.name = attachment.name
+                    part = MIMEBase('application', 'octet-stream')
+                    part.set_payload(content_file.read())
+                    encoders.encode_base64(part)
+                    part.add_header(
+                        'Content-Disposition',
+                        f'attachment; filename={content_file.name}',
+                    )
+                    message.attach(part)
+
+            # encoded message
+            encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+            
+            create_message = {"raw": encoded_message, "threadId":thread_id}
+
+            send_message = service.users().messages().send(userId='me', body=create_message).execute()
+            msg = 'Email sent successfully!'
+
+            return JsonResponse({'message':msg})
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Something went wrong!'})
