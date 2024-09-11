@@ -6147,7 +6147,7 @@ class GetScheduledEmailInfoAjax(View):
             drafts = Email_Draft.objects.all()
             for draft in drafts:
                 task = PeriodicTask.objects.get(name=draft.email_unique_id)
-                scheduled_emails.update({draft.email_unique_id:{'id':draft.email_unique_id,'subject':draft.subject,'schedule_datetime':task.schedule.clocked_time}})
+                scheduled_emails.update({draft.email_unique_id:{'id':draft.email_unique_id,'subject':draft.subject,'schedule_datetime':task.schedule.clocked_time,'schedule_status':draft.status}})
 
         html =  render(request, 'Email/scheduled_email_row.html', {'scheduled_emails':scheduled_emails}).content.decode('utf-8')
         return JsonResponse({'html':html})
