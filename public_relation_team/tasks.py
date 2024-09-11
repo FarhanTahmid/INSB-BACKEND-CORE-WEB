@@ -1,3 +1,5 @@
+from datetime import datetime
+import traceback
 from celery import shared_task
 from insb_port import settings
 from insb_port.celery import app
@@ -7,6 +9,8 @@ import json
 
 from system_administration.google_mail_handler import GmailHandler
 from googleapiclient.discovery import build
+
+from system_administration.system_error_handling import ErrorHandling
 
 
 @shared_task
@@ -32,7 +36,8 @@ def send_scheduled_email(unique_task_name_json):
         email_drafts.save()
         email_drafts.delete()
 
-    except:
+    except Exception as e:
         email_drafts.status = 'Failed'
         email_drafts.save()
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
     
