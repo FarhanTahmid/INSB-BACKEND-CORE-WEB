@@ -19,6 +19,7 @@ class GmailHandler:
     def get_credentials(request=None):
     
         creds = None
+
         if settings.GOOGLE_CLOUD_TOKEN:
             creds = Credentials.from_authorized_user_info({
                 'token':settings.GOOGLE_CLOUD_TOKEN,
@@ -41,7 +42,6 @@ class GmailHandler:
                 if(type(member) == Members):
                     messages.info(request, "Google Authorization Required! Please contact Web Team")
                     return 'Invalid'
-            
             if creds and creds.expired and creds.refresh_token:
                 try:
                     creds.refresh(Request())

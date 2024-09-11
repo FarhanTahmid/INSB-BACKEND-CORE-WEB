@@ -259,5 +259,19 @@ class Branch_View_Access:
             logger.info(ex, exc_info=True)
             return False
 
-
+    def get_manage_email_access(request):
+        logger = logging.getLogger(__name__)
+        try:
+            # get username
+            username=request.user.username
+            if(Branch_View_Access.common_access(username=username)):
+                return True
+            elif(Branch_Data_Access.objects.filter(ieee_id=username,manage_email_access=True).exists()):
+                return True
+            else:
+                return False
+        except Exception as ex:
+            # messages.error(request,"Error loading Data Access")
+            logger.info(ex, exc_info=True)
+            return False
     
