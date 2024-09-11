@@ -55,7 +55,7 @@ class Email_Draft(models.Model):
     subject = models.TextField(blank=True,null=True)
     drafts = models.JSONField(null=True,blank=True,default=dict)
     timestamp = models.DateTimeField(null=False,blank=False,auto_now_add=True)
-    status = models.CharField(null=False,blank=False,choices=[('Scheduled','Scheduled'),('Sent','Sent'),('Paused','Paused'),('Failed','Failed'),('Unknown','Unknown')], default='Unknown',max_length=100)
+    status = models.CharField(null=False,blank=False,choices=[('Scheduled','Scheduled'),('Sent','Sent'),('Paused','Paused'),('Failed','Failed'),('None','None')], default=None,max_length=100)
 
     class Meta:
         verbose_name = "Email Draft"
