@@ -5546,7 +5546,7 @@ def mail(request):
                         headers = last_message['payload'].get('headers', [])
                         snippet = last_message.get('snippet', '')
                         labels = last_message.get('labelIds', [])
-                        message_id = last_message['id']
+                        message_id = last_message['threadId']
 
                         # Extract relevant fields from headers
                         header_dict = {header['name']: header['value'] for header in headers}
