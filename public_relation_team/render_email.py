@@ -48,7 +48,7 @@ class PRT_Email_System:
             for email in to_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_members_of_branch()
+                    general_members=Branch.load_all_members_of_branch()
                     for member in general_members:
                         if member.email_nsu and member.email_nsu != 'None':
                             to_email_final_list.append(member.email_nsu) 
@@ -119,7 +119,7 @@ class PRT_Email_System:
             for email in cc_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_members_of_branch()
+                    general_members=Branch.load_all_members_of_branch()
                     for member in general_members:
                         if member.email_nsu and member.email_nsu != 'None':
                             cc_email_final_list.append(member.email_nsu)
@@ -180,7 +180,7 @@ class PRT_Email_System:
             for email in bcc_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_general_members_of_branch()
+                    general_members=Branch.load_all_members_of_branch()
                     for member in general_members:
                         if member.email_nsu and member.email_nsu != 'None':
                             bcc_email_final_list.append(member.email_nsu)
@@ -387,9 +387,13 @@ class PRT_Email_System:
                             # Attach the main message body
                             message.attach(MIMEText(mail_body, 'html'))
                 
-                            for attachment in attachment:
-                                content_file = ContentFile(attachment.read())
-                                content_file.name = attachment.name
+                            for file in attachment:
+                                content_file = ContentFile(file.read())
+                                content_file.name = file.name
+
+                                # Reset the file pointer to the beginning
+                                file.seek(0)
+
                                 part = MIMEBase('application', 'octet-stream')
                                 part.set_payload(content_file.read())
                                 encoders.encode_base64(part)
@@ -528,9 +532,13 @@ class PRT_Email_System:
             message.attach(MIMEText(mail_body, 'html'))
 
             if attachment:
-                for attachment in attachment:
-                    content_file = ContentFile(attachment.read())
-                    content_file.name = attachment.name
+                for file in attachment:
+                    content_file = ContentFile(file.read())
+                    content_file.name = file.name
+
+                    # Reset the file pointer to the beginning
+                    file.seek(0)
+
                     part = MIMEBase('application', 'octet-stream')
                     part.set_payload(content_file.read())
                     encoders.encode_base64(part)

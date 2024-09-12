@@ -62,3 +62,14 @@ class Email_Draft(models.Model):
 
     def __str__(self):
         return str(self.email_unique_id)
+    
+# class Email_Attachments(models.Model):
+#     email_unique_id = models.CharField(null=True,blank=True,max_length = 30)
+#     attachment=models.FileField(upload_to="Email_Attachments/",blank=True,null=True,default=None)
+
+#     class Meta:
+
+#         verbose_name = "Email Attachments"
+
+#     def __str__(self):
+#         return str(self.pk)
