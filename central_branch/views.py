@@ -5882,6 +5882,7 @@ def view_mail(request, mail_id):
                     header_dict = {header['name']: header['value'] for header in headers}
 
                     sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+                    To = header_dict.get('To')
                     Cc = header_dict.get('Cc')
                     Bcc = header_dict.get('Bcc')
                     subject = header_dict.get('Subject', '(No Subject)')
@@ -5898,6 +5899,7 @@ def view_mail(request, mail_id):
                         'thread_id':thread_id,
                         'sender_name': sender_name,
                         'sender_email': sender_email,
+                        'to':To,
                         'cc':Cc,
                         'bcc':Bcc,
                         'subject': subject,
