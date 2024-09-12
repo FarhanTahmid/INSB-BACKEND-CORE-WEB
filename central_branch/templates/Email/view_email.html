@@ -692,9 +692,9 @@
             <div class="dropdown">
               <button class="dropbtn">...</button>
               <div class="dropdown_content">
-                <a href="#" onclick="myFunction('reply')">Reply</a>
-                <a href="#" onclick="myFunction('fwd')">Forward</a>
-                <a href="#">Delete</a>
+                {% comment %} <a href="#" onclick="myFunction('reply')">Reply</a> {% endcomment %}
+                {% comment %} <a href="#" onclick="myFunction('fwd')">Forward</a> {% endcomment %}
+                <a>Delete this message</a>
               </div>
             </div>
           </div>
@@ -718,15 +718,15 @@
         <div class="buttons">
           <button class="reply_button" onclick="myFunction('reply')"><i class="fa fa-reply" style='margin-right: .5rem;'
               aria-hidden="true"></i>Reply</button>
-          <button class="forward_button" onclick="myFunction('fwd')"><i class="fa fa-share" style='margin-right: .5rem;'
-              aria-hidden="true"></i>Forward</button>
+          {% comment %} <button class="forward_button" onclick="myFunction('fwd')"><i class="fa fa-share" style='margin-right: .5rem;'
+              aria-hidden="true"></i>Forward</button> {% endcomment %}
         </div>
 
-        <form method="POST">
+          {% csrf_token %}
           <!-- reply block -->
           <div class="compose_email ckeditor_view_email" id="ck_view_reply_forword">
             <div class="tag-container" id="tagContainer">
-              <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+              <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">Additional To</p>
               <input type="text" name="to" class="tag-input" id="tagInput">
             </div>
             <hr class="fwd-only1">
@@ -766,10 +766,10 @@
                 <input type="file" id="myfile" name="myfile" hidden multiple>
               </div>
 
-              <input type="button" class="send_button" onclick="EmailSent()" value="Send">
+              <input type="button" class="send_button" onclick="EmailSent('{{threads.0.thread_id}}','{{threads.0.message_id}}')" value="Send">
             </div>
           </div>
-        </form>
+        
 
         {% for thread in threads|slice:"1:" %}
         <div class="heading">
@@ -798,9 +798,9 @@
             <div class="dropdown">
               <button class="dropbtn">...</button>
               <div class="dropdown_content">
-                <a href="#" onclick="myFunction('reply')">Reply</a>
-                <a href="#" onclick="myFunction('fwd')">Forward</a>
-                <a href="#">Delete</a>
+                {% comment %} <a href="#" onclick="myFunction('reply')">Reply</a> {% endcomment %}
+                {% comment %} <a href="#" onclick="myFunction('fwd')">Forward</a> {% endcomment %}
+                <a>Delete this message</a>
               </div>
             </div>
           </div>
@@ -809,6 +809,17 @@
         <div id="shadow-host-{{forloop.counter}}">
           {% comment %} {{thread.body|safe}} {% endcomment %}
         </div>
+
+        {% if thread.files %}
+        <div class="attachments">
+          <p>Attachments:</p>
+          <ul>
+            {% for attachment in thread.files %}
+            <li><a href="{% url 'central_branch:get_attachment' attachment.msg_id attachment.attachment_id %}?filename={{attachment.filename}}">{{attachment.filename}}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
         {% endfor %}
       </div>
       <!-- ############ PAGE END-->
@@ -821,7 +832,7 @@
         </div>
         <h5 name='msg' style="position: relative;
               text-align: center;
-              bottom: 15px;">Email Sent Successfully</h5>
+              bottom: 15px;">Sending...</h5>
       </div>
     </div>
     <!-- ############ LAYOUT END-->
@@ -941,11 +952,12 @@
         fileInput.files = dt.files;
         handleFileSelect({ target: fileInput });
       }
+        {% endcomment %}
 
       function getAllSelectedTags() {
         const tags = tagContainer.querySelectorAll('.tag span:first-child');
         return Array.from(tags).map(tag => tag.textContent);
-      } {% endcomment %}
+      } 
     </script>
     <!--input tags-->
     <script>
@@ -1047,13 +1059,53 @@
       {% endfor %}
     </script>
     <script>
-        function EmailSent() {
+        function EmailSent(thread_id, message_id) {
 
         // Get the modal
         var sentModal = document.getElementById("sentModal");
         sentModal.style.transform = 'translateY(0px)';
         sentModal.style.zIndex = '103100';
         sentModal.style.opacity = '1';
+
+        var body = getEditorContent();
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        var mssg = document.querySelector('h5[name="msg"]');
+        var attachments = document.querySelector('input[name="myfile"]');
+        const tagInput = document.getElementById('tagInput');
+        mssg.innerHTML = 'Sending...';
+
+        var formData = new FormData();
+        formData.append('to[]', getAllSelectedTags());
+        formData.append('body', body);
+        formData.append('csrfmiddlewaretoken', csrf);
+        formData.append('thread_id', thread_id);
+        formData.append('message_id',message_id);
+
+        // Append each file from the attachments input
+        for (var i = 0; i < attachments.files.length; i++) {
+          console.log('OK');
+          formData.append('attachments', attachments.files[i]);
+        }
+
+        $.ajax({
+          url: "{% url 'central_branch:send_reply_mail_request' %}",
+          type: "POST",
+          data: formData,
+          processData: false,  // Important!
+          contentType: false,  // Importfant!
+          headers: {
+            "X-CSRFToken": csrf
+          },
+          success: function (response) {
+            // Handle the response
+            console.log(response);
+            mssg.innerHTML = response['message'];
+            window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
+          },
+          error: function (error) {
+            console.error("Error:", error);
+          }
+        });
 
         // Get the <span> element that closes the modal
         var closeBtn = document.getElementsByClassName("modalClosebtn")[0];

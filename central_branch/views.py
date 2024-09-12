@@ -1,4 +1,9 @@
 import base64
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from django.core.files.base import ContentFile
 import mimetypes
 from django.template.loader import render_to_string
 import json
@@ -2610,7 +2615,7 @@ def event_control_homepage(request):
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
             'all_event_years':all_event_years,
-            'common_access':Branch_View_Access.common_access(request.user.username)
+            'common_access':Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username)
             
         }
 
@@ -5474,7 +5479,8 @@ def task_leaderboard(request):
 @login_required
 @member_login_permission
 def mail(request):
-    # try:
+
+    try:
         has_access=Branch_View_Access.get_manage_email_access(request)
         
         if has_access:
@@ -5569,6 +5575,7 @@ def mail(request):
                             'date': date,
                             'labels': labels,
                             'snippet': snippet,
+                            'internal_date':int(last_message['internalDate'])
                         })
 
                 # Create a batch request
@@ -5589,12 +5596,14 @@ def mail(request):
                             userId='me',
                             id=thread_id,
                             format='metadata',
-                            metadataHeaders=['From', 'Subject', 'Date']
+                            metadataHeaders=['From', 'Subject', 'Date', 'internalDate']
                         ), request_id=thread_id)
 
                 batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
 
                 batch.execute()
+
+                thread_data = sorted(thread_data, key=lambda x: x['internal_date'], reverse=True)
 
                 # except Exception as e:
                 #     print(e)
@@ -5683,6 +5692,7 @@ def mail(request):
                                 'date': date,
                                 'labels': labels,
                                 'snippet': snippet,
+                                'internal_date':int(last_message['internalDate'])
                             })
 
                     # Create a batch request
@@ -5703,12 +5713,14 @@ def mail(request):
                                 userId='me',
                                 id=thread_id,
                                 format='metadata',
-                                metadataHeaders=['From', 'Subject', 'Date']
+                                metadataHeaders=['From', 'Subject', 'Date', 'internalDate']
                             ), request_id=thread_id)
 
                     batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
 
                     batch.execute()
+
+                    thread_data = sorted(thread_data, key=lambda x: x['internal_date'], reverse=True)
                             
                         
                 except Exception as e:
@@ -5733,11 +5745,11 @@ def mail(request):
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
 
             
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
-    #     return cv.custom_500(request)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
+        return custom_500(request)
 
 def extract_name_and_email(from_header):
     # Use regular expression to extract name and email
@@ -5754,156 +5766,162 @@ def extract_name_and_email(from_header):
 
 def view_mail(request, mail_id):
 
-    sc_ag=PortData.get_all_sc_ag(request=request)
-    current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
-    user_data=current_user.getUserData() #getting user data as dictionary file
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
-    has_access=Branch_View_Access.get_manage_email_access(request)
+        has_access=Branch_View_Access.get_manage_email_access(request)
 
-    if has_access:
-        credentials = GmailHandler.get_credentials(request)
-        if not credentials:
-            print("NOT OK")
-            return None
-        service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-        print(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+        if has_access:
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OK")
+                return None
+            service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            print(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
-        thread_data = []
+            thread_data = []
 
-        thread_id = mail_id
-
-        # Fetch the required details for each message
-        thread_details = service.users().threads().get(
-            userId='me',
-            id=thread_id,
-            format='full',
-        ).execute()
-        
-        messagess = thread_details.get('messages', [])
-
-        if messagess:
-            for i in range(len(messagess),0,-1):
-                last_message = messagess[i-1]  # Get the last message in the thread
-                headers = last_message['payload'].get('headers', [])
-                body = ''
-                files = []
-                # Check if the message has a 'payload' and 'parts'
-                if 'parts' in last_message['payload']:
-                    def extract_parts(part):
-                        """ Recursively extract parts from a message """
-                        parts = []
-                        mime_type = part['mimeType']
-                        print(mime_type)
-                        
-                        if mime_type == 'text/plain' or mime_type == 'text/html':
-                            data = part['body'].get('data')
-                            if data:
-                                decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
-                                parts.append({'mimeType': mime_type, 'content': decoded_data})
-                        elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
-                            for subpart in part.get('parts', []):
-                                parts.extend(extract_parts(subpart))
-                                
-                        # Check if the part is an attachment
-                        elif part.get('filename'):
-                            attachment_id = part['body'].get('attachmentId')
-                            if attachment_id:
-
-                                # Add the attachment URL to parts
-                                files.append({
-                                    'msg_id':last_message['id'],
-                                    'mimeType': mime_type,
-                                    'filename': part.get('filename'),
-                                    'attachment_id': attachment_id
-                                })
-
-                        return parts
-                    
-                
-                    #Start extraction from the root message part
-                    email_parts = extract_parts(last_message['payload'])
-                    
-                    # Separate HTML and plain text
-                    content_parts = {part['mimeType']: part.get('content') for part in email_parts}
-                    body = content_parts.get('text/html')
-                    plain_text_body = content_parts.get('text/plain')
-                    # # Remove previous replies (common patterns to strip off replies)
-                    # body = re.split(r"(On\s.*wrote:)", body)[0]
-
-                    # # You can also strip off quoted text that starts with '>'
-                    # body = re.sub(r'(>.*\n)', '', body)
-
-                    if body == None:
-                        # # Remove previous replies (common patterns to strip off replies)
-                        # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
-
-                        # # You can also strip off quoted text that starts with '>'
-                        # plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
-                        body = plain_text_body
-                    
-                else:
-                    # If there are no 'parts', it means the message is simple and not multipart
-                    if last_message['payload']['mimeType'] == 'text/plain':
-                        body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-                    elif last_message['payload']['mimeType'] == 'text/html':
-                        body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-
-                    # # Remove previous replies (common patterns to strip off replies)
-                    # body = re.split(r"(On\s.*wrote:)", body)[0]
-
-                    # # You can also strip off quoted text that starts with '>'
-                    # body = re.sub(r'(>.*\n)', '', body)
-                labels = last_message.get('labelIds', [])
-
-                # Extract relevant fields from headers
-                header_dict = {header['name']: header['value'] for header in headers}
-
-                sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
-                Cc = header_dict.get('Cc')
-                Bcc = header_dict.get('Bcc')
-                subject = header_dict.get('Subject', '(No Subject)')
-                subject = '(No Subject)' if subject == '' else subject
-                date = header_dict.get('Date')
-
-                if date:
-                    date = parsedate_to_datetime(date)
-                else:
-                    date = None
-
-                thread_data.append({
-                    # 'message_id':message_id,
-                    'sender_name': sender_name,
-                    'sender_email': sender_email,
-                    'cc':Cc,
-                    'bcc':Bcc,
-                    'subject': subject,
-                    'date': date,
-                    'labels': labels,
-                    'body':body,
-                    'files':files
-                    # 'snippet': snippet,
-                })
+            thread_id = mail_id
 
             # Fetch the required details for each message
-            thread_details = service.users().threads().modify(
+            thread_details = service.users().threads().get(
                 userId='me',
                 id=thread_id,
-                body={
-                    'removeLabelIds': ['UNREAD']
-                }
+                format='full',
             ).execute()
+            
+            messagess = thread_details.get('messages', [])
 
-        # except Exception as e:
-        #     print(thread_data)
-        #     print(f'Failed to create service instance for gmail')
+            if messagess:
+                for i in range(len(messagess),0,-1):
+                    last_message = messagess[i-1]  # Get the last message in the thread
+                    headers = last_message['payload'].get('headers', [])
+                    body = ''
+                    files = []
+                    # Check if the message has a 'payload' and 'parts'
+                    if 'parts' in last_message['payload']:
+                        def extract_parts(part):
+                            """ Recursively extract parts from a message """
+                            parts = []
+                            mime_type = part['mimeType']
+                            print(mime_type)
+                            
+                            if mime_type == 'text/plain' or mime_type == 'text/html':
+                                data = part['body'].get('data')
+                                if data:
+                                    decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
+                                    parts.append({'mimeType': mime_type, 'content': decoded_data})
+                            elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
+                                for subpart in part.get('parts', []):
+                                    parts.extend(extract_parts(subpart))
+                                    
+                            # Check if the part is an attachment
+                            elif part.get('filename'):
+                                attachment_id = part['body'].get('attachmentId')
+                                if attachment_id:
 
-        context = {
-            'threads':thread_data
-        }
+                                    # Add the attachment URL to parts
+                                    files.append({
+                                        'msg_id':last_message['id'],
+                                        'mimeType': mime_type,
+                                        'filename': part.get('filename'),
+                                        'attachment_id': attachment_id
+                                    })
 
-        return render(request,'Email/view_email.html',context)
-    else:
-        return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+                            return parts
+                        
+                    
+                        #Start extraction from the root message part
+                        email_parts = extract_parts(last_message['payload'])
+                        
+                        # Separate HTML and plain text
+                        content_parts = {part['mimeType']: part.get('content') for part in email_parts}
+                        body = content_parts.get('text/html')
+                        plain_text_body = content_parts.get('text/plain')
+                        # # Remove previous replies (common patterns to strip off replies)
+                        # body = re.split(r"(On\s.*wrote:)", body)[0]
+
+                        # # You can also strip off quoted text that starts with '>'
+                        # body = re.sub(r'(>.*\n)', '', body)
+
+                        if body == None:
+                            # # Remove previous replies (common patterns to strip off replies)
+                            # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
+
+                            # # You can also strip off quoted text that starts with '>'
+                            # plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
+                            body = plain_text_body
+                        
+                    else:
+                        # If there are no 'parts', it means the message is simple and not multipart
+                        if last_message['payload']['mimeType'] == 'text/plain':
+                            body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+                        elif last_message['payload']['mimeType'] == 'text/html':
+                            body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+
+                        # # Remove previous replies (common patterns to strip off replies)
+                        # body = re.split(r"(On\s.*wrote:)", body)[0]
+
+                        # # You can also strip off quoted text that starts with '>'
+                        # body = re.sub(r'(>.*\n)', '', body)
+                    labels = last_message.get('labelIds', [])
+
+                    # Extract relevant fields from headers
+                    header_dict = {header['name']: header['value'] for header in headers}
+
+                    sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+                    Cc = header_dict.get('Cc')
+                    Bcc = header_dict.get('Bcc')
+                    subject = header_dict.get('Subject', '(No Subject)')
+                    subject = '(No Subject)' if subject == '' else subject
+                    date = header_dict.get('Date')
+
+                    if date:
+                        date = parsedate_to_datetime(date)
+                    else:
+                        date = None
+
+                    thread_data.append({
+                        'message_id':last_message['id'],
+                        'thread_id':thread_id,
+                        'sender_name': sender_name,
+                        'sender_email': sender_email,
+                        'cc':Cc,
+                        'bcc':Bcc,
+                        'subject': subject,
+                        'date': date,
+                        'labels': labels,
+                        'body':body,
+                        'files':files
+                    })
+
+                # Fetch the required details for each message
+                thread_details = service.users().threads().modify(
+                    userId='me',
+                    id=thread_id,
+                    body={
+                        'removeLabelIds': ['UNREAD']
+                    }
+                ).execute()
+
+            # except Exception as e:
+            #     print(thread_data)
+            #     print(f'Failed to create service instance for gmail')
+
+            context = {
+                'threads':thread_data
+            }
+
+            return render(request,'Email/view_email.html',context)
+        else:
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
+        return custom_500(request)
     
 class SendMailAjax(View):
     def post(self, request):
@@ -6233,6 +6251,99 @@ class UpdateScheduledEmailOptionsAjax(View):
                         message = 'Email schedule is cancelled'
 
             return JsonResponse({'message':message})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+        
+
+class SendReplyMailAjax(View):
+    def post(self, request):
+        msg = 'test'
+
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                body = request.POST.get('body')
+                original_message_id = request.POST.get('message_id')
+                thread_id = request.POST.get('thread_id')
+                email_attachment = None
+                if request.POST.get('attachments'):
+                    email_attachment=request.FILES.getlist('attachments')
+                to_email_additional = ''
+                if request.POST.get('to[]'):
+                    to_email_additional=request.POST.get('to[]')
+                
+                print(to_email_additional)
+
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        print("NOT OK")
+                        return None
+                    
+                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+                # Get the original email
+                original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
+                
+                # Extract original details
+                original_payload = original_message['payload']
+                headers = {h['name']: h['value'] for h in original_payload['headers']}
+
+                if email_attachment is None:
+                    message = MIMEText(body, 'html')
+
+                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message['To'] = headers.get('From') + ',' + to_email_additional
+                    print(message['To'])
+                    message['From'] = headers.get('To')  # Original recipient becomes the sender
+                    message['Cc'] = headers.get('Cc')
+                    subject = headers.get('Subject', '(No Subject)')
+                    if subject[:3] == 'Re:':
+                        message['Subject'] = subject
+                    else:
+                        message['Subject'] = 'Re: ' + subject
+                    message['In-Reply-To'] = headers.get('Message-ID')
+                    message['References'] = headers.get('Message-ID')
+                else:
+                    message=MIMEMultipart()
+
+                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message['To'] = headers.get('From')
+                    message['From'] = headers.get('To')  # Original recipient becomes the sender
+                    message['Cc'] = headers.get('Cc')
+                    subject = headers.get('Subject', '(No Subject)')
+                    if subject[:3] == 'Re:':
+                        message['Subject'] = subject
+                    else:
+                        message['Subject'] = 'Re: ' + subject
+                    message['In-Reply-To'] = headers.get('Message-ID')
+                    message['References'] = headers.get('Message-ID')
+
+                    # Attach the main message body
+                    message.attach(MIMEText(body, 'html'))
+        
+                    for attachment in email_attachment:
+                        content_file = ContentFile(attachment.read())
+                        content_file.name = attachment.name
+                        part = MIMEBase('application', 'octet-stream')
+                        part.set_payload(content_file.read())
+                        encoders.encode_base64(part)
+                        part.add_header(
+                            'Content-Disposition',
+                            f'attachment; filename={content_file.name}',
+                        )
+                        message.attach(part)
+
+                # encoded message
+                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+                
+                create_message = {"raw": encoded_message, "threadId":thread_id}
+
+                send_message = service.users().messages().send(userId='me', body=create_message).execute()
+                msg = 'Email sent successfully!'
+
+            return JsonResponse({'message':msg})
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Something went wrong!'})

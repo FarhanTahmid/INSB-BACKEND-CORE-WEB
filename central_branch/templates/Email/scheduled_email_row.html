@@ -15,7 +15,7 @@
             <p class="sender">{{email.id}}</p>
       </div>
       <div class="email_content">
-        <div><span class="subject">{{email.subject}}</span></div>
+        <div><span class="subject">{{email.subject}}</span> --- Status: {{email.schedule_status}}</div>
       </div>
       <div>
         <div class="email_date">Scheduled For {{email.schedule_datetime|date:"D, d M Y h:i:s A"}}</div>

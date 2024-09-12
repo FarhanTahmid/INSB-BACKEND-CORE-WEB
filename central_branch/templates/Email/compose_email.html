@@ -3067,10 +3067,13 @@
         // Define a mapping object to map options to their corresponding values
         const optionMapping = {
           'All Registered General Members of IEEE NSU SB': 'general_members',
-          'All Officers of IEEE NSU SB': 'officers',
-          'Executive Panel (Branch Only)': 'executive_panel',
-          'Branch Ex-Com Members': 'branch_ex_com',
-          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+          'All Officers of IEEE NSU SB': 'all_officers',
+          'Executive Panel (Branch Only)': 'eb_panel',
+          'Branch Ex-Com Members': 'excom_branch',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'scag_eb',
+          {% for session in recruitment_sessions %}
+          'Recruits of - {{session.session}}':'recruits_{{session.id}}',
+          {% endfor %}
         };
 
         function mapOptions(optionsArray) {
@@ -3153,10 +3156,13 @@
         // Define a mapping object to map options to their corresponding values
         const optionMapping = {
           'All Registered General Members of IEEE NSU SB': 'general_members',
-          'All Officers of IEEE NSU SB': 'officers',
-          'Executive Panel (Branch Only)': 'executive_panel',
-          'Branch Ex-Com Members': 'branch_ex_com',
-          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+          'All Officers of IEEE NSU SB': 'all_officers',
+          'Executive Panel (Branch Only)': 'eb_panel',
+          'Branch Ex-Com Members': 'excom_branch',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'scag_eb',
+          {% for session in recruitment_sessions %}
+          'Recruits of - {{session.session}}':'recruits_{{session.id}}',
+          {% endfor %}
         };
 
         function mapOptions(optionsArray) {
@@ -3245,10 +3251,13 @@
         // Define a mapping object to map options to their corresponding values
         const optionMapping = {
           'All Registered General Members of IEEE NSU SB': 'general_members',
-          'All Officers of IEEE NSU SB': 'officers',
-          'Executive Panel (Branch Only)': 'executive_panel',
-          'Branch Ex-Com Members': 'branch_ex_com',
-          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+          'All Officers of IEEE NSU SB': 'all_officers',
+          'Executive Panel (Branch Only)': 'eb_panel',
+          'Branch Ex-Com Members': 'excom_branch',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'scag_eb',
+          {% for session in recruitment_sessions %}
+          'Recruits of - {{session.session}}':'recruits_{{session.id}}',
+          {% endfor %}
         };
 
         function mapOptions(optionsArray) {
