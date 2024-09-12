@@ -2615,7 +2615,7 @@ def event_control_homepage(request):
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
             'all_event_years':all_event_years,
-            'common_access':Branch_View_Access.common_access(request.user.username)
+            'common_access':Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username)
             
         }
 
