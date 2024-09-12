@@ -948,7 +948,7 @@ class Branch:
         
         for member in all_members:
            
-            if (MDT_DATA.get_member_account_status(ieee_id=member.ieee_id)):                
+            if (member.is_active_member):                
                 members.append(member)
 
         return members
