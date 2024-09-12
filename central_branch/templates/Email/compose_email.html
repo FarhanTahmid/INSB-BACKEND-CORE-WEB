@@ -1525,7 +1525,9 @@
             <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
             <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
             <a href="?section=starred" onclick="activeInbox(this, 'starred')" class="email_box {% if section == 'starred'%}active{% endif %}">Starred</a>
+            {% if dev_access %}
             <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'dev_mail'%}activate{% endif %}">Dev</a>
+            {% endif %}
             <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')"
               class="email_box">Scheduled</a>
           </div>

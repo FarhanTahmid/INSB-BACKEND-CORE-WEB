@@ -5526,10 +5526,16 @@ def mail(request):
                     else:
                         threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='dev_mail':
-                    if query:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} label:dev-mail",pageToken=pg_token).execute()
+                    if Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username):
+                        if query:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} label:dev-mail",pageToken=pg_token).execute()
+                        else:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
                     else:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
+                        if query:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
+                        else:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='starred':
                     if query:
                         threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} is:starred",pageToken=pg_token).execute()
@@ -5648,8 +5654,11 @@ def mail(request):
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
                     elif section == 'sent':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken='').execute()
-                    elif section =='dev_mail':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
+                    elif section == 'dev_mail':
+                        if Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username):
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
+                        else:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
                     elif section =='starred':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred -label:dev-mail",pageToken='').execute()
                     else:
@@ -5735,7 +5744,8 @@ def mail(request):
                     'recruitment_sessions':recruitment_sessions,
                     'under_maintenance':under_maintainance,
                     'threads':thread_data,
-                    'error_message':error_message
+                    'error_message':error_message,
+                    'dev_access':Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username)
                 }
                 return render(request,'Email/compose_email.html',context)
         else:
