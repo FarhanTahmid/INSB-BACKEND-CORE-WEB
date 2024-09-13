@@ -210,7 +210,7 @@ class PRT_Email_System:
                             if eb.email_ieee and eb.email_ieee != 'None':
                                 bcc_email_final_list.append(eb.email_ieee)
                             if eb.email_nsu and eb.email_nsu != 'None':
-                                bcc_email_final_list.append(eb.member.email_nsu)
+                                bcc_email_final_list.append(eb.email_nsu)
                     for excom in branch_ex_com:
                         if excom.member.email_ieee and excom.member.email_ieee != 'None':
                             bcc_email_final_list.append(excom.member.email_ieee)
