@@ -5774,6 +5774,8 @@ def extract_name_and_email(from_header):
     
     return name, email
 
+@login_required
+@member_login_permission
 def view_mail(request, mail_id):
 
     try:

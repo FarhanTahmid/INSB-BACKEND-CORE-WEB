@@ -361,8 +361,9 @@ class Task_Assignation:
                         member_points.is_task_completed = False
                         member_points.completion_date = None
                         member_points.save()
-                        member.completed_task_points -= member_points.completion_points
-                        member.save()
+                        if member.completed_task_points >= member_points.completion_points:
+                            member.completed_task_points -= member_points.completion_points
+                            member.save()
 
                     if task.task_type == "Team":
 
@@ -372,9 +373,10 @@ class Task_Assignation:
 
                             member = Members.objects.get(ieee_id = mem.member)
                             if member not in task.members.all():
-
-                                member.completed_task_points -= mem.completion_points
-                                member.save()
+                                
+                                if member.completed_task_points >= mem.completion_points:
+                                    member.completed_task_points -= mem.completion_points
+                                    member.save()
                                 mem.is_task_completed = False
                                 mem.save()
 
@@ -384,8 +386,9 @@ class Task_Assignation:
                             team.save()
                         for team in task.team.all():
                             points = Team_Task_Point.objects.get(task = task,team=team)
-                            team.completed_task_points -= points.completion_points
-                            team.save()
+                            if team.completed_task_points >= points.completion_points:
+                                team.completed_task_points -= points.completion_points
+                                team.save()
 
 
                 
@@ -1004,8 +1007,9 @@ class Task_Assignation:
         for i in task_member_points:
 
             member = Members.objects.get(ieee_id = i.member)
-            member.completed_task_points -= i.completion_points
-            member.save()
+            if member.completed_task_points >= i.completion_points:
+                member.completed_task_points -= i.completion_points
+                member.save()
         
         media_files = Task_Media.objects.filter(task=task)
         for media_file in media_files:
@@ -1505,9 +1509,10 @@ This is an automated message. Do not reply
             #if task is completed and later marks are updated
             if task.is_task_completed:
                 member = Members.objects.get(ieee_id = ieee_id)
-                member.completed_task_points -= previous_marks
-                member.completed_task_points += marks
-                member.save()
+                if member.completed_task_points >= previous_marks:
+                    member.completed_task_points -= previous_marks
+                    member.completed_task_points += marks
+                    member.save()
 
             task_log_message =  f'Task Name: {task.title}, marks updated for {member_user.name}({ieee_id}) from {previous_marks} to {member_task.completion_points}'
             #updating logs

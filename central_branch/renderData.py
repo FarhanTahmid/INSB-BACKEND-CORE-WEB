@@ -658,24 +658,26 @@ class Branch:
             return to_attendee_final_list
         for option in attendeeOption:
             if(option == "general_members"):
-                general_members=Branch.load_all_active_members_of_branch()
+                general_members=Branch.load_all_members_of_branch()
                 for member in general_members:
-                    to_attendee_final_list.append({
-                        'displayName':member.name,
-                        'email':member.email_nsu,
-                    })
+                    if member.email_nsu and member.email_nsu != 'None':
+                        to_attendee_final_list.append({
+                            'displayName':member.name,
+                            'email':member.email_nsu,
+                        })
             elif option=="all_officers":
                 # get all officers email
                 branch_officers=Branch.load_all_officers_of_branch()
                 for officer in branch_officers:
-                    to_attendee_final_list.append({
-                        'displayName':officer.name,
-                        'email':officer.email_nsu,
-                    })
-                    # to_attendee_final_list.append({
-                    #     'displayName':officer.name,
-                    #     'email':officer.email_ieee,
-                    # })
+                    if officer.email_nsu and officer.email_nsu != 'None':
+                        to_attendee_final_list.append({
+                            'displayName':officer.name,
+                            'email':officer.email_nsu,
+                        })
+                        # to_attendee_final_list.append({
+                        #     'displayName':officer.name,
+                        #     'email':officer.email_ieee,
+                        # })
                             
             elif option=="eb_panel":
                 # get all eb panel email
@@ -683,10 +685,11 @@ class Branch:
                 for eb in eb_panel:
                     #if is faculty then skip
                     if not eb.position.is_faculty:
-                        to_attendee_final_list.append({
-                            'displayName':eb.name,
-                            'email':eb.email_nsu,
-                        })
+                        if eb.email_nsu and eb.email_nsu != 'None':
+                            to_attendee_final_list.append({
+                                'displayName':eb.name,
+                                'email':eb.email_nsu,
+                            })
                         # to_attendee_final_list.append({
                             # 'displayName':eb.name,
                             # 'email':eb.email_ieee,
@@ -698,24 +701,25 @@ class Branch:
                 for eb in eb_panel:
                     #If is faculty then skip
                     if not eb.position.is_faculty:
+                        if eb.email_nsu and eb.email_nsu != 'None':
+                            to_attendee_final_list.append({
+                                'displayName':eb.name,
+                                'email':eb.email_nsu,
+                            })
+                            # to_attendee_final_list.append({
+                            #     'displayName':eb.name,
+                            #     'email':eb.email_ieee,
+                            # })
+                for excom in branch_ex_com:
+                    if excom.member.email_nsu and excom.member.email_nsu != 'None':
                         to_attendee_final_list.append({
-                            'displayName':eb.name,
-                            'email':eb.email_nsu,
+                            'displayName':excom.member.name,
+                            'email':excom.member.email_nsu,
                         })
                         # to_attendee_final_list.append({
-                        #     'displayName':eb.name,
-                        #     'email':eb.email_ieee,
+                        #     'displayName':excom.member.name,
+                        #     'email':excom.member.email_ieee,
                         # })
-                for excom in branch_ex_com:
-                    to_attendee_final_list.append({
-                        'displayName':excom.member.name,
-                        'email':excom.member.email_nsu,
-                    })
-                    # to_attendee_final_list.append({
-                    #     'displayName':excom.member.name,
-                    #     'email':excom.member.email_ieee,
-                    # })
-                pass
             elif option=="scag_eb":
                 # get all the society, chapters and AG EBS
                 for i in range(2,6):
@@ -726,35 +730,37 @@ class Branch:
                             if ex.member is not None:
                                 #If is faculty then skip
                                 if not ex.member.position.is_faculty:
-                                    to_attendee_final_list.append({
-                                        'displayName':ex.member.name,
-                                        'email':ex.member.email_nsu,
-                                    })
-                                    # to_attendee_final_list.append({
-                                    #     'displayName':ex.member.name,
-                                    #     'email':ex.member.email_ieee,
-                                    # })
+                                    if ex.member.email_nsu and ex.member.email_nsu != 'None':
+                                        to_attendee_final_list.append({
+                                            'displayName':ex.member.name,
+                                            'email':ex.member.email_nsu,
+                                        })
+                                        # to_attendee_final_list.append({
+                                        #     'displayName':ex.member.name,
+                                        #     'email':ex.member.email_ieee,
+                                        # })
                             else:
-                                to_attendee_final_list.append({
-                                    'displayName':ex.ex_member.name,
-                                    'email':ex.ex_member.email,
-                                })
+                                if ex.ex_member.email and ex.ex_member.email != 'None':
+                                    to_attendee_final_list.append({
+                                        'displayName':ex.ex_member.name,
+                                        'email':ex.ex_member.email,
+                                    })
             elif option[0:9] == "recruits_":
                 recruit_id = int(option[9:])
                 recruited_mem = recruited_members.objects.filter(session_id = recruit_id)
                 for mem in recruited_mem:
-                    to_attendee_final_list.append({
-                        'displayName':mem.first_name,
-                        'email':mem.email_nsu,
-                    })
-                    # to_attendee_final_list.append({
-                    #     'displayName':mem.first_name,
-                    #     'email'::mem.email_nsu,
-                    # })
+                    if mem.email_nsu and mem.email_nsu != 'None':
+                        to_attendee_final_list.append({
+                            'displayName':mem.first_name,
+                            'email':mem.email_nsu,
+                        })
+                        # to_attendee_final_list.append({
+                        #     'displayName':mem.first_name,
+                        #     'email'::mem.email_nsu,
+                        # })
                 
         
         return to_attendee_final_list
-
     
     def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, add_attendee_names, add_attendee_emails, documents):
 
@@ -800,8 +806,11 @@ class Branch:
             venue = "North South University"
         else:
             venue = venue[0].venue_id.venue_name
+
+        calendar_id = CalendarHandler.get_google_calendar_id(event.event_organiser.primary)
+
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
-            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location=venue, start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
+            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, calendar_id=calendar_id, title=event.event_name, description=event.event_description_for_gc, location=venue, start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
             if(not event.google_calendar_event_id):
                 event.publish_in_google_calendar = False
                 messages.warning(request, "Could not publish event in calendar")
@@ -810,7 +819,7 @@ class Branch:
 
             event.save()
         elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
-            if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
+            if(CalendarHandler.delete_event_in_calendar(request, calendar_id, event.google_calendar_event_id)):
                 event.google_calendar_event_id = ""
                 messages.success(request, "Event deleted from calendar")
             else:
@@ -818,7 +827,7 @@ class Branch:
                 messages.warning(request, "Could not delete event from calendar")
             event.save()
         elif(event.google_calendar_event_id):
-            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, None, to_attendee_final_list)):
+            if(CalendarHandler.update_event_in_calendar(request, calendar_id, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, None, to_attendee_final_list)):
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
@@ -1369,7 +1378,6 @@ class Branch:
                 messages.success(request, "Notifications of the event deleted successfully!")
             else:
                 messages.warning(request, "Could not delete notifications of the event!")
-                return False
 
             try:
                 #getting banner image of the image and deleting it from if exists
