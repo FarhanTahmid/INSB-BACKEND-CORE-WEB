@@ -1504,7 +1504,7 @@ def event_google_calendar(request, primary, event_id):
             if(request.method == "POST"):
                 if('update_event_gc' in request.POST):
                     google_calendar_publish_event_status = request.POST.get('publish_event_gc')
-                    attendeeOption = request.POST.get('attendeeList')
+                    attendeeOption = request.POST.getlist('attendeeList')
                     event_description_for_gc = request.POST.get('event_description_for_gc')
                     add_attendee_names = request.POST.getlist('attendee_name')
                     add_attendee_emails = request.POST.getlist('attendee_email')

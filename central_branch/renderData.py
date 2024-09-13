@@ -658,7 +658,7 @@ class Branch:
             return to_attendee_final_list
         for option in attendeeOption:
             if(option == "general_members"):
-                general_members=Branch.load_all_active_members_of_branch()
+                general_members=Branch.load_all_members_of_branch()
                 for member in general_members:
                     to_attendee_final_list.append({
                         'displayName':member.name,
@@ -754,7 +754,6 @@ class Branch:
                 
         
         return to_attendee_final_list
-
     
     def update_event_google_calendar(request, event_id, publish_event_gc, description, attendeeOption, add_attendee_names, add_attendee_emails, documents):
 
@@ -800,8 +799,11 @@ class Branch:
             venue = "North South University"
         else:
             venue = venue[0].venue_id.venue_name
+
+        calendar_id = CalendarHandler.get_google_calendar_id(event.event_organiser.primary)
+
         if(not event.google_calendar_event_id and event.publish_in_google_calendar == True):
-            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, event_id=event.pk, title=event.event_name, description=event.event_description_for_gc, location=venue, start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
+            event.google_calendar_event_id = CalendarHandler.create_event_in_calendar(request=request, calendar_id=calendar_id, title=event.event_name, description=event.event_description_for_gc, location=venue, start_time=event.start_date, end_time=event.end_date, event_link='http://' + request.META['HTTP_HOST'] + reverse('main_website:event_details', args=[event.pk]), attendeeList=to_attendee_final_list, attachments=documents)
             if(not event.google_calendar_event_id):
                 event.publish_in_google_calendar = False
                 messages.warning(request, "Could not publish event in calendar")
@@ -810,7 +812,7 @@ class Branch:
 
             event.save()
         elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
-            if(CalendarHandler.delete_event_in_calendar(request, event.google_calendar_event_id)):
+            if(CalendarHandler.delete_event_in_calendar(request, calendar_id, event.google_calendar_event_id)):
                 event.google_calendar_event_id = ""
                 messages.success(request, "Event deleted from calendar")
             else:
@@ -818,7 +820,7 @@ class Branch:
                 messages.warning(request, "Could not delete event from calendar")
             event.save()
         elif(event.google_calendar_event_id):
-            if(CalendarHandler.update_event_in_calendar(request, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, None, to_attendee_final_list)):
+            if(CalendarHandler.update_event_in_calendar(request, calendar_id, event.google_calendar_event_id, None, event.event_description_for_gc, None, None, None, to_attendee_final_list)):
                 messages.success(request, "Event updated in calendar")
             else:
                 messages.warning(request, "Could not update event in calendar")
@@ -1369,7 +1371,6 @@ class Branch:
                 messages.success(request, "Notifications of the event deleted successfully!")
             else:
                 messages.warning(request, "Could not delete notifications of the event!")
-                return False
 
             try:
                 #getting banner image of the image and deleting it from if exists
