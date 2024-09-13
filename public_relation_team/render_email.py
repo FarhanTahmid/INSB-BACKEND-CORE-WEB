@@ -31,7 +31,6 @@ class PRT_Email_System:
         
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
-        
         substrings = single_emails.split(',')
         
         for email in substrings:
@@ -39,7 +38,9 @@ class PRT_Email_System:
             single_emails_final_list.extend(email.split())
 
         # single_emails_final_list.extend(single_emails)
- 
+        to_email_list = to_email_list[0].split(',')
+        cc_email_list = cc_email_list[0].split(',')
+        bcc_email_list = bcc_email_list[0].split(',')
         
         # Get the emails of to_email_list 
         to_email_final_list=[]
@@ -111,7 +112,6 @@ class PRT_Email_System:
                 single_emails_final_list.remove(email)
         # concatation of two lists
         to_email_final_list.extend(single_emails_final_list)
-            
         # Get all the cc_email_list
         cc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
