@@ -200,7 +200,10 @@ class NotificationHandler:
 
             # this shows an admin if the task was created by an admin, otherwise shows the member name
             receiver_list = []
-            receiver_list.append(member.ieee_id)
+            try:
+                receiver_list.append(member.ieee_id)
+            except:
+                receiver_list.append(member.email)
             notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
             NotificationHandler.create_notifications(notification_type=notification_type.pk,
                                                     title=title,
