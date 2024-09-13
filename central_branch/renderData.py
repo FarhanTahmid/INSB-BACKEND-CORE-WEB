@@ -953,6 +953,14 @@ class Branch:
 
         return members
     
+    def load_all_members_of_branch():
+        '''This function loads all the members from the branch
+        '''
+        all_members=Members.objects.all()
+
+        return all_members
+        
+    
     def create_panel(request,tenure_year,current_check,panel_start_date,panel_end_date):
         '''This function creates a panel object. Collects parameter value from views '''
         try:
