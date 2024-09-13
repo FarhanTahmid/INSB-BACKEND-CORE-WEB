@@ -1458,7 +1458,8 @@ class Task_Assignation:
             email_to.append(member.email_personal)
             email_from = settings.EMAIL_HOST_USER
             subject = f"Request to review your work"
-            message = f'''Greetings {member.name},
+            message = f'''
+Greetings {member.name},
 The work you have done so far is great! However, your task assignee seems to have
 commented on your completed work for more better outcome. Please view the task
 and make necessary changes accordingly
@@ -1543,7 +1544,8 @@ This is an automated message. Do not reply
                 url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
             
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
-            message = f'''Hello {username},
+            message = f'''
+Hello {username},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
@@ -1606,23 +1608,23 @@ This is an automated message. Do not reply
             subject = f"You have been Assigned a Task!"
             site_domain = request.META['HTTP_HOST']
             message = f'''
-                Hello {member.name},
-                
-                You have been assigned a task - {task.title}.
-                Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
+Hello {member.name},
 
-                You are requested to complete the task with in the due date. If not, you will be penalised daily
-                5% of your task points.
+You have been assigned a task - {task.title}.
+Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
 
-                Please follow the link or go through the portal for more details.
+You are requested to complete the task with in the due date. If not, you will be penalised daily
+5% of your task points.
 
-                Deadline: {task.deadline}
-                Task Assigned by: {task.task_created_by}, {task_created_by}
+Please follow the link or go through the portal for more details.
 
-                Best Regards
-                IEEE NSU SB Portal
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task_created_by}
 
-                This is an automated message. Do not reply
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
             '''
             email=EmailMultiAlternatives(subject,message,
                                     email_from,
@@ -2396,7 +2398,8 @@ This is an automated message. Do not reply
             email_to.append(member.email_personal)
             email_to.append(member.email_nsu)
             subject = f"Your Assigned Task Has Been Marked Completed/Updated!"
-            message = f'''Dear {member.name},
+            message = f'''
+Dear {member.name},
 Your assigned task has been marked completed for which you have
 received {points} points!
 
