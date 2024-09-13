@@ -182,56 +182,57 @@ class CalendarHandler:
         credentials = GmailHandler.get_credentials(request)
         if not credentials:
             return None
-        # try:
-        service = build(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, credentials=credentials)
-        print(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, 'service created successfully')
-
-        file_name = file_path.name
-
-        # Read the entire file content at once
-        content = ContentFile(file_path.read())
         
-        # Get the content as bytes and create an IO stream for Google API
-        content_io = io.BytesIO(content.read())
-
         try:
-            # Guess the MIME type based on the file name
-            mime_type, _ = mimetypes.guess_type(file_name)
+            service = build(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, credentials=credentials)
+            print(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, 'service created successfully')
 
-            # Create MediaIoBaseUpload with the content stream
-            media = MediaIoBaseUpload(content_io, mimetype=mime_type)
+            file_name = file_path.name
 
-            # Metadata for the file to be uploaded
-            file_metadata = {
-                'name': file_name,
-            }
-
-            # Create the file on Google Drive
-            file = service.files().create(
-                body=file_metadata,
-                media_body=media,
-                fields='id,webContentLink,name,iconLink,webViewLink'
-            ).execute()
-
-            # Set file permissions to "anyone with the link can view"
-            permission = {
-                'type': 'anyone',
-                'role': 'reader',
-            }
-            service.permissions().create(
-                fileId=file['id'],
-                body=permission,
-            ).execute()
-
-        finally:
-            # No need for file deletion since we are using in-memory content
-            content.close()
+            # Read the entire file content at once
+            content = ContentFile(file_path.read())
             
-        return file
-        # except Exception as e:
-        #     print(e)
-        #     print(f'Failed to create service instance for drive')
-        #     return None
+            # Get the content as bytes and create an IO stream for Google API
+            content_io = io.BytesIO(content.read())
+
+            try:
+                # Guess the MIME type based on the file name
+                mime_type, _ = mimetypes.guess_type(file_name)
+
+                # Create MediaIoBaseUpload with the content stream
+                media = MediaIoBaseUpload(content_io, mimetype=mime_type)
+
+                # Metadata for the file to be uploaded
+                file_metadata = {
+                    'name': file_name,
+                }
+
+                # Create the file on Google Drive
+                file = service.files().create(
+                    body=file_metadata,
+                    media_body=media,
+                    fields='id,webContentLink,name,iconLink,webViewLink'
+                ).execute()
+
+                # Set file permissions to "anyone with the link can view"
+                permission = {
+                    'type': 'anyone',
+                    'role': 'reader',
+                }
+                service.permissions().create(
+                    fileId=file['id'],
+                    body=permission,
+                ).execute()
+
+            finally:
+                # No need for file deletion since we are using in-memory content
+                content.close()
+                
+            return file
+        except Exception as e:
+            print(e)
+            print(f'Failed to create service instance for drive')
+            return None
         
     def google_drive_get_file(request, file_id):
         credentials = GmailHandler.get_credentials(request)
