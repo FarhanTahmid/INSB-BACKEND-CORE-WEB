@@ -2611,7 +2611,7 @@
 
         // Append each file from the attachments input
         for (var i = 0; i < attachments.files.length; i++) {
-          console.log('OK');
+          console.log(attachments.files[i]);
           formData.append('attachments', attachments.files[i]);
         }
 
@@ -2925,83 +2925,83 @@
 
     <!-- file attachments -->
     <script>
-      //for attachments
-      document.getElementById('myfile').addEventListener('change', function (e) {
-        const filePreviewContainer = document.getElementById('filePreviewContainer');
-        Array.from(e.target.files).forEach(file => {
-          const filePreview = document.createElement('div');
-          filePreview.className = 'file-preview';
+// Attach file input event listener
+document.getElementById('myfile').addEventListener('change', function (e) {
+    const filePreviewContainer = document.getElementById('filePreviewContainer');
+    
+    // Clear previous file previews and the previous file selection
+    filePreviewContainer.innerHTML = '';
 
-          const fileIcon = document.createElement('i');
-          fileIcon.className = 'fa fa-file file-icon';
+    Array.from(e.target.files).forEach((file, index) => {
+      const filePreview = document.createElement('div');
+      filePreview.className = 'file-preview';
 
-          const fileName = document.createElement('span');
-          fileName.className = 'file-name';
-          fileName.textContent = file.name;
+      const fileIcon = document.createElement('i');
+      fileIcon.className = 'fa fa-file file-icon';
 
-          const removeFile = document.createElement('span');
-          removeFile.className = 'remove-file';
-          removeFile.innerHTML = '&times;';
+      const fileName = document.createElement('span');
+      fileName.className = 'file-name';
+      fileName.textContent = file.name;
 
-          removeFile.addEventListener('click', () => {
-            filePreview.remove();
-            // Optional: remove file from the input element as well
-          });
+      const removeFile = document.createElement('span');
+      removeFile.className = 'remove-file';
+      removeFile.innerHTML = '&times;';
 
-          filePreview.appendChild(fileIcon);
-          filePreview.appendChild(fileName);
-          filePreview.appendChild(removeFile);
-          filePreviewContainer.appendChild(filePreview);
-        });
-        console.log(filePreviewContainer);
+      removeFile.addEventListener('click', () => {
+        removeFileFromInput(index);  // Remove file on click
       });
 
-      // Send Button click event
-      // document.querySelector('.btnSend').addEventListener('click', function() {
-      //     const files = document.getElementById('myfile').files;
-      //     if (files.length === 0) {
-      //         alert("No files attached.");
-      //         return;
-      //     }
+      filePreview.appendChild(fileIcon);
+      filePreview.appendChild(fileName);
+      filePreview.appendChild(removeFile);
+      filePreviewContainer.appendChild(filePreview);
+    });
+  });
 
-      //     alert(`${files.length} file(s) attached.`);
-      // });
+  // Function to remove the selected file
+  function removeFileFromInput(index) {
+    const fileInput = document.getElementById('myfile');
+    const dt = new DataTransfer();
 
-      function handleFileSelect(event) {
-        const fileInput = event.target;
-        const filePreviewContainer = document.getElementById('filePreviewContainer');
-
-        // Clear previous previews
-        //filePreviewContainer.innerHTML = '';
-
-        const files = fileInput.files;
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const filePreview = document.createElement('div');
-          filePreview.className = 'file-preview';
-          filePreview.innerHTML = `
-              <span>${file.name}</span>
-              <button onclick="removeFile(${i})">Remove</button>
-          `;
-          filePreviewContainer.appendChild(filePreview);
-        }
+    const files = fileInput.files;
+    for (let i = 0; i < files.length; i++) {
+      if (i !== index) {
+        dt.items.add(files[i]);  // Only add files that are not being removed
       }
+    }
 
-      function removeFile(index) {
-        const fileInput = document.getElementById('myfile');
-        const dt = new DataTransfer();
+    // Update the input with the new file list
+    fileInput.files = dt.files;
 
-        const files = fileInput.files;
-        for (let i = 0; i < files.length; i++) {
-          if (i !== index) {
-            dt.items.add(files[i]);
-          }
-        }
+    // Re-render the file previews
+    const filePreviewContainer = document.getElementById('filePreviewContainer');
+    filePreviewContainer.innerHTML = '';  // Clear current previews
 
-        fileInput.files = dt.files;
-        handleFileSelect({ target: fileInput });
-      }
+    Array.from(fileInput.files).forEach((file, i) => {
+      const filePreview = document.createElement('div');
+      filePreview.className = 'file-preview';
 
+      const fileIcon = document.createElement('i');
+      fileIcon.className = 'fa fa-file file-icon';
+
+      const fileName = document.createElement('span');
+      fileName.className = 'file-name';
+      fileName.textContent = file.name;
+
+      const removeFile = document.createElement('span');
+      removeFile.className = 'remove-file';
+      removeFile.innerHTML = '&times;';
+
+      removeFile.addEventListener('click', () => {
+        removeFileFromInput(i);  // Recursive call to remove file
+      });
+
+      filePreview.appendChild(fileIcon);
+      filePreview.appendChild(fileName);
+      filePreview.appendChild(removeFile);
+      filePreviewContainer.appendChild(filePreview);
+    });
+  }
       function getAllSelectedTags() {
         const tags = tagContainer.querySelectorAll('.tag span:first-child');
         return Array.from(tags).map(tag => tag.textContent);
