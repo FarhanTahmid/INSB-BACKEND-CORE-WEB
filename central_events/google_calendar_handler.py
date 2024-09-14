@@ -1,18 +1,19 @@
 import datetime
+import io
 import mimetypes
 import os
 import tempfile
 from googleapiclient.discovery import build
 from insb_port import settings
 from google_auth_oauthlib.flow import Flow
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaIoBaseUpload
+from django.core.files.base import ContentFile
 
 from system_administration.google_mail_handler import GmailHandler
 
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
-CALENDAR_ID = settings.GOOGLE_CALENDAR_ID
 SCOPES = settings.SCOPES
 BATCH_SIZE = 150
 
@@ -38,7 +39,7 @@ class CalendarHandler:
             print(f'Failed to create service instance for {API_NAME}')
             return None
 
-    def create_event_in_calendar(request, event_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
+    def create_event_in_calendar(request, calendar_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
 
         event = {
             'summary': title,
@@ -52,10 +53,10 @@ class CalendarHandler:
                 'dateTime': CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
                 'timeZone': 'Asia/Dhaka',
             },
-            'organizer' : {
-                'displayName' : 'IEEE NSU SB',
-                'email' : 'portal@ieeensusb.org'
-            },
+            # 'organizer' : {
+            #     'displayName' : 'IEEE NSU SB',
+            #     'email' : 'portal@ieeensusb.org'
+            # },
             'source' : {
                 'title' : 'IEEE NSU SB',
                 'url' : event_link
@@ -77,28 +78,28 @@ class CalendarHandler:
 
         service = CalendarHandler.authorize(request)
         if service:
-            response = service.events().insert(calendarId=CALENDAR_ID, body=event, supportsAttachments=True).execute()
+            response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
             id = response.get('id')
             print('Event created: %s' % (response.get('htmlLink')))
             for i in range(0, len(attendeeList), BATCH_SIZE):
                 batch = attendeeList[i:i + BATCH_SIZE]
-                event = service.events().get(calendarId=CALENDAR_ID, eventId=id).execute()
+                event = service.events().get(calendarId=calendar_id, eventId=id).execute()
                 if 'attendees' in event:
                     event['attendees'].extend(batch)
                 else:
                     event['attendees'] = batch
-                updated_event = service.events().update(calendarId=CALENDAR_ID, eventId=id, body=event, sendUpdates='all').execute()
+                updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='all').execute()
                 print(f'Batch {i // BATCH_SIZE + 1} updated.')
             return id
         else:
             return None
         
-    def update_event_in_calendar(request, event_id, title, description, location, start_time, end_time, attendees):
+    def update_event_in_calendar(request, calendar_id, event_id, title, description, location, start_time, end_time, attendees):
         if(event_id == None):
             return None
         service = CalendarHandler.authorize(request)
         if service:
-            response = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
+            response = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
             # print(response)
 
             if title:
@@ -118,20 +119,20 @@ class CalendarHandler:
             if attendees:
                 response['attendees'] = attendees
 
-            service.events().update(calendarId=CALENDAR_ID, eventId=response['id'], body=response, sendUpdates='all').execute()
+            service.events().update(calendarId=calendar_id, eventId=response['id'], body=response, sendUpdates='all').execute()
 
             return "Updated"
         else:
             return None
 
-    def delete_event_in_calendar(request, event_id):
+    def delete_event_in_calendar(request, calendar_id, event_id):
         if(event_id == None):
             return None
         global service
         service = CalendarHandler.authorize(request)
         if service:
-            if(CalendarHandler.has_event_in_calendar(event_id)):
-                response = service.events().delete(calendarId=CALENDAR_ID, eventId=event_id).execute()
+            if(CalendarHandler.has_event_in_calendar(calendar_id, event_id)):
+                response = service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
                 print('Event deleted')
             else:
                 print('Event does not exist')
@@ -141,10 +142,10 @@ class CalendarHandler:
             return None
 
 
-    def has_event_in_calendar(event_id):
+    def has_event_in_calendar(calendar_id, event_id):
         # service = CalendarHandler.authorize()
 
-        response = service.events().get(calendarId=CALENDAR_ID, eventId=event_id).execute()
+        response = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
 
         if(response):
             if(response.get('status') == 'cancelled'):
@@ -181,32 +182,39 @@ class CalendarHandler:
         credentials = GmailHandler.get_credentials(request)
         if not credentials:
             return None
+        
         try:
             service = build(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, credentials=credentials)
             print(settings.GOOGLE_DRIVE_API_NAME, settings.GOOGLE_DRIVE_API_VERSION, 'service created successfully')
 
             file_name = file_path.name
-            
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                for chunk in file_path.chunks():
-                    temp_file.write(chunk)
-                temp_file_path = temp_file.name
-            
-            try:
-                mime_type, _ = mimetypes.guess_type(file_name)
-                media = MediaFileUpload(temp_file_path, mimetype=mime_type)
 
+            # Read the entire file content at once
+            content = ContentFile(file_path.read())
+            
+            # Get the content as bytes and create an IO stream for Google API
+            content_io = io.BytesIO(content.read())
+
+            try:
+                # Guess the MIME type based on the file name
+                mime_type, _ = mimetypes.guess_type(file_name)
+
+                # Create MediaIoBaseUpload with the content stream
+                media = MediaIoBaseUpload(content_io, mimetype=mime_type)
+
+                # Metadata for the file to be uploaded
                 file_metadata = {
                     'name': file_name,
                 }
 
+                # Create the file on Google Drive
                 file = service.files().create(
                     body=file_metadata,
                     media_body=media,
                     fields='id,webContentLink,name,iconLink,webViewLink'
                 ).execute()
 
-                # Set the file permission to "anyone with the link can view"
+                # Set file permissions to "anyone with the link can view"
                 permission = {
                     'type': 'anyone',
                     'role': 'reader',
@@ -215,9 +223,10 @@ class CalendarHandler:
                     fileId=file['id'],
                     body=permission,
                 ).execute()
+
             finally:
-                # Ensure the temporary file is removed after processing
-                os.remove(temp_file_path)
+                # No need for file deletion since we are using in-memory content
+                content.close()
                 
             return file
         except Exception as e:
@@ -261,3 +270,16 @@ class CalendarHandler:
             print(e)
             print(f'Failed to create service instance for drive')
             return None
+        
+        
+    def get_google_calendar_id(event_organiser_primary):
+        if event_organiser_primary == 1:
+            return settings.GOOGLE_CALENDAR_ID_BRANCH
+        elif event_organiser_primary == 2:
+            return settings.GOOGLE_CALENDAR_ID_PES
+        elif event_organiser_primary == 3:
+            return settings.GOOGLE_CALENDAR_ID_RAS
+        elif event_organiser_primary == 4:
+            return settings.GOOGLE_CALENDAR_ID_IAS
+        elif event_organiser_primary == 5:
+            return settings.GOOGLE_CALENDAR_ID_WIE

@@ -54,7 +54,7 @@ class FCT_Data_Access(admin.ModelAdmin):
 class Branch_Data_Access(admin.ModelAdmin):
     list_display=[
         'ieee_id','create_event_access','event_details_page_access','create_individual_task_access','create_team_task_access','create_panels_access',
-        'panel_memeber_add_remove_access','team_details_page','manage_web_access','manage_custom_notification_access'
+        'panel_memeber_add_remove_access','team_details_page','manage_web_access','manage_custom_notification_access','manage_email_access'
     ]
 
 from .models import SystemErrors

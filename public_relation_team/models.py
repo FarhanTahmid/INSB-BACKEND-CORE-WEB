@@ -18,26 +18,15 @@ class Manage_Team(models.Model):
 
     def __str__(self):
         return str(self.ieee_id)
-    
-# class Email_Attachements(models.Model):
-#     email_name = models.CharField(null=True,blank=True,max_length = 1000)
-#     email_content=models.FileField(upload_to="Email_Attachments/",blank=True,null=True,default=None)
+
+# class Email_Draft(models.Model):
+#     email_unique_id = models.CharField(null=False,blank=False,max_length=20)
+#     subject = models.TextField(blank=True,null=True)
+#     drafts = models.JSONField(null=True,blank=True,default=dict)
+#     timestamp = models.DateTimeField(null=False,blank=False,auto_now_add=True)
 
 #     class Meta:
-
-#         verbose_name = "Email Attachments"
+#         verbose_name = "Email Draft"
 
 #     def __str__(self):
-#         return str(self.email_name)
-
-class Email_Draft(models.Model):
-    email_unique_id = models.CharField(null=False,blank=False,max_length=20)
-    subject = models.TextField(blank=True,null=True)
-    drafts = models.JSONField(null=True,blank=True,default=dict)
-    timestamp = models.DateTimeField(null=False,blank=False,auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Email Draft"
-
-    def __str__(self):
-        return str(self.email_unique_id)
+#         return str(self.email_unique_id)

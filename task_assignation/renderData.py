@@ -361,8 +361,9 @@ class Task_Assignation:
                         member_points.is_task_completed = False
                         member_points.completion_date = None
                         member_points.save()
-                        member.completed_task_points -= member_points.completion_points
-                        member.save()
+                        if member.completed_task_points >= member_points.completion_points:
+                            member.completed_task_points -= member_points.completion_points
+                            member.save()
 
                     if task.task_type == "Team":
 
@@ -372,9 +373,10 @@ class Task_Assignation:
 
                             member = Members.objects.get(ieee_id = mem.member)
                             if member not in task.members.all():
-
-                                member.completed_task_points -= mem.completion_points
-                                member.save()
+                                
+                                if member.completed_task_points >= mem.completion_points:
+                                    member.completed_task_points -= mem.completion_points
+                                    member.save()
                                 mem.is_task_completed = False
                                 mem.save()
 
@@ -384,8 +386,9 @@ class Task_Assignation:
                             team.save()
                         for team in task.team.all():
                             points = Team_Task_Point.objects.get(task = task,team=team)
-                            team.completed_task_points -= points.completion_points
-                            team.save()
+                            if team.completed_task_points >= points.completion_points:
+                                team.completed_task_points -= points.completion_points
+                                team.save()
 
 
                 
@@ -1004,8 +1007,9 @@ class Task_Assignation:
         for i in task_member_points:
 
             member = Members.objects.get(ieee_id = i.member)
-            member.completed_task_points -= i.completion_points
-            member.save()
+            if member.completed_task_points >= i.completion_points:
+                member.completed_task_points -= i.completion_points
+                member.save()
         
         media_files = Task_Media.objects.filter(task=task)
         for media_file in media_files:
@@ -1458,7 +1462,8 @@ class Task_Assignation:
             email_to.append(member.email_personal)
             email_from = settings.EMAIL_HOST_USER
             subject = f"Request to review your work"
-            message = f'''Greetings {member.name},
+            message = f'''
+Greetings {member.name},
 The work you have done so far is great! However, your task assignee seems to have
 commented on your completed work for more better outcome. Please view the task
 and make necessary changes accordingly
@@ -1475,7 +1480,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
@@ -1504,9 +1509,10 @@ This is an automated message. Do not reply
             #if task is completed and later marks are updated
             if task.is_task_completed:
                 member = Members.objects.get(ieee_id = ieee_id)
-                member.completed_task_points -= previous_marks
-                member.completed_task_points += marks
-                member.save()
+                if member.completed_task_points >= previous_marks:
+                    member.completed_task_points -= previous_marks
+                    member.completed_task_points += marks
+                    member.save()
 
             task_log_message =  f'Task Name: {task.title}, marks updated for {member_user.name}({ieee_id}) from {previous_marks} to {member_task.completion_points}'
             #updating logs
@@ -1543,7 +1549,8 @@ This is an automated message. Do not reply
                 url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
             
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
-            message = f'''Hello {username},
+            message = f'''
+Hello {username},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
@@ -1562,7 +1569,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.name}({logged_in_user.ieee_id}) and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1606,29 +1613,29 @@ This is an automated message. Do not reply
             subject = f"You have been Assigned a Task!"
             site_domain = request.META['HTTP_HOST']
             message = f'''
-                Hello {member.name},
-                
-                You have been assigned a task - {task.title}.
-                Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
+Hello {member.name},
 
-                You are requested to complete the task with in the due date. If not, you will be penalised daily
-                5% of your task points.
+You have been assigned a task - {task.title}.
+Please follow this link to view your task:{site_domain}/portal/central_branch/task/{task.pk}
 
-                Please follow the link or go through the portal for more details.
+You are requested to complete the task with in the due date. If not, you will be penalised daily
+5% of your task points.
 
-                Deadline: {task.deadline}
-                Task Assigned by: {task.task_created_by}, {task_created_by}
+Please follow the link or go through the portal for more details.
 
-                Best Regards
-                IEEE NSU SB Portal
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task_created_by}
 
-                This is an automated message. Do not reply
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
             '''
             email=EmailMultiAlternatives(subject,message,
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2396,7 +2403,8 @@ This is an automated message. Do not reply
             email_to.append(member.email_personal)
             email_to.append(member.email_nsu)
             subject = f"Your Assigned Task Has Been Marked Completed/Updated!"
-            message = f'''Dear {member.name},
+            message = f'''
+Dear {member.name},
 Your assigned task has been marked completed for which you have
 received {points} points!
 
@@ -2417,7 +2425,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task completion email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2466,7 +2474,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task edit email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)

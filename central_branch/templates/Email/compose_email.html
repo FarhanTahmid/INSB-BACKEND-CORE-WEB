@@ -15,12 +15,60 @@
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
 
   <!--Internal CSS-->
   <style>
     body {
       background-color: white;
     }
+
+    
+    /* Search Box */
+  .search {
+    width: 450px;
+    background: white;
+    box-shadow: -1px 0px 8px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 11px;
+    margin: 10px 0;
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    transition: background-color 0.3s ease;
+    border-radius: 11px;
+  }
+
+  
+  .search-container:hover {
+    background-color: #FFFFFF;
+  }
+
+  .search-container input {
+    width: 100%;
+    height: 30px;
+    border: none;
+    font-size: 13px;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .search-container:hover .fa-search {
+  color: #000;  
+}
+
+.search-container input::placeholder {
+  color: #A9A9A9;  
+}
+
+  .fa-search {
+    font-size: 20px;
+    color: #171718;
+    cursor: pointer; 
+  }
 
     .compose {
       position: fixed;
@@ -31,13 +79,15 @@
       background: white;
       border-radius: 5px;
       z-index: 1020;
-      /* max-height: 600px; */
+      max-height: 650px;
       overflow-y: auto;
     }
 
     .child-body {
       /* position: relative;
       left: 1rem; */
+      display: flex;
+      justify-content: flex-end;
     }
 
     .fa-pen {
@@ -49,16 +99,17 @@
       background-color: #137aac;
       border: none;
       color: white;
-      padding: 5px 20px;
+      padding: .25rem 2rem;
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: .75rem;
+      /* font-size: .75rem; */
       margin: 4px 2px;
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
       border: 2px solid #137aac;
+      
     }
 
     .compose_btn:hover {
@@ -252,20 +303,22 @@
       background: white;
       margin: 0 1rem;
       position: sticky;
+      top: 0;
+      
     }
 
     .email_wrapper_2 {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      margin: 0 1rem;
+      margin: 0;
       align-items: center;
     }
 
     .email_container {
       /* position: fixed; */
       /* top: 115px; */
-      margin: 0 1rem 0 0;
+      /* margin: 0 1rem 0 0; */
     }
 
     .email_container input[type="checkbox"] {
@@ -305,7 +358,7 @@
 
     .email_options {
       border-radius: 12px;
-      box-shadow: 0px 2px 5px 0px gray;
+      box-shadow: -1px 0px 8px 0px rgba(0, 0, 0, 0.1);
       padding: .5rem 1.5rem 1rem;
       background: white;
       display: flex;
@@ -359,7 +412,7 @@
     }
 
     .email_outer_container {
-      box-shadow: 0px 2px 5px 0px gray;
+      box-shadow: -1px 0px 8px 0px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       position: relative;
       top: -15px;
@@ -374,7 +427,7 @@
       /* margin: 8px; */
       border-radius: 8px;
       overflow-y: scroll;
-      max-height: 555px;
+      max-height: 550px;
 
     }
 
@@ -389,13 +442,15 @@
 
     .unique-dropdown-content::-webkit-scrollbar,
     .custom-dropdown-content::-webkit-scrollbar,
-    .alt-dropdown-content::-webkit-scrollbar {
+    .alt-dropdown-content::-webkit-scrollbar,
+    .compose::-webkit-scrollbar {
       width: 4px;
     }
 
     .unique-dropdown-content::-webkit-scrollbar-thumb,
     .custom-dropdown-content::-webkit-scrollbar-thumb,
-    .alt-dropdown-content::-webkit-scrollbar-thumb {
+    .alt-dropdown-content::-webkit-scrollbar-thumb,
+    .compose::-webkit-scrollbar-thumb {
       background-color: #ccc;
       border-radius: 12px;
     }
@@ -694,9 +749,6 @@
       color: #57cc99;
       background-color: white;
     }
-  </style>
-
-  <style>
     .tag-container {
       display: flex;
       flex-wrap: wrap;
@@ -780,8 +832,9 @@
     }
 
     .custom-tag {
-      background-color: #007bff;
-      color: white;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #000000;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -835,8 +888,9 @@
     }
 
     .alt-tag {
-      background-color: #28a745;
-      color: white;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #000000;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -890,8 +944,9 @@
     }
 
     .unique-tag {
-      background-color: #dc3545;
-      color: white;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: #000000;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -1041,7 +1096,8 @@
 
     .email_outer_container i {
       padding: .25rem;
-      scale: 1.2;
+      /* scale: 1.2; */
+      font-size: 1rem;
     }
 
     .email_container input[type='checkbox'] {
@@ -1049,6 +1105,7 @@
     }
 
     /*ckeditor ends*/
+
     @media screen and (max-width: 1024px) {
 
       .modal-1-content,
@@ -1057,20 +1114,26 @@
         left: 0px;
         margin: 10%;
       }
-    }
-
-    @media screen and (max-width: 500px) {
-
-      .modal-1-content,
-      .modal-2-content,
-      .modal-3-content {
-        margin: 5%;
+      .email_wrapper_2 {
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+        margin-bottom: 0.5rem;
+        align-items: center;
+      }
+      .email_boxes{
+        margin-left: 0;
       }
     }
 
+   
     /* responsive code for tablet and small screens */
 
     @media screen and (max-width: 768px) {
+      .search {
+        width: 100%;
+        margin: 10px 0;
+      }
       .compose {
         width: 90%;
         bottom: 20px;
@@ -1109,7 +1172,33 @@
       }
     }
 
+ 
+
+    @media screen and (max-width: 500px) {
+
+      .modal-1-content,
+      .modal-2-content,
+      .modal-3-content {
+        margin: 5%;
+      }
+    }
+
+
     @media screen and (max-width: 480px) {
+      .search {
+      width: 100%;
+      margin: 10px 0;
+    }
+
+    .email_boxes {
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .email_box {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
       .compose {
         width: 95%;
         bottom: 10px;
@@ -1156,6 +1245,8 @@
       }
     }
 
+    
+
     @media screen and (max-width:427px) {
       .label-ops {
         top: 137px;
@@ -1174,6 +1265,231 @@
 
     button[title="Insert Image"], [title="Insert Files"] {
       display: none;
+    }
+        
+    div.container {
+      background-color: transparent;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 80px;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    div.caption {
+      text-align: center;
+      color: #002855;
+      font-size: 1.5rem;
+      font-family: "Noto Sans", sans-serif;
+    }
+    div.dot {
+      display: inline-block;
+      margin: 0px;
+      padding: 0px;
+      animation: dot 1s infinite linear;
+      font-size: 3rem;
+    }
+
+    div.dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    div.dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes dot {
+      0%,
+      100% {
+          opacity: 0;
+      }
+      50% {
+          opacity: 1;
+      }
+    }
+
+    ::selection {
+      background-color: transparent;
+    }
+    .loaderBox{
+      display: none;
+      /* box-shadow: 0px 2px 5px 0px gray; */
+      height: 555px;
+    }
+
+    .edit_btn{
+    cursor: pointer;
+    margin-bottom: 0rem;
+  }
+  .confirm_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .confirm_modal_content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 500px;
+      /* height: 190px; */
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      /* left: 100px; */
+      padding: 10px 20px;
+    }
+
+    .confirmModalClosebtn {
+      color: rgb(86 84 84);
+      font-size: 28px;
+      /* font-weight: bold; */
+      display: flex;
+      justify-content: flex-end;
+      /* padding: 10px 20px 0; */
+      transition: all .3s ease-in-out;
+    }
+
+    .confirmModalClosebtn:hover,
+    .confirmModalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  .edit_schedule_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .schedule_content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 500px;
+      /* height: 190px; */
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      /* left: 100px; */
+      padding: 10px 20px;
+    }
+
+    .scheduleModalClosebtn {
+      color: rgb(86 84 84);
+      font-size: 28px;
+      /* font-weight: bold; */
+      display: flex;
+      justify-content: flex-end;
+      /* padding: 10px 20px 0; */
+      transition: all .3s ease-in-out;
+    }
+
+    .scheduleModalClosebtn:hover,
+    .scheduleModalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .schedule_content h6{
+      transition: all .3s ease-in-out;
+      cursor: pointer;
+      color: rgb(86 84 84);
+    }
+
+    .schedule_content h6:hover{
+      color: #000;
+    }
+
+    .schedule_content_inner{
+      display: flex;
+      /* flex-direction: column; */
+      margin-bottom: 1.5rem;
+      justify-content: space-between;
+    }
+
+    .schedule_heading{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem; 
+      align-items: center;
+    }
+
+    .save_changes{
+      border: 1px solid #51d479;
+      background: #51d479;
+      color: white;
+      padding: .25rem .75rem;
+      border-radius: .25rem;
+      transition: all .3s ease-in-out;
+    }
+
+    .save_changes:hover{
+      color: #51d479;
+      background: white;
+    }
+    .pause_btn_container,
+    .restart_btn_container,
+    .cancel_btn_container{
+      border: 1px solid #A9A9A9;
+      background: white;
+      color: white;
+      padding: 0rem .25rem;
+      border-radius: .25rem;
+      transition: all .3s ease-in-out;
+      display: flex;
+      align-items: center;
+      gap: .25rem;
+      cursor: pointer;
+    }
+    .pause_btn,
+    .restart_btn,
+    .cancel_btn{
+      border: none;
+      background: white;
+      color: #000000c9;
+      transition: all .3s ease-in-out;
+      cursor: pointer;
+    }
+
+    .pause_btn_container:hover,
+    .restart_btn_container:hover,
+    .cancel_btn_container:hover{
+      background: rgb(222, 222, 222);
+    }
+    
+    .pause_btn_container:hover .pause_btn,
+    .restart_btn_container:hover .restart_btn,
+    .cancel_btn_container:hover .cancel_btn{
+      background: rgb(222, 222, 222);
+    }
+    
+    .edit_btn_container{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
     }
   </style>
   <!--Internal CSS End-->
@@ -1206,19 +1522,30 @@
       <div class="email_wrapper">
         <div class="email_wrapper_2">
           <div class="email_boxes">
-            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box active inboxed">Inbox</a>
-            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box">Sent</a>
-            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box">Dev</a>
+            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
+            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
+            <a href="?section=starred" onclick="activeInbox(this, 'starred')" class="email_box {% if section == 'starred'%}active{% endif %}">Starred</a>
+            {% if dev_access %}
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'dev_mail'%}activate{% endif %}">Dev</a>
+            {% endif %}
             <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')"
               class="email_box">Scheduled</a>
           </div>
+          
+          <!-- Shakil Search code -->
+          <div class="search">
+            <div class="search-container">
+              <input id="search-input" placeholder="Search emails" type="search">
+              <i id="search-icon" class="fa fa-search" onclick="executeSearch()"></i>
+            </div>
+          </div>
+          <!-- Search code done -->
           <!-- Farhana Compose Code -->
           <div class="child-body">
             <button class="compose_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
               Compose</button>
             {% csrf_token %}
           </div>
-          <!-- Farhana Compose Code end-->
         </div>
         
 
@@ -1230,110 +1557,160 @@
                 <label for="select_all">Select All</label>
               </div>
               <div class="more_options">
-                <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="showStarredEmails(this)"></i>
-                <i class="fa fa-folder-o" title="Label"></i>
-                <i class="fa fa-envelope-open-o" title="Mark as read"></i>
-                <i class="fa fa-envelope-o" title="Mark as unread"></i>
-                <i class="fa fa-trash-o" title="Delete"></i>
+                {% comment %} <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="activeInbox(this, 'starred')"></i> {% endcomment %}
+                {% comment %} <i class="fa fa-folder-o" title="Label"></i> {% endcomment %}
+                <i class="fa fa-envelope-open-o"></i>
+                <i class="fa fa-envelope-o"></i>
+                <i class="fa fa-trash-o"></i>
 
               </div>
             </div>
 
-            {% comment %} Pagination {% endcomment %}
-            <div class="pagination">
-              <button class="prev-page">◄</button>
-              <span class="page-info">1-50 of 150</span>
-              <button class="next-page">►</button>
-            </div>
-
-
-          </div>
-
-          <div class="email_outer_container">
-            <!-- Inbox Section -->
-            <div id="inbox" class="email_inner_container inbox show">
-              {% for thread in threads %}
-              <div class="email_row_wrap" title="event">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <a href="{% url 'central_branch:view_mail' thread.message_id %}"
-                  onclick="markRead(this)">
-                  <div class="email_row">
+                    {% comment %} Pagination {% endcomment %}
+                    <div class="pagination">
+                      <button class="prev-page">◄</button>
+                      <span class="page-info">{{request.session.pg_range}}</span>
+                      <button class="next-page">►</button>
+                    </div>
+                  
+                  
+              </div>
+  
+              <div class="email_outer_container">
+                <div class="loaderBox">
+                  <div class="container">
+                    <div class="caption">
+                       <p style='display:inline-block;'>Loading</p>
+                       <div class="dot">.</div>
+                       <div class="dot">.</div>
+                       <div class="dot">.</div>
+                    </div>
+                 </div>
+                 </div>
+                 {% if error_message %}
+                 <p>
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <p style="margin: 0;">{{error_message}}</p>
+                  </div>
+              </p>
+                 {% endif %}
+                <!-- Inbox Section -->
+              <div id="inbox" class="email_inner_container inbox show">
+                {% if section == 'inbox' or not section %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
                     </div>
                     <div class="email_content">
                       <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
                     </div>
-                    <div class="email_date">{{thread.date}}</div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
                   </div>
                 </a>
               </div>
               {% endfor %}
+                {% endif %}
 
               <!-- More inbox rows -->
             </div>
 
             <!-- Sent Section -->
             <div id="sent" class="email_inner_container sent">
-
+              {% if section == 'sent' %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
+                    <div class="email_row_left">
+                      <p class="sender">{{thread.sender}}</p>
+                    </div>
+                    <div class="email_content">
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
+                    </div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+                {% endif %}
               <!-- More sent rows -->
             </div>
 
             <!-- Dev Mail Section -->
             <div id="dev_mail" class="email_inner_container dev_mail">
-              <div class="email_row_wrap" title="announcement">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <a href="#" onclick="markRead(this)">
-                  <div class="email_row">
+              {% if section == 'dev_mail' %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
                     <div class="email_row_left">
-                      <p class="sender"></p>
+                      <p class="sender">{{thread.sender}}</p>
                     </div>
                     <div class="email_content">
-                      <div><span class="subject"><span style="opacity: 0;">We appreciate your .....</span>Your emails
-                          are loading.....This may take a while....<span style="opacity: 0;">We appreciate your patience
-                            patience........</span></span></div>
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
                     </div>
-                    <div class="email_date"></div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
                   </div>
                 </a>
               </div>
+              {% endfor %}
+                {% endif %}
             </div>
 
             <!-- Scheduled Section -->
             <div id="scheduled_mail" class="email_inner_container scheduled_mail">
-              <div class="email_row_wrap" title="event">
-                <div class="checkbox_star">
-                  <input type="checkbox" id="select" name="select" class="bold">
-                  <i class="fa fa-star-o" aria-hidden="true" onclick="starEmail(this)"></i>
-                </div>
-                <a href="#" target="_blank" onclick="markRead(this)">
-                  <div class="email_row">
-                    <div class="email_row_left">
-                      <p class="sender"></p>
-                    </div>
-                    <div class="email_content">
-                      <div><span class="subject"><span style="opacity: 0;">We appreciate your .....</span>Your emails
-                          are loading.....This may take a while....<span style="opacity: 0;">We appreciate your patience
-                            patience........</span></span></div>
-                    </div>
-                    <div class="email_date"></div>
-                  </div>
-                </a>
-              </div>
 
               <!-- More scheduled rows -->
             </div>
 
             <!-- Starred Mail Section -->
-            <div class="email_inner_container starred">
+            <div id="starred" class="email_inner_container starred">
+              {% if section == 'starred' %}
+                {% for thread in threads %}
+                <div class="email_row_wrap" title="event">
+                  <div class="checkbox_star" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}">
+                    <input type="checkbox" id="select" name="select" class="bold">
+                    <input type="hidden" class="msg_id" value="{{thread.message_id}}">
+                    <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
+                  </div>
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
+                    <div class="email_row_left">
+                      <p class="sender">{{thread.sender}}</p>
+                    </div>
+                    <div class="email_content">
+                      <div><span class="subject">{{thread.subject}}</span> - {{thread.snippet}}</div>
+                    </div>
+                    <div class="email_date">{{thread.date|date:"D, d M Y h:i:s A"}}</div>
+                  </div>
+                </a>
+              </div>
+              {% endfor %}
+                {% endif %}
             </div>
           </div>
+
+
+
+          <!-- Farhana Compose Code end-->
 
           <div class="label-ops">
             <div style="display: flex; justify-content: space-between; padding: 5px;">
@@ -1373,12 +1750,14 @@
             <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send Email To" readonly
               onclick="uniqueToggleDropdown()">
             <div class="unique-dropdown-content" id="uniqueDropdown">
-              <div onclick="uniqueSelectOption('Item 1')">All Registered General Members of IEEE NSU SB</div>
-              <div onclick="uniqueSelectOption('Item 2')">All Officers of IEEE NSU SB</div>
-              <div onclick="uniqueSelectOption('Item 3')">Executive Panel (Branch Only)</div>
-              <div onclick="uniqueSelectOption('Item 4')">Branch Ex-Com Members</div>
-              <div onclick="uniqueSelectOption('Item 5')">All Society, Chapters, Affinity Group Executive Body
-                Members</div>
+              <div onclick="uniqueSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
+              <div onclick="uniqueSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+              <div onclick="uniqueSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+              <div onclick="uniqueSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+              <div onclick="uniqueSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              {% for session in recruitment_sessions %}
+              <div onclick="uniqueSelectOption('Recruits of - {{session.session}}')">Recruits of - {{session.session}}</div>
+              {% endfor %}
             </div>
           </div>
 
@@ -1388,13 +1767,14 @@
             <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
               onclick="customToggleDropdown()">
             <div class="custom-dropdown-content" id="customDropdown">
-              <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of
-                IEEE NSU SB</div>
+              <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
-              <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
-              <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
-              <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body
-                Members</div>
+              <div onclick="customSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+              <div onclick="customSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+              <div onclick="customSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              {% for session in recruitment_sessions %}
+              <div onclick="customSelectOption('Recruits of - {{session.session}}')">Recruits of - {{session.session}}</div>
+              {% endfor %}
             </div>
           </div>
           <div class="custom-tag-container" id="customTagContainer"></div>
@@ -1403,10 +1783,14 @@
             <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
               onclick="altToggleDropdown()">
             <div class="alt-dropdown-content" id="altDropdown">
-              <div onclick="altSelectOption('Choice 1')">Choice 1</div>
-              <div onclick="altSelectOption('Choice 2')">Choice 2</div>
-              <div onclick="altSelectOption('Choice 3')">Choice 3</div>
-              <div onclick="altSelectOption('Choice 4')">Choice 4</div>
+              <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
+              <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+              <div onclick="altSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+              <div onclick="altSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+              <div onclick="altSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
+              {% for session in recruitment_sessions %}
+              <div onclick="uniqueSelectOption('Recruits of - {{session.session}}')">Recruits of - {{session.session}}</div>
+              {% endfor %}
             </div>
           </div>
 
@@ -1442,12 +1826,13 @@
         <div class="modal-1-content">
           <div
             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
-            <h4 style="font-weight: bold;">Label and schedule the email?</h4>
+            {% comment %} <h4 style="font-weight: bold;">Label and schedule the email?</h4> {% endcomment %}
+            <h4 style="font-weight: bold;">Want to schedule the email?</h4>
             <span class="close1">&times;</span>
           </div>
           <!-- <hr> -->
           <div style="padding: .5rem 1.25rem .75rem;">
-            <div class="labels">
+            {% comment %} <div class="labels">
               <div>
                 <input type="checkbox" name="event">
                 <label for="event">Event</label>
@@ -1460,7 +1845,7 @@
                 <input type="checkbox" name="announcement">
                 <label for="announcement">Announcement</label>
               </div>
-            </div>
+            </div> {% endcomment %}
             <!-- <h6 style="position: relative;
                 top: 9px; font-weight: bold;">Want to Schedule the Email?</h6> -->
           </div>
@@ -1508,6 +1893,52 @@
       </div>
       <!--Email Section End-->
     </div>
+    <div id="scheduleModal" class="edit_schedule_modal">
+      <!-- Modal content -->
+      <div class="schedule_content">
+        <div class="schedule_heading">
+          <h5 style="margin-bottom: 0;">Edit Scheduled Mail</h5>
+          <span class="scheduleModalClosebtn">&times;</span>
+        </div>
+
+        <div class="edit_btn_container">
+          <div class="restart_btn_container" style="display: block;">
+            <svg width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.2577 3.50828C18.538 3.62437 18.7207 3.89785 18.7207 4.20119V8.44383C18.7207 8.85805 18.3849 9.19383 17.9707 9.19383H13.728C13.4247 9.19383 13.1512 9.0111 13.0351 8.73085C12.9191 8.45059 12.9832 8.128 13.1977 7.9135L14.8007 6.3105C12.1674 5.20912 9.01606 5.7309 6.87348 7.87348C4.04217 10.7048 4.04217 15.2952 6.87348 18.1265C9.70478 20.9578 14.2952 20.9578 17.1265 18.1265C18.7727 16.4803 19.4622 14.2401 19.1935 12.0937C19.142 11.6827 19.4335 11.3078 19.8445 11.2563C20.2555 11.2049 20.6304 11.4963 20.6819 11.9073C21.0057 14.4934 20.1746 17.1997 18.1872 19.1872C14.7701 22.6043 9.2299 22.6043 5.81282 19.1872C2.39573 15.7701 2.39573 10.2299 5.81282 6.81282C8.55119 4.07444 12.6515 3.5312 15.9309 5.18028L17.4404 3.67086C17.6549 3.45637 17.9774 3.3922 18.2577 3.50828Z" fill="#000000c9"></path> </g></svg>
+            <input name="restart_schedule" class="restart_btn" type="submit" onclick="ConfirmationModal(this)" value="Restart Send">
+          </div>
+          <div class="pause_btn_container" style="display: block;">
+            <svg class="pause_svg" width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2C7.88562 2 8.82843 2 9.41421 2.58579C10 3.17157 10 4.11438 10 6V18C10 19.8856 10 20.8284 9.41421 21.4142C8.82843 22 7.88562 22 6 22C4.11438 22 3.17157 22 2.58579 21.4142C2 20.8284 2 19.8856 2 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> <path d="M14 6C14 4.11438 14 3.17157 14.5858 2.58579C15.1716 2 16.1144 2 18 2C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6V18C22 19.8856 22 20.8284 21.4142 21.4142C20.8284 22 19.8856 22 18 22C16.1144 22 15.1716 22 14.5858 21.4142C14 20.8284 14 19.8856 14 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> </g></svg>
+            <input name="pause_schedule" class="pause_btn" type="submit" onclick="ConfirmationModal(this)" value="Pause Send">
+          </div>
+          <div class="cancel_btn_container">
+            <svg width=".75rem" height=".75rem" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <style>.cls-1{fill:none;stroke:#000000c9;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style> </defs> <title></title> <g id="cross"> <line class="cls-1" x1="7" x2="25" y1="7" y2="25"></line> <line class="cls-1" x1="7" x2="25" y1="25" y2="7"></line> </g> </g></svg>
+            <input name="cancel_schedule" class="cancel_btn" type="submit" onclick="ConfirmationModal(this)" value="Cancel Send">
+          </div>
+        </div>
+        <div class="schedule_content_inner">
+          <h6 name="schedule-time" style="margin-bottom: 0;">Change Schedule Time</h6>
+          <input type="datetime-local" name="schedule-time" style="border: 0;" value="" name="" placeholder="">
+      </div>
+        <div style="display: flex; justify-content: center;">
+          <input type="hidden" name="change_id" value="">
+          <input name="date_change" class="save_changes" type="submit" onclick="ConfirmationModal(this)" value="Save Changes">
+        </div>
+      </div>
+    </div>
+    <div id="confirm_modal" class="confirm_modal">
+      <!-- Modal content -->
+      <div class="confirm_modal_content">
+        <div style="display: flex;
+          justify-content: flex-end;
+          padding: 10px 20px 0;
+      ">
+          <span class="confirmModalClosebtn">&times;</span>
+        </div>
+        <h5 name="schedule_msg" style="position: relative;
+              text-align: center;
+              bottom: 15px;"></h5>
+      </div>
+    </div>
     <!-- ############ PAGE END-->
     <!-- ############ LAYOUT END-->
 
@@ -1516,23 +1947,27 @@
       document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
         let section = urlParams.get('section') || 'inbox';
+        if(section == 'scheduled_mail')
+        {
+          section = 'inbox';
+        }
         window.history.replaceState(null, '', '?section=' + section);
 
         // Hide all sections
-        // const sections = document.querySelectorAll('.email_inner_container');
-        // sections.forEach(sec => sec.classList.remove('show'));
+        const sections = document.querySelectorAll('.email_inner_container');
+        sections.forEach(sec => sec.classList.remove('show'));
 
-        // // Remove 'active' class from all links
-        // const links = document.querySelectorAll('.email_box');
-        // links.forEach(link => link.classList.remove('active'));
+        // Remove 'active' class from all links
+        //const links = document.querySelectorAll('.email_box');
+        //links.forEach(link => link.classList.remove('active'));
 
-        // // Show the selected section
-        // document.querySelector(`.${section}`).classList.add('show');
+        // Show the selected section
+        document.querySelector(`.{{section}}`).classList.add('show');
 
-        // // Add 'active' class to the clicked link
-        // $().classList.add('active');
+        // Add 'active' class to the clicked link
+        //$().classList.add('active');
       });
-      // count the mails
+      {% comment %} // count the mails
       function updateMailCounts() {
         // Identify the currently active container
         const activeContainer = document.querySelector('.email_inner_container.show');
@@ -1554,11 +1989,15 @@
             countElement.textContent = count;
           }
         });
-      }
+      } {% endcomment %}
 
       // Initial call to set counts based on the initially visible container
-      updateMailCounts();
+      {% comment %} updateMailCounts(); {% endcomment %}
+      </script>
 
+
+      <!-- script for compose modal -->
+      <script>
       // showing and hiding compose email button
       const composeBtn = document.querySelector('.child-body');
       const composeBody = document.querySelector('.compose');
@@ -1566,11 +2005,6 @@
       composeBtn.addEventListener('click', function () {
         composeBtn.classList.add('hidden');
         composeBody.classList.remove('hidden');
-      })
-
-      btnClose.addEventListener('click', function () {
-        closeCompose();
-        clearExistingData();
       })
 
       function closeCompose() {
@@ -1581,7 +2015,17 @@
         composeBody.classList.add('hidden');
       }
 
-      //showing emails according to selected email box
+      btnClose.addEventListener('click', function () {
+        closeCompose();
+        clearExistingData();
+      })
+      </script>
+
+
+
+      <!-- showing emails according to selected email box -->
+      <script>
+        //getting the selected box and inbox name
       function activeInbox(element, section) {
         //prevent refresh
         event.preventDefault();
@@ -1604,12 +2048,12 @@
           });
         }
 
-        //reset star icon to default
+        {% comment %} //reset star icon to default
         const starEmailIcon = document.querySelector('.more_options .starInbox');
         if (starEmailIcon.classList.contains('fa-star')) {
           starEmailIcon.classList.remove('fa-star');
           starEmailIcon.classList.add('fa-star-o');
-        }
+        } {% endcomment %}
         // Hide all sections
         const sections = document.querySelectorAll('.email_inner_container');
         sections.forEach(sec => sec.classList.remove('show'));
@@ -1623,31 +2067,69 @@
 
         // Add 'active' class to the clicked link
         element.classList.add('active');
+        startLoader();
+        if(section == 'scheduled_mail')
+        {
+          $.ajax({
+            url: "{% url 'central_branch:request_scheduled_email' %}",  // URL pointing to your Django view
+            method: 'GET',
+            success: function (response) {
+              stopLoader();
+              // Append the returned HTML to the table body
+              $('#' + section).html("");
+              $('#' + section).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+            }
+          });
+        }
+        else 
+        {
+          $.ajax({
+            url: "{% url 'central_branch:mail' %}?section=" + section,  // URL pointing to your Django view
+            method: 'GET',
+            success: function (response) {
+              stopLoader();
+              // Append the returned HTML to the table body
+              $('#' + section).html("");
+              $('#' + section).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+            }
+          });
+        }
 
-        $.ajax({
-          url: "{% url 'central_branch:mail' %}?section=" + section,  // URL pointing to your Django view
-          method: 'GET',
-          success: function (response) {
-            // Append the returned HTML to the table body
-            $('#' + section).html("");
-            $('#' + section).append(response.html);
-          }
-        });
 
         // Update mail counts based on the selected container
-        updateMailCounts();
+        {% comment %} updateMailCounts(); {% endcomment %}
       }
 
 
       //starring an email
       function starEmail(element) {
+        email_id = element.parentElement.querySelector('.msg_id').value;
         if (element.classList.contains('fa-star-o')) {
-          element.classList.remove('fa-star-o');
-          element.classList.add('fa-star');
+
+          StarUnstar(email_id, 'STAR', function(success) {
+            if(success) {
+              element.classList.remove('fa-star-o');
+              element.classList.add('fa-star');
+            }
+            else {
+              console.log('Error while STARRING');
+            }
+          });
         }
         else {
-          element.classList.add('fa-star-o');
-          element.classList.remove('fa-star');
+          StarUnstar(email_id, 'UNSTAR', function(success) {
+            if(success) {
+              element.classList.add('fa-star-o');
+              element.classList.remove('fa-star');
+            }
+            else {
+              console.log('Error while STARRING');
+            }
+          });
         }
 
       }
@@ -1698,41 +2180,82 @@
       // Delete Selected Emails functionality
       document.querySelector('.fa-trash-o').addEventListener('click', function () {
         const selectAllCheck = document.getElementById('select_all');
+        var message_ids = "";
+        var email_rows = []
+        var id = 1;
         if (selectAllCheck.checked) {
           if (document.querySelector('.inbox').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;
             });
           } else if (document.querySelector('.sent').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
-            });
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.dev_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
-            });
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
-              const emailRow = checkbox.closest('.email_row_wrap');
-              emailRow.remove();
-            });
+              const checkBoxStar = checkbox.closest('.checkbox_star');
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              email_rows.push(checkbox.closest('.email_row_wrap'));
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           }
 
         }
         else {
           const checkboxes = document.querySelectorAll('.email_row_wrap input[type="checkbox"]:checked');
           checkboxes.forEach(checkbox => {
-            const emailRow = checkbox.closest('.email_row_wrap');
-            emailRow.remove();
-          });
+            const checkBoxStar = checkbox.closest('.checkbox_star');
+            var msg_id = checkBoxStar.querySelector('.msg_id').value;
+            console.log(checkbox.closest('.email_row_wrap'));
+            email_rows.push(checkbox.closest('.email_row_wrap'));
+            if(id == 1)
+              message_ids += msg_id;
+            else
+              message_ids += ","+(msg_id);
+            id += 1;          });
         }
+
+        DeleteEmail(message_ids, function(success) {
+          if(success) {
+            email_rows.forEach(function(email_row) {
+              email_row.remove(); // Call remove on each DOM element
+            });
+          }
+          else {
+            console.log('Error while UNREAD');
+          }
+        });
       });
       // Tanvir's parts ends
       //Mark as read on click
@@ -1745,31 +2268,49 @@
       // Mark as Read Selected Emails functionality
       document.querySelector('.fa-envelope-open-o').addEventListener('click', function () {
         const selectAllCheck = document.getElementById('select_all');
+        var message_ids = "";
+        const email_rows_check_star = {};
+        var id = 1;
+
         if (selectAllCheck.checked) {
           if (document.querySelector('.inbox').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-              emailRow.style.backgroundColor = 'white';
-              checkBoxStar.style.backgroundColor = 'white';
+              email_rows_check_star[id] = [checkBoxStar, emailRow];
+              var msg_id = checkBoxStar.querySelector('.msg_id');
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;
             });
           } else if (document.querySelector('.sent').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-              emailRow.style.backgroundColor = 'white';
-              checkBoxStar.style.backgroundColor = 'white';
+              email_rows_check_star[id] = [checkBoxStar, emailRow];
+              var msg_id = checkBoxStar.querySelector('.msg_id');
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;
             });
           } else if (document.querySelector('.dev_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-              emailRow.style.backgroundColor = 'white';
-              checkBoxStar.style.backgroundColor = 'white';
-            });
+              email_rows_check_star[id] = [checkBoxStar, emailRow];
+              var msg_id = checkBoxStar.querySelector('.msg_id');
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
@@ -1785,40 +2326,74 @@
           checkboxes.forEach(checkbox => {
             const checkBoxStar = checkbox.closest('.checkbox_star');
             const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-            emailRow.style.backgroundColor = 'white';
-            checkBoxStar.style.backgroundColor = 'white';
-          });
+            email_rows_check_star[id] = [checkBoxStar, emailRow];
+            var msg_id = checkBoxStar.querySelector('.msg_id').value;
+            if(id == 1)
+              message_ids += msg_id;
+            else
+              message_ids += ","+(msg_id);
+            id += 1;          });
         }
+
+        ReadUnread(message_ids, 'READ', function(success) {
+          if(success) {
+            for(var key in email_rows_check_star)
+            {
+              items = email_rows_check_star[key];
+              items[0].style.backgroundColor = 'white';
+              items[1].style.backgroundColor = 'white';
+            }
+          }
+          else {
+            console.log('Error while READ');
+          }
+        });
       });
 
       // Mark as unread Selected Emails functionality
       document.querySelector('.fa-envelope-o').addEventListener('click', function () {
         const selectAllCheck = document.getElementById('select_all');
+        var message_ids = "";
+        const email_rows_check_star = {};
+        var id = 1;
+
         if (selectAllCheck.checked) {
           if (document.querySelector('.inbox').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.inbox .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-              emailRow.style.backgroundColor = 'aliceblue';
-              checkBoxStar.style.backgroundColor = 'aliceblue';
-            });
+              email_rows_check_star[id] = [checkBoxStar, emailRow];
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.sent').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.sent .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-              emailRow.style.backgroundColor = 'aliceblue';
-              checkBoxStar.style.backgroundColor = 'aliceblue';
-            });
+              email_rows_check_star[id] = [checkBoxStar, emailRow];
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.dev_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.dev_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
               const checkBoxStar = checkbox.closest('.checkbox_star');
               const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-              emailRow.style.backgroundColor = 'aliceblue';
-              checkBoxStar.style.backgroundColor = 'aliceblue';
-            });
+              email_rows_check_star[id] = [checkBoxStar, emailRow];
+              var msg_id = checkBoxStar.querySelector('.msg_id').value;
+              if(id == 1)
+                message_ids += msg_id;
+              else
+                message_ids += ","+(msg_id);
+              id += 1;            });
           } else if (document.querySelector('.scheduled_mail').classList.contains('show')) {
             const checkboxes = document.querySelectorAll('.scheduled_mail .email_row_wrap input[type="checkbox"]:checked');
             checkboxes.forEach(checkbox => {
@@ -1834,45 +2409,82 @@
           checkboxes.forEach(checkbox => {
             const checkBoxStar = checkbox.closest('.checkbox_star');
             const emailRow = checkbox.parentElement.parentElement.querySelector('.email_row');
-            emailRow.style.backgroundColor = 'aliceblue';
-            checkBoxStar.style.backgroundColor = 'aliceblue';
-          });
+            email_rows_check_star[id] = [checkBoxStar, emailRow];
+            var msg_id = checkBoxStar.querySelector('.msg_id').value;
+            if(id == 1)
+              message_ids += msg_id;
+            else
+              message_ids += ","+(msg_id);
+            id += 1;          });
         }
+
+        ReadUnread(message_ids, 'UNREAD', function(success) {
+          if(success) {
+            for(var key in email_rows_check_star)
+            {
+              items = email_rows_check_star[key];
+              items[0].style.backgroundColor = 'aliceblue';
+              items[1].style.backgroundColor = 'aliceblue';
+            }
+          }
+          else {
+            console.log('Error while UNREAD');
+          }
+        });
       });
 
       // show icons when checkbox is checked
-      const checkedBoxes = document.querySelectorAll('.checkbox_star input[type="checkbox"]');
+      var checkedBoxes;
       const markAsRead = document.querySelector('.fa-envelope-open-o');
       const markAsUnread = document.querySelector('.fa-envelope-o');
       const deleteEmail = document.querySelector('.fa-trash-o');
 
-      // for individual check box 
-      checkedBoxes.forEach(box => {
-        box.addEventListener('click', () => {
-          // Check if any checkbox is checked
-          const isAnyChecked = Array.from(checkedBoxes).some(checkbox => checkbox.checked);
+      addEventListenerToCheckBox();
 
-          if (isAnyChecked) {
-            markAsRead.style.opacity = '1';
-            markAsUnread.style.opacity = '1';
-            deleteEmail.style.opacity = '1';
-          } else {
-            markAsRead.style.opacity = '0';
-            markAsUnread.style.opacity = '0';
-            deleteEmail.style.opacity = '0';
-          }
+      function addEventListenerToCheckBox() {
+        checkedBoxes = document.querySelectorAll('.checkbox_star input[type="checkbox"]');
+        // for individual check box 
+        checkedBoxes.forEach(box => {
+          box.addEventListener('click', () => {
+            // Check if any checkbox is checked
+            const isAnyChecked = Array.from(checkedBoxes).some(checkbox => checkbox.checked);
+
+            if (isAnyChecked) {
+              markAsRead.style.opacity = '1';
+              markAsUnread.style.opacity = '1';
+              deleteEmail.style.opacity = '1';
+              markAsRead.title = 'Mark as Read';
+              markAsUnread.title = 'Mark as Unread';
+              deleteEmail.title = 'Delete';
+            } else {
+              markAsRead.style.opacity = '0';
+              markAsUnread.style.opacity = '0';
+              deleteEmail.style.opacity = '0';
+              markAsRead.title = '';
+              markAsUnread.title = '';
+              deleteEmail.title = '';
+            }
+          });
         });
-      });
+      }
+
+      
       // for select all checkbox
       document.querySelector('.select_all_option input[type="checkbox"]').addEventListener('click', () => {
         if (document.querySelector('.select_all_option input[type="checkbox"]').checked) {
           markAsRead.style.opacity = '1';
           markAsUnread.style.opacity = '1';
           deleteEmail.style.opacity = '1';
+          markAsRead.title = 'Mark as Read';
+          markAsUnread.title = 'Mark as Unread';
+          deleteEmail.title = 'Delete';
         } else {
           markAsRead.style.opacity = '0';
           markAsUnread.style.opacity = '0';
           deleteEmail.style.opacity = '0';
+          markAsRead.title = '';
+          markAsUnread.title = '';
+          deleteEmail.title = '';
         }
       });
 
@@ -1898,6 +2510,82 @@
         modal1.style.transform = 'translateY(-50px)';
         modal1.style.zIndex = '-100';
         modal1.style.opacity = '0';
+      }
+
+      function ReadUnread(id, action, callback)
+      {
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+          url: "{% url 'central_branch:request_email_read_unread' %}",
+          type: "POST",
+          data: {
+            'message_id':id,
+            'action':action
+          },
+          headers: {
+              "X-CSRFToken": csrf
+          },
+          success: function(response) {
+              // Call the callback function with true
+              if (callback) callback(true);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+              // Call the callback function with false
+              if (callback) callback(false);
+          }
+        });
+      }
+
+      function StarUnstar(id, action, callback)
+      {
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+          url: "{% url 'central_branch:request_email_star_unstar' %}",
+          type: "POST",
+          data: {
+            'message_id':id,
+            'action':action
+          },
+          headers: {
+              "X-CSRFToken": csrf
+          },
+          success: function(response) {
+              // Call the callback function with true
+              if (callback) callback(true);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+              // Call the callback function with false
+              if (callback) callback(false);
+          }
+        });
+      }
+
+      function DeleteEmail(id, callback) {
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        $.ajax({
+          url: "{% url 'central_branch:request_email_delete' %}",
+          type: "POST",
+          data: {
+            'message_id':id,
+          },
+          headers: {
+              "X-CSRFToken": csrf
+          },
+          success: function(response) {
+              // Call the callback function with true
+              if (callback) callback(true);
+          },
+          error: function(error) {
+              console.error("Error:", error);
+              // Call the callback function with false
+              if (callback) callback(false);
+          }
+        });
       }
 
       function EmailSent() {
@@ -2008,7 +2696,7 @@
     <!-- mail soet using label -->
     <script>
       // Select the elements
-      const labelIcon = document.querySelector('.fa-folder-o[title="Label"]');
+      {% comment %} const labelIcon = document.querySelector('.fa-folder-o[title="Label"]'); {% endcomment %}
       const labelOps = document.querySelector('.label-ops');
 
       // Function to show or hide the selection box
@@ -2022,16 +2710,16 @@
         event.stopPropagation(); // Prevent the event from bubbling up to the document
       }
 
-      // Function to hide the selection box if clicked outside
+      {% comment %} // Function to hide the selection box if clicked outside
       function hideLabelOps(event) {
         if (!labelOps.contains(event.target) && event.target !== labelIcon) {
           labelOps.style.display = 'none';
         }
-      }
+      } {% endcomment %}
 
       // Attach event listeners
-      labelIcon.addEventListener('click', toggleLabelOps);
-      document.addEventListener('click', hideLabelOps);
+      {% comment %} labelIcon.addEventListener('click', toggleLabelOps); {% endcomment %}
+      {% comment %} document.addEventListener('click', hideLabelOps); {% endcomment %}
 
       function filterEmails() {
         // Get all checkboxes and their associated labels
@@ -2113,7 +2801,7 @@
       }
     </script>
     <script>
-      //pagination
+      {% comment %} //pagination
       const emailsPerPage = 50;
       let currentPage = 1;
       let totalEmails = document.querySelectorAll('.email_row_wrap').length;
@@ -2139,20 +2827,25 @@
             row.style.display = 'none'; // Hide the email row
           }
         });
-      }
+      } {% endcomment %}
 
       // Event Listeners for Pagination Buttons
       document.querySelector('.prev-page').addEventListener('click', () => {
+        startLoader();
+        const searchQuery = document.getElementById('search-input').value;
         const urlParams = new URLSearchParams(window.location.search);
         $.ajax({
-          url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page&section=" + urlParams.get('section'),
+          url: "{% url 'central_branch:navigate' %}?navigate_to=prev_page&section=" + urlParams.get('section') + '&query=' + searchQuery,
           type: "GET",
           success: function (response) {
             // Handle the response
+            stopLoader();
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
-            }
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+              }
           },
           error: function (error) {
             console.error("Error:", error);
@@ -2166,15 +2859,20 @@
       });
 
       document.querySelector('.next-page').addEventListener('click', () => {
+        startLoader();
         const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = document.getElementById('search-input').value;
         $.ajax({
-          url: "{% url 'central_branch:navigate' %}?navigate_to=next_page&section=" + urlParams.get('section'),
+          url: "{% url 'central_branch:navigate' %}?navigate_to=next_page&section=" + urlParams.get('section') + '&query=' + searchQuery,
           type: "GET",
           success: function (response) {
             // Handle the response
+            stopLoader();
             if (response.message == 'success') {
               $('#' + urlParams.get('section')).html("");
               $('#' + urlParams.get('section')).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();            
             }
           },
           error: function (error) {
@@ -2188,10 +2886,41 @@
         // }
       });
 
-      showEmailsForPage();
-      // {% comment %} updatePaginationInfo(); {% endcomment %}
+      {% comment %} showEmailsForPage(); {% endcomment %}
+      {% comment %} updatePaginationInfo(); {% endcomment %}
 
 
+    </script>
+
+    <script>
+      // Function to execute search
+      function executeSearch() {
+        const searchQuery = document.getElementById('search-input').value;
+        const section = new URLSearchParams(window.location.search).get('section');
+        if (searchQuery) {
+          startLoader();
+          $.ajax({
+            url: "{% url 'central_branch:mail' %}?section=" + section + "&query=" + searchQuery,  // URL pointing to your Django view
+            method: 'GET',
+            success: function (response) {
+              stopLoader();
+              // Append the returned HTML to the table body
+              $('#' + section).html("");
+              $('#' + section).append(response.html);
+              document.querySelector('.page-info').innerHTML = response.pg_range;
+              addEventListenerToCheckBox();
+            }
+          });
+        }
+      }
+      console.log("EDFS");
+    
+      // Handle Enter keypress in the input field
+      document.getElementById('search-input').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+          executeSearch();
+        }
+      });
     </script>
 
     <!-- file attachments -->
@@ -2279,141 +3008,9 @@
       }
     </script>
     <script>
+      // For the CC dropdown
       let customSelectedTags = [];
-
-      function customToggleDropdown() {
-        const dropdown = document.getElementById("customDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customUpdateTagContainer();
-        }
-      }
-
-      function customRemoveTag(index) {
-        customSelectedTags.splice(index, 1);
-        customUpdateTagContainer();
-      }
-
-      function customUpdateTagContainer() {
-        const tagContainer = document.getElementById('customTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        customSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'custom-tag';
-          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getCustomSelectedTags() {
-        return customSelectedTags;
-      }
-    </script>
-    <script>
-      let altSelectedTags = [];
-
-      function altToggleDropdown() {
-        const dropdown = document.getElementById("altDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altUpdateTagContainer();
-        }
-      }
-
-      function altRemoveTag(index) {
-        altSelectedTags.splice(index, 1);
-        altUpdateTagContainer();
-      }
-
-      function altUpdateTagContainer() {
-        const tagContainer = document.getElementById('altTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        altSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'alt-tag';
-          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getAltSelectedTags() {
-        return altSelectedTags;
-      }
-    </script>
-    <script>
-      // let uniqueSelectedTags = [];
-
-      function uniqueToggleDropdown() {
-        const dropdown = document.getElementById("uniqueDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function uniqueSelectOption(option) {
-        if (!uniqueSelectedTags.includes(option)) {
-          uniqueSelectedTags.push(option);
-          uniqueUpdateTagContainer();
-        }
-      }
-
-      function uniqueRemoveTag(index) {
-        uniqueSelectedTags.splice(index, 1);
-        uniqueUpdateTagContainer();
-      }
-
-      function uniqueUpdateTagContainer() {
-        const tagContainer = document.getElementById('uniqueTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        uniqueSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'unique-tag';
-          tagElement.innerHTML = `${tag} <span class="unique-remove-tag" onclick="uniqueRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.unique-dropdown-input') && !event.target.closest('.unique-dropdown-content')) {
-          document.getElementById("uniqueDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getUniqueSelectedTags() {
-        return uniqueSelectedTags;
-      }
-    </script>
-    <script>
-      // For the first dropdown
-      // let customSelectedTags = [];
-      let customAvailableOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+      let customAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
 
       function customToggleDropdown() {
         const dropdown = document.getElementById("customDropdown");
@@ -2459,9 +3056,51 @@
         });
       }
 
-      // For the second dropdown
-      // let altSelectedTags = [];
-      let altAvailableOptions = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
+            // Close dropdown when clicking outside of it
+            window.onclick = function (event) {
+        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+          document.getElementById("customDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getCustomSelectedTags() {
+
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'all_officers',
+          'Executive Panel (Branch Only)': 'eb_panel',
+          'Branch Ex-Com Members': 'excom_branch',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'scag_eb',
+          {% for session in recruitment_sessions %}
+          'Recruits of - {{session.session}}':'recruits_{{session.id}}',
+          {% endfor %}
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(customSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      function customClearAllTags() {
+      // Add all selected tags back to the available options
+      customAvailableOptions = customAvailableOptions.concat(customSelectedTags);
+
+      // Clear the selected tags array
+      customSelectedTags = [];
+
+      // Update both the dropdown and the tag container
+      customUpdateDropdown();
+      customUpdateTagContainer();
+    }
+      // For the BCC dropdown
+      let altSelectedTags = [];
+      let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
 
       function altToggleDropdown() {
         const dropdown = document.getElementById("altDropdown");
@@ -2507,10 +3146,53 @@
         });
       }
 
-      // For the third dropdown
-      let uniqueSelectedTags = [];
-      let uniqueAvailableOptions = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+        // Close dropdown when clicking outside of it
+        window.onclick = function (event) {
+        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+          document.getElementById("altDropdown").style.display = "none";
+        }
+      };
 
+      // Function to get selected tags
+      function getAltSelectedTags() {
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'all_officers',
+          'Executive Panel (Branch Only)': 'eb_panel',
+          'Branch Ex-Com Members': 'excom_branch',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'scag_eb',
+          {% for session in recruitment_sessions %}
+          'Recruits of - {{session.session}}':'recruits_{{session.id}}',
+          {% endfor %}
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(altSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      function altClearAllTags() {
+        // Add all selected tags back to the available options
+        altAvailableOptions = altAvailableOptions.concat(altSelectedTags);
+
+        // Clear the selected tags array
+        altSelectedTags = [];
+
+        // Update both the dropdown and the tag container
+        altUpdateDropdown();
+        altUpdateTagContainer();
+      }
+
+      // For the Send Email to dropdown
+      let uniqueSelectedTags = [];
+      let uniqueAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
+
+      //toggles dropdown display
       function uniqueToggleDropdown() {
         const dropdown = document.getElementById("uniqueDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
@@ -2518,7 +3200,9 @@
 
       function uniqueSelectOption(option) {
         if (!uniqueSelectedTags.includes(option)) {
+          //adds option to array
           uniqueSelectedTags.push(option);
+          //removes option from dropdown
           uniqueAvailableOptions = uniqueAvailableOptions.filter(item => item !== option);
           uniqueUpdateDropdown();
           uniqueUpdateTagContainer();
@@ -2527,6 +3211,7 @@
 
       function uniqueRemoveTag(index) {
         const removedTag = uniqueSelectedTags.splice(index, 1)[0];
+        //adds removed option to dropdown
         uniqueAvailableOptions.push(removedTag);
         uniqueUpdateDropdown();
         uniqueUpdateTagContainer();
@@ -2555,7 +3240,52 @@
         });
       }
 
+            // Close dropdown when clicking outside of it
+            window.onclick = function (event) {
+        if (!event.target.matches('.unique-dropdown-input') && !event.target.closest('.unique-dropdown-content')) {
+          document.getElementById("uniqueDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getUniqueSelectedTags() {
+
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'all_officers',
+          'Executive Panel (Branch Only)': 'eb_panel',
+          'Branch Ex-Com Members': 'excom_branch',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'scag_eb',
+          {% for session in recruitment_sessions %}
+          'Recruits of - {{session.session}}':'recruits_{{session.id}}',
+          {% endfor %}
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(uniqueSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      function uniqueClearAllTags() {
+        // Add all selected tags back to the available options
+        uniqueAvailableOptions = uniqueAvailableOptions.concat(uniqueSelectedTags);
+
+        // Clear the selected tags array
+        uniqueSelectedTags = [];
+
+        // Update both the dropdown and the tag container
+        uniqueUpdateDropdown();
+        uniqueUpdateTagContainer();
+      }
       function clearExistingData() {
+        uniqueClearAllTags();
+        customClearAllTags();
+        altClearAllTags();
         const uniqueTagContainer = document.getElementById('uniqueTagContainer');
         uniqueTagContainer.innerHTML = '';
         const altTagContainer = document.getElementById('altTagContainer');
@@ -2602,6 +3332,156 @@
         modal2.style.transform = 'translateY(-50px)';
         modal2.style.zIndex = '-100';
         modal2.style.opacity = '0';
+      }
+
+      // Function to start the loader
+      function startLoader() {
+          const loaderContainer = document.querySelector('.container');
+          const box = document.querySelector('.loaderBox');
+          loaderContainer.style.display = 'block';
+          box.style.display = 'block';
+      }
+
+      // Function to stop the loader
+      function stopLoader() {
+          const loaderContainer = document.querySelector('.container');
+          const box = document.querySelector('.loaderBox');
+          loaderContainer.style.display = 'none';
+          box.style.display = 'none';
+      }
+    </script>
+    <script>
+      function scheduleEdit(element, id,status){
+      // Get the modal
+      var scheduleModal = document.getElementById("scheduleModal");
+      var id_input = scheduleModal.querySelector('input[name="change_id"]');
+      id_input.value = id;
+      var restartBtnContainer = scheduleModal.querySelector('.restart_btn_container');
+      var pauseBtnContainer = scheduleModal.querySelector('.pause_btn_container');
+      console.log("Restart Button:", restartBtnContainer, "Pause Button:", pauseBtnContainer);
+
+      if (restartBtnContainer && pauseBtnContainer) {
+          if (status === "Scheduled") {
+              pauseBtnContainer.style.display = 'block';
+              restartBtnContainer.style.display = 'none';
+          } else if (status === "Paused") {
+              restartBtnContainer.style.display = 'block';
+              pauseBtnContainer.style.display = 'none';
+          }
+      } else {
+          console.error("Could not find restart or resume button containers.");
+      }
+      scheduleModal.style.transform = 'translateY(0px)';
+      scheduleModal.style.zIndex = '103100';
+      scheduleModal.style.opacity = '1';
+    
+      // Get the <span> element that closes the modal
+      var closeBtn = document.getElementsByClassName("scheduleModalClosebtn")[0];
+    
+      // When the user clicks on <span> (x), close the modal
+      closeBtn.onclick = function () {
+        scheduleModal.style.transform = 'translateY(-50px)';
+        scheduleModal.style.zIndex = '-100';
+        scheduleModal.style.opacity = '0';
+      }
+    }
+
+      function ConfirmationModal(element){
+      hideScheduleModal();
+      // Get the modal
+      var confirmModal = document.getElementById("confirm_modal");
+      confirmModal.style.transform = 'translateY(0px)';
+      confirmModal.style.zIndex = '103100';
+      confirmModal.style.opacity = '1';
+    
+      // Get the <span> element that closes the modal
+      var closeBtn = document.getElementsByClassName("confirmModalClosebtn")[0];
+      var dateTime = document.querySelector('input[name="schedule-time"]').value;
+      var unique_id = document.querySelector('input[name="change_id"]').value;
+      var mssg = document.querySelector('h5[name="schedule_msg"]');
+      var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      if(element.name != 'date_change') {
+        mssg.innerHTML = 'Updating...';
+
+        $.ajax({
+          url: "{% url 'central_branch:request_update_email_schedule' %}",  // URL pointing to your Django view
+          method: 'POST',
+          data: {
+            'id':unique_id,
+            'status':element.name
+          },
+          headers: {
+            "X-CSRFToken": csrf
+          },
+          success: function (response) {
+            // Append the returned HTML to the table body
+            mssg.innerHTML = response.message;
+  
+            startLoader();
+            $.ajax({
+              url: "{% url 'central_branch:request_scheduled_email' %}",
+              method: 'GET',
+              success: function (response) {
+                stopLoader();
+                // Append the returned HTML to the table body
+                $('#scheduled_mail').html("");
+                $('#scheduled_mail').append(response.html);
+                document.querySelector('.page-info').innerHTML = response.pg_range;
+              }
+            });
+          }
+        });
+      }
+      else {
+        mssg.innerHTML = 'Scheduling...';
+
+        $.ajax({
+          url: "{% url 'central_branch:request_update_email_schedule' %}",  // URL pointing to your Django view
+          method: 'POST',
+          data: {
+            'id':unique_id,
+            'new_schedule_datetime':dateTime
+          },
+          headers: {
+            "X-CSRFToken": csrf
+          },
+          success: function (response) {
+            // Append the returned HTML to the table body
+            mssg.innerHTML = response.message;
+  
+            startLoader();
+            $.ajax({
+              url: "{% url 'central_branch:request_scheduled_email' %}",
+              method: 'GET',
+              success: function (response) {
+                stopLoader();
+                // Append the returned HTML to the table body
+                $('#scheduled_mail').html("");
+                $('#scheduled_mail').append(response.html);
+                document.querySelector('.page-info').innerHTML = response.pg_range;
+              }
+            });
+          }
+        });
+      }
+
+      
+    
+      // When the user clicks on <span> (x), close the modal
+      closeBtn.onclick = function () {
+        confirmModal.style.transform = 'translateY(-50px)';
+        confirmModal.style.zIndex = '-100';
+        confirmModal.style.opacity = '0';
+      }
+    }
+    
+      function hideScheduleModal() {
+      var scheduleModal = document.getElementById("scheduleModal");
+    
+      scheduleModal.style.transform = 'translateY(-50px)';
+      scheduleModal.style.zIndex = '-100';
+      scheduleModal.style.opacity = '0';
       }
     </script>
     {% block common_js %}

@@ -11,7 +11,7 @@ from django.core.files.base import ContentFile
 import json,os
 from datetime import datetime
 from insb_port import settings
-from public_relation_team.models import Email_Draft
+from central_branch.models import Email_Draft
 from system_administration.google_mail_handler import GmailHandler
 from googleapiclient.discovery import build
 from django.template.loader import render_to_string
@@ -31,7 +31,6 @@ class PRT_Email_System:
         
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
-        
         substrings = single_emails.split(',')
         
         for email in substrings:
@@ -39,7 +38,9 @@ class PRT_Email_System:
             single_emails_final_list.extend(email.split())
 
         # single_emails_final_list.extend(single_emails)
- 
+        to_email_list = to_email_list[0].split(',')
+        cc_email_list = cc_email_list[0].split(',')
+        bcc_email_list = bcc_email_list[0].split(',')
         
         # Get the emails of to_email_list 
         to_email_final_list=[]
@@ -48,17 +49,17 @@ class PRT_Email_System:
             for email in to_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_general_members_of_branch()
+                    general_members=Branch.load_all_members_of_branch()
                     for member in general_members:
-                        if member.email_nsu:
+                        if member.email_nsu and member.email_nsu != 'None':
                             to_email_final_list.append(member.email_nsu) 
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
-                        if officer.email_nsu:
+                        if officer.email_nsu and officer.email_nsu != 'None':
                             to_email_final_list.append(officer.email_nsu)
-                        if officer.email_ieee:
+                        if officer.email_ieee and officer.email_ieee != 'None':
                             to_email_final_list.append(officer.email_ieee)
                         
                 elif email=="eb_panel":
@@ -67,9 +68,9 @@ class PRT_Email_System:
                     for eb in eb_panel:
                         #if is faculty then skip
                         if not eb.position.is_faculty:
-                            if eb.email_nsu:
+                            if eb.email_nsu and eb.email_nsu != 'None':
                                 to_email_final_list.append(eb.email_nsu)
-                            if eb.email_ieee:
+                            if eb.email_ieee and eb.email_ieee != 'None':
                                 to_email_final_list.append(eb.email_ieee)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
@@ -78,14 +79,14 @@ class PRT_Email_System:
                     for eb in eb_panel:
                         #If is faculty then skip
                         if not eb.position.is_faculty:
-                            if eb.email_nsu:
+                            if eb.email_nsu and eb.email_nsu != 'None':
                                 to_email_final_list.append(eb.email_nsu)
-                            if eb.email_ieee:
+                            if eb.email_ieee and eb.email_ieee != 'None':
                                 to_email_final_list.append(eb.email_ieee)
                     for excom in branch_ex_com:
-                        if excom.member.email_nsu:
+                        if excom.member.email_nsu and excom.member.email_nsu != 'None':
                             to_email_final_list.append(excom.member.email_nsu)
-                        if excom.member.email_ieee:
+                        if excom.member.email_ieee and excom.member.email_ieee != 'None':
                             to_email_final_list.append(excom.member.email_ieee)
                     pass
                 elif email=="scag_eb":
@@ -98,12 +99,12 @@ class PRT_Email_System:
                                 if ex.member is not None:
                                     #If is faculty then skip
                                     if not ex.member.position.is_faculty:
-                                        if ex.member.email_ieee:
+                                        if ex.member.email_ieee and ex.member.email_ieee != 'None':
                                             to_email_final_list.append(ex.member.email_ieee)
-                                        if ex.member.email_nsu:
+                                        if ex.member.email_nsu and ex.member.email_ieee != 'None':
                                             to_email_final_list.append(ex.member.email_nsu)
                                 else:
-                                    if ex.ex_member.email:
+                                    if ex.ex_member.email and ex.ex_member.email != 'None':
                                         to_email_final_list.append(ex.ex_member.email)
         # Removing the mails which are common in single email list and to email list
         for email in to_email_final_list:
@@ -111,7 +112,6 @@ class PRT_Email_System:
                 single_emails_final_list.remove(email)
         # concatation of two lists
         to_email_final_list.extend(single_emails_final_list)
-            
         # Get all the cc_email_list
         cc_email_final_list=[]
         # check first if the list has null value in list, it means that there was no email selected
@@ -119,26 +119,26 @@ class PRT_Email_System:
             for email in cc_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_general_members_of_branch()
+                    general_members=Branch.load_all_members_of_branch()
                     for member in general_members:
-                        if member.email_nsu:
+                        if member.email_nsu and member.email_nsu != 'None':
                             cc_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
-                        if officer.email_nsu:
+                        if officer.email_nsu and officer.email_nsu != 'None':
                             cc_email_final_list.append(officer.email_nsu)
-                        if officer.email_ieee:
+                        if officer.email_ieee and officer.email_ieee != 'None':
                             cc_email_final_list.append(officer.email_ieee)
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            if eb.email_ieee:
+                            if eb.email_ieee and eb.email_ieee != 'None':
                                 cc_email_final_list.append(eb.email_ieee)
-                            if eb.email_nsu:
+                            if eb.email_nsu and eb.email_nsu != 'None':
                                 cc_email_final_list.append(eb.email_nsu)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
@@ -146,14 +146,14 @@ class PRT_Email_System:
                     branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            if eb.email_ieee:
+                            if eb.email_ieee and eb.email_ieee != 'None':
                                 cc_email_final_list.append(eb.email_ieee)
-                            if eb.email_nsu:
+                            if eb.email_nsu and eb.email_ieee != 'None':
                                 cc_email_final_list.append(eb.email_nsu)
                     for excom in branch_ex_com:
-                        if excom.member.email_ieee:
+                        if excom.member.email_ieee and excom.member.email_ieee != 'None':
                             cc_email_final_list.append(excom.member.email_ieee)
-                        if excom.member.email_nsu:
+                        if excom.member.email_nsu and excom.member.email_nsu != 'None':
                             cc_email_final_list.append(excom.member.email_nsu)
                     pass
                 elif email=="scag_eb":
@@ -165,12 +165,12 @@ class PRT_Email_System:
                             for ex in ex_com:
                                 if ex.member is not None:
                                     if not ex.member.position.is_faculty:
-                                        if ex.member.email_ieee:
+                                        if ex.member.email_ieee and ex.member.email_ieee != 'None':
                                             cc_email_final_list.append(ex.member.email_ieee)
-                                        if ex.member.email_nsu:
+                                        if ex.member.email_nsu and ex.member.email_nsu != 'None':
                                             cc_email_final_list.append(ex.member.email_nsu)
                                 else:
-                                    if ex.ex_member.email:
+                                    if ex.ex_member.email and ex.ex_member.email != 'None':
                                         cc_email_final_list.append(ex.ex_member.email)
         
         # get all bcc_email_list
@@ -180,26 +180,26 @@ class PRT_Email_System:
             for email in bcc_email_list:
                 if email=="general_members":
                     # get general member emails
-                    general_members=Branch.load_all_active_general_members_of_branch()
+                    general_members=Branch.load_all_members_of_branch()
                     for member in general_members:
-                        if member.email_nsu:
+                        if member.email_nsu and member.email_nsu != 'None':
                             bcc_email_final_list.append(member.email_nsu)
                 elif email=="all_officers":
                     # get all officers email
                     branch_officers=Branch.load_all_officers_of_branch()
                     for officer in branch_officers:
-                        if officer.email_nsu:
+                        if officer.email_nsu and officer.email_nsu != 'None':
                             bcc_email_final_list.append(officer.email_nsu)
-                        if officer.email_ieee:
+                        if officer.email_ieee and officer.email_ieee != 'None':
                             bcc_email_final_list.append(officer.email_ieee)
                 elif email=="eb_panel":
                     # get all eb panel email
                     eb_panel=Branch.load_branch_eb_panel()
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            if eb.email_ieee:
+                            if eb.email_ieee and eb.email_ieee != 'None':
                                 bcc_email_final_list.append(eb.email_ieee)
-                            if eb.email_nsu:
+                            if eb.email_nsu and eb.email_nsu != 'None':
                                 bcc_email_final_list.append(eb.email_nsu)
                 elif email=="excom_branch":
                     # get all the email of branch excom. this means all branch EBs + SC & AG chairs(only)
@@ -207,14 +207,14 @@ class PRT_Email_System:
                     branch_ex_com=PortData.get_branch_ex_com_from_sc_ag(request=request)
                     for eb in eb_panel:
                         if not eb.position.is_faculty:
-                            if eb.email_ieee:
+                            if eb.email_ieee and eb.email_ieee != 'None':
                                 bcc_email_final_list.append(eb.email_ieee)
-                            if eb.email_nsu:
-                                bcc_email_final_list.append(eb.member.email_nsu)
+                            if eb.email_nsu and eb.email_nsu != 'None':
+                                bcc_email_final_list.append(eb.email_nsu)
                     for excom in branch_ex_com:
-                        if excom.member.email_ieee:
+                        if excom.member.email_ieee and excom.member.email_ieee != 'None':
                             bcc_email_final_list.append(excom.member.email_ieee)
-                        if excom.member.email_nsu:
+                        if excom.member.email_nsu and excom.member.email_nsu != 'None':
                             bcc_email_final_list.append(excom.member.email_nsu)
                     pass
                 elif email=="scag_eb":
@@ -226,12 +226,12 @@ class PRT_Email_System:
                             for ex in ex_com:
                                 if ex.member is not None:
                                     if not ex.member.position.is_faculty:
-                                        if ex.member.email_ieee:
+                                        if ex.member.email_ieee and ex.member.email_ieee != 'None':
                                             bcc_email_final_list.append(ex.member.email_ieee)
-                                        if ex.member.email_nsu:
+                                        if ex.member.email_nsu and ex.member.email_nsu != 'None':
                                             bcc_email_final_list.append(ex.member.email_nsu)
                                 else:
-                                    if ex.ex_member.email:
+                                    if ex.ex_member.email and ex.ex_member.email != 'None':
                                         bcc_email_final_list.append(ex.ex_member.email)
     
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
@@ -387,9 +387,13 @@ class PRT_Email_System:
                             # Attach the main message body
                             message.attach(MIMEText(mail_body, 'html'))
                 
-                            for attachment in attachment:
-                                content_file = ContentFile(attachment.read())
-                                content_file.name = attachment.name
+                            for file in attachment:
+                                content_file = ContentFile(file.read())
+                                content_file.name = file.name
+
+                                # Reset the file pointer to the beginning
+                                file.seek(0)
+
                                 part = MIMEBase('application', 'octet-stream')
                                 part.set_payload(content_file.read())
                                 encoders.encode_base64(part)
@@ -427,12 +431,13 @@ class PRT_Email_System:
         '''This function sends the schedules email on time '''
         # try:
         drafts = {}
+        print(to_email_list_final)
 
         if len(to_email_list_final)>=40 and len(bcc_email_list_final)>=40:
             count = 1
             while len(to_email_list_final)!=0 and len(bcc_email_list_final)!=0:
                 # print(f"to_email_list >= {len(to_email_list)}  and bcc_email_list>={len(bcc_email_list)}")
-                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final[:40], cc_email_list_final, bcc_email_list_final[:40], subject, mail_body, attachment)
                 if drafts[count] is not None:
                     to_email_list_final = to_email_list_final[40:]
                     bcc_email_list_final = bcc_email_list_final[40:]
@@ -443,10 +448,11 @@ class PRT_Email_System:
         if len(to_email_list_final) >= 40:
             count = 1
             while len(to_email_list_final)!=0:
+                print(count)
                 # print(f"to_email_list only more than {len(to_email_list)}")
-                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final[:40], cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
                 if drafts[count] is not None:
-                    to_email_list_final = to_email_list_final[5:]
+                    to_email_list_final = to_email_list_final[40:]
                     count += 1
                 else:
                     return False
@@ -455,7 +461,7 @@ class PRT_Email_System:
             count = 1
             while len(bcc_email_list_final)!=0:
                 # print(f"bcc_email_list only more than {len(bcc_email_list)}")
-                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment)
+                drafts[count] = PRT_Email_System.send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final[:40], subject, mail_body, attachment)
                 if drafts[count] is not None:
                     bcc_email_list_final = bcc_email_list_final[40:]
                     count += 1
@@ -482,7 +488,7 @@ class PRT_Email_System:
         
         unique_task_name_json = json.dumps(unique_task_name)
 
-        Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts)
+        Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts,status='Scheduled')
     
         #Creating a periodic schedule for the email, where clockedschedules returns a tuple with clocked instance on 0 index
         #and clocked argument is foregined key with ClockedScheudle          
@@ -520,13 +526,19 @@ class PRT_Email_System:
             message["Bcc"] = ','.join(bcc_email_list_final)
             message["Subject"] = subject
 
+            print(message['To'])
+
             # Attach the main message body
             message.attach(MIMEText(mail_body, 'html'))
 
             if attachment:
-                for attachment in attachment:
-                    content_file = ContentFile(attachment.read())
-                    content_file.name = attachment.name
+                for file in attachment:
+                    content_file = ContentFile(file.read())
+                    content_file.name = file.name
+
+                    # Reset the file pointer to the beginning
+                    file.seek(0)
+
                     part = MIMEBase('application', 'octet-stream')
                     part.set_payload(content_file.read())
                     encoders.encode_base64(part)

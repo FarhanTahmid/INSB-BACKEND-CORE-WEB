@@ -1,10 +1,17 @@
 import base64
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from django.core.files.base import ContentFile
+import mimetypes
 from django.template.loader import render_to_string
 import json
 import logging
 import traceback
 from django.http import JsonResponse
 from django.shortcuts import render,redirect,get_object_or_404
+from django_celery_beat.models import ClockedSchedule
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from django.contrib import messages
@@ -13,11 +20,14 @@ from central_events.models import Events, Google_Calendar_Attachments, InterBran
 from content_writing_and_publications_team.forms import Content_Form
 from content_writing_and_publications_team.renderData import ContentWritingTeam
 from events_and_management_team.renderData import Events_And_Management_Team
+from googleapiclient.http import BatchHttpRequest
 from graphics_team.models import Graphics_Banner_Image, Graphics_Link
+from django_celery_beat.models import PeriodicTask
 from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from .models import Email_Draft
 from public_relation_team.renderData import PRT_Data
 from public_relation_team.render_email import PRT_Email_System
 from system_administration.google_mail_handler import GmailHandler
@@ -61,9 +71,11 @@ from django.views import View
 from users.renderData import member_login_permission
 from task_assignation.models import *
 import re
+from email.utils import parsedate_to_datetime
 
 # Create your views here.
 logger=logging.getLogger(__name__)
+service = None
 
 @login_required
 @member_login_permission
@@ -2513,6 +2525,7 @@ def manage_view_access(request):
                     manage_web_access=False
                     manage_award_access=False
                     manage_custom_notification_access = False
+                    manage_email_access = False
 
                     # Getting values from check box
                     
@@ -2536,6 +2549,8 @@ def manage_view_access(request):
                         manage_award_access=True
                     if(request.POST.get('manage_custom_notification_access')):
                         manage_custom_notification_access=True
+                    if(request.POST.get('manage_email_access')):
+                        manage_email_access=True
                     
                     # ****The passed keys must match the field name in the models. otherwise it wont update access
                     if(Branch.update_member_to_branch_view_access(request=request,ieee_id=ieee_id,kwargs={'create_event_access':create_event_access,
@@ -2544,7 +2559,8 @@ def manage_view_access(request):
                                                             'create_team_task_access':create_team_task_access,
                                                             'create_panels_access':create_panels_access,'panel_memeber_add_remove_access':panel_memeber_add_remove_access,
                                                             'team_details_page':team_details_page,'manage_web_access':manage_web_access,'manage_award_access':manage_award_access,
-                                                            'manage_custom_notification_access':manage_custom_notification_access})):
+                                                            'manage_custom_notification_access':manage_custom_notification_access,
+                                                            'manage_email_access':manage_email_access})):
                         return redirect('central_branch:manage_access')
                     
                 if(request.POST.get('add_member_to_access')):
@@ -2599,7 +2615,7 @@ def event_control_homepage(request):
             'has_access_to_create_event':has_access_to_create_event,
             'is_branch':is_branch,
             'all_event_years':all_event_years,
-            'common_access':Branch_View_Access.common_access(request.user.username)
+            'common_access':Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username)
             
         }
 
@@ -5463,39 +5479,68 @@ def task_leaderboard(request):
 @login_required
 @member_login_permission
 def mail(request):
-    # try:
-        user = request.user
-        has_access=(Access_Render.team_co_ordinator_access(team_id=PRT_Data.get_team_id(),username=user.username) or Access_Render.system_administrator_superuser_access(user.username) or Access_Render.system_administrator_staffuser_access(user.username) or Access_Render.eb_access(user.username)
-                or PRT_Data.prt_manage_email_access(user.username))
+
+    try:
+        has_access=Branch_View_Access.get_manage_email_access(request)
         
         if has_access:
+            error_message = ''
 
             if request.session.get('pg_token') and not request.GET.get('navigate_to'):
                 del request.session['pg_token']
+                if request.GET.get('pg_range'):
+                    del request.session['pg_range']
                 request.session.modified = True
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 section = request.GET.get('section')
                 tokens = request.session.get('pg_token')
+                print(tokens)
                 if tokens:
                     pg_token = tokens[-1]
                 else:
                     pg_token = ''
 
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
-                # try:
-                service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-                print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        error_message = 'Google Authorization Required! Please contact Web Team'
+                        print("NOT OK")
+                        return None
+                    # try:
+                    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+
+                query = request.GET.get('query')
+                thread_data = []
 
                 if section == 'inbox':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section == 'sent':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} in:sent -label:dev-mail",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='dev_mail':
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
+                    if Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username):
+                        if query:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} label:dev-mail",pageToken=pg_token).execute()
+                        else:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
+                    else:
+                        if query:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
+                        else:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
+                elif section =='starred':
+                    if query:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} is:starred",pageToken=pg_token).execute()
+                    else:
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken=pg_token).execute()
                 else:
                     threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 
@@ -5504,28 +5549,18 @@ def mail(request):
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
                         request.session.modified = True
+                    request.session['pg_range'] = '1 - 10'
 
-                thread_data = []
-
-                for thread in threads['threads']:
-                    thread_id = thread['id']
-
-                    # Fetch the required details for each message
-                    thread_details = service.users().threads().get(
-                        userId='me',
-                        id=thread_id,
-                        format='metadata',
-                        metadataHeaders=['From', 'Subject', 'Date']
-                    ).execute()
-                    
-                    messagess = thread_details.get('messages', [])
+                # Function to handle each response from the batch request
+                def handle_batch_response(request_id, response, exception):
+                    messagess = response.get('messages', [])
 
                     if messagess:
                         last_message = messagess[len(messagess)-1]  # Get the last message in the thread
                         headers = last_message['payload'].get('headers', [])
                         snippet = last_message.get('snippet', '')
                         labels = last_message.get('labelIds', [])
-                        message_id = thread['id']
+                        message_id = last_message['threadId']
 
                         # Extract relevant fields from headers
                         header_dict = {header['name']: header['value'] for header in headers}
@@ -5534,6 +5569,11 @@ def mail(request):
                         subject = '(No Subject)' if subject == '' else subject
                         date = header_dict.get('Date')
 
+                        if date:
+                            date = parsedate_to_datetime(date)
+                        else:
+                            date = None
+
                         thread_data.append({
                             'message_id':message_id,
                             'sender': sender,
@@ -5541,7 +5581,35 @@ def mail(request):
                             'date': date,
                             'labels': labels,
                             'snippet': snippet,
+                            'internal_date':int(last_message['internalDate'])
                         })
+
+                # Create a batch request
+                batch = BatchHttpRequest(callback=handle_batch_response)
+                
+
+                    # if exception is not None:
+                    #     print(f'Failed to delete draft with ID {request_id}. Error: {exception}')
+                    # else:
+                    #     print(f'Deleted draft with ID: {request_id}')
+
+                if threads.get('threads'):
+                    for thread in threads['threads']:
+                        thread_id = thread['id']
+
+                        # Fetch the required details for each message
+                        batch.add(service.users().threads().get(
+                            userId='me',
+                            id=thread_id,
+                            format='metadata',
+                            metadataHeaders=['From', 'Subject', 'Date', 'internalDate']
+                        ), request_id=thread_id)
+
+                batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
+
+                batch.execute()
+
+                thread_data = sorted(thread_data, key=lambda x: x['internal_date'], reverse=True)
 
                 # except Exception as e:
                 #     print(e)
@@ -5550,13 +5618,14 @@ def mail(request):
                     
                 context={
                     'threads':thread_data,
+                    'error_message':error_message
                 }
                 
                 # Render the row.html template with the data
                 html = render(request, 'Email/email_row.html', context).content.decode('utf-8')
                 
                 # Return the HTML as a JSON response
-                return JsonResponse({'html': html,'nextPageToken':threads.get('nextPageToken'), 'message':'success'})
+                return JsonResponse({'html': html,'nextPageToken':threads.get('nextPageToken'),'pg_range':request.session['pg_range'], 'message':'success'})
             
             else:
                 
@@ -5567,49 +5636,51 @@ def mail(request):
                 under_maintainance = system.objects.all().first()
 
                 section = request.GET.get('section')
+                thread_data = []
 
                 credentials = GmailHandler.get_credentials(request)
                 if not credentials:
                     print("NOT OK")
-                    return None
+                    error_message = 'Google Authorization Required! Please contact Web Team'
+                    return render(request,'Email/compose_email.html',{'all_sc_ag':sc_ag,
+                                                                      'user_data':user_data,
+                                                                      'section':section,
+                                                                      'error_message':error_message})
                 try:
-                    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-                    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    print(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                     if section == 'inbox':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
                     elif section == 'sent':
                         threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken='').execute()
-                    elif section =='dev_mail':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
+                    elif section == 'dev_mail':
+                        if Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username):
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
+                        else:
+                            threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
+                    elif section =='starred':
+                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred -label:dev-mail",pageToken='').execute()
                     else:
+                        section = 'inbox'
                         threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
 
-                    thread_data = []
 
                     if 'nextPageToken' in threads:
                         request.session['pg_token'] = [threads['nextPageToken']]
+                        request.session['pg_range'] = '1 - 10'
                         request.session.modified = True
-
-                    for thread in threads['threads']:
-                        thread_id = thread['id']
-
-                        # Fetch the required details for each message
-                        thread_details = service.users().threads().get(
-                            userId='me',
-                            id=thread_id,
-                            format='metadata',
-                            metadataHeaders=['From', 'Subject', 'Date']
-                        ).execute()
                         
-                        messagess = thread_details.get('messages', [])
+                    # Function to handle each response from the batch request
+                    def handle_batch_response(request_id, response, exception):
+                        messagess = response.get('messages', [])
 
                         if messagess:
                             last_message = messagess[len(messagess)-1]  # Get the last message in the thread
                             headers = last_message['payload'].get('headers', [])
                             snippet = last_message.get('snippet', '')
                             labels = last_message.get('labelIds', [])
-                            message_id = thread['id']
+                            message_id = last_message['threadId']
 
                             # Extract relevant fields from headers
                             header_dict = {header['name']: header['value'] for header in headers}
@@ -5618,6 +5689,11 @@ def mail(request):
                             subject = '(No Subject)' if subject == '' else subject
                             date = header_dict.get('Date')
 
+                            if date:
+                                date = parsedate_to_datetime(date)
+                            else:
+                                date = None
+
                             thread_data.append({
                                 'message_id':message_id,
                                 'sender': sender,
@@ -5625,31 +5701,65 @@ def mail(request):
                                 'date': date,
                                 'labels': labels,
                                 'snippet': snippet,
+                                'internal_date':int(last_message['internalDate'])
                             })
 
+                    # Create a batch request
+                    batch = BatchHttpRequest(callback=handle_batch_response)
+                    
+
+                        # if exception is not None:
+                        #     print(f'Failed to delete draft with ID {request_id}. Error: {exception}')
+                        # else:
+                        #     print(f'Deleted draft with ID: {request_id}')
+
+                    if threads.get('threads'):
+                        for thread in threads['threads']:
+                            thread_id = thread['id']
+
+                            # Fetch the required details for each message
+                            batch.add(service.users().threads().get(
+                                userId='me',
+                                id=thread_id,
+                                format='metadata',
+                                metadataHeaders=['From', 'Subject', 'Date', 'internalDate']
+                            ), request_id=thread_id)
+
+                    batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
+
+                    batch.execute()
+
+                    thread_data = sorted(thread_data, key=lambda x: x['internal_date'], reverse=True)
+                            
+                        
                 except Exception as e:
                     print(e)
                     print(f'Failed to create service instance for gmail')
                                                 
-                    
                 context={
                     'all_sc_ag':sc_ag,
                     'user_data':user_data,
+                    'section':section,
                     'media_url':settings.MEDIA_URL,
                     'recruitment_sessions':recruitment_sessions,
                     'under_maintenance':under_maintainance,
-                    'threads':thread_data
+                    'threads':thread_data,
+                    'error_message':error_message,
+                    'dev_access':Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username)
                 }
                 return render(request,'Email/compose_email.html',context)
         else:
+            sc_ag=PortData.get_all_sc_ag(request=request)
+            current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+            user_data=current_user.getUserData() #getting user data as dictionary file
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
 
             
-    # except Exception as e:
-    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    #     messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
-    #     return cv.custom_500(request)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
+        return custom_500(request)
 
 def extract_name_and_email(from_header):
     # Use regular expression to extract name and email
@@ -5664,95 +5774,168 @@ def extract_name_and_email(from_header):
     
     return name, email
 
+@login_required
+@member_login_permission
 def view_mail(request, mail_id):
 
-    credentials = GmailHandler.get_credentials(request)
-    if not credentials:
-        print("NOT OK")
-        return None
-    # try:
-    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-    print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+    try:
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
 
-    thread_data = []
+        has_access=Branch_View_Access.get_manage_email_access(request)
 
-    thread_id = mail_id
+        if has_access:
+            credentials = GmailHandler.get_credentials(request)
+            if not credentials:
+                print("NOT OK")
+                return None
+            service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            print(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
-    # Fetch the required details for each message
-    thread_details = service.users().threads().get(
-        userId='me',
-        id=thread_id,
-        format='full',
-    ).execute()
-    
-    messagess = thread_details.get('messages', [])
+            thread_data = []
 
-    if messagess:
-        last_message = messagess[len(messagess)-1]  # Get the last message in the thread
-        headers = last_message['payload'].get('headers', [])
-        body = ''
-        # Check if the message has a 'payload' and 'parts'
-        if 'parts' in last_message['payload']:
-            def extract_parts(part):
-                """ Recursively extract parts from a message """
-                parts = []
-                mime_type = part['mimeType']
-                print(mime_type)
-                
-                if mime_type == 'text/plain' or mime_type == 'text/html':
-                    data = part['body'].get('data')
-                    if data:
-                        decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
-                        parts.append({'mimeType': mime_type, 'content': decoded_data})
-                elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
-                    for subpart in part.get('parts', []):
-                        parts.extend(extract_parts(subpart))
+            thread_id = mail_id
 
-                return parts
+            # Fetch the required details for each message
+            thread_details = service.users().threads().get(
+                userId='me',
+                id=thread_id,
+                format='full',
+            ).execute()
             
-        
-            #Start extraction from the root message part
-            email_parts = extract_parts(last_message['payload'])
-            
-            # Separate HTML and plain text
-            body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/html'), None)
-            # plain_text_body = next((part['content'] for part in email_parts if part['mimeType'] == 'text/plain'), None)
-            
+            messagess = thread_details.get('messages', [])
+
+            if messagess:
+                for i in range(len(messagess),0,-1):
+                    last_message = messagess[i-1]  # Get the last message in the thread
+                    headers = last_message['payload'].get('headers', [])
+                    body = ''
+                    files = []
+                    # Check if the message has a 'payload' and 'parts'
+                    if 'parts' in last_message['payload']:
+                        def extract_parts(part):
+                            """ Recursively extract parts from a message """
+                            parts = []
+                            mime_type = part['mimeType']
+                            print(mime_type)
+                            
+                            if mime_type == 'text/plain' or mime_type == 'text/html':
+                                data = part['body'].get('data')
+                                if data:
+                                    decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
+                                    parts.append({'mimeType': mime_type, 'content': decoded_data})
+                            elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
+                                for subpart in part.get('parts', []):
+                                    parts.extend(extract_parts(subpart))
+                                    
+                            # Check if the part is an attachment
+                            elif part.get('filename'):
+                                attachment_id = part['body'].get('attachmentId')
+                                if attachment_id:
+
+                                    # Add the attachment URL to parts
+                                    files.append({
+                                        'msg_id':last_message['id'],
+                                        'mimeType': mime_type,
+                                        'filename': part.get('filename'),
+                                        'attachment_id': attachment_id
+                                    })
+
+                            return parts
+                        
+                    
+                        #Start extraction from the root message part
+                        email_parts = extract_parts(last_message['payload'])
+                        
+                        # Separate HTML and plain text
+                        content_parts = {part['mimeType']: part.get('content') for part in email_parts}
+                        body = content_parts.get('text/html')
+                        plain_text_body = content_parts.get('text/plain')
+                        # # Remove previous replies (common patterns to strip off replies)
+                        # body = re.split(r"(On\s.*wrote:)", body)[0]
+
+                        # # You can also strip off quoted text that starts with '>'
+                        # body = re.sub(r'(>.*\n)', '', body)
+
+                        if body == None:
+                            # # Remove previous replies (common patterns to strip off replies)
+                            # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
+
+                            # # You can also strip off quoted text that starts with '>'
+                            # plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
+                            body = plain_text_body
+                        
+                    else:
+                        # If there are no 'parts', it means the message is simple and not multipart
+                        if last_message['payload']['mimeType'] == 'text/plain':
+                            body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+                        elif last_message['payload']['mimeType'] == 'text/html':
+                            body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
+
+                        # # Remove previous replies (common patterns to strip off replies)
+                        # body = re.split(r"(On\s.*wrote:)", body)[0]
+
+                        # # You can also strip off quoted text that starts with '>'
+                        # body = re.sub(r'(>.*\n)', '', body)
+                    labels = last_message.get('labelIds', [])
+
+                    # Extract relevant fields from headers
+                    header_dict = {header['name']: header['value'] for header in headers}
+
+                    sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
+                    To = header_dict.get('To')
+                    Cc = header_dict.get('Cc')
+                    Bcc = header_dict.get('Bcc')
+                    subject = header_dict.get('Subject', '(No Subject)')
+                    subject = '(No Subject)' if subject == '' else subject
+                    date = header_dict.get('Date')
+
+                    if date:
+                        date = parsedate_to_datetime(date)
+                    else:
+                        date = None
+
+                    thread_data.append({
+                        'message_id':last_message['id'],
+                        'thread_id':thread_id,
+                        'sender_name': sender_name,
+                        'sender_email': sender_email,
+                        'to':To,
+                        'cc':Cc,
+                        'bcc':Bcc,
+                        'subject': subject,
+                        'date': date,
+                        'labels': labels,
+                        'body':body,
+                        'files':files
+                    })
+
+                # Fetch the required details for each message
+                thread_details = service.users().threads().modify(
+                    userId='me',
+                    id=thread_id,
+                    body={
+                        'removeLabelIds': ['UNREAD']
+                    }
+                ).execute()
+
+            # except Exception as e:
+            #     print(thread_data)
+            #     print(f'Failed to create service instance for gmail')
+
+            context = {
+                'threads':thread_data
+            }
+
+            return render(request,'Email/view_email.html',context)
         else:
-            # If there are no 'parts', it means the message is simple and not multipart
-            if last_message['payload']['mimeType'] == 'text/plain':
-                body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-            elif last_message['payload']['mimeType'] == 'text/html':
-                body = base64.urlsafe_b64decode(last_message['payload']['body']['data']).decode('utf-8')
-        labels = last_message.get('labelIds', [])
-
-        # Extract relevant fields from headers
-        header_dict = {header['name']: header['value'] for header in headers}
-        sender_name, sender_email = extract_name_and_email(header_dict.get('From'))
-        subject = header_dict.get('Subject', '(No Subject)')
-        subject = '(No Subject)' if subject == '' else subject
-        date = header_dict.get('Date')
-
-        thread_data.append({
-            # 'message_id':message_id,
-            'sender_name': sender_name,
-            'sender_email': sender_email,
-            'subject': subject,
-            'date': date,
-            'labels': labels,
-            'body':body
-            # 'snippet': snippet,
-        })
-
-    # except Exception as e:
-    #     print(thread_data)
-    #     print(f'Failed to create service instance for gmail')
-
-    context = {
-        'thread':thread_data[0]
-    }
-
-    return render(request,'Email/view_email.html',context)
+            return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        messages.warning(request,"Something went wrong while sending the email! The error has been reported to us, we will be fixing it soon!")
+        return custom_500(request)
     
 class SendMailAjax(View):
     def post(self, request):
@@ -5865,24 +6048,34 @@ class PaginationAjax(View):
 
             if navigate_to and section:
                 pg_token = request.session.get('pg_token')
-                if pg_token and len(pg_token) != 0:
-                    
+                if pg_token and len(pg_token) != 0:                   
                     if navigate_to == 'next_page':
+                        if pg_token[-1] == None:
+                            return JsonResponse({'message':'That\'s all'})
+                        
                         response = mail(request)
                         # Redirect with the URL containing custom params
                         response = json.loads(response.content)
                         request.session['pg_token'].append(response['nextPageToken'])
+                        pg_range = request.session['pg_range'].split(' - ')
+                        request.session['pg_range'] = f'{int(pg_range[0])+10} - {int(pg_range[1])+10}'
                         request.session.modified = True
+                        response['pg_range'] = request.session['pg_range']
                         return JsonResponse(response)
                     elif navigate_to == 'prev_page':
                         if len(pg_token) == 1:
                             request.session['pg_token'].pop()
+                            pg_range = request.session['pg_range'].split(' - ')
+                            request.session['pg_range'] = f'{int(pg_range[0])-10} - {int(pg_range[1])-10}'
                         else:
                             request.session['pg_token'].pop()
                             request.session['pg_token'].pop()
+                            pg_range = request.session['pg_range'].split(' - ')
+                            request.session['pg_range'] = f'{int(pg_range[0])-10} - {int(pg_range[1])-10}'
 
                         request.session.modified = True
                         response = mail(request)
+                        response['pg_range'] = request.session['pg_range']
                         return response
                     else:
                         return JsonResponse({'message':'error'})
@@ -5891,3 +6084,280 @@ class PaginationAjax(View):
                     return JsonResponse({'message':'error'})
         else:
             return HttpResponse('Access Denied!')
+
+class ReadUnreadEmailAjax(View):
+    def post(self, request):
+        try:
+            message_id = request.POST.get('message_id')
+            action = request.POST.get('action')
+            message_id = message_id.split(',')
+            
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            if action == 'READ':
+                service.users().messages().batchModify(
+                userId='me',
+                body={'ids':message_id,'removeLabelIds': ['UNREAD']}
+                ).execute()
+                return JsonResponse({'message':'Marked as Read!'})
+
+            elif action == 'UNREAD':
+                service.users().messages().batchModify(
+                userId='me',
+                body={'ids':message_id,'addLabelIds': ['UNREAD']}
+                ).execute()
+                return JsonResponse({'message':'Marked as Unread!'})   
+                
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+
+class StarUnstarEmailAjax(View):
+    def post(self, request):
+        try:
+            message_id = request.POST.get('message_id')
+            action = request.POST.get('action')
+            print(action)
+            
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            if action == 'STAR':
+                service.users().threads().modify(
+                userId='me',
+                id=message_id,
+                body={'addLabelIds': ['STARRED']}
+                ).execute()
+                return JsonResponse({'message':'UnStarred Succesfully!'})
+
+            elif action == 'UNSTAR':
+                service.users().threads().modify(
+                userId='me',
+                id=message_id,
+                body={'removeLabelIds': ['STARRED']}
+                ).execute()
+                return JsonResponse({'message':'UnStarred Succesfully!'})
+                
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+        
+class DeleteEmailAjax(View):
+    def post(self, request):
+        try:
+            message_ids = request.POST.get('message_id')
+            message_ids = message_ids.split(',')
+            print(message_ids)
+            
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            for message_id in message_ids: 
+                service.users().threads().trash(
+                    userId='me',
+                    id=message_id,
+                ).execute()
+
+            return JsonResponse({'message':'Deleted Successfully!'})   
+                
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+
+class GetScheduledEmailInfoAjax(View):
+    def get(self, request):
+        scheduled_emails = {}
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            drafts = Email_Draft.objects.all()
+            for draft in drafts:
+                task = PeriodicTask.objects.get(name=draft.email_unique_id)
+                scheduled_emails.update({draft.email_unique_id:{'id':draft.email_unique_id,'subject':draft.subject,'schedule_datetime':task.schedule.clocked_time,'schedule_status':draft.status}})
+
+        html =  render(request, 'Email/scheduled_email_row.html', {'scheduled_emails':scheduled_emails}).content.decode('utf-8')
+        return JsonResponse({'html':html})
+
+def get_attachment(request, message_id, attachment_id):
+    # Fetch the attachment from Gmail API
+    filename = request.GET.get('filename')
+    global service
+    if not service:
+        credentials = GmailHandler.get_credentials(request)
+        if not credentials:
+            print("NOT OK")
+            return None
+        
+        service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+    attachment = service.users().messages().attachments().get(
+        userId='me',
+        messageId=message_id,
+        id=attachment_id
+    ).execute()
+
+    # Decode the attachment data
+    attachment_data = base64.urlsafe_b64decode(attachment['data'].encode('utf-8'))
+
+    # Create the response
+    response = HttpResponse(attachment_data)
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
+class UpdateScheduledEmailOptionsAjax(View):
+    def post(self, request):
+        message = 'test'
+
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                unique_id = request.POST.get('id')
+                new_datetime = request.POST.get('new_schedule_datetime')
+                status = request.POST.get('status')
+                print(status)
+
+                task = PeriodicTask.objects.get(name=unique_id)
+                if new_datetime:
+                    clocked_schedule, created = ClockedSchedule.objects.get_or_create(clocked_time=datetime.strptime(new_datetime, '%Y-%m-%dT%H:%M'))
+                    task.clocked = clocked_schedule
+                    task.enabled = True
+                    task.save()
+
+                    # Convert string to datetime object (including timezone info)
+                    dt = datetime.fromisoformat(str(task.schedule.clocked_time))
+                    formatted_dt = dt.strftime('%a, %d %b %Y %I:%M:%S %p')
+
+                    message = f'Email is successfully scheduled on {formatted_dt}'
+                elif status:
+                    draft = Email_Draft.objects.get(email_unique_id=unique_id)
+                    if status == 'pause_schedule':
+                        task.enabled = False
+                        draft.status = 'Paused'
+                        task.save()
+                        draft.save()
+                        message = 'Email schedule paused successfully'
+                    elif status == 'restart_schedule':
+                        task.enabled = True
+                        draft.status = 'Scheduled'
+                        task.save()
+                        draft.save()
+                        message = 'Email schedule has restarted successfully'
+                    elif status == 'cancel_schedule':
+                        task.enabled = False
+                        task.save()
+                        draft.delete()
+                        message = 'Email schedule is cancelled'
+
+            return JsonResponse({'message':message})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+        
+
+class SendReplyMailAjax(View):
+    def post(self, request):
+        msg = 'test'
+
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                body = request.POST.get('body')
+                original_message_id = request.POST.get('message_id')
+                thread_id = request.POST.get('thread_id')
+                email_attachment = None
+                if request.POST.get('attachments'):
+                    email_attachment=request.FILES.getlist('attachments')
+                to_email_additional = ''
+                if request.POST.get('to[]'):
+                    to_email_additional=request.POST.get('to[]')
+                
+                print(to_email_additional)
+
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        print("NOT OK")
+                        return None
+                    
+                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+                # Get the original email
+                original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
+                
+                # Extract original details
+                original_payload = original_message['payload']
+                headers = {h['name']: h['value'] for h in original_payload['headers']}
+
+                if email_attachment is None:
+                    message = MIMEText(body, 'html')
+
+                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message['To'] = headers.get('From') + ',' + to_email_additional
+                    print(message['To'])
+                    message['From'] = headers.get('To')  # Original recipient becomes the sender
+                    message['Cc'] = headers.get('Cc')
+                    subject = headers.get('Subject', '(No Subject)')
+                    if subject[:3] == 'Re:':
+                        message['Subject'] = subject
+                    else:
+                        message['Subject'] = 'Re: ' + subject
+                    message['In-Reply-To'] = headers.get('Message-ID')
+                    message['References'] = headers.get('Message-ID')
+                else:
+                    message=MIMEMultipart()
+
+                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message['To'] = headers.get('From')
+                    message['From'] = headers.get('To')  # Original recipient becomes the sender
+                    message['Cc'] = headers.get('Cc')
+                    subject = headers.get('Subject', '(No Subject)')
+                    if subject[:3] == 'Re:':
+                        message['Subject'] = subject
+                    else:
+                        message['Subject'] = 'Re: ' + subject
+                    message['In-Reply-To'] = headers.get('Message-ID')
+                    message['References'] = headers.get('Message-ID')
+
+                    # Attach the main message body
+                    message.attach(MIMEText(body, 'html'))
+        
+                    for attachment in email_attachment:
+                        content_file = ContentFile(attachment.read())
+                        content_file.name = attachment.name
+                        part = MIMEBase('application', 'octet-stream')
+                        part.set_payload(content_file.read())
+                        encoders.encode_base64(part)
+                        part.add_header(
+                            'Content-Disposition',
+                            f'attachment; filename={content_file.name}',
+                        )
+                        message.attach(part)
+
+                # encoded message
+                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+                
+                create_message = {"raw": encoded_message, "threadId":thread_id}
+
+                send_message = service.users().messages().send(userId='me', body=create_message).execute()
+                msg = 'Email sent successfully!'
+
+            return JsonResponse({'message':msg})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})

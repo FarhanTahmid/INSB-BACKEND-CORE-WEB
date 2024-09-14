@@ -1,12 +1,16 @@
+from datetime import datetime
+import traceback
 from celery import shared_task
 from insb_port import settings
 from insb_port.celery import app
-from public_relation_team.models import Email_Draft
+from central_branch.models import Email_Draft
 from public_relation_team.render_email import PRT_Email_System
 import json
 
 from system_administration.google_mail_handler import GmailHandler
 from googleapiclient.discovery import build
+
+from system_administration.system_error_handling import ErrorHandling
 
 
 @shared_task
@@ -23,9 +27,17 @@ def send_scheduled_email(unique_task_name_json):
 
     service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
-    for value in drafts.values():
-        service.users().drafts().send(userId='me', body={'id': value}).execute()
-        print('Done')
+    try:
+        for value in drafts.values():
+            service.users().drafts().send(userId='me', body={'id': value}).execute()
+            print('Done')
+        
+        email_drafts.status = 'Sent'
+        email_drafts.save()
+        email_drafts.delete()
 
-    email_drafts.delete()
+    except Exception as e:
+        email_drafts.status = 'Failed'
+        email_drafts.save()
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
     

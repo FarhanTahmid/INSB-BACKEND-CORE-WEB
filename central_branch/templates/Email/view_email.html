@@ -24,13 +24,13 @@
       padding: 2rem;
       background-color: white;
       border-radius: 10px;
-      box-shadow: 0px 0px 6px 0px gray;
+      box-shadow: -1px 0px 8px 0px rgba(0, 0, 0, 0.1);
       margin-bottom: 100px;
     }
 
     .central_body h1 {
-      font-size: 30px;
-      font-weight: 100;
+      font-size: 1.5rem;
+      /* font-weight: bold; */
       border-bottom: 1px solid gray;
       padding-bottom: 10px;
       flex-grow: 1;
@@ -53,20 +53,21 @@
     .heading_col1 {
       display: flex;
       justify-content: space-between;
-      flex-basis: 20%;
+      /* flex-basis: 20%; */
       align-items: flex-start;
     }
 
     .heading_col2 {
       display: flex;
       justify-content: space-between;
-      flex-basis: 12%;
+      flex-basis: 14%;
       align-items: center;
+      margin-left: .25rem;
     }
 
     .buttons {
       padding-top: 20px;
-      margin-bottom: 30px;
+      margin-bottom: 1rem;
     }
 
     .reply_button,
@@ -159,14 +160,16 @@
     } */
 
     .dropbtn {
-      color: #00629b;
+      color: black;
       background-color: white;
       padding: 0px;
-      border: none;
+      border:1px solid #f2f2f2;
       border-radius: 50%;
       height: 30px;
       width: 30px;
       transition: all .3s ease-in-out;
+      font-weight: bold;
+      
     }
 
     .dropdown {
@@ -179,7 +182,7 @@
       position: absolute;
       background-color: white;
       min-width: 160px;
-      box-shadow: 0px 0px 7px 0px gray;
+      box-shadow: -1px 0px 8px 0px rgba(0, 0, 0, 0.1);
       z-index: 1;
       /* margin-left: -130px; */
       border-radius: 0.25rem;
@@ -203,8 +206,7 @@
     }
 
     .dropdown:hover .dropbtn {
-      background-color: #00629b;
-      color: white;
+      background-color: #f6f6f6;
     }
 
     .email_dp {
@@ -213,7 +215,7 @@
     }
 
     .return_inbox {
-      font-size: 25px;
+      font-size: 1.5rem;
       padding: 0rem 0rem 1rem;
       display: flex;
       gap: 1rem;
@@ -221,6 +223,8 @@
 
     .fa-arrow-left {
       color: #00629b;
+      position: relative;
+      bottom: .25rem;
     }
 
 
@@ -327,6 +331,10 @@
       .heading_col2 {
         flex-basis: 20%;
       }
+
+      .heading{
+        flex-direction: column;
+      }
     }
 
     .tag-container {
@@ -413,8 +421,9 @@
     }
 
     .custom-tag {
-      background-color: #007bff;
-      color: white;
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -468,8 +477,9 @@
     }
 
     .alt-tag {
-      background-color: #28a745;
-      color: white;
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
       padding: 5px 10px;
       border-radius: 15px;
       display: inline-flex;
@@ -485,14 +495,13 @@
     .fa-arrow-right {
       color: #888;
     }
-
+/* 
     .fa-arrow-right:hover {
       color: #b1b0b0;
-    }
+    } */
 
-    #ccBccFields h6 {
+    .ccBccFields h6 {
       margin-left: .5rem;
-      font-style: italic;
       color: #888;
     }
   </style>
@@ -575,7 +584,54 @@
 
     /* button[title="Insert Image"], [title="Insert Files"] {
       display: none;
-    } */
+    }
+
+    
+    .email_sent_confirm_modal {
+      opacity: 0;
+      position: fixed;
+      z-index: -1;
+      padding-top: 250px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 120%;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: all .3s ease-in-out;
+      transform: translateY(-20px);
+      overflow: auto;
+    }
+
+    .email_sent_content {
+      background-color: #fefefe;
+      margin: auto;
+      border: 1px solid rgb(136, 136, 136);
+      max-width: 550px;
+      height: 100px;
+      border-radius: 6px;
+      box-shadow: 2px 2px 5px 0px #80808054;
+      position: relative;
+      /* left: 100px; */
+      padding-bottom: 5px;
+    }
+
+    .modalClosebtn {
+      color: #000;
+      font-size: 28px;
+      font-weight: bold;
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 20px 0;
+    }
+
+    .modalClosebtn:hover,
+    .modalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 
@@ -606,70 +662,72 @@
       <div class="central_body">
 
         <div class="return_inbox">
-          <a href="#" title="Back"><i class="fa fa-arrow-left"></i></a>
-          <h1>{{thread.subject}}</h1>
+          <a href="{% url 'central_branch:mail' %}" title="Back"><i class="fa fa-arrow-left"></i></a>
+          <h1>{{threads.0.subject}}</h1>
         </div>
 
         <div class="heading">
           <div class="heading_col1">
-            <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture">
+            {% comment %} <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture"> {% endcomment %}
             <div class="col1_inner">
-              <h2>{{thread.sender_name}}</h2>
-              <address style="margin: 0px; color: gray;">
-                <a href="#">{{thread.sender_email}}</a>
+              <h2>{% if threads.0.sender_name %}{{threads.0.sender_name}}{% else %}{{threads.0.sender_email}}{% endif %}</h2>
+              <address style="margin: 0px; color: #002855; font-weight: bold;">
+                <a href="#">{{threads.0.sender_email}}</a>
               </address>
               <div style="display: flex;">
                 <!-- Arrow Element -->
-                <div id="arrow" onclick="toggleDisplay()"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                <div id="arrow" onclick="toggleDisplay(this)"><i class="fa fa-arrow-right" aria-hidden="true"></i>
                 </div>
 
                 <!-- CC and BCC Fields (Initially Hidden) -->
-                <div id="ccBccFields" style="opacity: 0;">
-                  <h6>CC:</h6>
-                  <h6>BCC:</h6>
+                <div class="ccBccFields" style="opacity: 0;">
+                  <h6>To: {{threads.0.to}}</h6>
+                  <h6>CC: {{threads.0.cc}}</h6>
+                  <h6>BCC: {{threads.0.bcc}}</h6>
                 </div>
               </div>
             </div>
           </div>
           <div class="heading_col2">
-            <p style="margin: 0px; color: gray;">{{thread.date}}</p>
+            <p style="margin: 0px; color: gray;">{{threads.0.date|date:"D, d M Y h:i:s A"}}</p>
             <div class="dropdown">
-              <button class="dropbtn"><i class="fa fa-bars"></i></button>
+              <button class="dropbtn">...</button>
               <div class="dropdown_content">
-                <a href="#" onclick="myFunction('reply')">Reply</a>
-                <a href="#" onclick="myFunction('fwd')">Forward</a>
-                <a href="#">Star</a>
-                <a href="#">Delete</a>
+                {% comment %} <a href="#" onclick="myFunction('reply')">Reply</a> {% endcomment %}
+                {% comment %} <a href="#" onclick="myFunction('fwd')">Forward</a> {% endcomment %}
+                <a>Delete this message</a>
               </div>
             </div>
           </div>
         </div>
 
         <div id="shadow-host">
-          {% comment %} {{thread.body|safe}} {% endcomment %}
+          {% comment %} {{threads.0.body|safe}} {% endcomment %}
         </div>
 
+        {% if threads.0.files %}
         <div class="attachments">
           <p>Attachments:</p>
           <ul>
-            <li><a href="#">(Attachments1)</a></li>
-            <li><a href="#">(Attachments2)</a></li>
-            <li><a href="#">(Attachments3)</a></li>
+            {% for attachment in threads.0.files %}
+            <li><a href="{% url 'central_branch:get_attachment' attachment.msg_id attachment.attachment_id %}?filename={{attachment.filename}}">{{attachment.filename}}</a></li>
+            {% endfor %}
           </ul>
         </div>
+        {% endif %}
 
         <div class="buttons">
           <button class="reply_button" onclick="myFunction('reply')"><i class="fa fa-reply" style='margin-right: .5rem;'
               aria-hidden="true"></i>Reply</button>
-          <button class="forward_button" onclick="myFunction('fwd')"><i class="fa fa-share" style='margin-right: .5rem;'
-              aria-hidden="true"></i>Forward</button>
+          {% comment %} <button class="forward_button" onclick="myFunction('fwd')"><i class="fa fa-share" style='margin-right: .5rem;'
+              aria-hidden="true"></i>Forward</button> {% endcomment %}
         </div>
 
-        <form method="POST">
+          {% csrf_token %}
           <!-- reply block -->
           <div class="compose_email ckeditor_view_email" id="ck_view_reply_forword">
             <div class="tag-container" id="tagContainer">
-              <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+              <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">Additional To</p>
               <input type="text" name="to" class="tag-input" id="tagInput">
             </div>
             <hr class="fwd-only1">
@@ -677,13 +735,11 @@
               <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
                 onclick="customToggleDropdown()">
               <div class="custom-dropdown-content" id="customDropdown">
-                <div onclick="customSelectOption('All Registered Members of IEEE')">All Registered General Members of
-                  IEEE NSU SB</div>
+                <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
                 <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
-                <div onclick="customSelectOption('Option 3')">Executive Panel (Branch Only)</div>
-                <div onclick="customSelectOption('Option 4')">Branch Ex-Com Members</div>
-                <div onclick="customSelectOption('Option 5')">All Society, Chapters, Affinity Group Executive Body
-                  Members</div>
+                <div onclick="customSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+                <div onclick="customSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+                <div onclick="customSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               </div>
             </div>
             <div class="custom-tag-container fwd-only3" id="customTagContainer"></div>
@@ -692,14 +748,15 @@
               <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
                 onclick="altToggleDropdown()">
               <div class="alt-dropdown-content" id="altDropdown">
-                <div onclick="altSelectOption('Choice 1')">Choice 1</div>
-                <div onclick="altSelectOption('Choice 2')">Choice 2</div>
-                <div onclick="altSelectOption('Choice 3')">Choice 3</div>
-                <div onclick="altSelectOption('Choice 4')">Choice 4</div>
+                <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
+                <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
+                <div onclick="altSelectOption('Executive Panel (Branch Only)')">Executive Panel (Branch Only)</div>
+                <div onclick="altSelectOption('Branch Ex-Com Members')">Branch Ex-Com Members</div>
+                <div onclick="altSelectOption('All Society, Chapters, Affinity Group Executive Body Members')">All Society, Chapters, Affinity Group Executive Body Members</div>
               </div>
             </div>
 
-            <div class="alt-tag-container" id="altTagContainer" style="margin-bottom: 1rem;"></div>
+            <div class="alt-tag-container fwd-only6" id="altTagContainer" style="margin-bottom: 1rem;"></div>
             <!--WFReditor-->
             {% block WFReditor %}
             {% include 'WFReditor.html' %}
@@ -710,12 +767,75 @@
                 <input type="file" id="myfile" name="myfile" hidden multiple>
               </div>
 
-              <input type="button" class="send_button" value="Send">
+              <input type="button" class="send_button" onclick="EmailSent('{{threads.0.thread_id}}','{{threads.0.message_id}}')" value="Send">
             </div>
           </div>
-        </form>
+        
+
+        {% for thread in threads|slice:"1:" %}
+        <div class="heading">
+          <div class="heading_col1">
+            <!-- <img class="email_dp" src="{% static 'logos/logo.gif' %}" alt="email_display_picture"> -->
+            <div class="col1_inner">
+              <h2>{% if thread.sender_name %}{{thread.sender_name}}{% else %}{{thread.sender_email}}{% endif %}</h2>
+              <address style="margin: 0px; color: #002855; font-weight: bold;">
+                <a href="#">{{thread.sender_email}}</a>
+              </address>
+              <div style="display: flex;">
+                <!-- Arrow Element -->
+                <div id="arrow" onclick="toggleDisplay(this)"><i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </div>
+
+                <!-- CC and BCC Fields (Initially Hidden) -->
+                <div class="ccBccFields" style="opacity: 0;">
+                  <h6>To: {{thread.to}}</h6>
+                  <h6>CC: {{thread.cc}}</h6>
+                  <h6>BCC: {{thread.bcc}}</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="heading_col2">
+            <p style="margin: 0px; color: gray;">{{thread.date|date:"D, d M Y h:i:s A"}}</p>
+            <div class="dropdown">
+              <button class="dropbtn">...</button>
+              <div class="dropdown_content">
+                {% comment %} <a href="#" onclick="myFunction('reply')">Reply</a> {% endcomment %}
+                {% comment %} <a href="#" onclick="myFunction('fwd')">Forward</a> {% endcomment %}
+                <a>Delete this message</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="shadow-host-{{forloop.counter}}">
+          {% comment %} {{thread.body|safe}} {% endcomment %}
+        </div>
+
+        {% if thread.files %}
+        <div class="attachments">
+          <p>Attachments:</p>
+          <ul>
+            {% for attachment in thread.files %}
+            <li><a href="{% url 'central_branch:get_attachment' attachment.msg_id attachment.attachment_id %}?filename={{attachment.filename}}">{{attachment.filename}}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        {% endfor %}
       </div>
       <!-- ############ PAGE END-->
+    </div>
+    <div id="sentModal" class="email_sent_confirm_modal">
+      <!-- Modal content -->
+      <div class="email_sent_content">
+        <div>
+          <span class="modalClosebtn">&times;</span>
+        </div>
+        <h5 name='msg' style="position: relative;
+              text-align: center;
+              bottom: 15px;">Sending...</h5>
+      </div>
     </div>
     <!-- ############ LAYOUT END-->
 
@@ -728,25 +848,31 @@
       }
     </script>
     <script>
+      let prev = 'none';
       function myFunction(composeType) {
         const x = document.getElementById("ck_view_reply_forword");
 
-        if (composeType === 'reply'){
+        if (composeType === 'reply' && (prev === 'none' || prev === 'fwd')){
           x.style.display = 'block';
+          prev = 'reply';
           document.querySelector('.fwd-only1').style.display = 'none';
           document.querySelector('.fwd-only2').style.display = 'none';
           document.querySelector('.fwd-only3').style.display = 'none';
           document.querySelector('.fwd-only4').style.display = 'none';
           document.querySelector('.fwd-only5').style.display = 'none';
-        }else if (composeType === 'fwd'){
+          document.querySelector('.fwd-only6').style.display = 'none';
+        }else if (composeType === 'fwd' && (prev === 'none' || prev === 'reply')){
           x.style.display = 'block';
+          prev = 'fwd';
           document.querySelector('.fwd-only1').style.display = 'block';
           document.querySelector('.fwd-only2').style.display = 'block';
-          document.querySelector('.fwd-only3').style.display = 'block';
+          document.querySelector('.fwd-only3').style.display = 'flex';
           document.querySelector('.fwd-only4').style.display = 'block';
           document.querySelector('.fwd-only5').style.display = 'block';
+          document.querySelector('.fwd-only6').style.display = 'flex';
         }else{
           x.style.display = 'none';
+          prev = 'none';
         }
       }
     </script>
@@ -794,7 +920,7 @@
       //     alert(`${files.length} file(s) attached.`);
       // });
 
-      function handleFileSelect(event) {
+      {% comment %} function handleFileSelect(event) {
         const fileInput = event.target;
         const filePreviewContainer = document.getElementById('filePreviewContainer');
 
@@ -812,8 +938,8 @@
           `;
           filePreviewContainer.appendChild(filePreview);
         }
-      }
-
+      } {% endcomment %}
+{% comment %} 
       function removeFile(index) {
         const fileInput = document.getElementById('myfile');
         const dt = new DataTransfer();
@@ -828,11 +954,12 @@
         fileInput.files = dt.files;
         handleFileSelect({ target: fileInput });
       }
+        {% endcomment %}
 
       function getAllSelectedTags() {
         const tags = tagContainer.querySelectorAll('.tag span:first-child');
         return Array.from(tags).map(tag => tag.textContent);
-      }
+      } 
     </script>
     <!--input tags-->
     <script>
@@ -902,97 +1029,114 @@
       }
     </script>
     <script>
+    function toggleDisplay(element) {
+      // Find the next sibling div (.ccBccFields)
+      const ccBccFields = element.nextElementSibling;
+      console.log(ccBccFields)
+      // Toggle opacity and visibility
+      if (ccBccFields.style.opacity === "0") {
+        ccBccFields.style.opacity = "1";
+      } else {
+        ccBccFields.style.opacity = "0";
+      }
+    }
+
+    </script>
+
+    <script>
+      const shadowHost = document.getElementById('shadow-host');
+      const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+      shadowRoot.innerHTML = `
+      {{threads.0.body|safe}}
+      `;
+      console.log("POK");
+     
+      {% for thread in threads|slice:"1:" %}
+      const shadowHost{{forloop.counter}} = document.getElementById('shadow-host-{{forloop.counter}}');
+      const shadowRoot{{forloop.counter}} = shadowHost{{forloop.counter}}.attachShadow({ mode: 'open' });
+      shadowRoot{{forloop.counter}}.innerHTML = `
+      {{thread.body|safe}}
+      `;
+
+      {% endfor %}
+    </script>
+    <script>
+        function EmailSent(thread_id, message_id) {
+
+        // Get the modal
+        var sentModal = document.getElementById("sentModal");
+        sentModal.style.transform = 'translateY(0px)';
+        sentModal.style.zIndex = '103100';
+        sentModal.style.opacity = '1';
+
+        var body = getEditorContent();
+        var csrf = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        var mssg = document.querySelector('h5[name="msg"]');
+        var attachments = document.querySelector('input[name="myfile"]');
+        const tagInput = document.getElementById('tagInput');
+        mssg.innerHTML = 'Sending...';
+
+        var formData = new FormData();
+        formData.append('to[]', getAllSelectedTags());
+        formData.append('body', body);
+        formData.append('csrfmiddlewaretoken', csrf);
+        formData.append('thread_id', thread_id);
+        formData.append('message_id',message_id);
+
+        // Append each file from the attachments input
+        for (var i = 0; i < attachments.files.length; i++) {
+          console.log('OK');
+          formData.append('attachments', attachments.files[i]);
+        }
+
+        $.ajax({
+          url: "{% url 'central_branch:send_reply_mail_request' %}",
+          type: "POST",
+          data: formData,
+          processData: false,  // Important!
+          contentType: false,  // Importfant!
+          headers: {
+            "X-CSRFToken": csrf
+          },
+          success: function (response) {
+            // Handle the response
+            console.log(response);
+            mssg.innerHTML = response['message'];
+            window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
+          },
+          error: function (error) {
+            console.error("Error:", error);
+          }
+        });
+
+        // Get the <span> element that closes the modal
+        var closeBtn = document.getElementsByClassName("modalClosebtn")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.onclick = function () {
+          sentModal.style.transform = 'translateY(-50px)';
+          sentModal.style.zIndex = '-100';
+          sentModal.style.opacity = '0';
+        }
+
+        //close reply and forward section
+        const x = document.getElementById("ck_view_reply_forword");
+        x.style.display = 'none';
+        prev = 'none';
+      }
+
+      function hideModal() {
+        var sentModal = document.getElementById("sentModal");
+
+        sentModal.style.transform = 'translateY(-50px)';
+        sentModal.style.zIndex = '-100';
+        sentModal.style.opacity = '0';
+      }
+    </script>
+    <script>
+      // For the CC dropdown
       let customSelectedTags = [];
-
-      function customToggleDropdown() {
-        const dropdown = document.getElementById("customDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customUpdateTagContainer();
-        }
-      }
-
-      function customRemoveTag(index) {
-        customSelectedTags.splice(index, 1);
-        customUpdateTagContainer();
-      }
-
-      function customUpdateTagContainer() {
-        const tagContainer = document.getElementById('customTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        customSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'custom-tag';
-          tagElement.innerHTML = `${tag} <span class="custom-remove-tag" onclick="customRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getCustomSelectedTags() {
-        return customSelectedTags;
-      }
-    </script>
-    <script>
-      let altSelectedTags = [];
-
-      function altToggleDropdown() {
-        const dropdown = document.getElementById("altDropdown");
-        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-      }
-
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altUpdateTagContainer();
-        }
-      }
-
-      function altRemoveTag(index) {
-        altSelectedTags.splice(index, 1);
-        altUpdateTagContainer();
-      }
-
-      function altUpdateTagContainer() {
-        const tagContainer = document.getElementById('altTagContainer');
-        tagContainer.innerHTML = ''; // Clear existing tags
-
-        altSelectedTags.forEach((tag, index) => {
-          const tagElement = document.createElement('div');
-          tagElement.className = 'alt-tag';
-          tagElement.innerHTML = `${tag} <span class="alt-remove-tag" onclick="altRemoveTag(${index})">×</span>`;
-          tagContainer.appendChild(tagElement);
-        });
-      }
-
-      // Close dropdown when clicking outside of it
-      window.onclick = function (event) {
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
-
-      // Function to get selected tags
-      function getAltSelectedTags() {
-        return altSelectedTags;
-      }
-    </script>
-    <script>
-      // For the first dropdown
-      // let customSelectedTags = [];
-      let customAvailableOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4'];
+      let customAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
 
       function customToggleDropdown() {
         const dropdown = document.getElementById("customDropdown");
@@ -1038,9 +1182,48 @@
         });
       }
 
-      // For the second dropdown
-      // let altSelectedTags = [];
-      let altAvailableOptions = ['Choice 1', 'Choice 2', 'Choice 3', 'Choice 4'];
+            // Close dropdown when clicking outside of it
+            window.onclick = function (event) {
+        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+          document.getElementById("customDropdown").style.display = "none";
+        }
+      };
+
+      // Function to get selected tags
+      function getCustomSelectedTags() {
+
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
+        }
+
+        const mappedArray = mapOptions(customSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
+      }
+
+      function customClearAllTags() {
+      // Add all selected tags back to the available options
+      customAvailableOptions = customAvailableOptions.concat(customSelectedTags);
+
+      // Clear the selected tags array
+      customSelectedTags = [];
+
+      // Update both the dropdown and the tag container
+      customUpdateDropdown();
+      customUpdateTagContainer();
+    }
+      // For the BCC dropdown
+      let altSelectedTags = [];
+      let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
 
       function altToggleDropdown() {
         const dropdown = document.getElementById("altDropdown");
@@ -1086,37 +1269,56 @@
         });
       }
 
-      // Close dropdown when clicking outside of it for all three dropdowns
-      window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
+        // Close dropdown when clicking outside of it
+        window.onclick = function (event) {
         if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
           document.getElementById("altDropdown").style.display = "none";
         }
       };
-    </script>
-    <script>
-      function toggleDisplay() {
-        var ccBccFields = document.getElementById("ccBccFields");
 
-        // Toggle the display of the CC and BCC fields
-        if (ccBccFields.style.opacity === "0" || ccBccFields.style.opacity === "") {
-          ccBccFields.style.opacity = "1"; // Show the fields
-        } else {
-          ccBccFields.style.opacity = "0";  // Hide the fields
+      // Function to get selected tags
+      function getAltSelectedTags() {
+        // Define a mapping object to map options to their corresponding values
+        const optionMapping = {
+          'All Registered General Members of IEEE NSU SB': 'general_members',
+          'All Officers of IEEE NSU SB': 'officers',
+          'Executive Panel (Branch Only)': 'executive_panel',
+          'Branch Ex-Com Members': 'branch_ex_com',
+          'All Society, Chapters, Affinity Group Executive Body Members': 'society_chapters_executive'
+        };
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || null);
         }
+
+        const mappedArray = mapOptions(altSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
       }
-    </script>
 
-    <script>
-      const shadowHost = document.getElementById('shadow-host');
-      const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+      function altClearAllTags() {
+        // Add all selected tags back to the available options
+        altAvailableOptions = altAvailableOptions.concat(altSelectedTags);
 
-      shadowRoot.innerHTML = `
-    {{thread.body|safe}}
-  `;
-    </script>
+        // Clear the selected tags array
+        altSelectedTags = [];
+
+        // Update both the dropdown and the tag container
+        altUpdateDropdown();
+        altUpdateTagContainer();
+      }
+
+          // Close dropdown when clicking outside of it for all three dropdowns
+          window.onclick = function (event) {
+      if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+        document.getElementById("customDropdown").style.display = "none";
+      }
+      if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+        document.getElementById("altDropdown").style.display = "none";
+      }
+    };
+
+      </script>
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
