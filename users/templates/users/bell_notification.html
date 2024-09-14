@@ -388,7 +388,7 @@
                 <img src="/media_files/{% if notification.notification.created_by != None %}{{notification.notification.created_by.user_profile_picture}}{% elif notification.notification.event %}{{notification.notification.event.event_organiser.logo}}{% else %}{{user_data.admin.profile_picture}}{% endif %}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
               </div>
               <div class="bell_friend_svg" >
-                <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
+                <img src="/media_files/{{notification.notification.type.type_icon}}" alt="">
               </div>
               <div class="notification_content">
                 <h6 class="sender_title sender_title_ellipsis">{{notification.notification.title|safe}}</h6>
