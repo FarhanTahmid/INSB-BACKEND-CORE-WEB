@@ -12,10 +12,12 @@
           removeBlurAndMessage();
       } else if (Notification.permission === "denied") {
           // If permission is denied, keep the page blurred and show the message
+          createModal();
           restrictAccess();
       } else {
           // If permission hasn't been requested yet, show an alert to ask for permission
           restrictAccess();
+          createModal();
       }
   }
 
@@ -28,8 +30,6 @@
           } else {
               // If permission is denied, keep the page blurred
               restrictAccess();
-              // Call the function to create and show the modal
-              createModal();
           }
       });
   }
@@ -113,7 +113,7 @@
 <style>
   @media screen and (max-width:991px) {
     .left.navside.dark.dk{
-      overflow: scroll;
+      overflow: scroll
     }
   }
   @media (min-width: 992px) {
