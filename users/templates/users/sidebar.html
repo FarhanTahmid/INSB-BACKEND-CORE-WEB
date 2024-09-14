@@ -28,6 +28,8 @@
           } else {
               // If permission is denied, keep the page blurred
               restrictAccess();
+              // Call the function to create and show the modal
+              createModal();
           }
       });
   }
@@ -106,9 +108,6 @@
         mCont.style.width = '90%';  // Adjust width for mobile screens
     }
   }
-
-  // Call the function to create and show the modal
-  createModal();
 
 </script>
 <style>
