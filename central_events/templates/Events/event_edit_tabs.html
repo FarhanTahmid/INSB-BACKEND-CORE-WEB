@@ -16,6 +16,27 @@
             gap: 10px;
         }
     }
+    .google_calendar_btn{
+        margin: 0;
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+        width: 150px;
+        color: #f0f0f0;
+        background: #2a9d8f;
+        /* font-weight: bold; */
+        border-radius: 3rem;
+        border: 1px solid #2a9d8f;
+        transition: all .3s ease-in-out;
+    }
+    .google_calendar_btn:hover{
+        color: #2a9d8f;
+        background: #f0f0f0;
+    }
+    .btn_active{
+        color: #2a9d8f;
+        background: #f0f0f0;
+    }
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -35,9 +56,17 @@
                 tabs[2].querySelector("a").classList.add("active");
             }
 
-            if (link.href === currentPageUrl) {
-                link.classList.add("active");
-            }
+            const buttons = document.querySelectorAll('.google_calendar_btn');
+        
+            buttons.forEach(button => {
+                const link = button.querySelector('a').href;
+                
+                if (currentPageUrl.includes("/google_calendar")) {
+                    button.classList.add('btn_active');
+                } else {
+                    button.classList.remove('btn_active');
+                }
+            });
 
             // Add click event listener to the entire tab
             tab.addEventListener("click", function () {
@@ -56,7 +85,7 @@
         <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'central_branch:event_edit_content_form_tab' event_id%}">Content</a></li>
         <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'central_branch:event_feedback' event_id%}">Feedbacks</a></li>
         <div style="border-left: 10px solid transparent;"></div>
-        <li class="tab" style="border-right: 1px solid #00629B; background: #007377; color: #ddd;"><a href="{% url 'central_branch:google_calendar' event_id %}">Google Calendar</a></li>
+        <p class="google_calendar_btn"><a href="{% url 'central_branch:google_calendar' event_id %}">Google Calendar</a></p>
         {% else %}
         <li class="tab"><a href="{% url 'chapters_and_affinity_group:event_edit_form' primary event_id %}">Edit</a></li>
         <li class="tab"><a href="{% url 'chapters_and_affinity_group:event_edit_media_form_tab' primary event_id%}">Media</a></li>
@@ -64,7 +93,7 @@
         <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:event_edit_content_form_tab' primary event_id%}">Content</a></li>
         <li class="tab" style="border-right: 1px solid #00629B;"><a href="{% url 'chapters_and_affinity_group:event_feedback' primary event_id%}">Feedbacks</a></li>
         <div style="border-left: 10px solid transparent;"></div>
-        <li class="tab" style="border-right: 1px solid #00629B; background: #007377; color: #ddd;"><a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}">Google Calendar</a></li>
+        <p class="google_calendar_btn"><a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}">Google Calendar</a></p>
         {% endif %}
     </ul>
     <br>

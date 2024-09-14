@@ -51,6 +51,18 @@
         padding-top: 16px;
         z-index: 9999;
     }
+    .publish_google_calendar{
+        margin: 0;
+        text-align: center;
+        padding: .25rem;
+        cursor: pointer;
+        width: 320px;
+        color: #f0f0f0;
+        background: #2a9d8f;
+        border-radius: .25rem;
+        border: 1px solid #2a9d8f;
+        transition: all .3s ease-in-out;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -78,27 +90,29 @@
                     <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% endif %}
                 </div>
-                <div class="publish-switch">
-                    <label class="form-control-label slider-checkbox">Publish Event:</label>
-                    <span>                                            
-                        <label class="ui-switch m-t-xs m-r">
-                            <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
-                                <i></i>
-                        </label>                
-                    </span>
-                </div>
-                <div class="publish-switch">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin: .75rem 0">
+                    <div class="publish-switch">
                     {% if is_branch %}
-                    <a href="{% url 'central_branch:google_calendar' event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 10px; background-color: #007377; border: 1px solid black; margin: 10px 0; color: #ddd;">
-                    {% else %}
-                    <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 10px; background-color: #007377; border: 1px solid black; margin: 10px 0; color: #ddd;">
-                    {% endif %}
-                        Click to publish the event to Google Calendar
-                    </a>
-                </div>
-                <div class="form-group">
-                    <label>Event Name: <span style="color:red">*<span></label> 
-                    <input
+                    <a href="{% url 'central_branch:google_calendar' event_id %}"class="publish_google_calendar">
+                        {% else %}
+                        <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="publish_google_calendar">
+                            {% endif %}
+                            Click to publish the event to Google Calendar
+                        </a>
+                    </div>
+                    <div class="publish-switch">
+                        <label class="form-control-label slider-checkbox">Publish Event:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                                <i></i>
+                            </label>                
+                        </span>
+                    </div>
+                    </div>
+                        <div class="form-group">
+                            <label>Event Name: <span style="color:red">*<span></label> 
+                                <input
                         placeholder="Event Name"
                         class="form-control"
                         type="text"
