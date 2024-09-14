@@ -61,51 +61,50 @@
     modal.style.transform = 'translate(-50%, -50%)';
     modal.style.width = '100%';
     modal.style.height = '100%';
-    modal.style.padding = '20px';
-    // modal.style.backgroundColor = '#ffffff60';
     modal.style.backdropFilter = 'blur(10px)';
-    // modal.style.border = '1px solid #ccc';
     modal.style.zIndex = '1500'; // Ensure it is above other content
     
     const mCont = document.createElement('div');
     
-    mCont.style.width = '450px';
+    mCont.style.width = '500px';
     mCont.style.background = '#fff';
     mCont.style.padding = '10px';
     mCont.style.position = 'fixed';
     mCont.style.top = '50%';
     mCont.style.left = '50%';
     mCont.style.transform = 'translate(-50%, -50%)';
-    mCont.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0)';
+    mCont.style.boxShadow = '0 0 15px rgba(0, 0, 0)';
+    mCont.style.borderRadius = '10px';
+    mCont.style.overflow = 'hidden';
 
     // Create the paragraph element
     const paragraph = document.createElement('p');
-    paragraph.innerText = 'This is a modal paragraph.';
+    paragraph.innerText = 'IEEE NSU Student Brunch portal requires you to enable notifications. Allow notifications to continue on the portal.';
+    paragraph.style.padding = '10px';
+    paragraph.style.marginBottom = '10px';
+    paragraph.style.borderBottom = '1.5px solid #c5c5c5';
     
     // Create the image element
     const image = document.createElement('img');
-    // image.src = {% static 'images/INSB-notification-worning.jpg' %};
+    image.src = '{% static 'images/INSB-notification-worning.jpg' %}';
     image.alt = 'Modal Image';
     image.style.width = '100%'; // Make the image responsive
-
-
-    // Add a close button
-    // const closeButton = document.createElement('button');
-    // closeButton.innerText = 'Close';
-    // closeButton.style.marginTop = '10px';
-    // closeButton.addEventListener('click', () => {
-    //   document.body.removeChild(modal); // Remove modal when closed
-    // });
+    image.style.position = 'relative';
+    // image.style.left = '20px';
 
     // Append paragraph and image to the modal
     mCont.appendChild(paragraph);
     mCont.appendChild(image);
-    // mCont.appendChild(closeButton);
 
     modal.appendChild(mCont);
 
     // Append the modal to the body
     document.body.appendChild(modal);
+
+    // Media query for smaller screens (optional)
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        mCont.style.width = '90%';  // Adjust width for mobile screens
+    }
   }
 
   // Call the function to create and show the modal
