@@ -468,7 +468,7 @@
                 <div class="form-group">
                     <label>Select Attendee List:</label>
                       <select multiple class="form-control" name="attendeeList">
-                        <option {% if "general_members" in selected_attendee_list or event.selected_attendee_list == None %}selected{% endif %} value="general_members">All Registered Active Members of IEEE NSU SB</option>
+                        <option {% if "general_members" in selected_attendee_list %}selected{% endif %} value="general_members">All Registered Active Members of IEEE NSU SB</option>
                         <option {% if "all_officers" in selected_attendee_list %}selected{% endif %} value="all_officers">All Officers of IEEE NSU SB</option>
                         <option {% if "eb_panel" in selected_attendee_list %}selected{% endif %} value="eb_panel">Executive Panel (Branch Only)</option>
                         <option {% if "excom_branch" in selected_attendee_list %}selected{% endif %} value="excom_branch">Branch Ex-Com Members</option>
