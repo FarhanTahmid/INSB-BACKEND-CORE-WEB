@@ -582,9 +582,9 @@
       display: none;
     }
 
-    /* button[title="Insert Image"], [title="Insert Files"] {
+    {% comment %} button[title="Insert Image"], [title="Insert Files"] {
       display: none;
-    }
+    } {% endcomment %}
 
     
     .email_sent_confirm_modal {
@@ -732,7 +732,7 @@
             </div>
             <hr class="fwd-only1">
             <div class="custom-dropdown-container fwd-only2">
-              <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
+              <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC"
                 onclick="customToggleDropdown()">
               <div class="custom-dropdown-content" id="customDropdown">
                 <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -745,7 +745,7 @@
             <div class="custom-tag-container fwd-only3" id="customTagContainer"></div>
             <hr class="fwd-only4">
             <div class="alt-dropdown-container fwd-only5">
-              <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
+              <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC"
                 onclick="altToggleDropdown()">
               <div class="alt-dropdown-content" id="altDropdown">
                 <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
