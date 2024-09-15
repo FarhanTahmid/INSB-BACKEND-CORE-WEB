@@ -386,7 +386,7 @@
         top: 88px;
         background: white;
         padding-top: 16px;
-        z-index: 9999;
+        z-index: 1000;
     }
         
     .confirm_update_change {
@@ -417,6 +417,23 @@
       /* left: 100px; */
       padding: 1.5rem;
     }
+
+    .modalClosebtn {
+      color: #000;
+      font-size: 28px;
+      /* font-weight: bold; */
+      display: flex;
+      justify-content: flex-end;
+      /* padding: 10px 0px 0; */
+    }
+
+    .modalClosebtn:hover,
+    .modalClosebtn:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -562,10 +579,14 @@
             <div class="warning_modal">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem;">
                 <h4 style="margin: 0; font-weight: bold;">WARNING!</h4>
+                <div>
+                    <span class="modalClosebtn">&times;</span>
+                </div>
                 </div>
                 <p>Event will be unpublished from Google Calendar after clicking 'Update Changes'! Sent email would not be deleted.</p>
                 <div style="display: flex; justify-content: flex-end;">
                     <input type="submit" name="update_event_gc" id="updateButton" class="btn btn-outline b-success text-success mb-2" value="Update Changes">
+                    <a href="{% url 'central_branch:event_control' %}" class="btn btn-outline b-danger text-danger mb-2" style="margin-left: .25rem;">Cancel</a>
                 </div>
             </div>
             </div>
@@ -858,6 +879,17 @@
         updateChangeModal.style.transform = 'translateY(0px)';
         updateChangeModal.style.zIndex = '103100';
         updateChangeModal.style.opacity = '1';
+
+        
+        // Get the <span> element that closes the modal
+        var closeBtn = document.getElementsByClassName("modalClosebtn")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        closeBtn.onclick = function () {
+        updateChangeModal.style.transform = 'translateY(-50px)';
+        updateChangeModal.style.zIndex = '-100';
+        updateChangeModal.style.opacity = '0';
+        }
     }
 </script>
 
