@@ -92,15 +92,6 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin: .75rem 0">
                     <div class="publish-switch">
-                    {% if is_branch %}
-                    <a href="{% url 'central_branch:google_calendar' event_id %}"class="publish_google_calendar">
-                        {% else %}
-                        <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="publish_google_calendar">
-                            {% endif %}
-                            Click to publish the event to Google Calendar
-                        </a>
-                    </div>
-                    <div class="publish-switch">
                         <label class="form-control-label slider-checkbox">Publish Event:</label>
                         <span>                                            
                             <label class="ui-switch m-t-xs m-r">
