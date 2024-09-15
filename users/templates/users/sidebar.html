@@ -6,40 +6,33 @@
 
   // Check the notification permission status
   function checkNotificationPermission() {
-    Notification.requestPermission();
-      if (Notification.permission === "granted") {
-          // If permission is granted, remove blur and message
-          removeBlurAndMessage();
-      } else if (Notification.permission === "denied") {
-          // If permission is denied, keep the page blurred and show the message
-          createModal();
-          restrictAccess();
-      } else {
-          // If permission hasn't been requested yet, show an alert to ask for permission
-          restrictAccess();
-          createModal();
-      }
-  }
-
-  // Request notification permission
-  function requestNotificationPermission() {
-      Notification.requestPermission().then((permission) => {
+      Notification.requestPermission(function (){
+        restrictAccess();
+      }).then((permission) => {
           if (permission === "granted") {
               // Remove blur and message when permission is granted
               removeBlurAndMessage();
-          } else {
-              // If permission is denied, keep the page blurred
-              restrictAccess();
-          }
+          } else if (Notification.permission === "denied") {
+            // If permission is denied, keep the page blurred and show the message
+            restrictAccess();
+        } else {
+            // If permission hasn't been requested yet, show an alert to ask for permission
+            restrictAccess();
+        }
       });
   }
 
+  let showModal = true;
   function restrictAccess() {
       // Blur the current page and display an alert message
       // document.body.style.filter = "blur(10px)";
       // alert('Allow Notifications to enable page');
-      document.getElementById('allowNotificationModal').style.display = 'block';
-      setInterval(checkNotificationPermission, 30000);
+      if (showModal){
+        createModal();
+        showModal = false;
+        document.getElementById('allowNotificationModal').style.display = 'block';
+        setInterval(checkNotificationPermission, 10000);
+      }
   }
 
   function removeBlurAndMessage() {
