@@ -22,13 +22,17 @@
       });
   }
 
+  let showModal = true;
   function restrictAccess() {
       // Blur the current page and display an alert message
       // document.body.style.filter = "blur(10px)";
       // alert('Allow Notifications to enable page');
-      createModal();
-      document.getElementById('allowNotificationModal').style.display = 'block';
-      setInterval(checkNotificationPermission, 30000);
+      if (showModal){
+        createModal();
+        showModal = false;
+        document.getElementById('allowNotificationModal').style.display = 'block';
+        setInterval(checkNotificationPermission, 10000);
+      }
   }
 
   function removeBlurAndMessage() {
