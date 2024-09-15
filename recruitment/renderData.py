@@ -58,6 +58,8 @@ class Recruitment:
             member.facebook_url = values['facebook_url']
             member.facebook_username=values['facebook_username']
             member.home_address = values['home_address']
+            member.school = values['school']
+            member.department = values['department']
             member.major = values['major']
             member.graduating_year = values['graduating_year']
             member.recruited_by = values['recruited_by']

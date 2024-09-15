@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.db import DatabaseError, IntegrityError, InternalError
 from django.http import HttpResponseServerError, HttpResponseBadRequest, HttpResponse,JsonResponse
 from port.renderData import PortData
-from recruitment.models import recruitment_session, recruited_members
+from recruitment.models import recruitment_session, recruited_members,nsu_departments,nsu_school,nsu_majors
 import users
 from users.models import MemberSkillSets, Members
 from . import renderData
@@ -22,6 +22,8 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
+from django.views import View
+from django.http import JsonResponse
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -219,6 +221,8 @@ def recruitee_details(request,session_id,nsu_id):
                             'facebook_url': request.POST['facebook_url'],
                             'facebook_username':request.POST['facebook_username'],
                             'home_address': request.POST['home_address'],
+                            'school':request.POST['school'],
+                            'department':request.POST['department'],
                             'major': request.POST['major'], 'graduating_year': request.POST['graduating_year'],
                             'ieee_id': request.POST['ieee_id'],
                             'recruited_by': request.POST['recruited_by'],
@@ -363,6 +367,9 @@ def recruit_member(request, session_id):
             form = StudentForm
             # load all skill types
             all_skills=users.renderData.load_all_skill_types(request)
+            all_schools = nsu_school.objects.all()
+            all_departments = nsu_departments.objects.all()
+            all_majors = nsu_majors.objects.all()
 
             context = {
                 'user_data':user_data,
@@ -370,7 +377,10 @@ def recruit_member(request, session_id):
                 'form': form,
                 'session_name': Session.session,
                 'session_id': Session.id,
-                'all_skills':all_skills
+                'all_skills':all_skills,
+                'all_schools':all_schools,
+                'all_departments':all_departments,
+                'all_majors':all_majors,
             }
 
             # this method is for the POST from the recruitment form
@@ -408,6 +418,8 @@ def recruit_member(request, session_id):
                                 facebook_url=request.POST['facebook_url'],
                                 facebook_username=request.POST['facebook_username'],
                                 home_address=request.POST['home_address'],
+                                school = request.POST.get('school'),
+                                department = request.POST.get('department'),
                                 major=request.POST.get('major'),
                                 graduating_year=request.POST['graduating_year'],
                                 session_id=Session.id,
@@ -532,3 +544,36 @@ def generateExcelSheet(request, session_id):
         logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return cv.custom_500(request)
+    
+class DepartmentAjax(View):
+    
+    def get(self,request):
+        
+        school_name = request.GET.get('school_name')
+        try:
+            departments = nsu_departments.objects.filter(department_of = nsu_school.objects.get(school_initial = school_name))
+        except:
+            departments = []
+        department_names = []
+        for dept in departments:
+            department_names.append(dept.department_initial)
+        return JsonResponse(data = {
+            'school_name':school_name,
+            'departments':department_names,
+        })
+    
+class MajorAjax(View):
+    
+    def get(self,request):
+        department_name = request.GET.get('department_name')
+        try:
+            majors = nsu_majors.objects.filter(major_of = nsu_departments.objects.get(department_initial = department_name))
+        except:
+            majors = []
+        major_names = []
+        for maj in majors:
+            major_names.append(maj.major_initial)
+        return JsonResponse(data = {
+            'department_name':department_name,
+            'majors':major_names,
+        })
