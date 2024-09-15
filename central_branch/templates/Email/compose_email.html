@@ -1491,6 +1491,10 @@
       justify-content: space-between;
       margin-bottom: 1.5rem;
     }
+    ::selection {
+        background-color: #007bff; /* Background color of the selection */
+        color: #ffffff; /* Text color of the selection */
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1796,7 +1800,7 @@
 
           <div class="alt-tag-container" id="altTagContainer"></div>
           <hr>
-          <input type="text" name="subject" placeholder="Subject" required>
+          <input class="compose_sub" type="text" name="subject" placeholder="Subject" required>
         </div>
 
         <div style="margin: 10px;">
