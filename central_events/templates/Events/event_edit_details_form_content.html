@@ -49,7 +49,7 @@
         top: 88px;
         background: white;
         padding-top: 16px;
-        z-index: 9999;
+        z-index: 1000;
     }
     .publish_google_calendar{
         margin: 0;
@@ -91,15 +91,6 @@
                     {% endif %}
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin: .75rem 0">
-                    <div class="publish-switch">
-                    {% if is_branch %}
-                    <a href="{% url 'central_branch:google_calendar' event_id %}"class="publish_google_calendar">
-                        {% else %}
-                        <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="publish_google_calendar">
-                            {% endif %}
-                            Click to publish the event to Google Calendar
-                        </a>
-                    </div>
                     <div class="publish-switch">
                         <label class="form-control-label slider-checkbox">Publish Event:</label>
                         <span>                                            
