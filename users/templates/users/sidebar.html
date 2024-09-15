@@ -6,31 +6,19 @@
 
   // Check the notification permission status
   function checkNotificationPermission() {
-    Notification.requestPermission();
-      if (Notification.permission === "granted") {
-          // If permission is granted, remove blur and message
-          removeBlurAndMessage();
-      } else if (Notification.permission === "denied") {
-          // If permission is denied, keep the page blurred and show the message
-          createModal();
-          restrictAccess();
-      } else {
-          // If permission hasn't been requested yet, show an alert to ask for permission
-          restrictAccess();
-          createModal();
-      }
-  }
-
-  // Request notification permission
-  function requestNotificationPermission() {
-      Notification.requestPermission().then((permission) => {
+      Notification.requestPermission(function (){
+        restrictAccess();
+      }).then((permission) => {
           if (permission === "granted") {
               // Remove blur and message when permission is granted
               removeBlurAndMessage();
-          } else {
-              // If permission is denied, keep the page blurred
-              restrictAccess();
-          }
+          } else if (Notification.permission === "denied") {
+            // If permission is denied, keep the page blurred and show the message
+            restrictAccess();
+        } else {
+            // If permission hasn't been requested yet, show an alert to ask for permission
+            restrictAccess();
+        }
       });
   }
 
@@ -38,6 +26,7 @@
       // Blur the current page and display an alert message
       // document.body.style.filter = "blur(10px)";
       // alert('Allow Notifications to enable page');
+      createModal();
       document.getElementById('allowNotificationModal').style.display = 'block';
       setInterval(checkNotificationPermission, 30000);
   }
@@ -81,7 +70,7 @@
 
     // Create the paragraph element
     const paragraph = document.createElement('p');
-    paragraph.innerText = 'IEEE NSU Student Brunch portal requires you to enable notifications. Allow notifications to continue on the portal.';
+    paragraph.innerText = 'IEEE NSU Student Branch portal requires you to enable notifications. Allow notifications to continue on the portal.';
     paragraph.style.padding = '10px';
     paragraph.style.marginBottom = '10px';
     paragraph.style.borderBottom = '1.5px solid #c5c5c5';
