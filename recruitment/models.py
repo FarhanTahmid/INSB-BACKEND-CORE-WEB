@@ -31,6 +31,8 @@ class recruited_members(models.Model):
     facebook_url=models.CharField(null=True,blank=True,max_length=500)
     facebook_username=models.CharField(null=True,blank=True,max_length=50)
     home_address=models.CharField(null=True,blank=True,max_length=300)
+    school = models.CharField(null=True,blank=True,max_length = 200,default="SEPS")
+    department = models.CharField(null=True,blank = True,max_length=200,default="ECE")
     major=models.CharField(null=True,blank=True,max_length=30)
     graduating_year=models.IntegerField(null=True,blank=True)
     recruitment_time=models.DateTimeField(auto_now_add=True,null=True,blank=True)
@@ -52,4 +54,37 @@ class recruited_members(models.Model):
     def get_absolute_url(self):
         return reverse("recruited member", kwargs={"nsu_id": self.nsu_id})
     
+class nsu_school(models.Model):
+
+    school_full_name=models.CharField(null=False,blank=False,max_length=200)
+    school_initial = models.CharField(null=False,blank=False,max_length=20)
+
+    class Meta:
+        verbose_name="NSU School of Degrees"
     
+    def __str__(self) -> str:
+        return str(self.school_initial)
+    
+class nsu_departments(models.Model):
+
+    department_of = models.ForeignKey(nsu_school,on_delete=models.CASCADE)
+    department_full_name = models.CharField(null=False,blank=False,max_length=200)
+    department_initial = models.CharField(null=False,blank=False,max_length=20)
+
+    class Meta:
+        verbose_name="NSU Departments"
+    
+    def __str__(self) -> str:
+        return str(self.department_initial)
+
+class nsu_majors(models.Model):
+
+    major_of = models.ForeignKey(nsu_departments,on_delete=models.CASCADE)
+    major_full_name = models.CharField(null=False,blank=False,max_length=200)
+    major_initial = models.CharField(null=False,blank=False,max_length=20)
+
+    class Meta:
+        verbose_name="NSU Majors"
+    
+    def __str__(self) -> str:
+        return str(self.major_initial)

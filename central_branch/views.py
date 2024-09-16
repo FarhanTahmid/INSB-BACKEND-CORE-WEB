@@ -3810,6 +3810,11 @@ def member_details(request,ieee_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         # load all skill types
         all_skills=users.renderData.load_all_skill_types(request)
+        # get member skills
+        try:
+            skill_of_member=member_skills.skills.all()
+        except AttributeError:
+            skill_of_member=None
         
         context={
             'is_branch':True,
@@ -3822,7 +3827,8 @@ def member_details(request,ieee_id):
             'media_url':settings.MEDIA_URL,
             'active_status':active_status,
             'user_data':user_data,
-            'all_skills':all_skills
+            'all_skills':all_skills,
+            'skill_of_member':skill_of_member,
         }
         if request.method=="POST":
             if request.POST.get('save_edit'):
@@ -3836,10 +3842,13 @@ def member_details(request,ieee_id):
                 email_nsu=request.POST['email_nsu']
                 facebook_url=request.POST['facebook_url']
                 home_address=request.POST['home_address']
+                school = request.POST['school_label']
+                department= request.POST['department_label']
                 major=request.POST['major_label']
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
+                skill_sets=request.POST.getlist('skill_sets')
                 blood_group = request.POST['blood_group']
 
                 if date_of_birth == '':
@@ -3869,6 +3878,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school = school,
+                                                                department=department,
                                                                 major=major,
                                                                 session=None,
                                                                 last_renewal_session=None,
@@ -3879,6 +3890,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                            
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -3894,6 +3918,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
                                                                 last_renewal_session=None,
@@ -3904,6 +3930,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                        
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -3921,6 +3960,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school = school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=None,
                                                                 last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
@@ -3931,6 +3972,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                        
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                            
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -3946,6 +4000,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
                                                                 last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
@@ -3956,6 +4012,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                        
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:

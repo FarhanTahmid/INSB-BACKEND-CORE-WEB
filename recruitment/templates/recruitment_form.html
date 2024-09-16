@@ -325,24 +325,37 @@
                             </div>
                             <br>
                             <div class="row m-b">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
+                                  <label for="exampleInputPassword1">School</label>
+                                  <select class="form-control w-75" name="school" id="school" required>
+                                    <option value="None" disabled selected>-------------------</option>
+                                    {% for school in all_schools %}
+                                    <option value="{{school.school_initial}}">{{school.school_initial}}</option>
+                                    {% endfor %}
+                                  </select>                  
+                                </div>
+                                <div class="col-md-4">
+                                  <label for="exampleInputPassword1">Department</label>
+                                  <select class="form-control w-75" name="department" id="department" required>
+                                      <option value="None" disabled selected>-------------------</option>
+                                  </select>                  
+                                </div>
+                                <div class="col-md-4">
                                     <label for="exampleInputPassword1">Major</label>
-                                    <select class="form-control w-75" name="major" id="major">
-                                        <option value="None">-------------------</option>
-                                        <option value="CSE">CSE</option>
-                                        <option value="EEE">EEE</option>
-                                        <option value="ETE">ETE</option>
+                                    <select class="form-control w-75" name="major" id="major" required>
+                                        <option value="None" disabled selected>-------------------</option>
                                     </select>                  
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="exampleInputPassword1">Tentative Graduating Year<span style="color:red;"> *</span></label>
-                                    <input
-                                        class="form-control w-75"
-                                        type="number"
-                                        required name="graduating_year"
-                                        placeholder="Graduating Year"
-                                    />  
-                                </div>
+                            </div>
+                            <br>
+                            <div class="form=group">
+                              <label for="exampleInputPassword1">Tentative Graduating Year<span style="color:red;"> *</span></label>
+                              <input
+                                  class="form-control w-75"
+                                  type="number"
+                                  required name="graduating_year"
+                                  placeholder="Graduating Year"
+                              />  
                             </div>
                             <br>
                             <div class="form-group">
@@ -560,6 +573,61 @@
 </script>
 
   <script src="{% static 'script/ajax.js'%}"></script>
+<script>
+  const school_name = document.getElementById('school');
+  const department_select = document.getElementById('department');
+  const major_select = document.getElementById('major');
+
+  school_name.addEventListener('click',()=>{
+    //console.log(school_name.value);
+    $.ajax({
+      type: "GET",
+      url: "{% url 'recruitment:get_departments' %}",
+      data: {
+        'school_name':school_name.value,
+      },
+      success: function(result){
+          console.log(result['departments']);
+          const departments = result['departments'];
+          department_select.innerHTML = '<option value="None" disabled selected>-------------------</option>';
+
+          departments.forEach((departments)=>{
+            const option = document.createElement('option');
+            option.value = departments; 
+            option.text = departments; 
+            department_select.appendChild(option);
+          });
+      
+      }
+    });
+  });
+
+  department_select.addEventListener('click',()=>{
+
+    $.ajax({
+      type: "GET",
+      url: "{% url 'recruitment:get_majors' %}",
+      data: {
+        'department_name':department_select.value,
+      },
+      success: function(result){
+          console.log(result['majors']);
+          const majors = result['majors'];
+          major_select.innerHTML = '<option value="None" disabled selected>-------------------</option>';
+
+          majors.forEach((majors)=>{
+            const option = document.createElement('option');
+            option.value = majors; 
+            option.text = majors; 
+            major_select.appendChild(option);
+          });
+      
+      }
+    });
+
+  });
+
+</script>
   <script>
     getPagination('#table-id');
 	$('#maxRows').trigger('change');

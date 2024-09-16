@@ -1,6 +1,7 @@
 
 from django.urls import path,include
 from recruitment import views
+from . views import DepartmentAjax,MajorAjax
 
 app_name='recruitment'
 
@@ -14,5 +15,7 @@ urlpatterns = [
     path('membership_form/<int:session_id>',views.recruit_member,name="recruit_member"),
     path('export_excel/<int:session_id>',views.generateExcelSheet,name="export_excel"),
     path('getPaymentStats/',views.getPaymentStats,name="payment_stats"),
+    path('get_departments/',DepartmentAjax.as_view(),name="get_departments"),
+    path('get_majors/',MajorAjax.as_view(),name='get_majors'),
 
 ]
