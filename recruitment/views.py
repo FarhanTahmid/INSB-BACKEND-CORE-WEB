@@ -314,6 +314,8 @@ def recruitee_details(request,session_id,nsu_id):
                                 nsu_id=getMember[0].nsu_id,
                                 email_personal=getMember[0].email_personal,
                                 email_nsu=getMember[0].email_nsu,
+                                school = getMember[0].school,
+                                department = getMember[0].department,
                                 major=getMember[0].major,
                                 contact_no=getMember[0].contact_no,
                                 home_address=getMember[0].home_address,
@@ -503,7 +505,7 @@ def generateExcelSheet(request, session_id):
 
             # Defining columns that will stay in the first row
             columns = ['NSU ID', 'First Name', 'Middle Name', 'Last Name', 'Email (personal)', 'Email (NSU)','Blood Group', 'Contact No', 'IEEE ID', 'Gender', 'Date Of Birth','Facebook Username', 'Facebook Url',
-                    'Address', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
+                    'Address', 'School', 'Department', 'Major', 'Graduating Year', 'Recruitment Time', 'Recruited By', 'Cash Payment Status', 'IEEE Payment Status']
 
             # Defining first column
             for column in range(len(columns)):
@@ -523,6 +525,7 @@ def generateExcelSheet(request, session_id):
                                                                                                         'facebook_username',
                                                                                                         'facebook_url',
                                                                                                         'home_address',
+                                                                                                        'school','department',
                                                                                                         'major', 'graduating_year',
                                                                                                         'recruitment_time',
                                                                                                         'recruited_by',

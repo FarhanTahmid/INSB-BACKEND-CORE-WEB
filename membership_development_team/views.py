@@ -178,6 +178,8 @@ def member_details(request,ieee_id):
                 email_nsu=request.POST['email_nsu']
                 facebook_url=request.POST['facebook_url']
                 home_address=request.POST['home_address']
+                school=request.POST['school_label']
+                department=request.POST['department_label']
                 major=request.POST['major_label']
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
@@ -211,6 +213,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=None,
                                                                 last_renewal_session=None,
@@ -243,6 +247,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
                                                                 last_renewal_session=None,
@@ -276,6 +282,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=None,
                                                                 last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
@@ -308,6 +316,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
                                                                 last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
@@ -979,7 +989,7 @@ def generateExcelSheet_membersList(request):
             font_style.font.bold = True
 
             # Defining columns that will stay in the first row
-            columns = ['IEEE ID','NSU ID', 'Name', 'Email (IEEE)','Email (Personal)', 'Major', 'Contact No', 'Home Address', 'Date Of Birth', 'Gender',
+            columns = ['IEEE ID','NSU ID', 'Name', 'Email (IEEE)','Email (Personal)', 'School', 'Department', 'Major', 'Contact No', 'Home Address', 'Date Of Birth', 'Gender',
                     'Facebook URL']
 
             # Defining first column
@@ -995,6 +1005,8 @@ def generateExcelSheet_membersList(request):
                                                     'name',
                                                     'email_ieee',
                                                     'email_personal',
+                                                    'school',
+                                                    'department',
                                                     'major',
                                                     'contact_no',
                                                     'home_address',

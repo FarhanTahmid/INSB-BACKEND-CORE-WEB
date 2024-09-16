@@ -35,7 +35,7 @@ class NotificationHandler:
         # get the object of notification_type, the passed value of the notification type must be the pk of the object
         notification_type = NotificationTypes.objects.get(pk=notification_type)
         timestamp=datetime.now()
-        
+        print("date time created")
         try:
             # get the object of members, the passed value of created by must be an instance of Members
             created_by=Members.objects.get(ieee_id=created_by)
@@ -45,6 +45,7 @@ class NotificationHandler:
                 type=notification_type,timestamp=timestamp,title=title,general_message=general_message,
                 inside_link=inside_link,created_by=created_by,notification_of=notification_of
             )
+            print("here1")
             # save the new instance of notification
             new_notification.save()
                         
@@ -56,6 +57,7 @@ class NotificationHandler:
                 type=notification_type,timestamp=timestamp,title=title,general_message=general_message,
                 inside_link=inside_link,notification_of=notification_of,event = event
             )
+            print("here2")
             # save the new instance of notification
             new_notification.save()
         
@@ -136,6 +138,8 @@ class NotificationHandler:
         '''
 
         notification_exists=Notifications.objects.filter(object_id=notification_of.pk, type=notification_type).exists()
+        if type(notification_of) == Task:
+            return False
         return notification_exists
 
     def mark_as_read(member_notification_id):
@@ -191,6 +195,7 @@ class NotificationHandler:
 
         general_message=message
         if NotificationHandler.has_notification(notification_of, notification_type):
+            print("exist notification")
             NotificationHandler.update_notification(notification_of, notification_type, {'general_message':general_message})
         else:
             try:
@@ -200,11 +205,10 @@ class NotificationHandler:
 
             # this shows an admin if the task was created by an admin, otherwise shows the member name
             receiver_list = []
-            try:
-                receiver_list.append(member.ieee_id)
-            except:
-                receiver_list.append(member.email)
+            print("receiver list created")
+            receiver_list.append(member.ieee_id)
             notification_created_by_name = "An admin" if notification_created_by is None else notification_created_by.name
+            print("notification created by name now going to creating")
             NotificationHandler.create_notifications(notification_type=notification_type.pk,
                                                     title=title,
                                                     general_message=general_message,
