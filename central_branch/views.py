@@ -6216,8 +6216,13 @@ def get_attachment(request, message_id, attachment_id):
     # Decode the attachment data
     attachment_data = base64.urlsafe_b64decode(attachment['data'].encode('utf-8'))
 
+    # Get the MIME type based on the file extension
+    mime_type, _ = mimetypes.guess_type(filename)
+    if not mime_type:
+        mime_type = 'application/octet-stream'  # Fallback for unknown types
+
     # Create the response
-    response = HttpResponse(attachment_data)
+    response = HttpResponse(attachment_data, content_type=mime_type)
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
