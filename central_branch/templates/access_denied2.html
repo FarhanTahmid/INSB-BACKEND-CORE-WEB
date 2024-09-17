@@ -70,13 +70,10 @@
         
             <!-- navbar right -->
             <ul class="nav navbar-nav ml-auto flex-row">
-              <li class="nav-item dropdown pos-stc-xs">
-                <a class="nav-link mr-2" href data-toggle="dropdown">
-                  <i class="material-icons">&#xe7f5;</i>
-                  <span class="label label-sm up warn">3</span>
-                </a>
-                <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
-              </li>
+              <!--notification bell-->
+              {% block bell_notification %}
+                  {% include 'users/bell_notification.html' %}
+              {% endblock bell_notification %}
               <li class="nav-item dropdown">
                 <a class="nav-link p-0 clear" href="{% url 'users:profile' %}">
                   <span class="avatar w-32">
