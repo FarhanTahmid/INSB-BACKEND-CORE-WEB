@@ -1805,3 +1805,6 @@ def update_count_down(request):
                 change.save()
 
             return JsonResponse({'status': 'success'})
+        
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
