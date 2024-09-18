@@ -1534,9 +1534,11 @@ This is an automated message. Do not reply
                 member = Members.objects.get(ieee_id = username)
                 email_to.append(member.email_nsu)
                 email_to.append(member.email_ieee)
+                receiver_name = member.name
             except:
                 member = adminUsers.objects.get(username=username)
                 email_to.append(member.email)
+                receiver_name = member.username
 
 
             email_from = settings.EMAIL_HOST_USER
@@ -1550,7 +1552,7 @@ This is an automated message. Do not reply
             
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
             message = f'''
-Hello {username},
+Hello {receiver_name},
 You're requested task has been completed and is ready for review! The task is submitted by {logged_in_user.name}.
 
 Please review the task, and for futher improvements make sure to comment! You can adjust the marks given to your 
