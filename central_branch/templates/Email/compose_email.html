@@ -329,7 +329,6 @@
     .email_boxes {
       display: flex;
       gap: 10px;
-      margin-left: -10px;
       align-items: center;
     }
 
@@ -1121,9 +1120,6 @@
         margin-bottom: 0.5rem;
         align-items: center;
       }
-      .email_boxes{
-        margin-left: 0;
-      }
     }
 
    
@@ -1196,7 +1192,6 @@
     }
 
     .email_box {
-      padding: 8px 10px;
       font-size: 14px;
     }
       .compose {
@@ -2775,6 +2770,21 @@
           tagInput.value = ''; // Clear the input field
         }
       });
+
+      // Handle paste event for multiple values
+      tagInput.addEventListener('paste', function (event) {
+          event.preventDefault(); // Stop default paste behavior
+          const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+          processInput(pasteText.trim());
+          tagInput.value = ''; // Clear the input field after paste
+        });
+
+        function processInput(input) {
+          const items = input.split(/[\s,]+/); // Split by space or comma
+          items.forEach(item => {
+              addTag(item.trim()); // Add tag only if it contains '@'
+          });
+        }
 
       function addTag(tagText) {
         if (tagText === '') return;
