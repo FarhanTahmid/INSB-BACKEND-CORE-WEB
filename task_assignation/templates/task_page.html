@@ -801,7 +801,7 @@
                     <div class="form-group">
                             <label for="documents">File Upload</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple {% if task.is_task_completed %}disabled{% endif %}>
+                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept="*/*" multiple {% if task.is_task_completed %}disabled{% endif %}>
                                 <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
                             </div>
                             
