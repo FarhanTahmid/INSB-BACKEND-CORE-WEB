@@ -598,17 +598,20 @@ class Branch:
             if(create_notification):
                 inside_link=f"{request.META['HTTP_HOST']}/events/{event.pk}"
                 general_message=f"{event.start_date.strftime('%A %d, %b@%I:%M%p')} | <b>{event.event_name}</b>"
-                # receiver_list=Branch.load_all_active_general_members_of_branch()
-                receiver_list=Branch.get_attendee_list_from_backend(event.selected_attendee_list)
-                if receiver_list == None or len(receiver_list) == 0:
-                    messages.warning(request, "The attendee list is empty! Could not create notifications or notify members")
-                    return True
+                receiver_list=Branch.load_all_members_of_branch()
+                members_to_notify=[]
+                for member in receiver_list:
+                    members_to_notify.append(member.ieee_id)
+                #receiver_list=Branch.get_attendee_list_from_backend(request,event.selected_attendee_list)
+                # if receiver_list == None or len(receiver_list) == 0:
+                #     messages.warning(request, "The attendee list is empty! Could not create notifications or notify members")
+                #     return True
                 if(NotificationHandler.create_notifications(notification_type=Branch.event_notification_type.pk,
                                                             title="New Event has been published!",
                                                             general_message=general_message,
                                                             inside_link=inside_link,
                                                             created_by="IEEE NSU SB",
-                                                            reciever_list=receiver_list,
+                                                            reciever_list=members_to_notify,
                                                             notification_of=event,
                                                             event = event)):
                     messages.success(request, "Notifications created and sent to members!")
