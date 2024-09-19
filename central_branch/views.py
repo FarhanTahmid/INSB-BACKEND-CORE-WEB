@@ -6435,3 +6435,77 @@ class SendReplyMailAjax(View):
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Something went wrong!'})
+        
+class SendForwardMailAjax(View):
+    def post(self, request):
+        msg = 'test'
+
+        # try:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            body = request.POST.get('body')
+            original_message_id = request.POST.get('message_id')
+            email_attachment = None
+            if request.POST.get('attachments'):
+                email_attachment=request.FILES.getlist('attachments')
+            to_email_additional = ''
+            if request.POST.get('to[]'):
+                to_email_additional=request.POST.get('to[]')
+            
+            print(to_email_additional)
+
+            global service
+            if not service:
+                credentials = GmailHandler.get_credentials(request)
+                if not credentials:
+                    print("NOT OK")
+                    return None
+                
+                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+            # Get the original email
+            original_message = service.users().messages().get(userId='me', id=original_message_id, format='raw').execute()
+
+            message=MIMEMultipart()
+            
+            # Attach the main message body
+            message.attach(MIMEText(body, 'html'))
+
+
+            message["From"] = "ieeensusb.portal@gmail.com"
+            message['To'] = to_email_additional
+            # message['Cc'] = headers.get('Cc')
+            subject = original_message.get('Subject', '(No Subject)')
+            if subject[:4] == 'Fwd:':
+                message['Subject'] = subject
+            else:
+                message['Subject'] = 'Fwd: ' + subject
+                
+            original_message = base64.urlsafe_b64decode(original_message['raw'].encode('utf-8'))
+            print(original_message)
+            message.attach(MIMEText(f"Forwarded message:\n\n{original_message.decode('utf-8')}", 'html'))
+
+            if email_attachment:
+                for attachment in email_attachment:
+                    content_file = ContentFile(attachment.read())
+                    content_file.name = attachment.name
+                    part = MIMEBase('application', 'octet-stream')
+                    part.set_payload(content_file.read())
+                    encoders.encode_base64(part)
+                    part.add_header(
+                        'Content-Disposition',
+                        f'attachment; filename={content_file.name}',
+                    )
+                    message.attach(part)
+
+            # encoded message
+            encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+            
+            create_message = {"raw": encoded_message}
+
+            send_message = service.users().messages().send(userId='me', body=create_message).execute()
+            msg = 'Email forwarded successfully!'
+
+        return JsonResponse({'message':msg})
+        # except Exception as e:
+        #     print(e)
+        #     return JsonResponse({'message':'Something went wrong!'})

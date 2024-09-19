@@ -766,6 +766,7 @@
                 <label for="myfile"><i class="fa fa-paperclip" style="margin: 6px 9px;"></i></label>
                 <input type="file" id="myfile" name="myfile" hidden multiple>
               </div>
+              <input type="hidden" id="mail_type">
 
               <input type="button" class="send_button" onclick="EmailSent('{{threads.0.thread_id}}','{{threads.0.message_id}}')" value="Send">
             </div>
@@ -861,6 +862,7 @@
           document.querySelector('.fwd-only4').style.display = 'none';
           document.querySelector('.fwd-only5').style.display = 'none';
           document.querySelector('.fwd-only6').style.display = 'none';
+          document.getElementById('mail_type').value = 'reply';
         }else if (composeType === 'fwd' && (prev === 'none' || prev === 'reply')){
           x.style.display = 'block';
           prev = 'fwd';
@@ -870,6 +872,7 @@
           document.querySelector('.fwd-only4').style.display = 'block';
           document.querySelector('.fwd-only5').style.display = 'block';
           document.querySelector('.fwd-only6').style.display = 'flex';
+          document.getElementById('mail_type').value = 'fwd';
         }else{
           x.style.display = 'none';
           prev = 'none';
@@ -1065,6 +1068,8 @@
 
         // Get the modal
         var sentModal = document.getElementById("sentModal");
+        const mail_type = document.getElementById('mail_type').value;
+        console.log(mail_type);
         sentModal.style.transform = 'translateY(0px)';
         sentModal.style.zIndex = '103100';
         sentModal.style.opacity = '1';
@@ -1080,7 +1085,6 @@
         formData.append('to[]', getAllSelectedTags());
         formData.append('body', body);
         formData.append('csrfmiddlewaretoken', csrf);
-        formData.append('thread_id', thread_id);
         formData.append('message_id',message_id);
 
         // Append each file from the attachments input
@@ -1089,25 +1093,53 @@
           formData.append('attachments', attachments.files[i]);
         }
 
-        $.ajax({
-          url: "{% url 'central_branch:send_reply_mail_request' %}",
-          type: "POST",
-          data: formData,
-          processData: false,  // Important!
-          contentType: false,  // Importfant!
-          headers: {
-            "X-CSRFToken": csrf
-          },
-          success: function (response) {
-            // Handle the response
-            console.log(response);
-            mssg.innerHTML = response['message'];
-            window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          }
-        });
+        if(mail_type == 'reply') {
+          formData.append('thread_id', thread_id);
+
+          $.ajax({
+            url: "{% url 'central_branch:send_reply_mail_request' %}",
+            type: "POST",
+            data: formData,
+            processData: false,  // Important!
+            contentType: false,  // Importfant!
+            headers: {
+              "X-CSRFToken": csrf
+            },
+            success: function (response) {
+              // Handle the response
+              console.log(response);
+              mssg.innerHTML = response['message'];
+              window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
+            },
+            error: function (error) {
+              console.error("Error:", error);
+            }
+          });
+        }
+        else if (mail_type == 'fwd') {
+          $.ajax({
+            url: "{% url 'central_branch:send_forward_mail_request' %}",
+            type: "POST",
+            data: formData,
+            processData: false,  // Important!
+            contentType: false,  // Importfant!
+            headers: {
+              "X-CSRFToken": csrf
+            },
+            success: function (response) {
+              // Handle the response
+              console.log(response);
+              mssg.innerHTML = response['message'];
+              //window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
+            },
+            error: function (error) {
+              console.error("Error:", error);
+            }
+          });
+        }
+        else {
+          mssg.innerHTML = "Wrong email type!";
+        }
 
         // Get the <span> element that closes the modal
         var closeBtn = document.getElementsByClassName("modalClosebtn")[0];
