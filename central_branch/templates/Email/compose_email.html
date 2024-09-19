@@ -2763,6 +2763,8 @@
       const tagContainer = document.getElementById('tagContainer');
       const tagInput = document.getElementById('tagInput');
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
           event.preventDefault(); // Prevent the space/comma from being typed
@@ -2780,11 +2782,13 @@
         });
 
         function processInput(input) {
-          const items = input.split(/[\s,]+/); // Split by space or comma
-          items.forEach(item => {
-              addTag(item.trim()); // Add tag only if it contains '@'
-          });
-        }
+        const items = input.split(/[\s,]+/); // Split by space or comma
+        items.forEach(item => {
+          if (emailRegex.test(item.trim())) {
+            addTag(item.trim()); // Add tag only if it matches the email format
+          }
+        });
+      }
 
       function addTag(tagText) {
         if (tagText === '') return;
