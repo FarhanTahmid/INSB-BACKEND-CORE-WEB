@@ -2768,7 +2768,8 @@
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
           event.preventDefault(); // Prevent the space/comma from being typed
-          addTag(tagInput.value.trim());
+          processInput(tagInput.value);
+          //addTag(tagInput.value.trim());
           tagInput.value = ''; // Clear the input field
         }
       });
@@ -2785,12 +2786,15 @@
         const items = input.split(/[\s,]+/); // Split by space or comma
         items.forEach(item => {
           if (emailRegex.test(item.trim())) {
-            addTag(item.trim()); // Add tag only if it matches the email format
+            addTag(item.trim(), true);
+          }
+          else {
+            addTag(item.trim(), false);
           }
         });
       }
 
-      function addTag(tagText) {
+      function addTag(tagText, isCorrect) {
         if (tagText === '') return;
 
         const tag = document.createElement('div');
@@ -2798,6 +2802,11 @@
 
         const span = document.createElement('span');
         span.textContent = tagText;
+
+        if(!isCorrect) {
+          tag.style.borderColor = 'red';
+          span.style.color = 'red';
+        }
 
         const removeButton = document.createElement('span');
         removeButton.className = 'remove-tag';
