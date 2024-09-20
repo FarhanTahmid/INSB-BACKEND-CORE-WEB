@@ -640,6 +640,28 @@
       .catch(function(err) {
         console.error("Error getting FCM token:", err);
       });
+
+      messaging.onTokenRefresh(function() {
+        messaging.getToken()
+        .then(function(refreshedToken) {
+          console.log("FCM Token refreshed:", refreshedToken);
+          $.ajax({
+            url: "{% url 'notification:receive_token' %}",
+            type: "GET",
+            data: {'token': token},
+            success: function (response) {
+              // console.log("Success:", response);
+            },
+            error: function (error) {
+                // console.log("Error:", error);
+            }
+          });
+        })
+        .catch(function(err) {
+          console.error("Unable to retrieve refreshed token:", err);
+        });
+      });
+
     })
     .catch(function(err) {
       console.error('Service Worker registration failed:', err);
