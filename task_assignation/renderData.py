@@ -1397,7 +1397,7 @@ class Task_Assignation:
         except:
             return False
             
-    def deduct_points_for_members(task):
+    def deduct_points_for_members(request,task):
 
         '''This function will deduct point according the late duration.. Marks will be decucted every day 5% of current score'''
 
@@ -1440,8 +1440,69 @@ class Task_Assignation:
                             #key value is late_duration number the and the member's id
                             member.deducted_points_logs[f"{late_duration}_{member.member}"] = f"({string_current_Date}): -{round(deduction_amount, 2)}, delayed by {late_duration} days"
                             member.save()
+                            member_obj = Members.objects.get(ieee_id = member.member)
+                            Task_Assignation.late_email_to_member(request,task,member_obj,late_duration,deduction_amount,member.completion_points)
         
         return is_late
+    
+    def late_email_to_member(request,task,member,late_duration,deduction_amount,completion_points):
+
+        '''This function sents out the email to the member to remind them that their task has been late
+        and sents the notification as well'''
+
+        try:
+            email_to = []
+            try:
+                email_to.append(member.email_nsu)
+                email_to.append(member.email_ieee)
+                receiver_name = member.name
+            except:
+                print("error occured")
+
+
+            email_from = settings.EMAIL_HOST_USER
+            site_domain = request.META['HTTP_HOST']
+
+            if task.task_type == 'Individuals' and len(task.team.all()) == 0:
+                url = f'{site_domain}/portal/central_branch/task/{task.pk}/upload_task'
+            else:
+                url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=member.team.primary)}/task/{task.pk}/upload_task/{member.team.primary}'
+            
+            subject = f"Your Task, {task.title}, is due by {late_duration} days!"
+            message = f'''
+Hello {receiver_name},
+Your assigned task has been due for {late_duration} days.
+
+Points Deducted : {deduction_amount}
+Remaining points to be gained from the task : {completion_points}
+Current total points : {member.completed_task_points}
+
+Complete the task as soon as possible to achieve the remaing points!
+
+Please follow the link to view the task: 
+{url}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+    '''
+            email=EmailMultiAlternatives(subject,message,
+                                email_from,
+                                email_to
+                                )
+            email.send()
+            task_log_message = f'Task Name: {task.title}, task due email sent to designated member {member.name}'
+            #setting message
+            Task_Assignation.save_task_logs(task,task_log_message)
+            #sending the notification to the task creator
+            notification_message = f"Assigned Task, {task.title} has been due for {late_duration} days! Check back on task ASAP!"
+            NotificationHandler.notification_to_a_member(request,task,"Task Due!",notification_message,f"{url}",Task_Assignation.task_comment,member)
+
+            return True
+        except:
+            return False
+
 
     def add_comments(request,task, member_id, comments):
 

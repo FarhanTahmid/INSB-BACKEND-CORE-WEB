@@ -5312,7 +5312,7 @@ def task_edit(request,task_id,team_primary = None):
         task_logs = Task_Log.objects.get(task_number = task)
 
         #checking to see if points to be deducted
-        late = Task_Assignation.deduct_points_for_members(task)
+        late = Task_Assignation.deduct_points_for_members(request,task)
 
         is_member_view = logged_in_user in task.members.all()
         #If it is a task member view or a regular view then override the access
