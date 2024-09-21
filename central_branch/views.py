@@ -27,6 +27,7 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from public_relation_team.tasks import send_scheduled_email
 from .models import Email_Draft
 from public_relation_team.renderData import PRT_Data
 from public_relation_team.render_email import PRT_Email_System
@@ -6312,7 +6313,6 @@ class UpdateScheduledEmailOptionsAjax(View):
                 unique_id = request.POST.get('id')
                 new_datetime = request.POST.get('new_schedule_datetime')
                 status = request.POST.get('status')
-                print(status)
 
                 task = PeriodicTask.objects.get(name=unique_id)
                 if new_datetime:
@@ -6345,6 +6345,11 @@ class UpdateScheduledEmailOptionsAjax(View):
                         task.save()
                         draft.delete()
                         message = 'Email schedule is cancelled'
+                    elif status == 'send_now':
+                        send_scheduled_email(json.dumps(unique_id))
+                        task.enabled = False
+                        task.save()
+                        message = "Email sent successfully"
 
             return JsonResponse({'message':message})
         except Exception as e:
