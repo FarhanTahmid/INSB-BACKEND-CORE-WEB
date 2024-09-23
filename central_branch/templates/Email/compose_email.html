@@ -75,12 +75,13 @@
       bottom: 10px;
       right: 10px;
       width: 587px;
-      border: 1px solid #ccc;
+      /* border: 1px solid #ccc; */
       background: white;
       border-radius: 5px;
       z-index: 1020;
       max-height: 650px;
       overflow-y: auto;
+      box-shadow: -2px -2px 8px 2px rgba(0, 0, 0, 0.1);
     }
 
     .child-body {
@@ -177,6 +178,7 @@
     }
 
     .fa-paperclip {
+      color: #333;
       padding: 6px 9px;
       border-radius: 50%;
       transition: all .3sec ease-in-out;
@@ -184,10 +186,11 @@
 
     .fa-paperclip:hover {
       background-color: #f0f0f0;
+      color: #333;
     }
 
     .button1 {
-      background-color: #e63946;
+      background-color: #c11c1c;
       border: none;
       color: white;
       padding: 8px 20px;
@@ -200,11 +203,11 @@
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
-      border: 1px solid #e63946;
+      border: 1px solid #ba4040;
     }
 
     .button2 {
-      background-color: #57cc99;
+      background-color: #265489;
       border: none;
       color: white;
       padding: 8px 20px;
@@ -217,17 +220,17 @@
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
-      border: 1px solid #57cc99;
+      border: 1px solid #265489;
     }
 
     .button1:hover {
       background-color: white;
-      color: #e63946;
+      color: #ba4040;
     }
 
     .button2:hover {
       background-color: white;
-      color: #57cc99;
+      color: #265489;
     }
 
     textarea::placeholder {
@@ -265,23 +268,25 @@
     }
 
     .scadule-yes {
-      background: #57cc99;
-      border: 1px solid #57cc99;
+      background: #265489;
+      border: 1px solid #265489;
       border-radius: .25rem;
       padding: .25rem 1rem;
       margin: .25rem;
       color: white;
       cursor: pointer;
       transition: all .3s ease-in-out;
+      display: flex;
+      align-items: center;
     }
 
     .scadule-yes:hover {
       background: white;
-      color: #57cc99;
+      color: #265489;
     }
 
     .scadule-send {
-      background: #57cc99;
+      background: #265489;
       border: 0;
       border-radius: 5px;
       padding: 5px 10px;
@@ -289,7 +294,7 @@
     }
 
     .scadule-send:hover {
-      background: #57cc99;
+      background: #265489;
       transition: .3s;
       cursor: pointer;
     }
@@ -513,7 +518,7 @@
     }
 
     .hidden {
-      display: none;
+      opacity: 0;
     }
 
     .select_all_option input[type="checkbox"] {
@@ -619,7 +624,7 @@
 
     .scadule-no {
       color: white;
-      background-color: #e9c46a;
+      background-color: #fbc74a;
       display: inline;
       padding: 6px 25px;
       margin: .25rem;
@@ -735,13 +740,13 @@
 
     .scadule-send {
       color: white;
-      background-color: #57cc99;
+      background-color: #265489;
       display: inline;
       padding: 6px 25px;
       margin: .25rem;
       border: 1px;
       border-style: solid;
-      border-color: #57cc99;
+      border-color: #265489;
       border-radius: 4px;
       transition: all .3s ease-in-out;
       position: relative;
@@ -749,7 +754,7 @@
     }
 
     .scadule-send:hover {
-      color: #57cc99;
+      color: #265489;
       background-color: white;
     }
     .tag-container {
@@ -1842,9 +1847,10 @@
             <h4 style="font-weight: bold;">Want to schedule the email?</h4>
             <span class="close1">&times;</span>
           </div>
+          <hr style="width: 94%;">
           <!-- <hr> -->
-          <div style="padding: .5rem 1.25rem .75rem;">
-            {% comment %} <div class="labels">
+          {% comment %} <div style="padding: .5rem 1.25rem .75rem;">
+            <div class="labels">
               <div>
                 <input type="checkbox" name="event">
                 <label for="event">Event</label>
@@ -1857,10 +1863,10 @@
                 <input type="checkbox" name="announcement">
                 <label for="announcement">Announcement</label>
               </div>
-            </div> {% endcomment %}
+            </div>
             <!-- <h6 style="position: relative;
                 top: 9px; font-weight: bold;">Want to Schedule the Email?</h6> -->
-          </div>
+          </div> {% endcomment %}
           <div class="scadule-yes-no">
             <input class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
             <!-- <h6 class="scadule-no" onclick="EmailSent()">No, send without schedule</h6> -->
@@ -1888,13 +1894,13 @@
           <div
             style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
             <h5 style="position: relative;
-                top: 9px">Set the time and date:</h5>
+                top: 9px; font-weight: bold">Set the time and date:</h5>
             <span class="close3">&times;</span>
           </div>
-          <hr>
+          <hr style="width: 94%;">
           <div class="pick_date_time">
             <input type="datetime-local" name="datetime-local" style="border: 0;
-              background: #c7ddff;
+              background: #f4f4f4;
               padding: 0 10px;
               border-radius: 5px;
               margin: .25rem;">
@@ -2519,6 +2525,7 @@
         modal1.style.transform = 'translateY(0px)';
         modal1.style.zIndex = '103100';
         modal1.style.opacity = '1';
+        modal1.style.backdropFilter = 'blur(2px)';
       }
 
       // When the user clicks on <span> (x), close the modal
@@ -2663,6 +2670,7 @@
         modal2.style.transform = 'translateY(0px)';
         modal2.style.zIndex = '103100';
         modal2.style.opacity = '1';
+        modal2.style.backdropFilter = 'blur(2px)';
 
         // Get the button that opens the modal
         // var btn2 = document.querySelector(".email_sent_confirm_modal");
@@ -2690,6 +2698,7 @@
         modal3.style.transform = 'translateY(0px)';
         modal3.style.zIndex = '103100';
         modal3.style.opacity = '1';
+        modal3.style.backdropFilter = 'blur(2px)';
 
         // Get the send button
         var btn3 = document.querySelector(".scadule-send");
@@ -3429,6 +3438,7 @@
       scheduleModal.style.transform = 'translateY(0px)';
       scheduleModal.style.zIndex = '103100';
       scheduleModal.style.opacity = '1';
+      scheduleModal.style.backdropFilter = 'blur(2px)';
     
       // Get the <span> element that closes the modal
       var closeBtn = document.getElementsByClassName("scheduleModalClosebtn")[0];
@@ -3448,6 +3458,7 @@
       confirmModal.style.transform = 'translateY(0px)';
       confirmModal.style.zIndex = '103100';
       confirmModal.style.opacity = '1';
+      confirmModal.style.backdropFilter = 'blur(2px)';
     
       // Get the <span> element that closes the modal
       var closeBtn = document.getElementsByClassName("confirmModalClosebtn")[0];
