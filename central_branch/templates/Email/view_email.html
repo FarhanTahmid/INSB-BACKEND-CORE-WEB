@@ -719,8 +719,8 @@
         <div class="buttons">
           <button class="reply_button" onclick="myFunction('reply')"><i class="fa fa-reply" style='margin-right: .5rem;'
               aria-hidden="true"></i>Reply</button>
-          {% comment %} <button class="forward_button" onclick="myFunction('fwd')"><i class="fa fa-share" style='margin-right: .5rem;'
-              aria-hidden="true"></i>Forward</button> {% endcomment %}
+          <button class="forward_button" onclick="myFunction('fwd')"><i class="fa fa-share" style='margin-right: .5rem;'
+              aria-hidden="true"></i>Forward</button>
         </div>
 
           {% csrf_token %}
@@ -969,15 +969,38 @@
       const tagContainer = document.getElementById('tagContainer');
       const tagInput = document.getElementById('tagInput');
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
           event.preventDefault(); // Prevent the space/comma from being typed
-          addTag(tagInput.value.trim());
+          processInput(tagInput.value);
+          //addTag(tagInput.value.trim());
           tagInput.value = ''; // Clear the input field
         }
       });
 
-      function addTag(tagText) {
+      // Handle paste event for multiple values
+      tagInput.addEventListener('paste', function (event) {
+          event.preventDefault(); // Stop default paste behavior
+          const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+          processInput(pasteText.trim());
+          tagInput.value = ''; // Clear the input field after paste
+        });
+
+        function processInput(input) {
+        const items = input.split(/[\s,]+/); // Split by space or comma
+        items.forEach(item => {
+          if (emailRegex.test(item.trim())) {
+            addTag(item.trim(), true);
+          }
+          else {
+            addTag(item.trim(), false);
+          }
+        });
+      }
+
+      function addTag(tagText, isCorrect) {
         if (tagText === '') return;
 
         const tag = document.createElement('div');
@@ -985,6 +1008,11 @@
 
         const span = document.createElement('span');
         span.textContent = tagText;
+
+        if(!isCorrect) {
+          tag.style.borderColor = 'red';
+          span.style.color = 'red';
+        }
 
         const removeButton = document.createElement('span');
         removeButton.className = 'remove-tag';
@@ -1052,7 +1080,6 @@
       shadowRoot.innerHTML = `
       {{threads.0.body|safe}}
       `;
-      console.log("POK");
      
       {% for thread in threads|slice:"1:" %}
       const shadowHost{{forloop.counter}} = document.getElementById('shadow-host-{{forloop.counter}}');

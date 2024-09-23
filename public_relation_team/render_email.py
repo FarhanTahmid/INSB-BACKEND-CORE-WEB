@@ -335,7 +335,7 @@ class PRT_Email_System:
 
                     message = MIMEText(mail_body, 'html')
 
-                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                     message["To"] = ','.join(to_email_list_final)
                     message["Cc"] = ','.join(cc_email_list_final)
                     message["Bcc"] = ','.join(bcc_email_list_final)
@@ -378,7 +378,7 @@ class PRT_Email_System:
             
                             message=MIMEMultipart()
 
-                            message["From"] = "ieeensusb.portal@gmail.com"
+                            message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                             message["To"] = ','.join(to_email_list_final)
                             message["Cc"] = ','.join(cc_email_list_final)
                             message["Bcc"] = ','.join(bcc_email_list_final)
@@ -520,7 +520,7 @@ class PRT_Email_System:
 
             message=MIMEMultipart()
 
-            message["From"] = "ieeensusb.portal@gmail.com"
+            message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
             message["To"] = ','.join(to_email_list_final)
             message["Cc"] = ','.join(cc_email_list_final)
             message["Bcc"] = ','.join(bcc_email_list_final)

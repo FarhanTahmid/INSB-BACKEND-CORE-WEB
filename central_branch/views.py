@@ -27,6 +27,7 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from public_relation_team.tasks import send_scheduled_email
 from .models import Email_Draft
 from public_relation_team.renderData import PRT_Data
 from public_relation_team.render_email import PRT_Email_System
@@ -71,7 +72,7 @@ from django.views import View
 from users.renderData import member_login_permission
 from task_assignation.models import *
 import re
-from email.utils import parsedate_to_datetime
+from email.utils import getaddresses, parseaddr, parsedate_to_datetime
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -6229,7 +6230,6 @@ class DeleteEmailAjax(View):
         try:
             message_ids = request.POST.get('message_id')
             message_ids = message_ids.split(',')
-            print(message_ids)
             
             global service
             if not service:
@@ -6239,12 +6239,21 @@ class DeleteEmailAjax(View):
                     return None
                 
                 service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            
+            # Create a batch request
+            batch = BatchHttpRequest()
 
             for message_id in message_ids: 
-                service.users().threads().trash(
+                batch.add(
+                    service.users().threads().trash(
                     userId='me',
                     id=message_id,
-                ).execute()
+                    )
+                )
+
+            batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
+
+            batch.execute()
 
             return JsonResponse({'message':'Deleted Successfully!'})   
                 
@@ -6304,7 +6313,6 @@ class UpdateScheduledEmailOptionsAjax(View):
                 unique_id = request.POST.get('id')
                 new_datetime = request.POST.get('new_schedule_datetime')
                 status = request.POST.get('status')
-                print(status)
 
                 task = PeriodicTask.objects.get(name=unique_id)
                 if new_datetime:
@@ -6337,6 +6345,11 @@ class UpdateScheduledEmailOptionsAjax(View):
                         task.save()
                         draft.delete()
                         message = 'Email schedule is cancelled'
+                    elif status == 'send_now':
+                        send_scheduled_email(json.dumps(unique_id))
+                        task.enabled = False
+                        task.save()
+                        message = "Email sent successfully"
 
             return JsonResponse({'message':message})
         except Exception as e:
@@ -6354,7 +6367,7 @@ class SendReplyMailAjax(View):
                 original_message_id = request.POST.get('message_id')
                 thread_id = request.POST.get('thread_id')
                 email_attachment = None
-                if request.POST.get('attachments'):
+                if request.FILES.get('attachments'):
                     email_attachment=request.FILES.getlist('attachments')
                 to_email_additional = ''
                 if request.POST.get('to[]'):
@@ -6383,7 +6396,6 @@ class SendReplyMailAjax(View):
 
                     message["From"] = "ieeensusb.portal@gmail.com"
                     message['To'] = headers.get('From') + ',' + to_email_additional
-                    print(message['To'])
                     message['From'] = headers.get('To')  # Original recipient becomes the sender
                     message['Cc'] = headers.get('Cc')
                     subject = headers.get('Subject', '(No Subject)')
@@ -6440,72 +6452,161 @@ class SendForwardMailAjax(View):
     def post(self, request):
         msg = 'test'
 
-        # try:
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            body = request.POST.get('body')
-            original_message_id = request.POST.get('message_id')
-            email_attachment = None
-            if request.POST.get('attachments'):
-                email_attachment=request.FILES.getlist('attachments')
-            to_email_additional = ''
-            if request.POST.get('to[]'):
-                to_email_additional=request.POST.get('to[]')
-            
-            print(to_email_additional)
-
-            global service
-            if not service:
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                body = request.POST.get('body')
+                original_message_id = request.POST.get('message_id')
+                email_attachment = None
+                if request.FILES.get('attachments'):
+                    email_attachment=request.FILES.getlist('attachments')
+                to_email_additional = ''
+                if request.POST.get('to[]'):
+                    to_email_additional=request.POST.get('to[]')
                 
-                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                print(to_email_additional)
 
-            # Get the original email
-            original_message = service.users().messages().get(userId='me', id=original_message_id, format='raw').execute()
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        print("NOT OK")
+                        return None
+                    
+                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
-            message=MIMEMultipart()
-            
-            # Attach the main message body
-            message.attach(MIMEText(body, 'html'))
+                # Get the original email
+                original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
 
+                # Extract original details
+                original_payload = original_message['payload']
+                headers = {h['name']: h['value'] for h in original_payload['headers']}
 
-            message["From"] = "ieeensusb.portal@gmail.com"
-            message['To'] = to_email_additional
-            # message['Cc'] = headers.get('Cc')
-            subject = original_message.get('Subject', '(No Subject)')
-            if subject[:4] == 'Fwd:':
-                message['Subject'] = subject
-            else:
-                message['Subject'] = 'Fwd: ' + subject
+                message=MIMEMultipart()
+
+                message["From"] = "ieeensusb.portal@gmail.com"
+                message['To'] = to_email_additional
+                # message['Cc'] = headers.get('Cc')
+                subject = headers.get('Subject', '(No Subject)')
+                if subject[:4] == 'Fwd:':
+                    message['Subject'] = subject
+                else:
+                    message['Subject'] = 'Fwd: ' + subject
+
+                original_message_body = ''
+                original_message_body_plain_text = ''
+                files = []
+                # Check if the message has a 'payload' and 'parts'
+                if 'parts' in original_message['payload']:
+                    def extract_parts(part):
+                        """ Recursively extract parts from a message """
+                        parts = []
+                        mime_type = part['mimeType']
+                        print(mime_type)
+                        
+                        if mime_type == 'text/plain' or mime_type == 'text/html':
+                            data = part['body'].get('data')
+                            if data:
+                                decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
+                                parts.append({'mimeType': mime_type, 'content': decoded_data})
+                        elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
+                            for subpart in part.get('parts', []):
+                                parts.extend(extract_parts(subpart))
+                                
+                        # # Check if the part is an attachment
+                        # elif part.get('filename'):
+                        #     attachment_id = part['body'].get('attachmentId')
+                        #     if attachment_id:
+
+                        #         # Add the attachment URL to parts
+                        #         files.append({
+                        #             'msg_id':original_message['id'],
+                        #             'mimeType': mime_type,
+                        #             'filename': part.get('filename'),
+                        #             'attachment_id': attachment_id
+                        #         })
+
+                        return parts
+                    
                 
-            original_message = base64.urlsafe_b64decode(original_message['raw'].encode('utf-8'))
-            print(original_message)
-            message.attach(MIMEText(f"Forwarded message:\n\n{original_message.decode('utf-8')}", 'html'))
+                    #Start extraction from the root message part
+                    email_parts = extract_parts(original_message['payload'])
+                    
+                    # Separate HTML and plain text
+                    content_parts = {part['mimeType']: part.get('content') for part in email_parts}
+                    original_message_body = content_parts.get('text/html')
+                    original_message_body_plain_text = content_parts.get('text/plain')
+                    # # Remove previous replies (common patterns to strip off replies)
+                    # body = re.split(r"(On\s.*wrote:)", body)[0]
 
-            if email_attachment:
-                for attachment in email_attachment:
-                    content_file = ContentFile(attachment.read())
-                    content_file.name = attachment.name
-                    part = MIMEBase('application', 'octet-stream')
-                    part.set_payload(content_file.read())
-                    encoders.encode_base64(part)
-                    part.add_header(
-                        'Content-Disposition',
-                        f'attachment; filename={content_file.name}',
-                    )
-                    message.attach(part)
+                    # # You can also strip off quoted text that starts with '>'
+                    # body = re.sub(r'(>.*\n)', '', body)
 
-            # encoded message
-            encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-            
-            create_message = {"raw": encoded_message}
+                    if original_message_body == None:
+                        # # Remove previous replies (common patterns to strip off replies)
+                        # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
 
-            send_message = service.users().messages().send(userId='me', body=create_message).execute()
-            msg = 'Email forwarded successfully!'
+                        # # You can also strip off quoted text that starts with '>'
+                        # plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
+                        original_message_body = original_message_body_plain_text
+                    
+                else:
+                    # If there are no 'parts', it means the message is simple and not multipart
+                    if original_message['payload']['mimeType'] == 'text/plain':
+                        original_message_body = base64.urlsafe_b64decode(original_message['payload']['body']['data']).decode('utf-8')
+                    elif original_message['payload']['mimeType'] == 'text/html':
+                        original_message_body = base64.urlsafe_b64decode(original_message['payload']['body']['data']).decode('utf-8')
+                            
+                
+                # Assuming headers is a dictionary that contains email headers
+                to_header = headers.get('To')
+                from_header = headers.get('From')
+                cc_header = headers.get('Cc')
 
-        return JsonResponse({'message':msg})
-        # except Exception as e:
-        #     print(e)
-        #     return JsonResponse({'message':'Something went wrong!'})
+                # Use getaddresses to parse multiple recipients in the 'To' field
+                to_addresses = getaddresses([to_header])
+                from_name, from_email = parseaddr(from_header)
+
+                # Format 'To' field with all recipients
+                to = ', '.join([f'{name} &lt;<a href="mailto:{email}">{email}</a>&gt;' for name, email in to_addresses])
+
+                # Handle the 'Cc' field (if it exists)
+                cc = ''
+                if cc_header:
+                    cc_addresses = getaddresses([cc_header])
+                    cc = ', '.join([f'{name} &lt;<a href="mailto:{email}">{email}</a>&gt;' for name, email in cc_addresses])
+                    cc = f'<br>Cc: <span>{cc}</span>'
+                
+                # Attach the main message body along with the forwarded body
+                message.attach(MIMEText(f'''{body}
+<br>---------- Forwarded message ---------
+<br>From: <span>{from_name} &lt;<a href="mailto:{from_email}">{from_email}</a>&gt;</span>
+<br>To: <span>{to}</span>
+{cc if cc else ''}
+<br><br>
+{original_message_body}''', 'html'))
+
+                if email_attachment:
+                    for attachment in email_attachment:
+                        content_file = ContentFile(attachment.read())
+                        content_file.name = attachment.name
+                        part = MIMEBase('application', 'octet-stream')
+                        part.set_payload(content_file.read())
+                        encoders.encode_base64(part)
+                        part.add_header(
+                            'Content-Disposition',
+                            f'attachment; filename={content_file.name}',
+                        )
+                        message.attach(part)
+
+                # encoded message
+                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+                
+                create_message = {"raw": encoded_message}
+
+                send_message = service.users().messages().send(userId='me', body=create_message).execute()
+                msg = 'Email forwarded successfully!'
+
+            return JsonResponse({'message':msg})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
