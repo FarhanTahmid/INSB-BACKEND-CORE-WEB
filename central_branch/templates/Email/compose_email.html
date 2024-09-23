@@ -162,6 +162,10 @@
       flex-wrap: wrap;
       justify-content: space-between;
       margin: 10px;
+      position: sticky;
+      bottom: 0px;
+      background: white;
+      align-items: center;
     }
 
     .attach_file {
@@ -750,6 +754,7 @@
     }
     .tag-container {
       display: flex;
+      justify-content: space-between;
       flex-wrap: wrap;
       /* border: 1px solid #ccc; */
       padding: 5px;
@@ -1208,7 +1213,6 @@
 
       .button,
       .button1 {
-        padding: 10px;
         font-size: 14px;
       }
 
@@ -1483,6 +1487,18 @@
       justify-content: space-between;
       margin-bottom: 1.5rem;
     }
+    .displayCC , .displayBCC{
+      display: none;
+    }
+
+    .ccBtn , .bccBtn{
+      cursor: pointer;
+      border-bottom: 1px solid #fff;
+    }
+
+    .ccBtn:hover , .bccBtn:hover{
+      border-bottom: 1px solid #888;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1734,12 +1750,16 @@
       <div class="compose hidden">
         <div class="compose_email">
           <div class="tag-container" id="tagContainer">
-            <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
-            <input type="text" name="to" class="tag-input" id="tagInput">
+              <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+              <input type="text" name="to" class="tag-input" id="tagInput">
+            <div style="display: flex; gap: .5rem; margin-top: 0.5rem;">
+              <h6 onclick="displayCC(this)" class="ccBtn" title="Add cc">Cc</h6>
+              <h6 onclick="displayBCC(this)" class="bccBtn" title="Add bcc">Bcc</h6>
+            </div>
           </div>
           <hr>
           <div class="unique-dropdown-container">
-            <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send Email To" readonly
+            <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send email to" readonly
               onclick="uniqueToggleDropdown()">
             <div class="unique-dropdown-content" id="uniqueDropdown">
               <div onclick="uniqueSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -1754,9 +1774,9 @@
           </div>
 
           <div class="unique-tag-container" id="uniqueTagContainer"></div>
-          <hr>
-          <div class="custom-dropdown-container">
-            <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
+          <hr class="displayCC">
+          <div class="custom-dropdown-container displayCC">
+            <input type="text" class="custom-dropdown-input" name="cc" placeholder="Cc" readonly
               onclick="customToggleDropdown()">
             <div class="custom-dropdown-content" id="customDropdown">
               <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -1769,10 +1789,10 @@
               {% endfor %}
             </div>
           </div>
-          <div class="custom-tag-container" id="customTagContainer"></div>
-          <hr>
-          <div class="alt-dropdown-container">
-            <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
+          <div class="custom-tag-container displayCC" id="customTagContainer"></div>
+          <hr class="displayBCC">
+          <div class="alt-dropdown-container displayBCC">
+            <input type="text" class="alt-dropdown-input" name="bcc" placeholder="Bcc" readonly
               onclick="altToggleDropdown()">
             <div class="alt-dropdown-content" id="altDropdown">
               <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -1786,7 +1806,7 @@
             </div>
           </div>
 
-          <div class="alt-tag-container" id="altTagContainer"></div>
+          <div class="alt-tag-container displayBCC" id="altTagContainer"></div>
           <hr>
           <input class="compose_sub" type="text" name="subject" placeholder="Subject" required>
         </div>
@@ -3517,6 +3537,26 @@
       scheduleModal.style.transform = 'translateY(-50px)';
       scheduleModal.style.zIndex = '-100';
       scheduleModal.style.opacity = '0';
+      }
+
+      function displayCC(element){
+        let CC = document.querySelectorAll('.displayCC');
+
+        element.style.display = 'none';
+
+        CC.forEach(element => {
+          element.style.display = 'block';
+        });
+      }
+
+      function displayBCC(element){
+        let bCC = document.querySelectorAll('.displayBCC');
+
+        element.style.display = 'none';
+
+        bCC.forEach(element => {
+          element.style.display = 'block';
+        });
       }
     </script>
     {% block common_js %}
