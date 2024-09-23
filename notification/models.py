@@ -3,6 +3,7 @@ from users.models import Members
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from central_events.models import Events
+from datetime import datetime
 
 # Create your models here.
 
@@ -69,6 +70,8 @@ class PushNotification(models.Model):
 
     member=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
     fcm_token=models.CharField(null=False,blank=False,max_length=1000)
+    created_at = models.DateTimeField(default=datetime.now())
+    updated_at = models.DateTimeField(default = datetime.now())
 
     class Meta:
         verbose_name="Push Notification Tokens"

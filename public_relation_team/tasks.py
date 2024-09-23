@@ -1,6 +1,6 @@
 import traceback
 from celery import shared_task
-from requests import HTTPError
+from googleapiclient.errors import HttpError
 from insb_port import settings
 from insb_port.celery import app
 from central_branch.models import Email_Draft
@@ -33,7 +33,7 @@ def send_scheduled_email(unique_task_name_json):
         def handle_batch_response(request_id, response, exception):
             if exception is not None:
                 # Handle error case
-                if isinstance(exception, HTTPError):
+                if isinstance(exception, HttpError):
                     status = exception.resp.status  # HTTP status code
                     if status == 403:
                         print(f"Request {request_id} was denied: Quota exceeded or access forbidden.")
