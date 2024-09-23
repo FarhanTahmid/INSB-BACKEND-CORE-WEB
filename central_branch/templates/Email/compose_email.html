@@ -324,12 +324,6 @@
       align-items: center;
     }
 
-    .email_container {
-      /* position: fixed; */
-      /* top: 115px; */
-      /* margin: 0 1rem 0 0; */
-    }
-
     .email_container input[type="checkbox"] {
       position: relative;
       top: -1px;
@@ -1221,11 +1215,6 @@
         font-size: 14px;
       }
 
-      .child-body {
-        /* left: auto;
-        right: 1rem; */
-      }
-
       .select_all_option {
         display: none;
       }
@@ -1781,8 +1770,8 @@
           <div class="unique-tag-container" id="uniqueTagContainer"></div>
           <hr class="displayCC">
           <div class="custom-dropdown-container displayCC">
-            <input type="text" class="custom-dropdown-input" name="cc" placeholder="Cc" readonly
-              onclick="customToggleDropdown()">
+            <input type="text" class="custom-dropdown-input" id="ccInput" name="cc" placeholder="Cc"
+              onclick="customToggleDropdown()" onkeydown="handleCCKeyDown(event)" onpaste="handleCCPaste(event)">
             <div class="custom-dropdown-content" id="customDropdown">
               <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
@@ -1797,8 +1786,8 @@
           <div class="custom-tag-container displayCC" id="customTagContainer"></div>
           <hr class="displayBCC">
           <div class="alt-dropdown-container displayBCC">
-            <input type="text" class="alt-dropdown-input" name="bcc" placeholder="Bcc" readonly
-              onclick="altToggleDropdown()">
+            <input type="text" class="alt-dropdown-input" id="bccInput" name="bcc" placeholder="Bcc"
+              onclick="altToggleDropdown()" onkeydown="handleBCCKeyDown(event)" onpaste="handleBCCPaste(event)">
             <div class="alt-dropdown-content" id="altDropdown">
               <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
@@ -2796,7 +2785,7 @@
       const tagContainer = document.getElementById('tagContainer');
       const tagInput = document.getElementById('tagInput');
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+      let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
 
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
@@ -3075,18 +3064,91 @@
       let customSelectedTags = [];
       let customAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
 
+      // For tracking original dropdown options
+      const originalDropdownOptions = [...customAvailableOptions];
+
+      let emailRegex1 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+
       function customToggleDropdown() {
         const dropdown = document.getElementById("customDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       }
 
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customAvailableOptions = customAvailableOptions.filter(item => item !== option);
-          customUpdateDropdown();
-          customUpdateTagContainer();
+      // Handling key press for input
+      function handleCCKeyDown(event) {
+        const input = document.getElementById("ccInput");
+        if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+          event.preventDefault();
+          processCCInput(input.value);
+          input.value = '';  // Clear input
         }
+      }
+
+      // Handling paste event for multiple emails
+      function handleCCPaste(event) {
+        event.preventDefault();
+        const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+        processCCInput(pasteText.trim());
+        document.getElementById('ccInput').value = '';  // Clear input
+      }
+
+      // Process input string (split by space/comma)
+      function processCCInput(input) {
+        const items = input.split(/[\s,]+/);
+        items.forEach(item => {
+          if (emailRegex1.test(item.trim())) {
+            addCCTag(item.trim(), true);
+          } else {
+            addCCTag(item.trim(), false);
+          }
+        });
+      }
+
+      // Function to add tag
+      function addCCTag(tagText, isCorrect) {
+        if (tagText === '' || customSelectedTags.includes(tagText)) return;
+
+        customSelectedTags.push(tagText);
+        if (customAvailableOptions.includes(tagText)) {
+          customAvailableOptions = customAvailableOptions.filter(item => item !== tagText);
+          customUpdateDropdown();
+        }
+
+        const tagContainer = document.getElementById('customTagContainer');
+        const tagElement = document.createElement('div');
+        tagElement.className = 'custom-tag';
+        const span = document.createElement('span');
+        span.textContent = tagText;
+        if (!isCorrect) {
+          tagElement.style.borderColor = 'red';
+          span.style.color = 'red';
+        }
+
+        const removeButton = document.createElement('span');
+        removeButton.className = 'custom-remove-tag';
+        removeButton.innerHTML = '&times;';
+        removeButton.onclick = () => {
+          removeCCTag(tagText);
+          tagContainer.removeChild(tagElement);
+        };
+
+        tagElement.appendChild(span);
+        tagElement.appendChild(removeButton);
+        tagContainer.appendChild(tagElement);
+      }
+
+      // Remove tag and add it back to dropdown only if it was originally there
+      function removeCCTag(tag) {
+        customSelectedTags = customSelectedTags.filter(item => item !== tag);
+        if (originalDropdownOptions.includes(tag)) {
+          customAvailableOptions.push(tag);
+          customUpdateDropdown();
+        }
+      }
+
+      function customSelectOption(option) {
+        addCCTag(option, true);
+        customToggleDropdown();
       }
 
       function customRemoveTag(index) {
@@ -3119,12 +3181,16 @@
         });
       }
 
-            // Close dropdown when clicking outside of it
-            window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-      };
+      window.onclick = function (event) {
+      // For CC dropdown
+      if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+        document.getElementById("customDropdown").style.display = "none";
+      }
+      // For BCC dropdown
+      if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+        document.getElementById("altDropdown").style.display = "none";
+      }
+    };
 
       // Function to get selected tags
       function getCustomSelectedTags() {
@@ -3151,32 +3217,100 @@
       }
 
       function customClearAllTags() {
-      // Add all selected tags back to the available options
-      customAvailableOptions = customAvailableOptions.concat(customSelectedTags);
-
-      // Clear the selected tags array
-      customSelectedTags = [];
-
-      // Update both the dropdown and the tag container
-      customUpdateDropdown();
-      customUpdateTagContainer();
+        customAvailableOptions = customAvailableOptions.concat(
+        customSelectedTags.filter(tag => originalDropdownOptions.includes(tag))
+      );
+        customSelectedTags = [];
+        customUpdateDropdown();
+        document.getElementById('customTagContainer').innerHTML = '';
     }
       // For the BCC dropdown
       let altSelectedTags = [];
       let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
+
+      // For tracking original dropdown options
+      const altOriginalDropdownOptions = [...altAvailableOptions];
 
       function altToggleDropdown() {
         const dropdown = document.getElementById("altDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       }
 
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altAvailableOptions = altAvailableOptions.filter(item => item !== option);
-          altUpdateDropdown();
-          altUpdateTagContainer();
+      // Handling key press for BCC input
+      function handleBCCKeyDown(event) {
+        const input = document.getElementById("bccInput");
+        if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+          event.preventDefault();
+          processBCCInput(input.value);
+          input.value = '';  // Clear input
         }
+      }
+
+      // Handling paste event for multiple emails
+      function handleBCCPaste(event) {
+        event.preventDefault();
+        const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+        processBCCInput(pasteText.trim());
+        document.getElementById('bccInput').value = '';  // Clear input
+      }
+
+      // Process input string for BCC
+      function processBCCInput(input) {
+        const items = input.split(/[\s,]+/);
+        items.forEach(item => {
+          if (emailRegex1.test(item.trim())) {
+            addBCCTag(item.trim(), true);
+          } else {
+            addBCCTag(item.trim(), false);
+          }
+        });
+      }
+
+      // Function to add tag for BCC
+      function addBCCTag(tagText, isCorrect) {
+        if (tagText === '' || altSelectedTags.includes(tagText)) return;
+
+        altSelectedTags.push(tagText);
+        if (altAvailableOptions.includes(tagText)) {
+          altAvailableOptions = altAvailableOptions.filter(item => item !== tagText);
+          altUpdateDropdown();
+        }
+
+        const tagContainer = document.getElementById('altTagContainer');
+        const tagElement = document.createElement('div');
+        tagElement.className = 'alt-tag';
+        const span = document.createElement('span');
+        span.textContent = tagText;
+        if (!isCorrect) {
+          tagElement.style.borderColor = 'red';
+          span.style.color = 'red';
+        }
+
+        const removeButton = document.createElement('span');
+        removeButton.className = 'alt-remove-tag';
+        removeButton.innerHTML = '&times;';
+        removeButton.onclick = () => {
+          removeBCCTag(tagText);
+          tagContainer.removeChild(tagElement);
+        };
+
+        tagElement.appendChild(span);
+        tagElement.appendChild(removeButton);
+        tagContainer.appendChild(tagElement);
+      }
+
+      // Remove BCC tag and add it back to dropdown only if it was originally there
+      function removeBCCTag(tag) {
+        altSelectedTags = altSelectedTags.filter(item => item !== tag);
+        if (altOriginalDropdownOptions.includes(tag)) {
+          altAvailableOptions.push(tag);
+          altUpdateDropdown();
+        }
+      }
+
+      function altSelectOption(option) {
+        addBCCTag(option, true);
+        altToggleDropdown();
       }
 
       function altRemoveTag(index) {
@@ -3209,12 +3343,6 @@
         });
       }
 
-        // Close dropdown when clicking outside of it
-        window.onclick = function (event) {
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
 
       // Function to get selected tags
       function getAltSelectedTags() {
@@ -3240,15 +3368,12 @@
       }
 
       function altClearAllTags() {
-        // Add all selected tags back to the available options
-        altAvailableOptions = altAvailableOptions.concat(altSelectedTags);
-
-        // Clear the selected tags array
+        altAvailableOptions = altAvailableOptions.concat(
+        altSelectedTags.filter(tag => altOriginalDropdownOptions.includes(tag))
+      );
         altSelectedTags = [];
-
-        // Update both the dropdown and the tag container
         altUpdateDropdown();
-        altUpdateTagContainer();
+        document.getElementById('altTagContainer').innerHTML = '';
       }
 
       // For the Send Email to dropdown
