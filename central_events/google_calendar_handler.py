@@ -3,13 +3,17 @@ import io
 import mimetypes
 import os
 import tempfile
+import traceback
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from insb_port import settings
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.http import MediaIoBaseUpload
 from django.core.files.base import ContentFile
+from django.contrib import messages
 
 from system_administration.google_mail_handler import GmailHandler
+from system_administration.system_error_handling import ErrorHandling
 
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
@@ -40,105 +44,134 @@ class CalendarHandler:
             return None
 
     def create_event_in_calendar(request, calendar_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
+        
+        event_created_id = None
+        try:
+            event = {
+                'summary': title,
+                'description': description,
+                'location': location,
+                'start': {
+                    'dateTime': CalendarHandler.convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
+                    'timeZone': 'Asia/Dhaka',
+                },
+                'end': {
+                    'dateTime': CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
+                    'timeZone': 'Asia/Dhaka',
+                },
+                # 'organizer' : {
+                #     'displayName' : 'IEEE NSU SB',
+                #     'email' : 'portal@ieeensusb.org'
+                # },
+                'source' : {
+                    'title' : 'IEEE NSU SB',
+                    'url' : event_link
+                },
+                'status' : 'confirmed',
+                'transparency' : 'opaque',
+                'guestsCanSeeOtherGuests' : False,
+            }
+            if attachments:
+                files = []
+                for attachment in attachments:
+                    file = CalendarHandler.google_drive_get_file(request, attachment.file_id)
+                    files.append({
+                        "fileUrl": file['webContentLink'],
+                        "title": file['name'],
+                        "iconLink": file['iconLink']
+                    })
+                event.update({'attachments': files})
 
-        event = {
-            'summary': title,
-            'description': description,
-            'location': location,
-            'start': {
-                'dateTime': CalendarHandler.convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
-                'timeZone': 'Asia/Dhaka',
-            },
-            'end': {
-                'dateTime': CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
-                'timeZone': 'Asia/Dhaka',
-            },
-            # 'organizer' : {
-            #     'displayName' : 'IEEE NSU SB',
-            #     'email' : 'portal@ieeensusb.org'
-            # },
-            'source' : {
-                'title' : 'IEEE NSU SB',
-                'url' : event_link
-            },
-            'status' : 'confirmed',
-            'transparency' : 'opaque',
-            'guestsCanSeeOtherGuests' : False,
-        }
-        if attachments:
-            files = []
-            for attachment in attachments:
-                file = CalendarHandler.google_drive_get_file(request, attachment.file_id)
-                files.append({
-                    "fileUrl": file['webContentLink'],
-                    "title": file['name'],
-                    "iconLink": file['iconLink']
-                })
-            event.update({'attachments': files})
-
-        service = CalendarHandler.authorize(request)
-        if service:
-            response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
-            id = response.get('id')
-            print('Event created: %s' % (response.get('htmlLink')))
-            for i in range(0, len(attendeeList), BATCH_SIZE):
-                batch = attendeeList[i:i + BATCH_SIZE]
-                event = service.events().get(calendarId=calendar_id, eventId=id).execute()
-                if 'attendees' in event:
-                    event['attendees'].extend(batch)
-                else:
-                    event['attendees'] = batch
-                updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='all').execute()
-                print(f'Batch {i // BATCH_SIZE + 1} updated.')
-            return id
-        else:
+            service = CalendarHandler.authorize(request)
+            if service:
+                response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
+                id = response.get('id')
+                event_created_id = id
+                print('Event created: %s' % (response.get('htmlLink')))
+                for i in range(0, len(attendeeList), BATCH_SIZE):
+                    batch = attendeeList[i:i + BATCH_SIZE]
+                    event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+                    if 'attendees' in event:
+                        event['attendees'].extend(batch)
+                    else:
+                        event['attendees'] = batch
+                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='all').execute()
+                    print(f'Batch {i // BATCH_SIZE + 1} updated.')
+                return id
+            else:
+                return None
+        except Exception as e:
+            if isinstance(e, HttpError):
+                if e.resp.status == 400:
+                    messages.error(request, e.error_details[0]['message'])
+                    
+                    if event_created_id:
+                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)
+            
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return None
         
     def update_event_in_calendar(request, calendar_id, event_id, title, description, location, start_time, end_time, attendees):
-        if(event_id == None):
-            return None
-        service = CalendarHandler.authorize(request)
-        if service:
-            response = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
-            # print(response)
+        try:
+            if(event_id == None):
+                return None
+            service = CalendarHandler.authorize(request)
+            if service:
+                response = service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+                # print(response)
 
-            if title:
-                response['summary'] = title
-                response['start'] = {
-                    'dateTime':CalendarHandler.convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
-                    'timeZone': 'Asia/Dhaka',
-                }
-                response['end'] = {
-                    'dateTime':CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
-                    'timeZone': 'Asia/Dhaka',
-                }
-            if description:
-                response['description'] = description
-            if location:
-                response['location']=location
-            if attendees:
-                response['attendees'] = attendees
+                if title:
+                    response['summary'] = title
+                    response['start'] = {
+                        'dateTime':CalendarHandler.convert_to_RFC_datetime(year=start_time.year, month=start_time.month, day=start_time.day, hour=start_time.hour, minute=start_time.minute),
+                        'timeZone': 'Asia/Dhaka',
+                    }
+                    response['end'] = {
+                        'dateTime':CalendarHandler.convert_to_RFC_datetime(year=end_time.year, month=end_time.month, day=end_time.day, hour=end_time.hour, minute=end_time.minute),
+                        'timeZone': 'Asia/Dhaka',
+                    }
+                if description:
+                    response['description'] = description
+                if location:
+                    response['location']=location
+                if attendees:
+                    response['attendees'] = attendees
 
-            service.events().update(calendarId=calendar_id, eventId=response['id'], body=response, sendUpdates='all').execute()
+                service.events().update(calendarId=calendar_id, eventId=response['id'], body=response, sendUpdates='all').execute()
 
-            return "Updated"
-        else:
+                return "Updated"
+            else:
+                return None
+        except Exception as e:
+            if isinstance(e, HttpError):
+                if e.resp.status == 400:
+                    messages.error(request, e.error_details)
+            
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return None
 
     def delete_event_in_calendar(request, calendar_id, event_id):
-        if(event_id == None):
-            return None
-        global service
-        service = CalendarHandler.authorize(request)
-        if service:
-            if(CalendarHandler.has_event_in_calendar(calendar_id, event_id)):
-                response = service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
-                print('Event deleted')
+        try:
+            if(event_id == None):
+                return None
+            global service
+            service = CalendarHandler.authorize(request)
+            if service:
+                if(CalendarHandler.has_event_in_calendar(calendar_id, event_id)):
+                    response = service.events().delete(calendarId=calendar_id, eventId=event_id).execute()
+                    print('Event deleted')
+                else:
+                    print('Event does not exist')
+                
+                return "Deleted"
             else:
-                print('Event does not exist')
-            
-            return "Deleted"
-        else:
+                return None
+        except Exception as e:
+            if isinstance(e, HttpError):
+                if e.resp.status == 400:
+                    messages.error(request, e.error_details)
+
+            ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return None
 
 
