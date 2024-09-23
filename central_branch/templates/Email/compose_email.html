@@ -780,7 +780,9 @@
     .tag .remove-tag {
       cursor: pointer;
       padding: 2px;
-      color: #888;
+      color: #333;
+      position: relative;
+      top: 1px;
     }
 
     .tag .remove-tag:hover {
@@ -848,6 +850,8 @@
       margin-left: 5px;
       cursor: pointer;
       font-weight: bold;
+      position: relative;
+      top: 1px;
     }
 
     .alt-dropdown-container {
@@ -904,6 +908,8 @@
       margin-left: 5px;
       cursor: pointer;
       font-weight: bold;
+      position: relative;
+      top: 1px;
     }
 
     .unique-dropdown-container {
@@ -960,6 +966,8 @@
       margin-left: 5px;
       cursor: pointer;
       font-weight: bold;
+      position: relative;
+      top: 1px;
     }
 
     /* {% comment %} Pagination {% endcomment %} */
@@ -2826,8 +2834,9 @@
         span.textContent = tagText;
 
         if(!isCorrect) {
-          tag.style.borderColor = 'red';
-          span.style.color = 'red';
+          tag.style.backgroundColor = '#ffbebe';
+          tag.style.border = 'red';
+          // span.style.backgroundColor = 'red';
         }
 
         const removeButton = document.createElement('span');
@@ -3120,8 +3129,9 @@
         const span = document.createElement('span');
         span.textContent = tagText;
         if (!isCorrect) {
-          tagElement.style.borderColor = 'red';
-          span.style.color = 'red';
+          tagElement.style.backgroundColor = '#ffbebe';
+          tagElement.style.border = 'red';
+          // span.style.backgroundColor = 'red';
         }
 
         const removeButton = document.createElement('span');
@@ -3282,8 +3292,9 @@
         const span = document.createElement('span');
         span.textContent = tagText;
         if (!isCorrect) {
-          tagElement.style.borderColor = 'red';
-          span.style.color = 'red';
+          tagElement.style.backgroundColor = '#ffbebe';
+          tagElement.style.border = 'red';
+          // span.style.backgroundColor = 'red';
         }
 
         const removeButton = document.createElement('span');
@@ -3681,7 +3692,10 @@
         element.style.display = 'none';
 
         CC.forEach(element => {
-          element.style.display = 'block';
+          if(element.classList.contains('custom-tag-container'))
+            element.style.display = 'flex';
+          else
+            element.style.display = 'block';
         });
       }
 
@@ -3691,7 +3705,10 @@
         element.style.display = 'none';
 
         bCC.forEach(element => {
-          element.style.display = 'block';
+          if(element.classList.contains('alt-tag-container'))
+            element.style.display = 'flex';
+          else 
+            element.style.display = 'block';
         });
       }
     </script>
