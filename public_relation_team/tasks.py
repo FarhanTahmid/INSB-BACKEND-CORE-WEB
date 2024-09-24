@@ -77,7 +77,7 @@ def send_scheduled_email(username, unique_task_name_json):
         batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
         
         batch.execute()
-        ErrorHandling.send_schedule_error_email(username, email_unique_id, email_drafts.subject, 'Unknown')
+        
 
 
     except Exception as e:
