@@ -6346,7 +6346,7 @@ class UpdateScheduledEmailOptionsAjax(View):
                         draft.delete()
                         message = 'Email schedule is cancelled'
                     elif status == 'send_now':
-                        send_scheduled_email(json.dumps(unique_id))
+                        send_scheduled_email(json.dumps(request.user.username), json.dumps(unique_id))
                         task.enabled = False
                         task.save()
                         message = "Email sent successfully"

@@ -1,3 +1,4 @@
+from datetime import datetime
 import traceback
 from celery import shared_task
 from googleapiclient.errors import HttpError
@@ -5,18 +6,22 @@ from insb_port import settings
 from insb_port.celery import app
 from central_branch.models import Email_Draft
 from public_relation_team.render_email import PRT_Email_System
+from django.core.mail import send_mail
 import json
 from googleapiclient.http import BatchHttpRequest
 
 from system_administration.google_mail_handler import GmailHandler
 from googleapiclient.discovery import build
 
+from system_administration.models import adminUsers
 from system_administration.system_error_handling import ErrorHandling
+from users.models import Members
 
 
 @shared_task
-def send_scheduled_email(unique_task_name_json):
+def send_scheduled_email(username, unique_task_name_json):
     email_unique_id = json.loads(unique_task_name_json)
+    username = json.loads(username)
 
     email_drafts = Email_Draft.objects.get(email_unique_id=email_unique_id)
     drafts = email_drafts.drafts
@@ -52,6 +57,7 @@ def send_scheduled_email(unique_task_name_json):
                 email_drafts.status = 'Failed'
                 email_drafts.save()
                 ErrorHandling.saveSystemErrors(error_name=exception,error_traceback=traceback.format_exc())
+                ErrorHandling.send_schedule_error_email(username, email_unique_id, email_drafts.subject, exception)
             else:
                                 
                 if not error[0]:
@@ -71,9 +77,12 @@ def send_scheduled_email(unique_task_name_json):
         batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
         
         batch.execute()
+        ErrorHandling.send_schedule_error_email(username, email_unique_id, email_drafts.subject, 'Unknown')
+
 
     except Exception as e:
         email_drafts.status = 'Failed'
         email_drafts.save()
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-    
+        ErrorHandling.send_schedule_error_email(username, email_unique_id, email_drafts.subject, 'Unknown')
+
