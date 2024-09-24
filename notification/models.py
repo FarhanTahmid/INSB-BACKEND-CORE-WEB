@@ -70,8 +70,8 @@ class PushNotification(models.Model):
 
     member=models.ForeignKey(Members,null=False,blank=False,on_delete=models.CASCADE)
     fcm_token=models.CharField(null=False,blank=False,max_length=1000)
-    created_at = models.DateTimeField(default=datetime.now())
-    updated_at = models.DateTimeField(default = datetime.now())
+    created_at = models.DateTimeField(default=datetime.now)
+    updated_at = models.DateTimeField(default = datetime.now)
 
     class Meta:
         verbose_name="Push Notification Tokens"
