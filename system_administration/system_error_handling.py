@@ -82,7 +82,7 @@ Error: {error}<br><br>"""
                 return None
 
             service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-            print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
+            # print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
 
             message=MIMEText(mail_body, 'html')
@@ -103,10 +103,10 @@ Error: {error}<br><br>"""
                 .execute()
             )
 
-            print(f'Message Id: {send_message["id"]}')
+            # print(f'Message Id: {send_message["id"]}')
             return True
         except Exception as e:
-            print(e)
+            # print(e)
             return False
         
                 

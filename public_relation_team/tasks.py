@@ -41,17 +41,21 @@ def send_scheduled_email(username, unique_task_name_json):
                 if isinstance(exception, HttpError):
                     status = exception.resp.status  # HTTP status code
                     if status == 403:
-                        print(f"Request {request_id} was denied: Quota exceeded or access forbidden.")
+                        pass
+                        # print(f"Request {request_id} was denied: Quota exceeded or access forbidden.")
                     elif status == 404:
-                        print(f"Request {request_id} failed: Resource not found.")
+                        # print(f"Request {request_id} failed: Resource not found.")
                         ErrorHandling.saveSystemErrors(error_name=exception,error_traceback=traceback.format_exc())
                         return
                     elif status == 500:
-                        print(f"Request {request_id} encountered a server error.")
+                        pass
+                        # print(f"Request {request_id} encountered a server error.")
                     else:
-                        print(f"Request {request_id} failed with status {status}: {exception}")
+                        pass
+                        # print(f"Request {request_id} failed with status {status}: {exception}")
                 else:
-                    print(f"Request {request_id} encountered a non-HTTP error: {exception}")
+                    pass
+                    # print(f"Request {request_id} encountered a non-HTTP error: {exception}")
 
                 error[0] = True
                 email_drafts.status = 'Failed'
@@ -62,7 +66,7 @@ def send_scheduled_email(username, unique_task_name_json):
                                 
                 if not error[0]:
                     # Success case                       
-                    print(f"Request {request_id} succeeded with response: {response}")
+                    # print(f"Request {request_id} succeeded with response: {response}")
                     email_drafts.status = 'Sent'
                     email_drafts.save()
                     email_drafts.delete()
