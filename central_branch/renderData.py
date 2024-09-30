@@ -31,6 +31,7 @@ from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from content_writing_and_publications_team.models import Content_Team_Document
 from recruitment.models import recruited_members
+import re
 
 class Branch:
 
@@ -40,6 +41,10 @@ class Branch:
     except:
         event_notification_type = None
 
+    def is_valid_email(email):
+        # Simple regex for basic email validation
+        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        return re.match(regex, email) is not None
     
     def getBranchID():
         '''This Method returns the object of Branch from Society chapters and AG Table'''
@@ -664,7 +669,7 @@ class Branch:
             if(option == "general_members"):
                 general_members=Branch.load_all_members_of_branch()
                 for member in general_members:
-                    if member.email_nsu and member.email_nsu != 'None':
+                    if member.email_nsu and member.email_nsu != 'None' and Branch.is_valid_email(member.email_nsu):
                         to_attendee_final_list.append({
                             'displayName':member.name,
                             'email':member.email_nsu,
@@ -673,7 +678,7 @@ class Branch:
                 # get all officers email
                 branch_officers=Branch.load_all_officers_of_branch()
                 for officer in branch_officers:
-                    if officer.email_nsu and officer.email_nsu != 'None':
+                    if officer.email_nsu and officer.email_nsu != 'None' and Branch.is_valid_email(officer.email_nsu):
                         to_attendee_final_list.append({
                             'displayName':officer.name,
                             'email':officer.email_nsu,
@@ -689,7 +694,7 @@ class Branch:
                 for eb in eb_panel:
                     #if is faculty then skip
                     if not eb.position.is_faculty:
-                        if eb.email_nsu and eb.email_nsu != 'None':
+                        if eb.email_nsu and eb.email_nsu != 'None' and Branch.is_valid_email(eb.email_nsu):
                             to_attendee_final_list.append({
                                 'displayName':eb.name,
                                 'email':eb.email_nsu,
@@ -705,7 +710,7 @@ class Branch:
                 for eb in eb_panel:
                     #If is faculty then skip
                     if not eb.position.is_faculty:
-                        if eb.email_nsu and eb.email_nsu != 'None':
+                        if eb.email_nsu and eb.email_nsu != 'None' and Branch.is_valid_email(eb.email_nsu):
                             to_attendee_final_list.append({
                                 'displayName':eb.name,
                                 'email':eb.email_nsu,
@@ -715,7 +720,7 @@ class Branch:
                             #     'email':eb.email_ieee,
                             # })
                 for excom in branch_ex_com:
-                    if excom.member.email_nsu and excom.member.email_nsu != 'None':
+                    if excom.member.email_nsu and excom.member.email_nsu != 'None' and Branch.is_valid_email(excom.member.email_nsu):
                         to_attendee_final_list.append({
                             'displayName':excom.member.name,
                             'email':excom.member.email_nsu,
@@ -734,7 +739,7 @@ class Branch:
                             if ex.member is not None:
                                 #If is faculty then skip
                                 if not ex.member.position.is_faculty:
-                                    if ex.member.email_nsu and ex.member.email_nsu != 'None':
+                                    if ex.member.email_nsu and ex.member.email_nsu != 'None' and Branch.is_valid_email(ex.member.email_nsu):
                                         to_attendee_final_list.append({
                                             'displayName':ex.member.name,
                                             'email':ex.member.email_nsu,
@@ -744,7 +749,7 @@ class Branch:
                                         #     'email':ex.member.email_ieee,
                                         # })
                             else:
-                                if ex.ex_member.email and ex.ex_member.email != 'None':
+                                if ex.ex_member.email and ex.ex_member.email != 'None' and Branch.is_valid_email(ex.ex_member.email):
                                     to_attendee_final_list.append({
                                         'displayName':ex.ex_member.name,
                                         'email':ex.ex_member.email,
@@ -753,7 +758,7 @@ class Branch:
                 recruit_id = int(option[9:])
                 recruited_mem = recruited_members.objects.filter(session_id = recruit_id)
                 for mem in recruited_mem:
-                    if mem.email_nsu and mem.email_nsu != 'None':
+                    if mem.email_nsu and mem.email_nsu != 'None' and Branch.is_valid_email(mem.email_nsu):
                         to_attendee_final_list.append({
                             'displayName':mem.first_name,
                             'email':mem.email_nsu,
