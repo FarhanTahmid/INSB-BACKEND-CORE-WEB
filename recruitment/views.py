@@ -207,6 +207,10 @@ def recruitee_details(request,session_id,nsu_id):
                         if request.POST.get('ieee_payment_status'):
                             ieee_payment_status = True
                         skill_set_list = request.POST.getlist("skill_sets")
+                        try:
+                            blood_group = request.POST['blood_group']
+                        except:
+                            blood_group = "None"
 
                         # Collecting all infos
                         info_dict = {
@@ -230,7 +234,7 @@ def recruitee_details(request,session_id,nsu_id):
                             'ieee_payment_status': ieee_payment_status,
                             'skill_set_list':skill_set_list,
                             'comment':request.POST['comment'],
-                            'blood_group':request.POST['blood_group']
+                            'blood_group':blood_group
                         }
                         
 
@@ -405,7 +409,10 @@ def recruit_member(request, session_id):
                         return redirect('recruitment:recruit_member',Session.id)
                     else:
                         try:
-
+                            try:
+                                blood_group = request.POST['blood_group']
+                            except:
+                                blood_group = "None"
                             recruited_member = recruited_members(
                                 nsu_id=request.POST['nsu_id'],
                                 first_name=request.POST['first_name'],
@@ -429,7 +436,7 @@ def recruit_member(request, session_id):
                                 recruited_by=request.POST['recruited_by'],
                                 cash_payment_status=cash_payment_status,
                                 ieee_payment_status=ieee_payment_status,
-                                blood_group=request.POST['blood_group']
+                                blood_group=blood_group
                             )
                             unique_code=renderData.Recruitment.generateUniqueCode(nsu_id=recruited_member.nsu_id,session=recruited_member.session_id,request=request)
                             recruited_member.unique_code=unique_code

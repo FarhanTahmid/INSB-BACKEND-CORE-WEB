@@ -219,8 +219,7 @@
                                 <label for="email_personal">Personal Email</label>
                                 <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}"><br>
                                 <label for="blood_group">Blood Group</label>
-                                <select class="form-control" style="    border: 2px solid #d3d3d3;
-    border-radius: 4px;" name="blood_group" value="{{ user_data.blood_group }}" required>
+                                <select class="form-control" style="border: 2px solid #d3d3d3;border-radius: 4px;" name="blood_group" value="{{ user_data.blood_group }}" required>
                                     <option value="None" disabled {% if user_data.blood_group == "None" %}selected{% endif %}>-------------------</option>
                                     <option value="A+" {% if user_data.blood_group == "A+" %}selected{% endif %}>A+</option>
                                     <option value="A-" {% if user_data.blood_group == "A-" %}selected{% endif %}>A-</option>
