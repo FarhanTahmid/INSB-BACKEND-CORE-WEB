@@ -90,7 +90,7 @@ class CalendarHandler:
                 event_created_id = id
                 print('Event created: %s' % (response.get('htmlLink')))
 
-                attendeeList = list(set(attendeeList))
+                attendeeList = attendeeList
 
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
