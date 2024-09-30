@@ -88,6 +88,9 @@ class CalendarHandler:
                 id = response.get('id')
                 event_created_id = id
                 print('Event created: %s' % (response.get('htmlLink')))
+
+                attendeeList = list(set(attendeeList))
+
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
                     event = service.events().get(calendarId=calendar_id, eventId=id).execute()
