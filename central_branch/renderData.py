@@ -42,9 +42,12 @@ class Branch:
         event_notification_type = None
 
     def is_valid_email(email):
-        # Simple regex for basic email validation
+    # Simple regex for basic email validation
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        return re.match(regex, email) is not None
+        if re.match(regex, email):
+            return True
+        else:
+            return False
     
     def getBranchID():
         '''This Method returns the object of Branch from Society chapters and AG Table'''
