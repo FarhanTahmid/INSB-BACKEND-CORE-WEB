@@ -19,7 +19,7 @@ from system_administration.system_error_handling import ErrorHandling
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 SCOPES = settings.SCOPES
-BATCH_SIZE = 150
+BATCH_SIZE = 35
 
 service = None
 
