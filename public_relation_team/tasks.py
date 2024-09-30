@@ -34,7 +34,7 @@ def send_scheduled_email(username, unique_task_name_json):
     try:
         for value in drafts.values():
             try:
-                time.sleep(1)
+                time.sleep(2)
                 
                 response = service.users().drafts().send(userId='me', body={'id': value}).execute()
                 # Success case                       

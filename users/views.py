@@ -438,7 +438,10 @@ def update_information(request):
                 major = request.POST['major']
                 facebook_url = request.POST['facebook_url']
                 linkedin_url = request.POST['linkedin_url']
-                blood_group = request.POST['blood_group']
+                try:
+                    blood_group = request.POST['blood_group']
+                except:
+                    blood_group = "None"
 
                 if date_of_birth == '':
                     date_of_birth = None
