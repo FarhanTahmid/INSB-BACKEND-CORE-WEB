@@ -670,7 +670,7 @@ class Branch:
             return to_attendee_final_list
         for option in attendeeOption:
             if(option == "general_members"):
-                general_members=Branch.load_all_members_of_branch()
+                general_members=Branch.load_all_active_members_of_branch()
                 for member in general_members:
                     if member.email_nsu and member.email_nsu != 'None' and Branch.is_valid_email(member.email_nsu):
                         to_attendee_final_list.append({

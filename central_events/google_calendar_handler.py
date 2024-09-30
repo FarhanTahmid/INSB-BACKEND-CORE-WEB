@@ -46,6 +46,7 @@ class CalendarHandler:
     def create_event_in_calendar(request, calendar_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
         
         event_created_id = None
+        email_queue_count = 0
         try:
             event = {
                 'summary': title,
@@ -100,6 +101,7 @@ class CalendarHandler:
                         event['attendees'] = batch
                     updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='all').execute()
                     print(f'Batch {i // BATCH_SIZE + 1} updated.')
+                    email_queue_count += BATCH_SIZE
                 return id
             else:
                 return None
@@ -109,10 +111,13 @@ class CalendarHandler:
                     messages.error(request, e.error_details[0]['message'])
                     
                     if event_created_id:
-                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)
+                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)          
+            
+            messages.error(request,f'Total attendees added : {email_queue_count}')
             
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return None
+
         
     def update_event_in_calendar(request, calendar_id, event_id, title, description, location, start_time, end_time, attendees):
         try:
