@@ -114,7 +114,7 @@ class CalendarHandler:
                     if event_created_id:
                         CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)          
             
-            messages.error(request,f'Total attendees added : {email_queue_count}')
+            messages.error(request,f'Total attendees added : {email_queue_count}, Originally email to sent - {len(attendeeList)} members')
             
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return None
