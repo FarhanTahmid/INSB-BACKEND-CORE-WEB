@@ -14,7 +14,7 @@ from django.contrib import messages
 
 from system_administration.google_mail_handler import GmailHandler
 from system_administration.system_error_handling import ErrorHandling
-
+import time
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
@@ -100,6 +100,9 @@ class CalendarHandler:
                     updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='all').execute()
                     print(f'Batch {i // BATCH_SIZE + 1} updated.')
                     email_queue_count += BATCH_SIZE
+                    #providing sleep to prevent API rate limits
+                    time.sleep(2)
+
                 return id
             else:
                 return None
