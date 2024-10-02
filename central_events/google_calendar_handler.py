@@ -19,7 +19,7 @@ import time
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 SCOPES = settings.SCOPES
-BATCH_SIZE = 35
+BATCH_SIZE = 499
 
 service = None
 
