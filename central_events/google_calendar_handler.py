@@ -14,12 +14,16 @@ from django.contrib import messages
 
 from system_administration.google_mail_handler import GmailHandler
 from system_administration.system_error_handling import ErrorHandling
-import time
+import time,random
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 SCOPES = settings.SCOPES
 BATCH_SIZE = 35
+
+MAX_RETRIES = 5  # Maximum retries for exponential backoff
+INITIAL_DELAY = 1  # Initial wait time in seconds
+MAX_DELAY = 64  # Maximum wait time in seconds
 
 service = None
 
@@ -84,28 +88,88 @@ class CalendarHandler:
                 event.update({'attachments': files})
 
             service = CalendarHandler.authorize(request)
-            if service:
-                time.sleep(10)
-                response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
-                id = response.get('id')
-                event_created_id = id
-                print('Event created: %s' % (response.get('htmlLink')))
+            # if service:
+            #     time.sleep(10)
+            #     response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
+            #     id = response.get('id')
+            #     event_created_id = id
+            #     print('Event created: %s' % (response.get('htmlLink')))
 
+            #     for i in range(0, len(attendeeList), BATCH_SIZE):
+            #         batch = attendeeList[i:i + BATCH_SIZE]
+            #         event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+            #         time.sleep(10)
+            #         if 'attendees' in event:
+            #             event['attendees'].extend(batch)
+            #         else:
+            #             event['attendees'] = batch
+
+            #         updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
+            #         #print(f'Batch {i // BATCH_SIZE + 1} updated.')
+            #         email_queue_count += BATCH_SIZE
+            #         time.sleep(10)
+
+            #     return id
+            # else:
+            #     return None
+            if service:
+                # Exponential backoff for event creation
+                retries = 0
+                delay = INITIAL_DELAY
+                while retries < MAX_RETRIES:
+                    try:
+                        time.sleep(delay)
+                        response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
+                        event_created_id = response.get('id')
+                        print('Event created: %s' % (response.get('htmlLink')))
+                        break  # Break out of the loop on success
+                    except HttpError as e:
+                        if e.resp.status in [403, 429]:
+                            # Apply exponential backoff
+                            if retries < MAX_RETRIES:
+                                print(f"Rate limit hit, retrying in {delay} seconds...")
+                                delay = min(MAX_DELAY, delay * 2) + random.uniform(0, 1)
+                                retries += 1
+                            else:
+                                raise e  # Give up after reaching max retries
+                        else:
+                            raise e  # Reraise if it's not a rate limit error
+
+                if not event_created_id:
+                    return None
+
+                # Add attendees in batches, with exponential backoff
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
-                    event = service.events().get(calendarId=calendar_id, eventId=id).execute()
-                    time.sleep(10)
-                    if 'attendees' in event:
-                        event['attendees'].extend(batch)
-                    else:
-                        event['attendees'] = batch
+                    retries = 0
+                    delay = INITIAL_DELAY
+                    while retries < MAX_RETRIES:
+                        try:
+                            time.sleep(delay)
+                            event = service.events().get(calendarId=calendar_id, eventId=event_created_id).execute()
+                            if 'attendees' in event:
+                                event['attendees'].extend(batch)
+                            else:
+                                event['attendees'] = batch
 
-                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
-                    #print(f'Batch {i // BATCH_SIZE + 1} updated.')
-                    email_queue_count += BATCH_SIZE
-                    time.sleep(10)
+                            updated_event = service.events().update(calendarId=calendar_id, eventId=event_created_id, body=event, sendUpdates='none').execute()
+                            email_queue_count += len(batch)
+                            print(f'Batch {i // BATCH_SIZE + 1} updated.')
+                            break  # Success, break out of retry loop
+                        except HttpError as e:
+                            if e.resp.status in [403, 429]:
+                                # Apply exponential backoff for attendee update
+                                if retries < MAX_RETRIES:
+                                    print(f"Rate limit hit while updating batch, retrying in {delay} seconds...")
+                                    delay = min(MAX_DELAY, delay * 2) + random.uniform(0, 1)
+                                    retries += 1
+                                else:
+                                    raise e  # Give up after max retries
+                            else:
+                                raise e  # Other HTTP errors
 
-                return id
+                return event_created_id
+
             else:
                 return None
         except Exception as e:
