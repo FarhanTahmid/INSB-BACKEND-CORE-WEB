@@ -84,26 +84,27 @@ class CalendarHandler:
                 event.update({'attachments': files})
 
             service = CalendarHandler.authorize(request)
-            time.sleep(10)
             if service:
-                response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
                 time.sleep(10)
+                response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
                 id = response.get('id')
                 event_created_id = id
                 print('Event created: %s' % (response.get('htmlLink')))
 
-                event = service.events().get(calendarId=calendar_id, eventId=id).execute()
-                time.sleep(10)
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
+                    event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+                    time.sleep(10)
                     if 'attendees' in event:
                         event['attendees'].extend(batch)
                     else:
                         event['attendees'] = batch
+
+                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
                     #print(f'Batch {i // BATCH_SIZE + 1} updated.')
                     email_queue_count += BATCH_SIZE
+                    time.sleep(10)
 
-                updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
                 return id
             else:
                 return None
@@ -113,8 +114,10 @@ class CalendarHandler:
                     messages.error(request, e.error_details[0]['message'])
                     
                     if event_created_id:
-                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)          
-            
+                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)  
+            else:
+                messages.error(request, f"Unexpected error: {str(e)}")
+           
             messages.error(request,f'Total attendees added : {email_queue_count}, Originally email to sent - {len(attendeeList)} members')
             
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
