@@ -100,11 +100,10 @@ class CalendarHandler:
                         event['attendees'].extend(batch)
                     else:
                         event['attendees'] = batch
-                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
-                    time.sleep(10)
                     #print(f'Batch {i // BATCH_SIZE + 1} updated.')
                     email_queue_count += BATCH_SIZE
 
+                updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
                 return id
             else:
                 return None
