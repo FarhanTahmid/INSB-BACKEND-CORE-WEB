@@ -101,7 +101,7 @@ class CalendarHandler:
                     print(f'Batch {i // BATCH_SIZE + 1} updated.')
                     email_queue_count += BATCH_SIZE
                     #providing sleep to prevent API rate limits
-                    time.sleep(5)
+                    time.sleep(2)
 
                 return id
             else:
