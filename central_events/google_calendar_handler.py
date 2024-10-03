@@ -19,7 +19,7 @@ import time
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 SCOPES = settings.SCOPES
-BATCH_SIZE = 10
+BATCH_SIZE = 30
 
 service = None
 
@@ -93,15 +93,15 @@ class CalendarHandler:
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
                     event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+                    time.sleep(5)
                     if 'attendees' in event:
                         event['attendees'].extend(batch)
                     else:
                         event['attendees'] = batch
                     updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
+                    time.sleep(5)
                     #print(f'Batch {i // BATCH_SIZE + 1} updated.')
                     email_queue_count += BATCH_SIZE
-                    #providing sleep to prevent API rate limits
-                    time.sleep(10)
 
                 return id
             else:
