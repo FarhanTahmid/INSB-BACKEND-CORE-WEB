@@ -527,7 +527,7 @@ class PRT_Email_System:
             message["Bcc"] = ','.join(bcc_email_list_final)
             message["Subject"] = subject
 
-            print(message['To'])
+            # print(message['To'])
 
             # Attach the main message body
             message.attach(MIMEText(mail_body, 'html'))
@@ -561,7 +561,7 @@ class PRT_Email_System:
                 .execute()
             )
 
-            print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+            # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
             return draft['id']
         # except:
         #     print('Could not do it :)')
