@@ -19,7 +19,7 @@ import time
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 SCOPES = settings.SCOPES
-BATCH_SIZE = 35
+BATCH_SIZE = 40
 
 service = None
 
@@ -85,7 +85,7 @@ class CalendarHandler:
 
             service = CalendarHandler.authorize(request)
             if service:
-                time.sleep(10)
+                time.sleep(2)
                 response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
                 id = response.get('id')
                 event_created_id = id
@@ -93,17 +93,17 @@ class CalendarHandler:
 
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
-                    event = service.events().get(calendarId=calendar_id, eventId=id).execute()
-                    time.sleep(10)
-                    if 'attendees' in event:
-                        event['attendees'].extend(batch)
+                    # event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+                    # time.sleep(10)
+                    if 'attendees' in response:
+                        response['attendees'].extend(batch)
                     else:
-                        event['attendees'] = batch
+                        response['attendees'] = batch
 
-                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='none').execute()
-                    #print(f'Batch {i // BATCH_SIZE + 1} updated.')
+                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=response, sendUpdates='all').execute()
+                    print(f'Batch {i // BATCH_SIZE + 1} updated.')
                     email_queue_count += BATCH_SIZE
-                    time.sleep(10)
+                    time.sleep(2)
 
                 return id
             else:
@@ -147,8 +147,8 @@ class CalendarHandler:
                     response['description'] = description
                 if location:
                     response['location']=location
-                if attendees:
-                    response['attendees'] = attendees
+                # if attendees:
+                #     response['attendees'] = attendees
 
                 service.events().update(calendarId=calendar_id, eventId=response['id'], body=response, sendUpdates='all').execute()
 
