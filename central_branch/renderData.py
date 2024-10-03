@@ -836,7 +836,7 @@ class Branch:
                 event.publish_in_google_calendar = False
                 messages.warning(request, "Could not publish event in calendar")
             else:
-                messages.success(request, f"Event published in calendar, email sent to {to_attendee_final_list}")
+                messages.success(request, f"Event published in calendar, email sent to {len(to_attendee_final_list)}")
 
             event.save()
         elif(event.google_calendar_event_id and event.publish_in_google_calendar == False):
