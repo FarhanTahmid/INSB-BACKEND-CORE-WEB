@@ -84,8 +84,10 @@ class CalendarHandler:
                 event.update({'attachments': files})
 
             service = CalendarHandler.authorize(request)
+            time.sleep(10)
             if service:
                 response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
+                time.sleep(10)
                 id = response.get('id')
                 event_created_id = id
                 print('Event created: %s' % (response.get('htmlLink')))
