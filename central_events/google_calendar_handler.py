@@ -91,6 +91,7 @@ class CalendarHandler:
                 print('Event created: %s' % (response.get('htmlLink')))
 
                 event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+                time.sleep(10)
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
                     if 'attendees' in event:
