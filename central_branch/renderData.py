@@ -673,22 +673,22 @@ class Branch:
             if(option == "general_members"):
                 general_members=Branch.load_all_active_members_of_branch()
                 for member in general_members:
-                    if member.email_nsu and member.email_nsu != 'None' and Branch.is_valid_email(member.email_nsu) and member.email_nsu not in temp_list_checker:
+                    if member.email_personal and member.email_personal != 'None' and Branch.is_valid_email(member.email_personal) and member.email_personal not in temp_list_checker:
                         to_attendee_final_list.append({
                             'displayName':member.name,
-                            'email':member.email_nsu,
+                            'email':member.email_personal,
                         })
-                        temp_list_checker.append(member.email_nsu)
+                        temp_list_checker.append(member.email_personal)
             elif option=="all_officers":
                 # get all officers email
                 branch_officers=Branch.load_all_officers_of_branch()
                 for officer in branch_officers:
-                    if officer.email_nsu and officer.email_nsu != 'None' and Branch.is_valid_email(officer.email_nsu) and officer.email_nsu not in temp_list_checker:
+                    if officer.email_personal and officer.email_personal != 'None' and Branch.is_valid_email(officer.email_personal) and officer.email_personal not in temp_list_checker:
                         to_attendee_final_list.append({
                             'displayName':officer.name,
-                            'email':officer.email_nsu,
+                            'email':officer.email_personal,
                         })
-                        temp_list_checker.append(officer.email_nsu)
+                        temp_list_checker.append(officer.email_personal)
                         # to_attendee_final_list.append({
                         #     'displayName':officer.name,
                         #     'email':officer.email_ieee,
@@ -700,12 +700,12 @@ class Branch:
                 for eb in eb_panel:
                     #if is faculty then skip
                     if not eb.position.is_faculty:
-                        if eb.email_nsu and eb.email_nsu != 'None' and Branch.is_valid_email(eb.email_nsu) and eb.email_nsu not in temp_list_checker:
+                        if eb.email_personal and eb.email_personal!= 'None' and Branch.is_valid_email(eb.email_personal) and eb.email_personal not in temp_list_checker:
                             to_attendee_final_list.append({
                                 'displayName':eb.name,
-                                'email':eb.email_nsu,
+                                'email':eb.email_personal,
                             })
-                            temp_list_checker.append(eb.email_nsu)
+                            temp_list_checker.append(eb.email_personal)
                         # to_attendee_final_list.append({
                             # 'displayName':eb.name,
                             # 'email':eb.email_ieee,
@@ -717,23 +717,23 @@ class Branch:
                 for eb in eb_panel:
                     #If is faculty then skip
                     if not eb.position.is_faculty:
-                        if eb.email_nsu and eb.email_nsu != 'None' and Branch.is_valid_email(eb.email_nsu) and eb.email_nsu not in temp_list_checker:
+                        if eb.email_personal and eb.email_personal != 'None' and Branch.is_valid_email(eb.email_personal) and eb.email_personal not in temp_list_checker:
                             to_attendee_final_list.append({
                                 'displayName':eb.name,
-                                'email':eb.email_nsu,
+                                'email':eb.email_personal,
                             })
-                            temp_list_checker.append(eb.email_nsu)
+                            temp_list_checker.append(eb.email_personal)
                             # to_attendee_final_list.append({
                             #     'displayName':eb.name,
                             #     'email':eb.email_ieee,
                             # })
                 for excom in branch_ex_com:
-                    if excom.member.email_nsu and excom.member.email_nsu != 'None' and Branch.is_valid_email(excom.member.email_nsu) and excom.member.email_nsu not in temp_list_checker:
+                    if excom.member.email_personal and excom.member.email_personal != 'None' and Branch.is_valid_email(excom.member.email_personal) and excom.member.email_personal not in temp_list_checker:
                         to_attendee_final_list.append({
                             'displayName':excom.member.name,
-                            'email':excom.member.email_nsu,
+                            'email':excom.member.email_personal,
                         })
-                        temp_list_checker.append(excom.member.email_nsu)
+                        temp_list_checker.append(excom.member.email_personal)
                         # to_attendee_final_list.append({
                         #     'displayName':excom.member.name,
                         #     'email':excom.member.email_ieee,
@@ -748,12 +748,12 @@ class Branch:
                             if ex.member is not None:
                                 #If is faculty then skip
                                 if not ex.member.position.is_faculty:
-                                    if ex.member.email_nsu and ex.member.email_nsu != 'None' and Branch.is_valid_email(ex.member.email_nsu) and ex.member.email_nsu not in temp_list_checker:
+                                    if ex.member.email_personal and ex.member.email_personal != 'None' and Branch.is_valid_email(ex.member.email_personal) and ex.member.email_personal not in temp_list_checker:
                                         to_attendee_final_list.append({
                                             'displayName':ex.member.name,
-                                            'email':ex.member.email_nsu,
+                                            'email':ex.member.email_personal,
                                         })
-                                        temp_list_checker.append(ex.member.email_nsu)
+                                        temp_list_checker.append(ex.member.email_personal)
                                         # to_attendee_final_list.append({
                                         #     'displayName':ex.member.name,
                                         #     'email':ex.member.email_ieee,
@@ -769,12 +769,12 @@ class Branch:
                 recruit_id = int(option[9:])
                 recruited_mem = recruited_members.objects.filter(session_id = recruit_id)
                 for mem in recruited_mem:
-                    if mem.email_nsu and mem.email_nsu != 'None' and Branch.is_valid_email(mem.email_nsu) and mem.email_nsu not in temp_list_checker:
+                    if mem.email_personal and mem.email_personal != 'None' and Branch.is_valid_email(mem.email_personal) and mem.email_personal not in temp_list_checker:
                         to_attendee_final_list.append({
                             'displayName':mem.first_name,
-                            'email':mem.email_nsu,
+                            'email':mem.email_personal,
                         })
-                        temp_list_checker.append(mem.email_nsu)
+                        temp_list_checker.append(mem.email_personal)
                         # to_attendee_final_list.append({
                         #     'displayName':mem.first_name,
                         #     'email'::mem.email_nsu,
