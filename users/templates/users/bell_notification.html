@@ -792,7 +792,7 @@
     {% for notification in user_data.notifications %}
       <!--redirect link-->
       <div class="msg-info-div">
-        <a href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" target="_blank">
+        <a href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}">
           <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
             <input type="hidden" class="hidden-input" id="hid-inp" value="{% if notification.is_read %}2{% else %}1{% endif %}" data-namr="1" />
             <div class="sender_content">
@@ -1171,7 +1171,7 @@
             //console.log('here trying to append notification');
             const notificationElement = `
                 <div class="msg-info-div new-notification">
-                    <a href="${notificationLink}" target="_blank">
+                    <a href="${notificationLink}">
                         <div class="msg" onmouseover="hoverIn(this)" onmouseout="hoverOut(this)" onclick="msg_read(this)">
                             <input type="hidden" class="hidden-input" id="hid-inp" value="${notification.is_read ? 2 : 1}" data-namr="1" />
                             <div class="sender_content">
