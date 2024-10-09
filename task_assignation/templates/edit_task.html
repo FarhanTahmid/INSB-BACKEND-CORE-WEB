@@ -1001,7 +1001,8 @@
                         {% if is_coordinator == "Admin/EB" and is_task_forwared_to_incharge.1 == False and not task.is_task_completed and task.task_type == "Team" %}
                             
                             <div class="dropdown">
-                                {% if is_task_forwarded_to_volunteers == False %}
+                                {% if is_task_forwarded_to_volunteers.1 == True and is_task_forwared_to_incharge.1 == False %}
+                                {% else %}
                                 <button class="check-task-button dropdown-toggle" data-toggle="dropdown">Forward Task To Team Incharges</button>
                                 {% endif %}
                                 <div class="dropdown-menu dropdown-menu-scale info pull-right" style="right: 50%; left: 50%;">
