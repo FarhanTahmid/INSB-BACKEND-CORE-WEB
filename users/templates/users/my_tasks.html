@@ -135,6 +135,24 @@
         display: flex;
         justify-content: flex-end;
       }
+      .leaderboards-button{
+        padding: 5px 15px;
+        color: black;
+        background: #FFDE59;
+        margin: 16px 4px 16px; 
+        border-radius: 4px;
+        border: 2px solid #FCCB02;
+        transition: all ease-in-out .3s;
+        cursor: pointer;
+      }
+      .leaderboards-button:hover{
+          background: white;
+          border-color: #FCCB02;
+      }
+      .leaderboards-button-container{
+        display: flex;
+        justify-content: center;
+      }
         @media screen and (max-width: 1024px) {
             .form-wrapper{
                 margin: 10%;
@@ -206,8 +224,15 @@
                 </a>
                 <span class="tooltip-text">Go back</span>
               </div>
-
-
+              <div class="leaderboards-button-container">
+                <a
+                href="{% url "central_branch:task_leaderboard" %}"
+                class="leaderboards-button"
+                style="margin-bottom: 15px; cursor: pointer"
+                >
+                Task LeaderBoards
+              </a>
+            </div>
               <div class="total_points">
                 <h6>Total Points: <span style="color: #75D481; font-weight: bold;">{{total_points|floatformat:2}}</span></h6>
               </div>
