@@ -2075,7 +2075,7 @@ This is an automated message. Do not reply
             dic.update({member:member_task_type})
         return dic
     
-    def forward_task(request,task_id,task_types_per_member,team_primary):
+    def forward_task(request,task_id,task_types_per_member,team_primary,by_coordinators):
 
         '''This function will forward the task to the core/team volunteers'''
 
@@ -2223,25 +2223,49 @@ This is an automated message. Do not reply
             for team in teams_listed:
                 team_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
 
-                if team_forward.task_forwarded_to_core_or_team_volunteers == False:
+                if by_coordinators == 0:
+                    if team_forward.task_forwarded_to_core_or_team_volunteers == False:
 
-                    team_forward.task_forwarded_to_core_or_team_volunteers = True
-                    team_forward.forwarded_by_for_volunteers = request.user.username
-                    team_forward.save()
+                        team_forward.task_forwarded_to_core_or_team_volunteers = True
+                        team_forward.forwarded_by_for_volunteers = request.user.username
+                        team_forward.save()
 
-                    incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
-                    for member in task.members.all():
+                        incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                        for member in task.members.all():
 
-                        if member in incharges:
-                            #removing the incharge from the task and reducing their points
-                            task.members.remove(member)
-                            task.save()
-                            points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                            points_for_incharge.completion_points = task.task_category.points * (40/100)
-                            points_for_incharge.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
-                            #setting message
-                            Task_Assignation.save_task_logs(task,task_log_message)
+                            if member in incharges:
+                                #removing the incharge from the task and reducing their points
+                                task.members.remove(member)
+                                task.save()
+                                points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
+                                points_for_incharge.completion_points = task.task_category.points * (40/100)
+                                points_for_incharge.save()
+                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
+                                #setting message
+                                Task_Assignation.save_task_logs(task,task_log_message)
+                else:
+                    if team_forward.task_forwarded_to_core_or_team_volunteers == False and team_forward.task_forwarded_to_incharge == False:
+
+                        team_forward.task_forwarded_to_core_or_team_volunteers = True
+                        team_forward.task_forwarded_to_incharge = False
+                        team_forward.forwared_by = request.user.username
+                        team_forward.forwarded_by_for_volunteers = request.user.username
+                        team_forward.save()
+
+                        coordinators = Members.objects.filter(team=team,position__is_co_ordinator = True,position__is_officer = True)
+                        
+                        for member in task.members.all():
+
+                            if member in coordinators:
+                                #removing the coordinators from the task and reducing their points
+                                task.members.remove(member)
+                                task.save()
+                                points_for_coordinators = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
+                                points_for_coordinators.completion_points = task.task_category.points * (10/100)
+                                points_for_coordinators.save()
+                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Co-ordinator, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 10% of task'
+                                #setting message
+                                Task_Assignation.save_task_logs(task,task_log_message)
 
 
         else:
@@ -2350,25 +2374,49 @@ This is an automated message. Do not reply
             team = Teams.objects.get(primary = int(team_primary))
             team_forward = Team_Task_Forwarded.objects.get(team=team,task=task)
 
-            if team_forward.task_forwarded_to_core_or_team_volunteers == False:
+            if by_coordinators == 0:
+                if team_forward.task_forwarded_to_core_or_team_volunteers == False:
 
-                team_forward.task_forwarded_to_core_or_team_volunteers = True
-                team_forward.forwarded_by_for_volunteers = request.user.username
-                team_forward.save()
+                    team_forward.task_forwarded_to_core_or_team_volunteers = True
+                    team_forward.forwarded_by_for_volunteers = request.user.username
+                    team_forward.save()
 
-                incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
-                for member in task.members.all():
+                    incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                    for member in task.members.all():
 
-                    if member in incharges:
-                        #removing the incharge from the task and reducing their points
-                        task.members.remove(member)
-                        task.save()
-                        points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                        points_for_incharge.completion_points = task.task_category.points * (40/100)
-                        points_for_incharge.save()
-                        task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
-                        #setting message
-                        Task_Assignation.save_task_logs(task,task_log_message)
+                        if member in incharges:
+                            #removing the incharge from the task and reducing their points
+                            task.members.remove(member)
+                            task.save()
+                            points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
+                            points_for_incharge.completion_points = task.task_category.points * (40/100)
+                            points_for_incharge.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+            else:
+                if team_forward.task_forwarded_to_core_or_team_volunteers == False and team_forward.task_forwarded_to_incharge==False:
+
+                    team_forward.task_forwarded_to_core_or_team_volunteers = True
+                    team_forward.task_forwarded_to_incharge = False
+                    team_forward.forwared_by = request.user.username
+                    team_forward.forwarded_by_for_volunteers = request.user.username
+                    team_forward.save()
+
+                    coordinators = Members.objects.filter(team=team,position__is_co_ordinator = True,position__is_officer = True)
+                    for member in task.members.all():
+
+                        if member in coordinators:
+                            #removing the incharge from the task and reducing their points
+                            task.members.remove(member)
+                            task.save()
+                            points_for_coordinator = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
+                            points_for_coordinator.completion_points = task.task_category.points * (10/100)
+                            points_for_coordinator.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Coordinator, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 10% of task'
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+
 
         return True
 
