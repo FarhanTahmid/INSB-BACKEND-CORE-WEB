@@ -95,8 +95,9 @@
         }
         .category.user{
             display: flex;
-            justify-content: space-between;
-            flex-direction: row;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
         }
         {% comment %} @media screen and (max-width: 400px) {
             .category.user{
@@ -1380,10 +1381,10 @@
                             <td>
                                 <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
                                     <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Yes/No Box </option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Text field </option>
+                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Text Field </option>
                                     <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File / Permission Paper Upload </option>
                                     <option value="media" {% if types.has_media %}selected{% endif %}>Media Upload </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Link </option>
                                 </select>
                             </td>                
                             <td>{{member.team.team_name}}</td>

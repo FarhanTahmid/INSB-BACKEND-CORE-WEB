@@ -767,8 +767,8 @@
                     {% if members_task_type.has_drive_link %}
                     <!-- Drive link -->
                     <div class="form-group">
-                        <label>Folder Drive Link</label>
-                        <input placeholder="Provide Drive Link" class="form-control" type="url" autocomplete="off"
+                        <label>Link</label>
+                        <input placeholder="Provide Link" class="form-control" type="url" autocomplete="off"
                         value="{{drive_link_loaded.drive_link}}" name="content_drive" 
                         {% if task.is_task_completed %}disabled {% endif %}/>
                     </div>
@@ -777,13 +777,13 @@
 
                     {% if members_task_type.has_permission_paper %}
                     <!-- Paper permission -->
-                    <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                    <label class="description_label" style="margin-right: 20px;">Completed? </label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                     
                         <select id="paper_permission_dropdown" name="permission_paper" class="form-control" {% if task.is_task_completed %}disabled {% endif %}>
                             <option value="" disabled selected>Select</option>
-                            <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Completed </option>
-                            <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
+                            <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Yes</option>
+                            <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>No</option>
                         </select>                                  
                     </div>
                     <br>
@@ -830,7 +830,7 @@
                     <!--upload doc-->
                     {% if members_task_type.has_file_upload %}
                     <div class="form-group">
-                            <label for="documents">File Upload</label>
+                            <label for="documents">File / Permission Paper Upload</label>
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept="*/*" multiple {% if task.is_task_completed %}disabled{% endif %}>
                                 <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
@@ -1022,7 +1022,7 @@
     
                         <!-- Drive link -->
                         {% if task_type.0.has_drive_link %}
-                        <label>Folder Drive Link</label>
+                        <label>Link</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                             <div>
                                 {% if task_type.2.drive_link %}
@@ -1043,13 +1043,13 @@
     
                         {% if task_type.0.has_permission_paper %}
                         <!-- Paper permission -->
-                        <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                        <label class="description_label" style="margin-right: 20px;">Completed?</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                             <div>
                                 {% if task_type.1.permission_paper == "completed" %}
-                                Completed
+                                Yes
                                 {% elif task_type.1.permission_paper == "not_completed" %}
-                                Not Completed
+                                No
                                 {% else %}
                                 <div style="color: #d33838;">
                                     No response yet!
