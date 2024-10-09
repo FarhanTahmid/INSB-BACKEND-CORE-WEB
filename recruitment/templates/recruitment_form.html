@@ -323,7 +323,7 @@
                             <br>
                             <div class="row m-b">
                                 <div class="col-md-4">
-                                  <label for="exampleInputPassword1">School</label>
+                                  <label for="exampleInputPassword1">School<span style="color:red;"> *</span></label>
                                   <select class="form-control w-75" name="school" id="school" required>
                                     <option value="None" disabled selected>-------------------</option>
                                     {% for school in all_schools %}
@@ -332,13 +332,13 @@
                                   </select>                  
                                 </div>
                                 <div class="col-md-4">
-                                  <label for="exampleInputPassword1">Department</label>
+                                  <label for="exampleInputPassword1">Department<span style="color:red;"> *</span></label>
                                   <select class="form-control w-75" name="department" id="department" required>
                                       <option value="None" disabled selected>-------------------</option>
                                   </select>                  
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="exampleInputPassword1">Major</label>
+                                    <label for="exampleInputPassword1">Major<span style="color:red;"> *</span></label>
                                     <select class="form-control w-75" name="major" id="major" required>
                                         <option value="None" disabled selected>-------------------</option>
                                     </select>                  
@@ -399,7 +399,7 @@
                             <div class="form-group w-50">
                               <label for="blood_group">Blood Group</label>
                               <select class="form-control" name="blood_group" value="{{ user_data.blood_group }}">
-                                  <option value="None" disabled>-------------------</option>
+                                  <option value="None" disabled selected>-------------------</option>
                                   <option value="A+">A+</option>
                                   <option value="A-">A-</option>
                                   <option value="B+">B+</option>

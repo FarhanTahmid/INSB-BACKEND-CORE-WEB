@@ -1,18 +1,8 @@
-{% load static %}
 
 {% block loading_overlay %}
+{% load static %}
 
 <style>
-    @import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Poppins", sans-serif;
-        color: #fff;
-        text-decoration: none;
-    }
 
     body.loading {
         overflow: hidden;
@@ -22,7 +12,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        z-index: 9990;
+        z-index: 99999;
         display: flex;
         min-height: 100%;
         min-width: 100%;
@@ -154,12 +144,12 @@
         transform: translate(-50%, 200%);
         width: 96px;
         height: 96px;
-        z-index: 9999;
+        z-index: 99999;
     }
 
     .loader-square {
         position: fixed;
-        z-index: 9999;
+        z-index: 99999;
         top: 0;
         left: 0;
         width: 25px;
@@ -337,7 +327,6 @@
         }
     }
 </style>
-</head>
 
 <div id="loadingOverlay">
     <div class="typewriter">

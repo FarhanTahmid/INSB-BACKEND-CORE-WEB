@@ -3850,7 +3850,10 @@ def member_details(request,ieee_id):
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
                 skill_sets=request.POST.getlist('skill_sets')
-                blood_group = request.POST['blood_group']
+                try:
+                    blood_group = request.POST['blood_group']
+                except:
+                    blood_group = "None"
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -6346,7 +6349,7 @@ class UpdateScheduledEmailOptionsAjax(View):
                         draft.delete()
                         message = 'Email schedule is cancelled'
                     elif status == 'send_now':
-                        send_scheduled_email(json.dumps(unique_id))
+                        send_scheduled_email(json.dumps(request.user.username), json.dumps(unique_id))
                         task.enabled = False
                         task.save()
                         message = "Email sent successfully"

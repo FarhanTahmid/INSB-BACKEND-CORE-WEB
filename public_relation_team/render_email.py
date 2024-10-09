@@ -486,6 +486,7 @@ class PRT_Email_System:
         uuid = str(uuid)[:6]
         unique_task_name = f"{uuid}_{scheduled_email_date_time.timestamp()}"
         
+        username = json.dumps(request.user.username)
         unique_task_name_json = json.dumps(unique_task_name)
 
         Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts,status='Scheduled')
@@ -496,7 +497,7 @@ class PRT_Email_System:
                             clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
                             name=unique_task_name ,
                             task = "public_relation_team.tasks.send_scheduled_email",
-                            args =json.dumps([unique_task_name_json]),
+                            args =json.dumps([username, unique_task_name_json]),
                             one_off = True,
                             enabled = True,
                     )
@@ -526,7 +527,7 @@ class PRT_Email_System:
             message["Bcc"] = ','.join(bcc_email_list_final)
             message["Subject"] = subject
 
-            print(message['To'])
+            # print(message['To'])
 
             # Attach the main message body
             message.attach(MIMEText(mail_body, 'html'))
@@ -560,7 +561,7 @@ class PRT_Email_System:
                 .execute()
             )
 
-            print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+            # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
             return draft['id']
         # except:
         #     print('Could not do it :)')

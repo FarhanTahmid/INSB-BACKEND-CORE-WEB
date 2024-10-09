@@ -356,9 +356,14 @@ def getEventNumberStat(request,primary):
             #when event year is found removing increasing count value and removing it from list 
             #to loawer time complexity
             try:
-                if event.event_date.year == year-i:
-                    count+=1
-                    events.remove(event)
+                if event.start_date:
+                    if event.start_date.year == year-i:
+                        count+=1
+                        events.remove(event)
+                else:
+                    if event.event_date.year == year-i:
+                        count+=1
+                        events.remove(event)
             except:
                 pass
         #assiging the number of events occured in a year to the list

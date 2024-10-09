@@ -184,7 +184,10 @@ def member_details(request,ieee_id):
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 skill_sets=request.POST.getlist('skill_sets')
-                blood_group = request.POST['blood_group']
+                try:
+                    blood_group = request.POST['blood_group']
+                except:
+                    blood_group = "None"
 
                 if date_of_birth == '':
                     date_of_birth = None

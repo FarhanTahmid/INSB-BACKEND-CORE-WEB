@@ -14,12 +14,12 @@ from django.contrib import messages
 
 from system_administration.google_mail_handler import GmailHandler
 from system_administration.system_error_handling import ErrorHandling
-
+import time
 
 API_NAME = settings.GOOGLE_CALENDAR_API_NAME
 API_VERSION = settings.GOOGLE_CALENDAR_API_VERSION
 SCOPES = settings.SCOPES
-BATCH_SIZE = 150
+BATCH_SIZE = 40
 
 service = None
 
@@ -46,6 +46,7 @@ class CalendarHandler:
     def create_event_in_calendar(request, calendar_id, title, description, location, start_time, end_time, event_link, attendeeList, attachments=None):
         
         event_created_id = None
+        email_queue_count = 0
         try:
             event = {
                 'summary': title,
@@ -84,19 +85,26 @@ class CalendarHandler:
 
             service = CalendarHandler.authorize(request)
             if service:
+                time.sleep(2)
                 response = service.events().insert(calendarId=calendar_id, body=event, supportsAttachments=True).execute()
                 id = response.get('id')
                 event_created_id = id
                 print('Event created: %s' % (response.get('htmlLink')))
+
                 for i in range(0, len(attendeeList), BATCH_SIZE):
                     batch = attendeeList[i:i + BATCH_SIZE]
-                    event = service.events().get(calendarId=calendar_id, eventId=id).execute()
-                    if 'attendees' in event:
-                        event['attendees'].extend(batch)
+                    # event = service.events().get(calendarId=calendar_id, eventId=id).execute()
+                    # time.sleep(10)
+                    if 'attendees' in response:
+                        response['attendees'].extend(batch)
                     else:
-                        event['attendees'] = batch
-                    updated_event = service.events().update(calendarId=calendar_id, eventId=id, body=event, sendUpdates='all').execute()
+                        response['attendees'] = batch
+
+                    response = service.events().update(calendarId=calendar_id, eventId=id, body=response, sendUpdates='all').execute()
                     print(f'Batch {i // BATCH_SIZE + 1} updated.')
+                    email_queue_count += BATCH_SIZE
+                    time.sleep(2)
+
                 return id
             else:
                 return None
@@ -106,10 +114,15 @@ class CalendarHandler:
                     messages.error(request, e.error_details[0]['message'])
                     
                     if event_created_id:
-                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)
+                        CalendarHandler.delete_event_in_calendar(request, calendar_id, event_created_id)  
+            else:
+                messages.error(request, f"Unexpected error: {str(e)}")
+           
+            messages.error(request,f'Total attendees added : {email_queue_count}, Originally email to sent - {len(attendeeList)} members')
             
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return None
+
         
     def update_event_in_calendar(request, calendar_id, event_id, title, description, location, start_time, end_time, attendees):
         try:
@@ -134,8 +147,8 @@ class CalendarHandler:
                     response['description'] = description
                 if location:
                     response['location']=location
-                if attendees:
-                    response['attendees'] = attendees
+                # if attendees:
+                #     response['attendees'] = attendees
 
                 service.events().update(calendarId=calendar_id, eventId=response['id'], body=response, sendUpdates='all').execute()
 
