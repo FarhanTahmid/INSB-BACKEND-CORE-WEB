@@ -1607,9 +1607,9 @@ This is an automated message. Do not reply
 
             
             if task.task_type == 'Individuals' and len(task.team.all()) == 0:
-                url = f'{site_domain}/portal/central_branch/task/{task.pk}/upload_task'
+                url = f'{site_domain}/portal/central_branch/task/{task.pk}'
             else:
-                url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}/upload_task/{logged_in_user.team.primary}'
+                url = f'{site_domain}/portal/{Task_Assignation.get_team_app_name(team_primary=logged_in_user.team.primary)}/task/{task.pk}'
             
             subject = f"Task Review Request from {logged_in_user.name}, {logged_in_user.ieee_id}"
             message = f'''
