@@ -727,14 +727,14 @@
       setTimeout(() => {
           document.body.classList.remove('loading');
           document.getElementById('loadingOverlay').classList.add('hidden'); // Add 'hidden' class after a brief delay
-      }, 1000); // Adjust the delay as needed to match the transition duration
+      }, 0); // Adjust the delay as needed to match the transition duration
   }
   
 
   // Example: Simulate loading
   window.addEventListener('load', function() {
       showLoadingScreen(); // Show loading screen when the page loads
-      setTimeout(hideLoadingScreen, 2500); // Simulate loading taking 3 seconds
+      setTimeout(hideLoadingScreen, 0); // Simulate loading taking 3 seconds
   });
 
 
