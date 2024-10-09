@@ -1115,7 +1115,7 @@
                   {% if create_individual_task_access or create_team_task_access %}
                     <button type="button" class="log-task-button" id="trigger">Task Logs</button>
                     {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
-                    <button type="submit" class="create-task-btn" name="update_task">Update Task</button>     
+                    <button type="submit" id="submitTaskButton" class="create-task-btn" name="update_task">Update Task</button>     
                     {% endif %}         
                   {% endif %}                  
                   
@@ -1566,8 +1566,20 @@
         // Attach event listeners
         document.addEventListener("DOMContentLoaded", () => {
             handleSelection();
-            const form = document.getElementById("taskForm");
-            form.addEventListener("submit", validateForm);
+            const submitButton = document.getElementById("submitTaskButton"); // Replace with your button's specific ID
+    if (submitButton) {
+        submitButton.addEventListener("click", (event) => {
+            const form = document.getElementById("taskForm"); // Ensure you're referencing the form
+            if (form) {
+                // Prevent default form submission to perform validation
+                event.preventDefault();
+                if (validateForm(event)) {
+                    // If validation is successful, submit the form
+                    form.submit();
+                }
+            }
+        });
+    }
         });
     </script>
         
