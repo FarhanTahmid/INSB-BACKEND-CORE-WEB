@@ -74,7 +74,7 @@
         }
     
         label{
-            font-size:20px;
+            font-size:1rem;
         }
 
         .app-body{
@@ -434,6 +434,9 @@
       cursor: pointer;
     }
 
+    .modal-title{
+        font-weight: bold;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
@@ -596,7 +599,7 @@
 
    <!-- modal for adding new attendees -->
    <div class="modal fade" id="AddCaptionModal" tabindex="-1" role="dialog" aria-labelledby="AddCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-m" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCaptionModalLabel">Add Attendee</h5>
@@ -608,7 +611,7 @@
             <div class="modal-body">  
                 <form id="AddCaptionModalForm">               
                     <div class="form-group">
-                        <label>Attendee Name:</label> 
+                        <label>Name:</label> 
                             <input
                                 placeholder="Attendee"
                                 class="form-control"
@@ -616,11 +619,12 @@
                                 autocomplete="off"
                                 required
                                 id="attendeeName"
+                                style="border-radius: .25rem;"
                             />
                     </div>
 
                     <div class="form-group">
-                        <label>Attendee Email:</label> 
+                        <label>Email:</label> 
                             <input
                                 placeholder="Email"
                                 class="form-control"
@@ -628,6 +632,7 @@
                                 autocomplete="off"
                                 required
                                 id="attendeeEmail"
+                                style="border-radius: .25rem;"
                             />
                     </div>
                 </form>
@@ -635,7 +640,7 @@
             <div class="modal-footer">
                 <!-- Change the button label and name attribute -->
                 <button type="button" class="btn btn-outline-success txt-success buttons" id="addAttendee" data-dismiss="modal">Add</button>
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -644,7 +649,7 @@
 
 <!-- modal for editing attendees -->
 <div class="modal fade" id="EditCaptionModal" tabindex="-1" role="dialog" aria-labelledby="EditCaptionModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-m" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editCaptionModalLabel">View Attendee</h5>
@@ -654,26 +659,28 @@
             </div>
             <div class="modal-body">
                     <div class="form-group">
-                        <label>Attendee Name: </label> 
+                        <label>Name: </label> 
                             <input
                                 placeholder="Attendee"
                                 class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 id="attendee_Name"
+                                style="border-radius: .25rem;"
                                 disabled
                             />
                         <br>
                             
                     </div>
                     <div class="form-group">
-                        <label>Attendee Email: </label> 
+                        <label>Email: </label> 
                             <input
                                 placeholder="Email"
                                 class="form-control"
                                 type="text"
                                 autocomplete="off"
                                 ID="attendee_Email"
+                                style="border-radius: .25rem;"
                                 disabled
                             />
                         <br>
@@ -686,7 +693,7 @@
 
 
 <!-- Confirmation modal for delete attendee -->
-<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-top" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -707,6 +714,28 @@
         </div>
     </div>
 </div>
+</div> -->
+<div class="modal fade" id="ConfirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-m" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">View Attendee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="attendee_id" name= "attendee_id" type="hidden">
+                <h6>Are you sure you want to delete the attendee?</h6>
+                <p id="delete_attendee_Name">Name: </p>
+                <p id="delete_attendee_Email">Email: </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="removeAttendee" class="btn btn-outline-danger" data-dismiss="modal">Confirm</button>
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 

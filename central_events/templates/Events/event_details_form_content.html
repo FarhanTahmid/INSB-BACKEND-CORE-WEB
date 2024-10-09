@@ -54,7 +54,7 @@
                     <p style="color:red" class="message">{{message}}</p>
                 {% endfor %}
             </div> {% endcomment %}
-            <form method="POST">
+            <form method="POST" id="eventForm">
                 {% csrf_token %}
                 <div class="box-body">
                     <div class="form-group">
@@ -125,14 +125,15 @@
                             
                     </div> {% endcomment %}
                     <div class="form-group">
-                        <label for="exampleInputPassword3">Add a (tentative) start date for the Event: </label>
-                        <input type="datetime-local" id="date_time" name="start_date_time" required>
+                        <label for="startDateTime">Add a (tentative) start date for the Event: </label>
+                        <input type="datetime-local" id="startDateTime" name="start_date_time" required>
                     </div>
                     <br>
                     <div class="form-group">
-                        <label for="exampleInputPassword3">Add a end date for the Event: </label>
-                        <input type="datetime-local" id="date_time" name="end_date_time" required>
+                        <label for="endDateTime">Add a end date for the Event: </label>
+                        <input type="datetime-local" id="endDateTime" name="end_date_time" required>
                     </div>
+                    <div id="error-message" style="color: red; display: none;"></div><br>
                     <br>
 
                     <div style="text-align: center;">
@@ -176,5 +177,27 @@
             </div>
         </div>
       </div>
+<script>
+        const form = document.getElementById('eventForm');
+        const startDateTimeInput = document.getElementById('startDateTime');
+        const endDateTimeInput = document.getElementById('endDateTime');
+        const errorMessage = document.getElementById('error-message');
 
+        form.addEventListener('submit', function(event) {
+            const startDateTime = new Date(startDateTimeInput.value);
+            const endDateTime = new Date(endDateTimeInput.value);
+
+            // Reset error message
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+
+            if (startDateTime > endDateTime) {
+                // Prevent form submission
+                event.preventDefault();
+                // Show error message
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Start date/time cannot be after the end date/time.';
+            }
+        });
+</script>
 {% endblock event_details_form %}

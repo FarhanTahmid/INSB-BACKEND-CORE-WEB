@@ -95,8 +95,9 @@
         }
         .category.user{
             display: flex;
-            justify-content: space-between;
-            flex-direction: row;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
         }
         {% comment %} @media screen and (max-width: 400px) {
             .category.user{
@@ -205,7 +206,7 @@
             padding: 2px 26px;
             color: #d33838;
             background: white;
-            margin-bottom: 15px;
+            /* margin-bottom: 15px; */
             border-radius: 4px;
             border: 1px solid #d33838;
             transition: all ease-in-out .3s;
@@ -984,7 +985,7 @@
                
                </div>
            </form> 
-           <form method="post">
+           <form method="post" id="taskForm">
             {% csrf_token %}
             <!--Messages-->
             {% if not is_new_task %}
@@ -1380,11 +1381,11 @@
                             <td>{{member.name}}</td>
                             <td>
                                 <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
-                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Permission Paper</option>
-                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Content </option>
-                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File Upload </option>
-                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media </option>
-                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Drive Link </option>
+                                    <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Yes/No Box </option>
+                                    <option value="content" {% if types.has_content  %}selected{% endif %}>Text Field </option>
+                                    <option value="file_upload" {% if types.has_file_upload %}selected{% endif %}>File / Permission Paper Upload </option>
+                                    <option value="media" {% if types.has_media %}selected{% endif %}>Media Upload </option>
+                                    <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Link </option>
                                 </select>
                             </td>                
                             <td>{{member.team.team_name}}</td>
@@ -1451,6 +1452,125 @@
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
+
+    <style>
+        /* Highlight rows with missing task type in red */
+        .error-row {
+            background-color: #ffdddd!important; /* Light red background */
+        }
+    </style>
+        
+    <script>
+        function handleSelection() {
+            const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+            const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+            const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+        
+            // Check for team selection
+            teamCheckboxes.forEach(team => {
+                team.addEventListener('change', () => {
+                    if (team.checked) {
+                        // Uncheck all individual checkboxes and reset styles
+                        individualCheckboxes.forEach(individual => {
+                            individual.checked = false;
+                            removeErrorHighlight(individual);
+                        });
+                        // Hide the task type selects for individuals
+                        taskTypeSelects.forEach(select => select.disabled = true);
+                    }
+                });
+            });
+        
+            // Check for individual selection
+            individualCheckboxes.forEach(individual => {
+                individual.addEventListener('change', () => {
+                    if (individual.checked) {
+                        // Uncheck all team checkboxes
+                        teamCheckboxes.forEach(team => team.checked = false);
+                        // Enable task type selects for selected individuals
+                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                        taskType.disabled = false;
+                    } else {
+                        // If unchecked, disable the task type dropdown
+                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                        taskType.disabled = true;
+                        removeErrorHighlight(individual);
+                    }
+                });
+            });
+        }
+        
+        // Function to highlight rows with errors
+        function highlightErrorRow(element, addHighlight = true) {
+            const row = element.closest('tr');
+            if (row) {
+                if (addHighlight) {
+                    row.classList.add('error-row');
+                } else {
+                    row.classList.remove('error-row');
+                }
+            }
+        }
+        
+        // Function to remove error highlight from a row
+        function removeErrorHighlight(individual) {
+            const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+            highlightErrorRow(individual, false);
+            highlightErrorRow(taskType, false);
+        }
+        
+        // Function to validate form before submission
+        function validateForm(event) {
+            const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+            const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+            const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+        
+            // Remove any existing error highlights
+            individualCheckboxes.forEach(individual => removeErrorHighlight(individual));
+        
+            // Check if any team or individual is selected
+            const isTeamSelected = Array.from(teamCheckboxes).some(checkbox => checkbox.checked);
+            const isIndividualSelected = Array.from(individualCheckboxes).some(checkbox => checkbox.checked);
+        
+            if (!isTeamSelected && !isIndividualSelected) {
+                alert("Please select either a team or an individual before submitting.");
+                event.preventDefault();
+                return false;
+            }
+        
+            // Check if task types are selected for selected individuals
+            if (isIndividualSelected) {
+                let allTaskTypesSelected = true;
+                individualCheckboxes.forEach(individual => {
+                    if (individual.checked) {
+                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                        if (!taskType || taskType.selectedOptions.length === 0) {
+                            // Highlight the row in red if no task type is selected
+                            highlightErrorRow(individual);
+                            highlightErrorRow(taskType);
+                            allTaskTypesSelected = false;
+                        }
+                    }
+                });
+        
+                if (!allTaskTypesSelected) {
+                    alert("Please select a task type for each selected individual.");
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        
+            return true;
+        }
+        
+        // Attach event listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            handleSelection();
+            const form = document.getElementById("taskForm");
+            form.addEventListener("submit", validateForm);
+        });
+    </script>
+        
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
