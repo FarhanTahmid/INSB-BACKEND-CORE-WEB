@@ -984,7 +984,7 @@
                
                </div>
            </form> 
-           <form method="post">
+           <form method="post" id="taskForm">
             {% csrf_token %}
             <!--Messages-->
             {% if not is_new_task %}
@@ -1441,6 +1441,125 @@
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}
+
+    <style>
+        /* Highlight rows with missing task type in red */
+        .error-row {
+            background-color: #ffdddd!important; /* Light red background */
+        }
+    </style>
+        
+    <script>
+        function handleSelection() {
+            const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+            const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+            const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+        
+            // Check for team selection
+            teamCheckboxes.forEach(team => {
+                team.addEventListener('change', () => {
+                    if (team.checked) {
+                        // Uncheck all individual checkboxes and reset styles
+                        individualCheckboxes.forEach(individual => {
+                            individual.checked = false;
+                            removeErrorHighlight(individual);
+                        });
+                        // Hide the task type selects for individuals
+                        taskTypeSelects.forEach(select => select.disabled = true);
+                    }
+                });
+            });
+        
+            // Check for individual selection
+            individualCheckboxes.forEach(individual => {
+                individual.addEventListener('change', () => {
+                    if (individual.checked) {
+                        // Uncheck all team checkboxes
+                        teamCheckboxes.forEach(team => team.checked = false);
+                        // Enable task type selects for selected individuals
+                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                        taskType.disabled = false;
+                    } else {
+                        // If unchecked, disable the task type dropdown
+                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                        taskType.disabled = true;
+                        removeErrorHighlight(individual);
+                    }
+                });
+            });
+        }
+        
+        // Function to highlight rows with errors
+        function highlightErrorRow(element, addHighlight = true) {
+            const row = element.closest('tr');
+            if (row) {
+                if (addHighlight) {
+                    row.classList.add('error-row');
+                } else {
+                    row.classList.remove('error-row');
+                }
+            }
+        }
+        
+        // Function to remove error highlight from a row
+        function removeErrorHighlight(individual) {
+            const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+            highlightErrorRow(individual, false);
+            highlightErrorRow(taskType, false);
+        }
+        
+        // Function to validate form before submission
+        function validateForm(event) {
+            const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+            const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+            const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+        
+            // Remove any existing error highlights
+            individualCheckboxes.forEach(individual => removeErrorHighlight(individual));
+        
+            // Check if any team or individual is selected
+            const isTeamSelected = Array.from(teamCheckboxes).some(checkbox => checkbox.checked);
+            const isIndividualSelected = Array.from(individualCheckboxes).some(checkbox => checkbox.checked);
+        
+            if (!isTeamSelected && !isIndividualSelected) {
+                alert("Please select either a team or an individual before submitting.");
+                event.preventDefault();
+                return false;
+            }
+        
+            // Check if task types are selected for selected individuals
+            if (isIndividualSelected) {
+                let allTaskTypesSelected = true;
+                individualCheckboxes.forEach(individual => {
+                    if (individual.checked) {
+                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                        if (!taskType || taskType.selectedOptions.length === 0) {
+                            // Highlight the row in red if no task type is selected
+                            highlightErrorRow(individual);
+                            highlightErrorRow(taskType);
+                            allTaskTypesSelected = false;
+                        }
+                    }
+                });
+        
+                if (!allTaskTypesSelected) {
+                    alert("Please select a task type for each selected individual.");
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        
+            return true;
+        }
+        
+        // Attach event listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            handleSelection();
+            const form = document.getElementById("taskForm");
+            form.addEventListener("submit", validateForm);
+        });
+    </script>
+        
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
