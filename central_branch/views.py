@@ -5084,7 +5084,7 @@ def upload_task(request, task_id,team_primary = None):
 
 @login_required
 @member_login_permission
-def add_task(request, task_id,team_primary = None):
+def add_task(request, task_id,team_primary = None,by_coordinators = 0):
 
     try:
 
@@ -5119,7 +5119,7 @@ def add_task(request, task_id,team_primary = None):
                     return redirect('central_branch:add_task',task_id)
             print(task_types_per_member)
 
-            if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team_primary)):
+            if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team_primary,by_coordinators)):
 
                 #If it is a team task and no members were selected then show message but save other params
                 if(not member_select):
@@ -5130,14 +5130,14 @@ def add_task(request, task_id,team_primary = None):
                 if team_primary == None or team_primary == "1":
                     return redirect('central_branch:add_task',task_id)
                 else:
-                    return redirect(f'{app_name}:add_task_team',task_id,team_primary)
+                    return redirect(f'{app_name}:add_task_team',task_id,team_primary,by_coordinators)
             else:
                 messages.warning(request,"Error occured while forwarding task")
 
                 if team_primary == None or team_primary == "1":
                     return redirect('central_branch:add_task',task_id)
                 else:
-                    return redirect(f'{app_name}:add_task_team',task_id,team_primary)
+                    return redirect(f'{app_name}:add_task_team',task_id,team_primary,by_coordinators)
 
         
         
