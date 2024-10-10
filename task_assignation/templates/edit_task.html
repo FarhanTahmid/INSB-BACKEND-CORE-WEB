@@ -1026,11 +1026,27 @@
                         <span class="closeStartModal">&times;</span>
                     </div>
                     <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Start Task?</h5>
-                    <h6  style="text-align: center; margin: 0 22px 5px;font-size: small;">You cannot forward the task to someone if you start now.</h6>
-                    <h6 style="text-align: center;font-size: small;">Do you want to start the task?</h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If it is a <b>team task</b>, you <b>cannot</b> forward the task to someone if you start now.</h6>
+                    <h6 style="text-align: center;">Do you want to start the task?</h6>
                     <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
                         <a href="#" class="cancel_start_task_btn">No</a>
-                        <a href="#" class="confirm_start_task_btn" name="start_task">Yes</a>
+                    {% if create_individual_task_access or create_team_task_access %}
+
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if my_task %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button" class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% else %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if my_task %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url 'users:upload_task_user' task.pk %}" class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% else %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url ''|add:app_name|add:':upload_task' task.pk  %}"  class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% endif %}
+                            {% endif %}
+                        {% endif %}
                 </div>
                 </div>
             
