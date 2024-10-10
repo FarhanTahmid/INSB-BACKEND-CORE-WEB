@@ -344,9 +344,9 @@ class PRT_Email_System:
 
 
                     message = MIMEText(mail_body, 'html')
-                    print(to_email_list_final)
-                    print(cc_email_list_final)
-                    print(bcc_email_list_final)
+                    # print(to_email_list_final)
+                    # print(cc_email_list_final)
+                    # print(bcc_email_list_final)
 
                     message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                     message["To"] = ','.join(to_email_list_final)
