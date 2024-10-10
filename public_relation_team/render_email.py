@@ -31,7 +31,7 @@ class PRT_Email_System:
         
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
-        substrings = single_emails.split(',')
+        substrings = single_emails[0].split(',')
         
         for email in substrings:
             # Trim leading and trailing whitespaces
@@ -41,6 +41,10 @@ class PRT_Email_System:
         to_email_list = to_email_list[0].split(',')
         cc_email_list = cc_email_list[0].split(',')
         bcc_email_list = bcc_email_list[0].split(',')
+
+        # print(to_email_list)
+        # print(cc_email_list)
+        # print(bcc_email_list)
         
         # Get the emails of to_email_list 
         to_email_final_list=[]
@@ -334,6 +338,9 @@ class PRT_Email_System:
 
 
                     message = MIMEText(mail_body, 'html')
+                    # print(to_email_list_final)
+                    # print(cc_email_list_final)
+                    # print(bcc_email_list_final)
 
                     message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                     message["To"] = ','.join(to_email_list_final)
@@ -346,12 +353,12 @@ class PRT_Email_System:
                     
                     create_message = {"raw": encoded_message}
 
-                    send_message = (
-                        service.users()
-                        .messages()
-                        .send(userId="me", body=create_message)
-                        .execute()
-                    )
+                    # send_message = (
+                    #     service.users()
+                    #     .messages()
+                    #     .send(userId="me", body=create_message)
+                    #     .execute()
+                    # )
 
                     print(f'Message Id: {send_message["id"]}')
 
