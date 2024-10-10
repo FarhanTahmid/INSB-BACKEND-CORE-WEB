@@ -1423,7 +1423,31 @@
                         <tr>
                             <td>{{forloop.counter}}.</td>
                             <td>{{team.team_name}}</td>
-                            <td><input type="checkbox" name="team_select" value="{{team.primary}}" {% if task.task_type == "Team" and team in task.team.all %}checked{% endif %}></td>
+                            <td><input type="checkbox" name="team_select" value="{{team.primary}}" {% if task.task_type == "Team" and team in task.team.all %}checked{% endif %} onclick="toggleCoordinators({{ forloop.counter }})"></td>
+                        </tr>
+                        <!-- Coordinator List Row (Hidden by Default) -->
+                        <tr id="coordinator-list-{{ forloop.counter }}" class="coordinator-row" style="display: none;">
+                            <td colspan="3">
+                                <!-- Coordinator list with selection options -->
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Coordinator Name</th>
+                                            <th>Select Coordinator</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for coordinator in team.coordinators %}
+                                        <tr>
+                                            <td>{{ coordinator.name }}</td>
+                                            <td>
+                                                <input type="checkbox" name="coordinator_select" value="{{ coordinator.id }}">
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -1460,107 +1484,181 @@
     </style>
         
     <script>
-        function handleSelection() {
-            const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
-            const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
-            const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
-        
-            // Check for team selection
-            teamCheckboxes.forEach(team => {
-                team.addEventListener('change', () => {
-                    if (team.checked) {
-                        // Uncheck all individual checkboxes and reset styles
-                        individualCheckboxes.forEach(individual => {
-                            individual.checked = false;
-                            removeErrorHighlight(individual);
-                        });
-                        // Hide the task type selects for individuals
-                        taskTypeSelects.forEach(select => select.disabled = true);
-                    }
-                });
-            });
-        
-            // Check for individual selection
-            individualCheckboxes.forEach(individual => {
-                individual.addEventListener('change', () => {
-                    if (individual.checked) {
-                        // Uncheck all team checkboxes
-                        teamCheckboxes.forEach(team => team.checked = false);
-                        // Enable task type selects for selected individuals
-                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
-                        taskType.disabled = false;
-                    } else {
-                        // If unchecked, disable the task type dropdown
-                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+        // Function to toggle the display of the coordinator list for the selected team
+function toggleCoordinators(teamRowId) {
+    let coordinatorRow = document.getElementById("coordinator-list-" + teamRowId);
+    
+    // Toggle the display of the coordinator row
+    if (coordinatorRow.style.display === "none") {
+        coordinatorRow.style.display = "table-row";
+    } else {
+        coordinatorRow.style.display = "none";
+    }
+}
+
+// Optional: Function to filter the team table based on search input
+function filter_team_table() {
+    let input = document.getElementById("search_input_team").value.toLowerCase();
+    let rows = document.querySelectorAll("#team-table tbody tr");
+
+    rows.forEach((row) => {
+        // Display only rows that match the search criteria (either team or coordinator)
+        let isMatch = row.innerText.toLowerCase().includes(input);
+        row.style.display = isMatch ? "" : "none";
+    });
+}
+
+function handleSelection() {
+    const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+    const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+    const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+
+    // Check for team selection
+    teamCheckboxes.forEach(team => {
+        team.addEventListener('change', () => {
+            const teamId = team.value;  // Get the team ID
+            const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
+
+            if (team.checked) {
+                // Uncheck and reset all individual checkboxes
+                individualCheckboxes.forEach(individual => {
+                    individual.checked = false;
+                    removeErrorHighlight(individual);
+
+                    // Reset task type dropdown for the individual
+                    const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                    if (taskType) {
                         taskType.disabled = true;
-                        removeErrorHighlight(individual);
+                        taskType.selectedIndex = -1; // Clear all selections in dropdown
                     }
                 });
-            });
+
+                // Make sure at least one coordinator checkbox is checked when a team is selected
+                if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
+                    coordinatorCheckboxes[0].checked = true;  // Default to the first coordinator if none are selected
+                }
+            } else {
+                // If the team is unchecked, uncheck all its coordinator checkboxes
+                coordinatorCheckboxes.forEach(coordinator => {
+                    coordinator.checked = false;
+                });
+            }
+        });
+    });
+
+    // Check for individual selection
+    individualCheckboxes.forEach(individual => {
+        individual.addEventListener('change', () => {
+            if (individual.checked) {
+                // Uncheck all team checkboxes
+                teamCheckboxes.forEach(team => team.checked = false);
+
+                // Enable task type dropdown for the selected individual
+                const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                if (taskType) {
+                    taskType.disabled = false;
+                }
+            } else {
+                // If unchecked, disable the task type dropdown
+                const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                if (taskType) {
+                    taskType.disabled = true;
+                    taskType.selectedIndex = -1; // Clear selection when unchecked
+                }
+                removeErrorHighlight(individual);
+            }
+        });
+    });
+}
+
+// Function to highlight rows with errors
+function highlightErrorRow(element, addHighlight = true) {
+    const row = element.closest('tr');
+    if (row) {
+        if (addHighlight) {
+            row.classList.add('error-row');
+        } else {
+            row.classList.remove('error-row');
         }
-        
-        // Function to highlight rows with errors
-        function highlightErrorRow(element, addHighlight = true) {
-            const row = element.closest('tr');
-            if (row) {
-                if (addHighlight) {
-                    row.classList.add('error-row');
-                } else {
-                    row.classList.remove('error-row');
+    }
+}
+
+// Function to remove error highlight from a row
+function removeErrorHighlight(individual) {
+    const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+    highlightErrorRow(individual, false);
+    highlightErrorRow(taskType, false);
+}
+
+// Function to validate form before submission
+function validateForm(event) {
+    const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+    const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+    const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+
+    // Remove any existing error highlights
+    individualCheckboxes.forEach(individual => removeErrorHighlight(individual));
+
+    // Check if any team or individual is selected
+    const isTeamSelected = Array.from(teamCheckboxes).some(checkbox => checkbox.checked);
+    const isIndividualSelected = Array.from(individualCheckboxes).some(checkbox => checkbox.checked);
+
+    if (!isTeamSelected && !isIndividualSelected) {
+        alert("Please select either a team or an individual before submitting.");
+        event.preventDefault();
+        return false;
+    }
+
+    // Check if task types are selected for selected individuals
+    if (isIndividualSelected) {
+        let allTaskTypesSelected = true;
+        individualCheckboxes.forEach(individual => {
+            if (individual.checked) {
+                const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                if (!taskType || taskType.selectedOptions.length === 0) {
+                    // Highlight the row in red if no task type is selected
+                    highlightErrorRow(individual);
+                    highlightErrorRow(taskType);
+                    allTaskTypesSelected = false;
                 }
             }
+        });
+
+        if (!allTaskTypesSelected) {
+            alert("Please select a task type for each selected individual.");
+            event.preventDefault();
+            return false;
         }
-        
-        // Function to remove error highlight from a row
-        function removeErrorHighlight(individual) {
-            const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
-            highlightErrorRow(individual, false);
-            highlightErrorRow(taskType, false);
-        }
-        
-        // Function to validate form before submission
-        function validateForm(event) {
-            const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
-            const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
-            const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
-        
-            // Remove any existing error highlights
-            individualCheckboxes.forEach(individual => removeErrorHighlight(individual));
-        
-            // Check if any team or individual is selected
-            const isTeamSelected = Array.from(teamCheckboxes).some(checkbox => checkbox.checked);
-            const isIndividualSelected = Array.from(individualCheckboxes).some(checkbox => checkbox.checked);
-        
-            if (!isTeamSelected && !isIndividualSelected) {
-                alert("Please select either a team or an individual before submitting.");
-                event.preventDefault();
-                return false;
-            }
-        
-            // Check if task types are selected for selected individuals
-            if (isIndividualSelected) {
-                let allTaskTypesSelected = true;
-                individualCheckboxes.forEach(individual => {
-                    if (individual.checked) {
-                        const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
-                        if (!taskType || taskType.selectedOptions.length === 0) {
-                            // Highlight the row in red if no task type is selected
-                            highlightErrorRow(individual);
-                            highlightErrorRow(taskType);
-                            allTaskTypesSelected = false;
-                        }
-                    }
-                });
-        
-                if (!allTaskTypesSelected) {
-                    alert("Please select a task type for each selected individual.");
+    }
+
+    // Check if a coordinator is selected for each selected team
+    if (isTeamSelected) {
+        let allCoordinatorsSelected = true;
+        teamCheckboxes.forEach(team => {
+            if (team.checked) {
+                const teamId = team.value;
+                const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
+                
+                // Get the team name from the corresponding row
+                const teamRow = team.closest('tr');
+                const teamName = teamRow.querySelector('td:nth-child(2)').innerText; // Assuming team name is in the second column
+
+                if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
+                    alert(`Please select at least one coordinator for the team "${teamName}".`);
+                    allCoordinatorsSelected = false;
                     event.preventDefault();
                     return false;
                 }
             }
+        });
         
-            return true;
+        if (!allCoordinatorsSelected) {
+            return false;
         }
+    }
+
+    return true;
+}
         
         // Attach event listeners
         document.addEventListener("DOMContentLoaded", () => {
