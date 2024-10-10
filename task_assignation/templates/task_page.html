@@ -476,7 +476,7 @@
     .front {
     display: block;
     position: relative;
-    padding: 5px 15px;
+    padding: 0px 16px;
     border-radius: 12px;
     font-size: 1.1rem;
     color: white;
@@ -528,6 +528,7 @@
         justify-content: center;
         flex-direction: row;
         flex-wrap: wrap;
+        gap: .25rem;
     }
     .name_tab li {
         display: flex;
@@ -535,21 +536,26 @@
         align-items: center;
         list-style: none;
         text-align: center;
-        border: 1px solid rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(0, 0, 0, 0.7);
         font-style: italic;
         transition: all .2s ease-in-out;
         padding: 10px;
         cursor: pointer;
+        border-radius: .25rem;
     }
     .name_tab li:hover{
-        background: #002855ad;
+        background: #1769acb7;
         color: white;
     }
     .active_tab{
-        background: #002855ad;
+        background: #1768ac;
         color: white;
     }
-
+    @media screen and (max-width:500px) {
+        .name_tab li{
+            width: 100%;
+        }
+    }
     /* modal */
     .modal__wrapper{
     position: fixed;
@@ -954,7 +960,7 @@
                             </a>
                             <span class="tooltip-text">Go back</span>
                         </div>
-                        <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
+                        <!-- <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button> -->
                     </div>
                 <!--Messages-->
                 <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
@@ -968,7 +974,7 @@
                 <!--Messages-->
                 
                 <!-- task page heading-->
-                <h4 style="margin-top: 25px;">Click to see their Task Progress</h4>
+                <h4 style="margin-top: 25px;">See Task Progress</h4>
                 
 
             <div class="name_tab">
@@ -1000,11 +1006,17 @@
                     flex-wrap: wrap;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 20px;">
-                    <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
-                        <div style="font-size: 20px;">
-                            Points:
-                            <input type="number" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" {% if task.is_task_completed %} disabled {% endif %} placeholder="Task marks" style="width: 60px;">
+                    margin-bottom: 30px;
+                    gap: 20px;">
+                    <span style="font-size: 18px; font-weight: 600; color: #277da1;">{{member.name}} - {{member.ieee_id}}</span>
+                        <div>
+                            <span style="font-size: larger;">Points:</span>
+                            <input type="number" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" {% if task.is_task_completed %} disabled {% endif %} placeholder="Task marks" style="width: 70px; border-radius: .5rem;
+                            padding: 0 4px;
+                            border: none;
+                            background: #f8f8f8;
+                            font-size: 20px;
+                            margin-right: .75rem;">
                             <input type="hidden" id="member_id" name="member_id" value="{{member}}"></input>
                             <input type="hidden" id="task_id" name="task_id" value="{{task.pk}}"></input>
                             <button type="button" class="task-mark-save" {% if task.is_task_completed %} disabled {% endif %}>
@@ -1012,10 +1024,11 @@
                                 <span class="edge"></span>
                                 <span class="front text">Save</span>
                             </button>
-                        </div>
+                        </div>                        
                     </div>
-                    <br>
-                    <br>
+                    <div style="margin-bottom: 2rem;">
+                        <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
+                    </div>
 
                     {% csrf_token %}
     

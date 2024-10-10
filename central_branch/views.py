@@ -5208,6 +5208,7 @@ def task_edit(request,task_id,team_primary = None):
         is_task_started_by_any_incharge = False
         
         print(is_task_of_teams_individuals)
+        print(is_task_forwarded_to_volunteers)
         print("checking")
         #app name for proper redirecting
         app_name = "central_branch"
