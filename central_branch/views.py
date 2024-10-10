@@ -4667,6 +4667,20 @@ def create_task(request,team_primary = None):
                 teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
                 all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
+                #fetching all team and the coordinators of the team as a dictionary
+                teams_and_coordinators = {}
+                current_panel = Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
+                co_ordinator_position = Roles_and_Position.objects.filter(role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1),is_co_ordinator = True,is_officer=True)
+                for team in teams:
+                    team_coordinator_members = []
+                    for position in co_ordinator_position:
+                        members = Panel_Members.objects.filter(team=team,position=position,tenure=current_panel)
+                        team_coordinator_members+=members
+                    teams_and_coordinators[team] = team_coordinator_members
+                
+                print(teams_and_coordinators)
+    
+
                 context = {
                     'is_new_task':True, #Task is being created. Use it to disable some ui in the template
                     'task_categories':task_categories,
@@ -4676,6 +4690,7 @@ def create_task(request,team_primary = None):
                     'user_data':user_data,
                     'create_individual_task_access':create_individual_task_access,
                     'create_team_task_access':create_team_task_access,
+                    'teams_and_coordinators':teams_and_coordinators,
 
                     'app_name':app_name,
                 }
@@ -5331,7 +5346,6 @@ def task_edit(request,task_id,team_primary = None):
         print(create_individual_task_access)
         print(create_team_task_access)
 
-   
             
         if team_primary == None or team_primary == "1":
 
@@ -5340,7 +5354,17 @@ def task_edit(request,task_id,team_primary = None):
             all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
            
             #this is being done to ensure that he can click start button only if it is his task
-       
+
+            #fetching all team and the coordinators of the team as a dictionary
+            teams_and_coordinators = {}
+            current_panel = Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
+            co_ordinator_position = Roles_and_Position.objects.filter(role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1),is_co_ordinator = True,is_officer=True)
+            for team in teams:
+                team_coordinator_members = []
+                for position in co_ordinator_position:
+                    members = Panel_Members.objects.filter(team=team,position=position,tenure=current_panel)
+                    team_coordinator_members+=members
+                teams_and_coordinators[team] = team_coordinator_members
 
             context = {
                 'task':task,
@@ -5357,6 +5381,7 @@ def task_edit(request,task_id,team_primary = None):
                 'create_team_task_access':create_team_task_access,
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
+                'teams_and_coordinators': teams_and_coordinators,
 
                 'app_name':app_name,
                 'is_coordinator':is_coordinator,

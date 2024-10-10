@@ -1059,7 +1059,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for team in teams %}
+            {% for team,coordinators in teams_and_coordinators.items %}
             <!-- Team Row -->
             <tr>
                 <td>{{ forloop.counter }}.</td>
@@ -1080,11 +1080,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for coordinator in team.coordinators %}
+                            {% for coordinator in coordinators %}
                             <tr>
-                                <td>{{ coordinator.name }}</td>
+                                <td>{{ coordinator.member.name }}</td>
                                 <td>
-                                    <input type="checkbox" name="coordinator_select" value="{{ coordinator.id }}">
+                                    <input type="checkbox" name="coordinator_select" value="{{ coordinator.member.ieee_id }}">
                                 </td>
                             </tr>
                             {% endfor %}
