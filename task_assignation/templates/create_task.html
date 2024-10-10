@@ -1327,25 +1327,51 @@ function validateForm(event) {
         event.preventDefault();
         return false;
     }
+    checkSelections();
+    checkTeamSelections();
 
-    // Check if a coordinator is selected for each selected team
-    if (isTeamSelected) {
-        let allCoordinatorsSelected = true;
-        teamCheckboxes.forEach((team) => {
-            if (team.checked) {
-                const teamId = team.value;
-                const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
-                if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
-                    highlightErrorRow(team);
-                    alert(`Please select at least one coordinator for the selected team "${team.closest('tr').querySelector('td:nth-child(2)').innerText}".`);
-                    allCoordinatorsSelected = false;
+    function checkTeamSelections() {
+    let isAnyTeamChecked = false; // Track if any team checkbox is selected
+
+    teamCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) { // Check if the team checkbox is selected
+            isAnyTeamChecked = true; // Mark that at least one team checkbox is selected
+
+            // Find the associated coordinator row using the team's primary ID
+            const coordinatorRow = document.querySelector(`#coordinator-list-${checkbox.value}`);
+
+            // Check if any coordinator is selected in that row
+            const coordinatorCheckboxes = coordinatorRow.querySelectorAll('input[name="coordinator_select"]');
+            const isAnyCoordinatorChecked = [...coordinatorCheckboxes].some(coordinator => coordinator.checked);
+
+            if (!isAnyCoordinatorChecked) {
+                highlightErrorRow(checkbox);
+                alert(`Please select at least one coordinator for the selected team "${checkbox.closest('tr').querySelector('td:nth-child(2)').innerText}".`);
+                event.preventDefault();
+            }
+        }
+    });
+    }
+
+    function checkSelections() {
+        let isAnyChecked = false; // To track if any checkbox is checked
+
+        individualCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) { // Check if the checkbox is selected
+                isAnyChecked = true; // Mark that at least one checkbox is selected
+
+                // Find the associated select element (assuming the select is next to the checkbox in the DOM)
+                const selectElement = checkbox.closest('tr').querySelector('select');
+
+                // Check if any option in the select is selected
+                const selectedOptions = [...selectElement.options].filter(option => option.selected);
+                if (selectedOptions.length === 0) {
+                    alert(`No options selected for ${checkbox.closest('tr').querySelector('td:nth-child(2)').innerText}`);
                     event.preventDefault();
-                    return false;
                 }
             }
         });
     }
-
     return true;
 }
         // Attach event listeners
