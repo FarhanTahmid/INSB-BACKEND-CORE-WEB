@@ -1048,7 +1048,7 @@
                             <td><input type="checkbox" name="member_select" value="{{member.ieee_id}}"></td>
                             <td>{{member.name}}</td>
                             <td>
-                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
+                                <select name="{{member.ieee_id}}_task_type[]" multiple multiselect-search="true" class="task_type_options"> 
                                     <option value="permission_paper">Yes/No Box </option>
                                     <option value="content">Text Field </option>
                                     <option value="file_upload">File / Permission Paper Upload </option>
@@ -1111,7 +1111,7 @@
                             {% for coordinator in coordinators %}
                             <tr>
                                 <td>{{ coordinator.member.name }}</td>
-                                <td>
+                                <td class="co_ordinator_checkbox">
                                     <input type="checkbox" name="coordinator_select" value="{{ coordinator.member.ieee_id }}">
                                 </td>
                             </tr>
@@ -1177,6 +1177,8 @@
             for (i = 0; i < tr.length; i++) {
                 // Skip coordinator rows and header row
                 if (tr[i].classList.contains("coordinator-row") || i === 0) continue;
+                const coordinatorTable = document.querySelectorAll('.coordinator-row');
+                coordinatorTable.forEach(table => table.style.display = "none");
 
                 // Loop through cells in the current team row to search for the filter term
                 td = tr[i].getElementsByTagName("td")[1]; // Assuming the team name is in the second cell
@@ -1333,7 +1335,6 @@ function validateForm(event) {
             if (team.checked) {
                 const teamId = team.value;
                 const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
-
                 if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
                     highlightErrorRow(team);
                     alert(`Please select at least one coordinator for the selected team "${team.closest('tr').querySelector('td:nth-child(2)').innerText}".`);
@@ -1343,10 +1344,6 @@ function validateForm(event) {
                 }
             }
         });
-
-        if (!allCoordinatorsSelected) {
-            return false;
-        }
     }
 
     return true;
@@ -1554,6 +1551,16 @@ function validateForm(event) {
         {% if create_individual_task_access and create_team_task_access %}
         radioButtons.forEach((button) => {
             button.addEventListener("change", () => {
+
+                const checkboxes = document.querySelectorAll('.multiselect-dropdown-list input[type="checkbox"]');
+                checkboxes.forEach(checkbox => checkbox.checked = false);
+                
+                const coordinatorCheckboxes = document.querySelectorAll('.co_ordinator_checkbox input[type="checkbox"]');
+                coordinatorCheckboxes.forEach(checkbox => checkbox.checked = false);
+
+                const coordinatorTable = document.querySelectorAll('.coordinator-row');
+                coordinatorTable.forEach(table => table.style.display = "none");
+
                 let checkedRadioButton = document.querySelector('input[name="task_type"]:checked');
     
                 if(checkedRadioButton.id == 'btn05'){
