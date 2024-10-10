@@ -176,6 +176,9 @@ class PRT_Email_System:
                                 else:
                                     if ex.ex_member.email and ex.ex_member.email != 'None':
                                         cc_email_final_list.append(ex.ex_member.email)
+                else:
+                    if email != 'None':
+                        cc_email_final_list.append(email)
         
         # get all bcc_email_list
         bcc_email_final_list=[]
@@ -237,6 +240,9 @@ class PRT_Email_System:
                                 else:
                                     if ex.ex_member.email and ex.ex_member.email != 'None':
                                         bcc_email_final_list.append(ex.ex_member.email)
+                else:
+                    if email != 'None':
+                        bcc_email_final_list.append(email)
     
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
            the 'to' and kept in 'cc' '''
@@ -338,9 +344,9 @@ class PRT_Email_System:
 
 
                     message = MIMEText(mail_body, 'html')
-                    # print(to_email_list_final)
-                    # print(cc_email_list_final)
-                    # print(bcc_email_list_final)
+                    print(to_email_list_final)
+                    print(cc_email_list_final)
+                    print(bcc_email_list_final)
 
                     message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                     message["To"] = ','.join(to_email_list_final)
@@ -353,12 +359,12 @@ class PRT_Email_System:
                     
                     create_message = {"raw": encoded_message}
 
-                    # send_message = (
-                    #     service.users()
-                    #     .messages()
-                    #     .send(userId="me", body=create_message)
-                    #     .execute()
-                    # )
+                    send_message = (
+                        service.users()
+                        .messages()
+                        .send(userId="me", body=create_message)
+                        .execute()
+                    )
 
                     print(f'Message Id: {send_message["id"]}')
 
