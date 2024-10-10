@@ -177,11 +177,14 @@
         #search_input_individuals, #search_input_team{
             padding: 3px 10px;
         }
-        .individuals-table, .team-table{
+        .individuals-table{
             border-radius: 4px;
             min-height: 400px;
             max-height: 500px;
             margin-bottom: 15px;
+        }
+        .team-table{
+            overflow-y: clip;
         }
         .box{
             padding: 2px 25px 0px 9px;
@@ -329,16 +332,16 @@
         .table-responsive{
             overflow-x: hidden;
         }
-        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar, modal-4-content::-webkit-scrollbar, modal-5-content::-webkit-scrollbar{
+        .individuals-table::-webkit-scrollbar , #team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar, modal-4-content::-webkit-scrollbar, modal-5-content::-webkit-scrollbar{
             width: 6px;
             height: 6px;
         }
-        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb , .modal-4-content::-webkit-scrollbar-thumb , .modal-5-content::-webkit-scrollbar-thumb{
+        .individuals-table::-webkit-scrollbar-thumb , #team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb , .modal-4-content::-webkit-scrollbar-thumb , .modal-5-content::-webkit-scrollbar-thumb{
             background-color: #e7eeef;
             transition: all .4s ease-in-out;
             border-radius: 4px;
         }
-        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover , .modal-4-content::-webkit-scrollbar-thumb:hover , .modal-5-content::-webkit-scrollbar-thumb:hover{
+        .individuals-table::-webkit-scrollbar-thumb:hover , #team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover , .modal-4-content::-webkit-scrollbar-thumb:hover , .modal-5-content::-webkit-scrollbar-thumb:hover{
             background-color: rgb(169, 170, 170);
         }
         .switch {
@@ -746,6 +749,31 @@
 }
 .modal__wrapper.active .modal__container{
     transform: translateY(0px);
+}
+#team-table{
+    width: 99%;
+    min-height: 0px;
+    max-height: 500px;
+    box-shadow: 0px 0px 1px 1px #ddd;
+    margin: 10px 0 2px .5%;
+}
+#team-table > thead > th{
+    background-color: #333;
+    color: #fff;
+}
+.coordinator-row th{
+    background-color: #33333393;
+    color: #fff;
+}
+.coordinator-row td{
+    background-color: white;
+}
+.coordinator-row table{
+    border-radius: .25rem;
+    overflow: hidden;
+    box-shadow: 0px 0px 2px #ddd;
+    margin: 0;
+
 }
 /* Custom CSS for dropdown menu items */
             .dropdown-menu input[type="submit"] {
@@ -1428,7 +1456,7 @@
                 
                                 <!-- Coordinator List Row (Hidden by Default) -->
                                 <tr id="coordinator-list-{{ forloop.counter }}" class="coordinator-row" style="display: none;">
-                                    <td colspan="3">
+                                    <td colspan="3" style="padding: 0;">
                                         <!-- Coordinator list with selection options -->
                                         <table class="table">
                                             <thead>
@@ -1488,6 +1516,8 @@
     // Function to toggle the display of the coordinator list for the selected team
     function toggleCoordinators(teamRowId) {
         let coordinatorRow = document.getElementById("coordinator-list-" + teamRowId);
+        coordinatorRow.style.backgroundColor = "white";
+
         // Toggle the display of the coordinator row
         if (coordinatorRow.style.display === "none") {
             coordinatorRow.style.display = "table-row";
