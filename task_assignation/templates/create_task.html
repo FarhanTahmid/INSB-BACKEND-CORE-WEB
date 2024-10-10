@@ -1038,39 +1038,66 @@
                 {% endif %}
 
                 {% if create_team_task_access %}
-                <!--Search bar for teams-->
-                <div class="tb_search  search_input_team" >
-                    <input
-                    type="text"
-                    id="search_input_team"
-                    onkeyup="filter_team_table()"
-                    placeholder="Search..."
-                    class="form-control title-box"/>
-                </div>
-                
-                
-                <!--Table for teams-->
-                <div class="table-responsive team-table">
-                    <table class="table box" id="team-table">
-                    <thead>
-                        <tr>
-                            <th>SL no.</th>
-                        <th>Team</th>
-                        <th>Select</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for team in teams %}
-                        <tr>
-                            <td>{{forloop.counter}}.</td>
-                            <td>{{team.team_name}}</td>
-                            <td><input type="checkbox" name="team_select" value="{{team.primary}}"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                </div>
-                {% endif %}
+<!-- Search bar for teams -->
+<div class="tb_search search_input_team">
+    <input
+        type="text"
+        id="search_input_team"
+        onkeyup="filter_team_table()"
+        placeholder="Search..."
+        class="form-control title-box"/>
+</div>
+
+<!-- Table for teams -->
+<div class="table-responsive team-table">
+    <table class="table box" id="team-table">
+        <thead>
+            <tr>
+                <th>SL no.</th>
+                <th>Team</th>
+                <th>Select Team</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for team in teams %}
+            <!-- Team Row -->
+            <tr>
+                <td>{{ forloop.counter }}.</td>
+                <td>{{ team.team_name }}</td>
+                <td>
+                    <input type="checkbox" name="team_select" value="{{ team.primary }}" onclick="toggleCoordinators({{ forloop.counter }})">
+                </td>
+            </tr>
+            <!-- Coordinator List Row (Hidden by Default) -->
+            <tr id="coordinator-list-{{ forloop.counter }}" class="coordinator-row" style="display: none;">
+                <td colspan="3">
+                    <!-- Coordinator list with selection options -->
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Coordinator Name</th>
+                                <th>Select Coordinator</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for coordinator in team.coordinators %}
+                            <tr>
+                                <td>{{ coordinator.name }}</td>
+                                <td>
+                                    <input type="checkbox" name="coordinator_select" value="{{ coordinator.id }}">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
                 
 
                 <!--create task btn-->
@@ -1098,7 +1125,31 @@
     </style>
         
     <script>
-        
+// Function to toggle the display of the coordinator list for the selected team
+function toggleCoordinators(teamRowId) {
+    let coordinatorRow = document.getElementById("coordinator-list-" + teamRowId);
+    
+    // Toggle the display of the coordinator row
+    if (coordinatorRow.style.display === "none") {
+        coordinatorRow.style.display = "table-row";
+    } else {
+        coordinatorRow.style.display = "none";
+    }
+}
+
+// Optional: Function to filter the team table based on search input
+function filter_team_table() {
+    let input = document.getElementById("search_input_team").value.toLowerCase();
+    let rows = document.querySelectorAll("#team-table tbody tr");
+
+    rows.forEach((row) => {
+        // Display only rows that match the search criteria (either team or coordinator)
+        let isMatch = row.innerText.toLowerCase().includes(input);
+        row.style.display = isMatch ? "" : "none";
+    });
+}
+
+// Function to handle checkbox selection logic
 function handleSelection() {
     const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
     const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
@@ -1107,6 +1158,9 @@ function handleSelection() {
     // Check for team selection
     teamCheckboxes.forEach(team => {
         team.addEventListener('change', () => {
+            const teamId = team.value;  // Get the team ID
+            const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
+
             if (team.checked) {
                 // Uncheck and reset all individual checkboxes
                 individualCheckboxes.forEach(individual => {
@@ -1119,6 +1173,16 @@ function handleSelection() {
                         taskType.disabled = true;
                         taskType.selectedIndex = -1; // Clear all selections in dropdown
                     }
+                });
+
+                // Make sure at least one coordinator checkbox is checked when a team is selected
+                if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
+                    coordinatorCheckboxes[0].checked = true;  // Default to the first coordinator if none are selected
+                }
+            } else {
+                // If the team is unchecked, uncheck all its coordinator checkboxes
+                coordinatorCheckboxes.forEach(coordinator => {
+                    coordinator.checked = false;
                 });
             }
         });
@@ -1209,6 +1273,32 @@ function validateForm(event) {
         }
     }
 
+    // Check if a coordinator is selected for each selected team
+    if (isTeamSelected) {
+        let allCoordinatorsSelected = true;
+        teamCheckboxes.forEach(team => {
+            if (team.checked) {
+                const teamId = team.value;
+                const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
+                
+                // Get the team name from the corresponding row
+                const teamRow = team.closest('tr');
+                const teamName = teamRow.querySelector('td:nth-child(2)').innerText; // Assuming team name is in the second column
+
+                if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
+                    alert(`Please select at least one coordinator for the team "${teamName}".`);
+                    allCoordinatorsSelected = false;
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        });
+        
+        if (!allCoordinatorsSelected) {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -1216,8 +1306,9 @@ function validateForm(event) {
 document.addEventListener("DOMContentLoaded", () => {
     handleSelection();
     const form = document.getElementById("taskForm");
-            form.addEventListener("submit", validateForm);
-        });
+    form.addEventListener("submit", validateForm);
+});
+
     </script>
 
     <script>
