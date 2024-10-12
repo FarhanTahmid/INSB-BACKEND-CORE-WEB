@@ -34,7 +34,7 @@ class Task_Assignation:
         task_comment = None
         task_member_remove = None
 
-    def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member):
+    def create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member,coordinators_per_team):
         ''' This function is used to create a new task for both Branch and SC_AG. Use the task_of parameter to set the sc_ag primary which is also used for branch '''
 
         # try:
@@ -114,14 +114,15 @@ class Task_Assignation:
 
             coordinators = []
             #As it is a team task then notify the current coordinators of those teams
-            #For each member in current panel members
-            for member in get_current_panel_members:
-                #If the member's team primary exist in team_select list i.e. is a member of the team
-                if str(member.team.primary) in team_select:
+            #For each member that was selected
+            for team,member_list in coordinators_per_team.items():
+                
+                for mem in member_list:
+                    coordinator = Members.objects.get(ieee_id = mem)
                     #And if the member is a coordinator
-                    if member.position.is_co_ordinator and member.position.is_officer:
+                    if coordinator.position.is_co_ordinator and coordinator.position.is_officer:
                         #Add to coordinators array and send confirmation
-                        coordinators.append(member.member)
+                        coordinators.append(coordinator)
                         ##
                         ## Send email/notification here
                         ##
