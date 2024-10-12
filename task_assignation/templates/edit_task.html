@@ -177,11 +177,14 @@
         #search_input_individuals, #search_input_team{
             padding: 3px 10px;
         }
-        .individuals-table, .team-table{
+        .individuals-table{
             border-radius: 4px;
             min-height: 400px;
             max-height: 500px;
             margin-bottom: 15px;
+        }
+        .team-table{
+            overflow-y: clip;
         }
         .box{
             padding: 2px 25px 0px 9px;
@@ -211,7 +214,15 @@
             border: 1px solid #d33838;
             transition: all ease-in-out .3s;
         }
-        .cancel_delete_task_btn{
+        .confirm_start_task_btn{
+            padding: 2px 26px;
+            color: #fff;
+            background: #d33838;
+            border-radius: 4px;
+            border: 1px solid #d33838;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_delete_task_btn , .cancel_start_task_btn{
             padding: 2px 26px;
             color: #0000008f;
             background: white;
@@ -219,7 +230,7 @@
             border: 1px solid #0000004f;
             transition: all ease-in-out .3s;
         }
-        .cancel_delete_task_btn:hover{
+        .cancel_delete_task_btn:hover , .cancel_start_task_btn:hover{
             color: white;
             background: #0000004f;
             border-color: transparent;
@@ -240,6 +251,10 @@
             color: white;
             background: #d33838;
             border-color: #d33838;
+        }
+        .confirm_start_task_btn:hover{
+            color: #d33838;
+            background: #fff;
         }
         .create-task-btn , .start-task-btn{
             padding: 5px 15px;
@@ -329,16 +344,16 @@
         .table-responsive{
             overflow-x: hidden;
         }
-        .individuals-table::-webkit-scrollbar , .team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar, modal-4-content::-webkit-scrollbar, modal-5-content::-webkit-scrollbar{
+        .individuals-table::-webkit-scrollbar , #team-table::-webkit-scrollbar , .modal-1-content::-webkit-scrollbar , .modal-2-content::-webkit-scrollbar , .modal-3-content::-webkit-scrollbar, modal-4-content::-webkit-scrollbar, modal-5-content::-webkit-scrollbar{
             width: 6px;
             height: 6px;
         }
-        .individuals-table::-webkit-scrollbar-thumb , .team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb , .modal-4-content::-webkit-scrollbar-thumb , .modal-5-content::-webkit-scrollbar-thumb{
+        .individuals-table::-webkit-scrollbar-thumb , #team-table::-webkit-scrollbar-thumb , .modal-1-content::-webkit-scrollbar-thumb , .modal-2-content::-webkit-scrollbar-thumb , .modal-3-content::-webkit-scrollbar-thumb , .modal-4-content::-webkit-scrollbar-thumb , .modal-5-content::-webkit-scrollbar-thumb{
             background-color: #e7eeef;
             transition: all .4s ease-in-out;
             border-radius: 4px;
         }
-        .individuals-table::-webkit-scrollbar-thumb:hover , .team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover , .modal-4-content::-webkit-scrollbar-thumb:hover , .modal-5-content::-webkit-scrollbar-thumb:hover{
+        .individuals-table::-webkit-scrollbar-thumb:hover , #team-table::-webkit-scrollbar-thumb:hover , .modal-1-content::-webkit-scrollbar-thumb:hover , .modal-2-content::-webkit-scrollbar-thumb:hover , .modal-3-content::-webkit-scrollbar-thumb:hover , .modal-4-content::-webkit-scrollbar-thumb:hover , .modal-5-content::-webkit-scrollbar-thumb:hover{
             background-color: rgb(169, 170, 170);
         }
         .switch {
@@ -412,7 +427,7 @@
             color: #000000a2;
         }
 
-       .delete_modal{
+       .delete_modal , .start_task_modal{
         opacity: 0;
         position: fixed;
         z-index: -1;
@@ -467,6 +482,14 @@
             border: 1px solid rgb(136, 136, 136);
             width: 40%;
         }
+        .start-task-modal-content {
+            background-color: #fefefe;
+            margin: auto 44%;
+            padding: 0px 12px 28px;
+            border: 1px solid rgb(136, 136, 136);
+            width: 25%;
+            border-radius: .25rem;
+        }
         .modal-1-content , .modal-2-content , .modal-3-content , .modal-4-content , .modal-5-content{
             background-color: #fefefe;
             margin: auto;
@@ -480,12 +503,13 @@
             left: 100px;
         }
 
-        .close , .close1 , .close2 , .close3{
+        .close , .close1 , .close2 , .close3 , .closeStartModal{
             color: #000;
             font-size: 28px;
-            font-weight: bold;
+            /* font-weight: bold; */
             display: flex;
             justify-content: flex-end;
+            cursor: pointer;
         }
 
         .close:hover,
@@ -495,7 +519,8 @@
         .close2:hover,
         .close2:focus,
         .close3:hover,
-        .close3:focus{
+        .close3:focus,
+        .closeStartModal:focus{
             color: #000;
             text-decoration: none;
             cursor: pointer;
@@ -601,7 +626,7 @@
                 width: 100%;
                 margin-bottom: 15px;
             }
-            .modal-content{
+            .modal-content , .start-task-modal-content{
                 width: 50%;
                 margin: auto;
             }
@@ -626,7 +651,7 @@
             .task_type{
                 margin-bottom: -20px;
             }
-            .modal-content{
+            .modal-content , .start-task-modal-content{
                 width: 90%;
             }
             .category{
@@ -746,6 +771,31 @@
 }
 .modal__wrapper.active .modal__container{
     transform: translateY(0px);
+}
+#team-table{
+    width: 99%;
+    min-height: 0px;
+    max-height: 500px;
+    box-shadow: 0px 0px 1px 1px #ddd;
+    margin: 10px 0 2px .5%;
+}
+#team-table > thead > th{
+    background-color: #333;
+    color: #fff;
+}
+.coordinator-row th{
+    background-color: #33333393;
+    color: #fff;
+}
+.coordinator-row td{
+    background-color: white;
+}
+.coordinator-row table{
+    border-radius: .25rem;
+    overflow: hidden;
+    box-shadow: 0px 0px 2px #ddd;
+    margin: 0;
+
 }
 /* Custom CSS for dropdown menu items */
             .dropdown-menu input[type="submit"] {
@@ -964,7 +1014,43 @@
                 </div>
               
 
+                <!-- Start Task Modal -->
+                <div id="startTask" class="start_task_modal">
+
+                <!-- Modal content -->
+                <div class="start-task-modal-content">
+                    <div style="display: flex; justify-content: flex-end; ">
+                        <!-- <h5 style="margin: 0;
+                        display: flex;
+                        align-items: center;">Start Task?</h5> -->
+                        <span class="closeStartModal">&times;</span>
+                    </div>
+                    <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Start Task?</h5>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If it is a <b>team task</b>, you <b>cannot</b> forward the task to someone if you start now.</h6>
+                    <h6 style="text-align: center;">Do you want to start the task?</h6>
+                    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
+                        <a href="#" class="cancel_start_task_btn">No</a>
+                    {% if create_individual_task_access or create_team_task_access %}
+
+                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                        {% if team_primary != None and team_primary != "1" %}
+                            {% if my_task %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button" class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% else %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% endif %}
+                        {% else %}
+                            {% if my_task %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url 'users:upload_task_user' task.pk %}" class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% else %}
+                            {% if is_task_started_by_member %}{% else %}<a href="{% url ''|add:app_name|add:':upload_task' task.pk  %}"  class="confirm_start_task_btn" name="start_task">Yes</a>{% endif %}
+                            {% endif %}
+                            {% endif %}
+                        {% endif %}
+                </div>
+                </div>
             
+            </div>
             <form method="post">
                {% csrf_token %} 
                <!-- The Modal -->
@@ -1049,9 +1135,9 @@
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% if team_primary != None and team_primary != "1" %}
                             {% if my_task %}
-                            <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% if is_task_started_by_member %}<a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">View Task Submission</a>{% else %}<button type="button" class="check-task-button" id="start_task">Start the Task</button>{% endif %}
                             {% else %}
-                            <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% if is_task_started_by_member %}<a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">View Task Submission</a>{% else %}<button type="button" class="check-task-button" id="start_task">Start the Task</button>{% endif %}
                             {% endif %}
                             {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_forwarded_to_volunteers == False and is_task_started_by_member == False %}
                                 {% if not is_task_started_by_any_coordinator %}
@@ -1066,9 +1152,9 @@
                             {% endif %}
                         {% else %}
                             {% if my_task %}
-                            <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% if is_task_started_by_member %}<a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">View Task Submission</a>{% else %}<button type="button" class="check-task-button" id="start_task">Start the Task</button>{% endif %}
                             {% else %}
-                            <a href="{% url ''|add:app_name|add:':upload_task' task.pk  %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
+                            {% if is_task_started_by_member %}<a href="{% url ''|add:app_name|add:':upload_task' task.pk  %}" class="check-task-button">View Task Submission</a> {% else %}<button type="button" class="check-task-button" id="start_task">Start the Task</button>{% endif %}
                             {% endif %}
 
                         {% endif %}
@@ -1428,7 +1514,7 @@
                 
                                 <!-- Coordinator List Row (Hidden by Default) -->
                                 <tr id="coordinator-list-{{ forloop.counter }}" class="coordinator-row" style="display: none;">
-                                    <td colspan="3">
+                                    <td colspan="3" style="padding: 0;">
                                         <!-- Coordinator list with selection options -->
                                         <table class="table">
                                             <thead>
@@ -1488,6 +1574,8 @@
     // Function to toggle the display of the coordinator list for the selected team
     function toggleCoordinators(teamRowId) {
         let coordinatorRow = document.getElementById("coordinator-list-" + teamRowId);
+        coordinatorRow.style.backgroundColor = "white";
+
         // Toggle the display of the coordinator row
         if (coordinatorRow.style.display === "none") {
             coordinatorRow.style.display = "table-row";
@@ -2319,6 +2407,52 @@ function MultiselectDropdown(options){
 window.addEventListener('load',()=>{
   MultiselectDropdown(window.MultiselectDropdownOptions);
 });
+    </script>
+    <script>
+        // popup modal when start task button is clicked
+        // Get the modal
+        const startTaskModal = document.getElementById("startTask");
+        
+        // Get the button that opens the modal
+        const btnClick = document.querySelector("#start_task");
+        
+        // Get the <span> element that closes the modal
+        const closeStartTask = document.getElementsByClassName("closeStartModal")[0];
+
+        const cancelStartTaskBtn = document.getElementsByClassName('cancel_start_task_btn')[0];
+        
+        // When the user clicks the button, open the modal 
+        btnClick.onclick = function() {
+        //   modal.style.display = "block";
+        startTaskModal.style.transform = 'translateY(0px)';
+        startTaskModal.style.zIndex = '103100';
+        startTaskModal.style.opacity = '1';
+        }
+        
+        // When the user clicks on <span> (x), close the modal
+        closeStartTask.onclick = function() {
+        //   modal.style.display = "none";
+        startTaskModal.style.transform = 'translateY(-50px)';
+        startTaskModal.style.zIndex = '-100';
+        startTaskModal.style.opacity = '0';
+        }
+        
+        // When the user clicks on cancel btn, close the modal
+        cancelStartTaskBtn.onclick = function() {
+        //   modal.style.display = "none";
+        startTaskModal.style.transform = 'translateY(-50px)';
+        startTaskModal.style.zIndex = '-100';
+        startTaskModal.style.opacity = '0';
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == startTaskModal) {
+            startTaskModal.style.transform = 'translateY(-50px)';
+            startTaskModal.style.zIndex = '-100';
+            startTaskModal.style.opacity = '0';
+        }
+        }
     </script>
   </body>
 </html>
