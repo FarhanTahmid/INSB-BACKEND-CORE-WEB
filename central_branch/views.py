@@ -6056,7 +6056,7 @@ class SendMailAjax(View):
         
         email_single_email = ''
         if request.POST.get('to[]'):
-            email_single_email=request.POST.get('to[]')
+            email_single_email=request.POST.getlist('to[]')
         email_to_list = ['']
         if request.POST.getlist('sendTo[]'):
             email_to_list=request.POST.getlist('sendTo[]')
@@ -6073,7 +6073,7 @@ class SendMailAjax(View):
         email_schedule_date_time = request.POST['dateTime']
 
         msg = 'Test'
-        print(request.POST)
+        # print(request.POST)
         
         if email_schedule_date_time != "":
             
