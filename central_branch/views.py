@@ -4637,9 +4637,16 @@ def create_task(request,team_primary = None):
                 team_select = None
                 member_select = None
                 task_types_per_member = {}
+                coordinators_per_team = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
+                    print(team_select)
+                    for team_id in team_select:
+                        coordinators_name = request.POST.getlist(team_id+'_coordinators[]')
+                        coordinators_per_team[team_id] = coordinators_name
+                    print("printing team and coordinators")
+                    print(coordinators_per_team)
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
                     for member_id in member_select:
@@ -4647,7 +4654,7 @@ def create_task(request,team_primary = None):
                         task_types_per_member[member_id] = member_name
             
                 task_of = 1 #Setting task_of as 1 for Branch primary
-                if(Task_Assignation.create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
+                if(Task_Assignation.create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member,coordinators_per_team)):
                     messages.success(request,"Task Created successfully!")
                 else:
                     messages.warning(request,"Something went wrong while creating the task!")
@@ -6056,7 +6063,7 @@ class SendMailAjax(View):
         
         email_single_email = ''
         if request.POST.get('to[]'):
-            email_single_email=request.POST.getlist('to[]')
+            email_single_email=request.POST.get('to[]')
         email_to_list = ['']
         if request.POST.getlist('sendTo[]'):
             email_to_list=request.POST.getlist('sendTo[]')
@@ -6073,7 +6080,7 @@ class SendMailAjax(View):
         email_schedule_date_time = request.POST['dateTime']
 
         msg = 'Test'
-        # print(request.POST)
+        print(request.POST)
         
         if email_schedule_date_time != "":
             
