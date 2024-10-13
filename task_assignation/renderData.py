@@ -1928,7 +1928,8 @@ This is an automated message. Do not reply
 
             if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
                 return (False,"Task already forwarded to Volunteers!")
-
+            
+            #updating incharges if task not forwarded by incharge
             if team_forward.task_forwarded_to_incharge and not team_forward.task_forwarded_to_core_or_team_volunteers:
                 new_member_added = []
                 for people in all_task_members:
@@ -2056,7 +2057,7 @@ This is an automated message. Do not reply
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
             if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
                 return (False,"Task already forwarded to Volunteers!")
-
+            #updating incharges if task not forwarded by incharge
             if team_forward.task_forwarded_to_incharge and not team_forward.task_forwarded_to_core_or_team_volunteers:
                 new_member_added = []
                 for people in all_task_members:
@@ -2434,7 +2435,7 @@ This is an automated message. Do not reply
                                 task_foward.is_task_started_by_member = True
                                 task_foward.save()
                                 points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                                points_for_incharge.completion_points = task.task_category.points * (40/100)
+                                points_for_incharge.completion_points = task.task_category.points * (25/100)
                                 points_for_incharge.save()
                                 task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 15% of task'
                                 #setting message
@@ -2591,7 +2592,7 @@ This is an automated message. Do not reply
                             task_foward.is_task_started_by_member = True
                             task_foward.save()
                             points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                            points_for_incharge.completion_points = task.task_category.points * (40/100)
+                            points_for_incharge.completion_points = task.task_category.points * (25/100)
                             points_for_incharge.save()
                             task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 15% of task'
                             #setting message
