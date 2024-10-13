@@ -178,7 +178,7 @@
             <!--Start from here-->
             <div class="body">
                 <div class="container">
-                    <form action="" method="post" enctype="multipart/form-data" style="padding: 0 5%;">
+                    <form method="post" id="profile-form" enctype="multipart/form-data" style="padding: 0 5%;">
                         {% csrf_token %}
                         <h2 style="font-weight: 600;
                         text-align: center;
@@ -207,7 +207,7 @@
                                 <input class="input" type="text" name="name" value="{{ user_data.name }}" required><br>                                
                             </div>
                             <div>
-                                <label for="email_personal">Email</label>
+                                <label for="email">Email</label>
                                 <input class="input" type="email" name="email" value="{{ user_data.email }}" required><br>
                             </div>
                             {% else %}
@@ -219,7 +219,7 @@
                                 <label for="email_personal">Personal Email</label>
                                 <input class="input" type="email" name="email_personal" value="{{ user_data.email_personal }}"><br>
                                 <label for="blood_group">Blood Group</label>
-                                <select class="form-control" name="blood_group" value="{{ user_data.blood_group }}">
+                                <select class="form-control" style="border: 2px solid #d3d3d3;border-radius: 4px;" name="blood_group" value="{{ user_data.blood_group }}" required>
                                     <option value="None" disabled {% if user_data.blood_group == "None" %}selected{% endif %}>-------------------</option>
                                     <option value="A+" {% if user_data.blood_group == "A+" %}selected{% endif %}>A+</option>
                                     <option value="A-" {% if user_data.blood_group == "A-" %}selected{% endif %}>A-</option>
@@ -271,7 +271,18 @@
             </div>
 
         </div>
-        <div id="loader" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999; text-align: center; vertical-align: middle;">
+        <div id="loader" style="display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1028;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;">
             <div class="loading-spinner"></div>
           </div>
         <!--PAGE END-->
@@ -284,50 +295,220 @@
 
     </div>
     <!-- app end-->
+
+    {% if user_data.is_admin_user %}
     <script>
-        document.getElementById('image-upload').addEventListener('change', function() {
-          var fileInput = this;
-          var errorMessage = document.getElementById('error-message');
-    
-          /*if (fileInput.files.length > 0) {
-            var fileSize = fileInput.files[0].size; // in bytes
-            var maxSize = {{picture_max_size}}; // 4 MB in bytes
-    
-            if (fileSize > maxSize) {
-              errorMessage.textContent = 'File size exceeds 2 MB. Please choose a smaller size photo or resize this!';
-              fileInput.value = ''; // Clear the input to prevent uploading the large file
-            } else {
-              errorMessage.textContent = ''; // Clear any previous error message
+        document.getElementById('update-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const form = document.getElementById('profile-form'); // Change class selector to id selector
+            
+            // Check if form is correctly selected
+            if (!(form instanceof HTMLFormElement)) {
+                console.error('Form element not found or is not a valid HTMLFormElement.');
+                return;
             }
-          }*/
+            
+            const name = form.querySelector('input[name="name"]');
+            const emailPersonal = form.querySelector('input[name="email"]');
+            
+            const loader = document.getElementById('loader'); // Loader
+            const fileInput = document.getElementById('image-upload'); // File input for image upload
+            
+            let isValid = true;
+            let errorMessage = '';
+    
+            function isEmailValid(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            function isNotNone(value, fieldName) {
+                if (value === null || value.trim() === '' || value === 'None') {
+                    isValid = false;
+                    errorMessage += `${fieldName} cannot be empty or None.\n`;
+                }
+            }
+            console.log(emailPersonal);
+            isNotNone(name.value.trim(), 'Full Name');
+            isNotNone(emailPersonal.value.trim(), 'Personal Email');
+
+            if (emailPersonal && !isEmailValid(emailPersonal.value.trim())) {
+                isValid = false;
+                errorMessage += 'Personal Email is invalid.\n';
+            }
+            
+            // File size validation
+            const fileSize = fileInput.files.length > 0 ? fileInput.files[0].size : 0;
+            const maxSize = 4194304 * 1024 * 1024; // Convert MB to bytes
+            
+            if (fileSize > maxSize) {
+                isValid = false;
+                errorMessage += 'File size exceeds ' + (maxSize / (1024 * 1024)) + ' MB. Please choose a smaller photo or resize it!\n';
+            }
+    
+            if (isValid) {
+                console.log('Form is valid, submitting...');
+    
+                // Show loader before form submission
+                loader.style.display = 'flex'; 
+            
+                // Submit the form
+                form.submit();
+            } else {
+                alert('Form validation failed:\n' + errorMessage); // Show errors as alert
+            }
         });
-        const updateButton = document.getElementById('update-button');
-        const loader = document.getElementById('loader');
+    </script>
 
-        updateButton.addEventListener('click', () => {
-        loader.style.display = 'block';
-
-        // Start loading logic and timer for dynamic duration
-        const startTime = Date.now();
-        const loadingPromise = your_loading_function(); // Replace with your actual loading function
-
-        loadingPromise
-            .then(() => {
-            const loadingTime = Date.now() - startTime;
-            // Adjust minimum loading time (e.g., 1000 milliseconds)
-            const displayTime = Math.max(loadingTime, 1000);
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, displayTime);
-            })
-            .catch(() => {
-            // Handle errors gracefully, hide loader after some time
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 3000); // Adjust error timeout as needed
-            });
+    {% else %}
+    <script>
+        document.getElementById('update-button').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const form = document.getElementById('profile-form'); // Change class selector to id selector
+            
+            // Check if form is correctly selected
+            if (!(form instanceof HTMLFormElement)) {
+                console.error('Form element not found or is not a valid HTMLFormElement.');
+                return;
+            }
+            
+            const name = form.querySelector('input[name="name"]');
+            const emailPersonal = form.querySelector('input[name="email_personal"]');
+            const nsuEmail = form.querySelector('input[name="email_nsu"]');
+            const contactNo = form.querySelector('input[name="contact_no"]');
+            const linkedinUrl = form.querySelector('input[name="linkedin_url"]');
+            const nsuId = form.querySelector('input[name="nsu_id"]');
+            const dob = form.querySelector('input[name="dob"]');
+            const gender = form.querySelector('input[name="gender"]');
+            const ieeeEmail = form.querySelector('input[name="email_ieee"]');
+            const major = form.querySelector('input[name="major"]');
+            const facebookUrl = form.querySelector('input[name="facebook_url"]');
+            const loader = document.getElementById('loader'); // Loader
+            const fileInput = document.getElementById('image-upload'); // File input for image upload
+            
+            let isValid = true;
+            let errorMessage = '';
+    
+            function isEmailValid(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            function isPhoneValid(phone) {
+                const phoneRegex = /^[0-9+]{10,16}$/;
+                return phoneRegex.test(phone);
+            }
+    
+            function isDateValid(date) {
+                return !isNaN(Date.parse(date));
+            }
+    
+            function isNsuEmailValid(email) {
+                return email.endsWith('@northsouth.edu');
+            }
+    
+            function isIeeeEmailValid(email) {
+                return email.endsWith('@ieee.org');
+            }
+    
+            function isNumeric(value) {
+                return /^\d+$/.test(value);
+            }
+    
+            function isGenderValid(gender) {
+                const genderLower = gender;
+                return genderLower === 'Male' || genderLower === 'Female';
+            }
+    
+            function isNotNone(value, fieldName) {
+                if (value === null || value.trim() === '' || value === 'None') {
+                    isValid = false;
+                    errorMessage += `${fieldName} cannot be empty or None.\n`;
+                }
+            }
+            function isNotOnlyNone(value, fieldName) {
+                if (value === 'None') {
+                    isValid = false;
+                    errorMessage += `${fieldName} cannot be None.\n`;
+                }
+            }
+    
+            isNotNone(name.value.trim(), 'Full Name');
+            isNotNone(nsuId.value.trim(), 'NSU ID');
+            isNotNone(emailPersonal.value.trim(), 'Personal Email');
+            isNotNone(nsuEmail.value.trim(), 'NSU Email');
+            isNotNone(gender.value.trim(), 'Gender');
+            isNotNone(major.value.trim(), 'Major');
+            isNotNone(contactNo.value.trim(), 'Contact Number');
+            isNotOnlyNone(linkedinUrl.value.trim(), 'LinkedIn URL');
+            isNotOnlyNone(facebookUrl.value.trim(), 'FaceBook URL');
+            isNotOnlyNone(ieeeEmail.value.trim(), 'IEEE Email');
+            
+            if (emailPersonal && !isEmailValid(emailPersonal.value.trim())) {
+                isValid = false;
+                errorMessage += 'Personal Email is invalid.\n';
+            }
+            if (nsuEmail && !isNsuEmailValid(nsuEmail.value.trim())) {
+                isValid = false;
+                errorMessage += 'NSU Email must end with @northsouth.edu.\n';
+            }
+            if (contactNo && !isPhoneValid(contactNo.value.trim())) {
+                isValid = false;
+                errorMessage += 'Contact Number is invalid.\n';
+            }
+            if (nsuId && (!isNumeric(nsuId.value.trim()) || nsuId.value.trim() === '')) {
+                isValid = false;
+                errorMessage += 'NSU ID must be all digits.\n';
+            }
+            if (dob && !isDateValid(dob.value.trim())) {
+                isValid = false;
+                errorMessage += 'Date of Birth is invalid.\n';
+            }
+            if (gender && !isGenderValid(gender.value.trim())) {
+                isValid = false;
+                errorMessage += 'Gender must be either Male or Female.\n';
+            }
+            if (ieeeEmail.value != "" && !isIeeeEmailValid(ieeeEmail.value.trim())) {
+                isValid = false;
+                errorMessage += 'IEEE Email must end with @ieee.org.\n';
+            }
+            if (linkedinUrl && linkedinUrl.value.trim() !== '' && !linkedinUrl.value.trim().startsWith('https://')) {
+                isValid = false;
+                errorMessage += 'LinkedIn URL must start with https://.\n';
+            }
+            if (facebookUrl && facebookUrl.value.trim() !== '' && !facebookUrl.value.trim().startsWith('https://')) {
+                isValid = false;
+                errorMessage += 'Facebook URL must start with https://.\n';
+            }
+            
+            // File size validation
+            const fileSize = fileInput.files.length > 0 ? fileInput.files[0].size : 0;
+            const maxSize = 4194304 * 1024 * 1024; // Convert MB to bytes
+            
+            if (fileSize > maxSize) {
+                isValid = false;
+                errorMessage += 'File size exceeds ' + (maxSize / (1024 * 1024)) + ' MB. Please choose a smaller photo or resize it!\n';
+            }
+    
+            if (isValid) {
+                console.log('Form is valid, submitting...');
+    
+                // Show loader before form submission
+                loader.style.display = 'flex'; 
+            
+                // Submit the form
+                form.submit();
+            } else {
+                alert('Form validation failed:\n' + errorMessage); // Show errors as alert
+            }
         });
-      </script>
+    </script>
+    {% endif %}
+    
+    
+    
     {% block common_js %}
     {% include "common_js.html" %}
     {% endblock common_js %}

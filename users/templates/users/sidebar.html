@@ -6,38 +6,33 @@
 
   // Check the notification permission status
   function checkNotificationPermission() {
-    Notification.requestPermission();
-      if (Notification.permission === "granted") {
-          // If permission is granted, remove blur and message
-          removeBlurAndMessage();
-      } else if (Notification.permission === "denied") {
-          // If permission is denied, keep the page blurred and show the message
-          restrictAccess();
-      } else {
-          // If permission hasn't been requested yet, show an alert to ask for permission
-          restrictAccess();
-      }
-  }
-
-  // Request notification permission
-  function requestNotificationPermission() {
-      Notification.requestPermission().then((permission) => {
+      Notification.requestPermission(function (){
+        restrictAccess();
+      }).then((permission) => {
           if (permission === "granted") {
               // Remove blur and message when permission is granted
               removeBlurAndMessage();
-          } else {
-              // If permission is denied, keep the page blurred
-              restrictAccess();
-          }
+          } else if (Notification.permission === "denied") {
+            // If permission is denied, keep the page blurred and show the message
+            restrictAccess();
+        } else {
+            // If permission hasn't been requested yet, show an alert to ask for permission
+            restrictAccess();
+        }
       });
   }
 
+  let showModal = true;
   function restrictAccess() {
       // Blur the current page and display an alert message
       // document.body.style.filter = "blur(10px)";
       // alert('Allow Notifications to enable page');
-      document.getElementById('allowNotificationModal').style.display = 'block';
-      setInterval(checkNotificationPermission, 30000);
+      if (showModal){
+        createModal();
+        showModal = false;
+        document.getElementById('allowNotificationModal').style.display = 'block';
+        setInterval(checkNotificationPermission, 10000);
+      }
   }
 
   function removeBlurAndMessage() {
@@ -73,13 +68,13 @@
     mCont.style.top = '50%';
     mCont.style.left = '50%';
     mCont.style.transform = 'translate(-50%, -50%)';
-    mCont.style.boxShadow = '0 0 15px rgba(0, 0, 0)';
-    mCont.style.borderRadius = '10px';
+    mCont.style.boxShadow = '0 0 2px rgba(0, 0, 0)';
+    mCont.style.borderRadius = '.25rem';
     mCont.style.overflow = 'hidden';
 
     // Create the paragraph element
     const paragraph = document.createElement('p');
-    paragraph.innerText = 'IEEE NSU Student Brunch portal requires you to enable notifications. Allow notifications to continue on the portal.';
+    paragraph.innerText = 'IEEE NSU Student Branch portal requires you to enable notifications. Allow notifications to continue on the portal.';
     paragraph.style.padding = '10px';
     paragraph.style.marginBottom = '10px';
     paragraph.style.borderBottom = '1.5px solid #c5c5c5';
@@ -107,14 +102,11 @@
     }
   }
 
-  // Call the function to create and show the modal
-  createModal();
-
 </script>
 <style>
   @media screen and (max-width:991px) {
     .left.navside.dark.dk{
-      overflow: scroll;
+      overflow: scroll
     }
   }
   @media (min-width: 992px) {
@@ -200,7 +192,7 @@
                     </li>
                     <li>
                       <a href="{% url 'central_branch:mail' %}" >
-                        <span class="nav-text">Emails</span>
+                        <span class="nav-text">Email</span>
                       </a>
                     </li>
                     <li>

@@ -75,12 +75,15 @@
       bottom: 10px;
       right: 10px;
       width: 587px;
-      border: 1px solid #ccc;
+      /* border: 1px solid #ccc; */
       background: white;
       border-radius: 5px;
       z-index: 1020;
       max-height: 650px;
       overflow-y: auto;
+      box-shadow: -2px -2px 8px 2px rgba(0, 0, 0, 0.1);
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .child-body {
@@ -161,7 +164,11 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      margin: 10px;
+      padding: 10px;
+      position: sticky;
+      bottom: 0px;
+      background: white;
+      align-items: center;
     }
 
     .attach_file {
@@ -173,6 +180,7 @@
     }
 
     .fa-paperclip {
+      color: #333;
       padding: 6px 9px;
       border-radius: 50%;
       transition: all .3sec ease-in-out;
@@ -180,10 +188,11 @@
 
     .fa-paperclip:hover {
       background-color: #f0f0f0;
+      color: #333;
     }
 
     .button1 {
-      background-color: #e63946;
+      background-color: #c11c1c;
       border: none;
       color: white;
       padding: 8px 20px;
@@ -196,11 +205,11 @@
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
-      border: 1px solid #e63946;
+      border: 1px solid #ba4040;
     }
 
     .button2 {
-      background-color: #57cc99;
+      background-color: #265489;
       border: none;
       color: white;
       padding: 8px 20px;
@@ -213,17 +222,17 @@
       cursor: pointer;
       border-radius: 4px;
       transition: all .3s ease-in-out;
-      border: 1px solid #57cc99;
+      border: 1px solid #265489;
     }
 
     .button1:hover {
       background-color: white;
-      color: #e63946;
+      color: #ba4040;
     }
 
     .button2:hover {
       background-color: white;
-      color: #57cc99;
+      color: #265489;
     }
 
     textarea::placeholder {
@@ -261,23 +270,25 @@
     }
 
     .scadule-yes {
-      background: #57cc99;
-      border: 1px solid #57cc99;
+      background: #265489;
+      border: 1px solid #265489;
       border-radius: .25rem;
       padding: .25rem 1rem;
       margin: .25rem;
       color: white;
       cursor: pointer;
       transition: all .3s ease-in-out;
+      display: flex;
+      align-items: center;
     }
 
     .scadule-yes:hover {
       background: white;
-      color: #57cc99;
+      color: #265489;
     }
 
     .scadule-send {
-      background: #57cc99;
+      background: #265489;
       border: 0;
       border-radius: 5px;
       padding: 5px 10px;
@@ -285,7 +296,7 @@
     }
 
     .scadule-send:hover {
-      background: #57cc99;
+      background: #265489;
       transition: .3s;
       cursor: pointer;
     }
@@ -315,12 +326,6 @@
       align-items: center;
     }
 
-    .email_container {
-      /* position: fixed; */
-      /* top: 115px; */
-      /* margin: 0 1rem 0 0; */
-    }
-
     .email_container input[type="checkbox"] {
       position: relative;
       top: -1px;
@@ -329,7 +334,6 @@
     .email_boxes {
       display: flex;
       gap: 10px;
-      margin-left: -10px;
       align-items: center;
     }
 
@@ -372,7 +376,7 @@
 
     .email_options_left {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 2rem;
     }
 
@@ -383,8 +387,6 @@
     }
 
     .select_all_option {
-      position: relative;
-      top: 5px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -616,7 +618,7 @@
 
     .scadule-no {
       color: white;
-      background-color: #e9c46a;
+      background-color: #fbc74a;
       display: inline;
       padding: 6px 25px;
       margin: .25rem;
@@ -732,13 +734,13 @@
 
     .scadule-send {
       color: white;
-      background-color: #57cc99;
+      background-color: #265489;
       display: inline;
       padding: 6px 25px;
       margin: .25rem;
       border: 1px;
       border-style: solid;
-      border-color: #57cc99;
+      border-color: #265489;
       border-radius: 4px;
       transition: all .3s ease-in-out;
       position: relative;
@@ -746,11 +748,12 @@
     }
 
     .scadule-send:hover {
-      color: #57cc99;
+      color: #265489;
       background-color: white;
     }
     .tag-container {
       display: flex;
+      justify-content: space-between;
       flex-wrap: wrap;
       /* border: 1px solid #ccc; */
       padding: 5px;
@@ -777,7 +780,9 @@
     .tag .remove-tag {
       cursor: pointer;
       padding: 2px;
-      color: #888;
+      color: #333;
+      position: relative;
+      top: 1px;
     }
 
     .tag .remove-tag:hover {
@@ -845,6 +850,8 @@
       margin-left: 5px;
       cursor: pointer;
       font-weight: bold;
+      position: relative;
+      top: 1px;
     }
 
     .alt-dropdown-container {
@@ -901,6 +908,8 @@
       margin-left: 5px;
       cursor: pointer;
       font-weight: bold;
+      position: relative;
+      top: 1px;
     }
 
     .unique-dropdown-container {
@@ -957,6 +966,8 @@
       margin-left: 5px;
       cursor: pointer;
       font-weight: bold;
+      position: relative;
+      top: 1px;
     }
 
     /* {% comment %} Pagination {% endcomment %} */
@@ -1121,9 +1132,6 @@
         margin-bottom: 0.5rem;
         align-items: center;
       }
-      .email_boxes{
-        margin-left: 0;
-      }
     }
 
    
@@ -1134,10 +1142,22 @@
         width: 100%;
         margin: 10px 0;
       }
-      .compose {
-        width: 90%;
-        bottom: 20px;
-        right: 5%;
+      .compose{
+        position: fixed;
+        bottom: 0px;
+        right: 0px;
+        width: 587px;
+        /* border: 1px solid #ccc; */
+        background: white;
+        border-radius: 5px;
+        z-index: 1020;
+        height: 100vh;
+        overflow-y: auto;
+        box-shadow: -2px -2px 8px 2px rgba(0, 0, 0, 0.1);
+        width: 100vw;
+        /* display: flex; */
+        flex-direction: column;
+        justify-content: space-between;
       }
 
       input[type="text"],
@@ -1170,6 +1190,24 @@
       .unique-dropdown-content {
         width: 100%;
       }
+
+      .compose_btn{
+        background-color: white;
+        border: none;
+        color: #137aac;
+        padding: .5rem .85rem;
+        font-size: 1.25rem;
+        border-radius: 50%;
+        position: fixed;
+        bottom: .5rem;
+        right: .85rem;
+        z-index: 1;
+        box-shadow: 0px 0px 4px 2px #d2d2d2;
+      }
+
+      .email_boxes{
+        display: none;
+      }
     }
 
  
@@ -1196,14 +1234,8 @@
     }
 
     .email_box {
-      padding: 8px 10px;
       font-size: 14px;
     }
-      .compose {
-        width: 95%;
-        bottom: 10px;
-        right: 2.5%;
-      }
 
       input[type="text"],
       textarea {
@@ -1213,13 +1245,7 @@
 
       .button,
       .button1 {
-        padding: 10px;
         font-size: 14px;
-      }
-
-      .child-body {
-        /* left: auto;
-        right: 1rem; */
       }
 
       .select_all_option {
@@ -1228,16 +1254,16 @@
 
       .more_options i {
         /* padding: .25rem; */
-        scale: 1.4;
+        scale: 1.3;
       }
 
       .email_outer_container i {
         padding: .25rem;
-        scale: 1.4;
+        scale: 1.3;
       }
 
       .email_container input[type='checkbox'] {
-        scale: 1.4;
+        scale: 1.3;
       }
 
       .label-ops {
@@ -1308,9 +1334,6 @@
       }
     }
 
-    ::selection {
-      background-color: transparent;
-    }
     .loaderBox{
       display: none;
       /* box-shadow: 0px 2px 5px 0px gray; */
@@ -1491,6 +1514,56 @@
       justify-content: space-between;
       margin-bottom: 1.5rem;
     }
+    .displayCC , .displayBCC{
+      display: none;
+    }
+
+    .ccBtn , .bccBtn{
+      cursor: pointer;
+      border-bottom: 1px solid #fff;
+    }
+
+    .ccBtn:hover , .bccBtn:hover{
+      border-bottom: 1px solid #888;
+    }
+
+        /* Basic styling */
+    .hamburger-menu {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 0;
+      /* padding: 10px; */
+      z-index: 1000;
+      background: white;
+      box-shadow: -1px 0px 8px 0px rgba(0, 0, 0, 0.1);
+      border-radius: .5rem;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+      padding-right: .5rem;
+    }
+
+    @media (max-width: 768px) {
+      .hamburger{
+        display: block;
+      }
+
+      .search-container{
+        padding: .25rem 20px;
+      }
+
+    }
+    .hamburger-menu .active{
+      color: #137aac;
+    }
+    .activeBoxName{
+      margin: 0;
+    }
   </style>
   <!--Internal CSS End-->
 </head>
@@ -1521,6 +1594,15 @@
       <!--Email Section Start-->
       <div class="email_wrapper">
         <div class="email_wrapper_2">
+          <div class="hamburger-menu" id="menu">
+            <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
+            <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
+            <a href="?section=starred" onclick="activeInbox(this, 'starred')" class="email_box {% if section == 'starred'%}active{% endif %}">Starred</a>
+            {% if dev_access %}
+            <a href="?section=dev_mail" onclick="activeInbox(this, 'dev_mail')" class="email_box {% if section == 'dev_mail'%}activate{% endif %}">Dev</a>
+            {% endif %}
+            <a href="?section=scheduled_mail" onclick="activeInbox(this, 'scheduled_mail')" class="email_box">Scheduled</a>
+          </div>
           <div class="email_boxes">
             <a href="?section=inbox" onclick="activeInbox(this, 'inbox')" class="email_box {% if section == 'inbox' or not section %}active{% endif %} inboxed">Inbox</a>
             <a href="?section=sent" onclick="activeInbox(this, 'sent')" class="email_box {% if section == 'sent'%}active{% endif %}">Sent</a>
@@ -1535,6 +1617,7 @@
           <!-- Shakil Search code -->
           <div class="search">
             <div class="search-container">
+              <div class="hamburger" onclick="toggleMenu()"><i class="material-icons"></i></div>
               <input id="search-input" placeholder="Search emails" type="search">
               <i id="search-icon" class="fa fa-search" onclick="executeSearch()"></i>
             </div>
@@ -1556,6 +1639,7 @@
                 <input type="checkbox" id="select_all" name="select_all">
                 <label for="select_all">Select All</label>
               </div>
+              <h6 class="activeBoxName"></h6>
               <div class="more_options">
                 {% comment %} <i class="fa fa-star-o starInbox" title="Starred Emails" onclick="activeInbox(this, 'starred')"></i> {% endcomment %}
                 {% comment %} <i class="fa fa-folder-o" title="Label"></i> {% endcomment %}
@@ -1742,12 +1826,16 @@
       <div class="compose hidden">
         <div class="compose_email">
           <div class="tag-container" id="tagContainer">
-            <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
-            <input type="text" name="to" class="tag-input" id="tagInput">
+              <p style="margin: 0; margin-right: .25rem; position: relative; right: 2px;">To</p>
+              <input type="text" name="to" class="tag-input" id="tagInput">
+            <div style="display: flex; gap: .5rem; margin-top: 0.5rem;">
+              <h6 onclick="displayCC(this)" class="ccBtn" title="Add cc">Cc</h6>
+              <h6 onclick="displayBCC(this)" class="bccBtn" title="Add bcc">Bcc</h6>
+            </div>
           </div>
           <hr>
           <div class="unique-dropdown-container">
-            <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send Email To" readonly
+            <input type="text" class="unique-dropdown-input" name="sendemail" placeholder="Send email to" readonly
               onclick="uniqueToggleDropdown()">
             <div class="unique-dropdown-content" id="uniqueDropdown">
               <div onclick="uniqueSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -1762,10 +1850,10 @@
           </div>
 
           <div class="unique-tag-container" id="uniqueTagContainer"></div>
-          <hr>
-          <div class="custom-dropdown-container">
-            <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
-              onclick="customToggleDropdown()">
+          <hr class="displayCC">
+          <div class="custom-dropdown-container displayCC">
+            <input type="text" class="custom-dropdown-input" id="ccInput" name="cc" placeholder="Cc"
+              onclick="customToggleDropdown()" onkeydown="handleCCKeyDown(event)" onpaste="handleCCPaste(event)">
             <div class="custom-dropdown-content" id="customDropdown">
               <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
@@ -1777,11 +1865,11 @@
               {% endfor %}
             </div>
           </div>
-          <div class="custom-tag-container" id="customTagContainer"></div>
-          <hr>
-          <div class="alt-dropdown-container">
-            <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
-              onclick="altToggleDropdown()">
+          <div class="custom-tag-container displayCC" id="customTagContainer"></div>
+          <hr class="displayBCC">
+          <div class="alt-dropdown-container displayBCC">
+            <input type="text" class="alt-dropdown-input" id="bccInput" name="bcc" placeholder="Bcc"
+              onclick="altToggleDropdown()" onkeydown="handleBCCKeyDown(event)" onpaste="handleBCCPaste(event)">
             <div class="alt-dropdown-content" id="altDropdown">
               <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
@@ -1794,9 +1882,9 @@
             </div>
           </div>
 
-          <div class="alt-tag-container" id="altTagContainer"></div>
+          <div class="alt-tag-container displayBCC" id="altTagContainer"></div>
           <hr>
-          <input type="text" name="subject" placeholder="Subject" required>
+          <input class="compose_sub" type="text" name="subject" placeholder="Subject" required>
         </div>
 
         <div style="margin: 10px;">
@@ -1830,9 +1918,10 @@
             <h4 style="font-weight: bold;">Want to schedule the email?</h4>
             <span class="close1">&times;</span>
           </div>
+          <hr style="width: 94%;">
           <!-- <hr> -->
-          <div style="padding: .5rem 1.25rem .75rem;">
-            {% comment %} <div class="labels">
+          {% comment %} <div style="padding: .5rem 1.25rem .75rem;">
+            <div class="labels">
               <div>
                 <input type="checkbox" name="event">
                 <label for="event">Event</label>
@@ -1845,10 +1934,10 @@
                 <input type="checkbox" name="announcement">
                 <label for="announcement">Announcement</label>
               </div>
-            </div> {% endcomment %}
+            </div>
             <!-- <h6 style="position: relative;
                 top: 9px; font-weight: bold;">Want to Schedule the Email?</h6> -->
-          </div>
+          </div> {% endcomment %}
           <div class="scadule-yes-no">
             <input class="scadule-no" onclick="EmailSent()" value="No, send without schedule">
             <!-- <h6 class="scadule-no" onclick="EmailSent()">No, send without schedule</h6> -->
@@ -1876,13 +1965,13 @@
           <div
             style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 10px 20px 0; position: sticky; top: 0px;">
             <h5 style="position: relative;
-                top: 9px">Set the time and date:</h5>
+                top: 9px; font-weight: bold">Set the time and date:</h5>
             <span class="close3">&times;</span>
           </div>
-          <hr>
+          <hr style="width: 94%;">
           <div class="pick_date_time">
             <input type="datetime-local" name="datetime-local" style="border: 0;
-              background: #c7ddff;
+              background: #f4f4f4;
               padding: 0 10px;
               border-radius: 5px;
               margin: .25rem;">
@@ -1904,15 +1993,19 @@
         <div class="edit_btn_container">
           <div class="restart_btn_container" style="display: block;">
             <svg width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18.2577 3.50828C18.538 3.62437 18.7207 3.89785 18.7207 4.20119V8.44383C18.7207 8.85805 18.3849 9.19383 17.9707 9.19383H13.728C13.4247 9.19383 13.1512 9.0111 13.0351 8.73085C12.9191 8.45059 12.9832 8.128 13.1977 7.9135L14.8007 6.3105C12.1674 5.20912 9.01606 5.7309 6.87348 7.87348C4.04217 10.7048 4.04217 15.2952 6.87348 18.1265C9.70478 20.9578 14.2952 20.9578 17.1265 18.1265C18.7727 16.4803 19.4622 14.2401 19.1935 12.0937C19.142 11.6827 19.4335 11.3078 19.8445 11.2563C20.2555 11.2049 20.6304 11.4963 20.6819 11.9073C21.0057 14.4934 20.1746 17.1997 18.1872 19.1872C14.7701 22.6043 9.2299 22.6043 5.81282 19.1872C2.39573 15.7701 2.39573 10.2299 5.81282 6.81282C8.55119 4.07444 12.6515 3.5312 15.9309 5.18028L17.4404 3.67086C17.6549 3.45637 17.9774 3.3922 18.2577 3.50828Z" fill="#000000c9"></path> </g></svg>
-            <input name="restart_schedule" class="restart_btn" type="submit" onclick="ConfirmationModal(this)" value="Restart Send">
+            <input name="restart_schedule" class="restart_btn" style="color: orange;" type="submit" onclick="ConfirmationModal(this)" value="Restart Send">
           </div>
           <div class="pause_btn_container" style="display: block;">
             <svg class="pause_svg" width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2C7.88562 2 8.82843 2 9.41421 2.58579C10 3.17157 10 4.11438 10 6V18C10 19.8856 10 20.8284 9.41421 21.4142C8.82843 22 7.88562 22 6 22C4.11438 22 3.17157 22 2.58579 21.4142C2 20.8284 2 19.8856 2 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> <path d="M14 6C14 4.11438 14 3.17157 14.5858 2.58579C15.1716 2 16.1144 2 18 2C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6V18C22 19.8856 22 20.8284 21.4142 21.4142C20.8284 22 19.8856 22 18 22C16.1144 22 15.1716 22 14.5858 21.4142C14 20.8284 14 19.8856 14 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> </g></svg>
-            <input name="pause_schedule" class="pause_btn" type="submit" onclick="ConfirmationModal(this)" value="Pause Send">
+            <input name="pause_schedule" class="pause_btn" style="color: orange;" type="submit" onclick="ConfirmationModal(this)" value="Pause Send">
+          </div>
+          <div class="pause_btn_container" style="display: block;">
+            {% comment %} <svg class="pause_svg" width=".75rem" height=".75rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M2 6C2 4.11438 2 3.17157 2.58579 2.58579C3.17157 2 4.11438 2 6 2C7.88562 2 8.82843 2 9.41421 2.58579C10 3.17157 10 4.11438 10 6V18C10 19.8856 10 20.8284 9.41421 21.4142C8.82843 22 7.88562 22 6 22C4.11438 22 3.17157 22 2.58579 21.4142C2 20.8284 2 19.8856 2 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> <path d="M14 6C14 4.11438 14 3.17157 14.5858 2.58579C15.1716 2 16.1144 2 18 2C19.8856 2 20.8284 2 21.4142 2.58579C22 3.17157 22 4.11438 22 6V18C22 19.8856 22 20.8284 21.4142 21.4142C20.8284 22 19.8856 22 18 22C16.1144 22 15.1716 22 14.5858 21.4142C14 20.8284 14 19.8856 14 18V6Z" stroke="#000000c9" stroke-width="1.5"></path> </g></svg> {% endcomment %}
+            <input name="send_now" class="pause_btn" style="color: green;" type="submit" onclick="ConfirmationModal(this)" value="Send Now">
           </div>
           <div class="cancel_btn_container">
             <svg width=".75rem" height=".75rem" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <style>.cls-1{fill:none;stroke:#000000c9;stroke-linecap:round;stroke-linejoin:round;stroke-width:2px;}</style> </defs> <title></title> <g id="cross"> <line class="cls-1" x1="7" x2="25" y1="7" y2="25"></line> <line class="cls-1" x1="7" x2="25" y1="25" y2="7"></line> </g> </g></svg>
-            <input name="cancel_schedule" class="cancel_btn" type="submit" onclick="ConfirmationModal(this)" value="Cancel Send">
+            <input name="cancel_schedule" class="cancel_btn" style="color: red;" type="submit" onclick="ConfirmationModal(this)" value="Cancel Send">
           </div>
         </div>
         <div class="schedule_content_inner">
@@ -2005,6 +2098,7 @@
       composeBtn.addEventListener('click', function () {
         composeBtn.classList.add('hidden');
         composeBody.classList.remove('hidden');
+        composeBody.style.display = 'flex';
       })
 
       function closeCompose() {
@@ -2013,6 +2107,7 @@
 
         composeBtn.classList.remove('hidden');
         composeBody.classList.add('hidden');
+        composeBody.style.display = '';
       }
 
       btnClose.addEventListener('click', function () {
@@ -2102,6 +2197,40 @@
 
         // Update mail counts based on the selected container
         {% comment %} updateMailCounts(); {% endcomment %}
+
+        // Close the hamburger menu after an option is clicked
+        const menu = document.getElementById('menu');
+        menu.style.display = 'none';
+        document.removeEventListener('click', closeMenuOnClickOutside);
+        
+        if(window.innerWidth < 480){
+
+          let boxName = document.querySelector('.activeBoxName');
+          switch (section) {
+          case 'inbox':
+            boxName.innerHTML = 'Inbox';
+            break;
+            
+            case 'dev_mail':
+              boxName.innerHTML = 'Dev';
+              break;
+              
+            case 'starred':
+             boxName.innerHTML = 'Starred';
+             break;
+             
+            case 'sent':
+               boxName.innerHTML = 'Sent';
+               break;
+               
+            case 'scheduled_mail':
+                 boxName.innerHTML = 'Scheduled';
+            break;
+            
+            default:
+              break;
+            }
+          }
       }
 
 
@@ -2503,6 +2632,7 @@
         modal1.style.transform = 'translateY(0px)';
         modal1.style.zIndex = '103100';
         modal1.style.opacity = '1';
+        modal1.style.backdropFilter = 'blur(2px)';
       }
 
       // When the user clicks on <span> (x), close the modal
@@ -2588,6 +2718,18 @@
         });
       }
 
+      function checkScreenWidth(){
+        let screenWidth = window.innerWidth;
+        let composeBtn = document.querySelector(".compose_btn");
+        let boxName = document.querySelector('.activeBoxName');
+        
+        if (screenWidth < 768)
+          composeBtn.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i>';
+        if (screenWidth < 480)
+          boxName.innerHTML = 'Inbox';
+      }
+      checkScreenWidth();
+
       function EmailSent() {
         closeCompose();
         // Capture values from input fields
@@ -2611,7 +2753,7 @@
 
         // Append each file from the attachments input
         for (var i = 0; i < attachments.files.length; i++) {
-          console.log('OK');
+          console.log(attachments.files[i]);
           formData.append('attachments', attachments.files[i]);
         }
 
@@ -2647,6 +2789,7 @@
         modal2.style.transform = 'translateY(0px)';
         modal2.style.zIndex = '103100';
         modal2.style.opacity = '1';
+        modal2.style.backdropFilter = 'blur(2px)';
 
         // Get the button that opens the modal
         // var btn2 = document.querySelector(".email_sent_confirm_modal");
@@ -2674,6 +2817,7 @@
         modal3.style.transform = 'translateY(0px)';
         modal3.style.zIndex = '103100';
         modal3.style.opacity = '1';
+        modal3.style.backdropFilter = 'blur(2px)';
 
         // Get the send button
         var btn3 = document.querySelector(".scadule-send");
@@ -2771,15 +2915,38 @@
       const tagContainer = document.getElementById('tagContainer');
       const tagInput = document.getElementById('tagInput');
 
+      let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
           event.preventDefault(); // Prevent the space/comma from being typed
-          addTag(tagInput.value.trim());
+          processInput(tagInput.value);
+          //addTag(tagInput.value.trim());
           tagInput.value = ''; // Clear the input field
         }
       });
 
-      function addTag(tagText) {
+      // Handle paste event for multiple values
+      tagInput.addEventListener('paste', function (event) {
+          event.preventDefault(); // Stop default paste behavior
+          const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+          processInput(pasteText.trim());
+          tagInput.value = ''; // Clear the input field after paste
+        });
+
+        function processInput(input) {
+        const items = input.split(/[\s,]+/); // Split by space or comma
+        items.forEach(item => {
+          if (emailRegex.test(item.trim())) {
+            addTag(item.trim(), true);
+          }
+          else {
+            addTag(item.trim(), false);
+          }
+        });
+      }
+
+      function addTag(tagText, isCorrect) {
         if (tagText === '') return;
 
         const tag = document.createElement('div');
@@ -2787,6 +2954,12 @@
 
         const span = document.createElement('span');
         span.textContent = tagText;
+
+        if(!isCorrect) {
+          tag.style.backgroundColor = '#ffbebe';
+          tag.style.border = 'red';
+          // span.style.backgroundColor = 'red';
+        }
 
         const removeButton = document.createElement('span');
         removeButton.className = 'remove-tag';
@@ -2913,7 +3086,6 @@
           });
         }
       }
-      console.log("EDFS");
     
       // Handle Enter keypress in the input field
       document.getElementById('search-input').addEventListener('keypress', function (event) {
@@ -2925,84 +3097,95 @@
 
     <!-- file attachments -->
     <script>
-      //for attachments
-      document.getElementById('myfile').addEventListener('change', function (e) {
-        const filePreviewContainer = document.getElementById('filePreviewContainer');
-        Array.from(e.target.files).forEach(file => {
-          const filePreview = document.createElement('div');
-          filePreview.className = 'file-preview';
+    // Store previously selected files in an array
+    let previousFiles = [];
 
-          const fileIcon = document.createElement('i');
-          fileIcon.className = 'fa fa-file file-icon';
+    // Function to handle file selection
+    document.getElementById('myfile').addEventListener('change', function (e) {
+        const fileInput = e.target;
+        const newFiles = Array.from(fileInput.files);
+        
+        // Update the previously selected files with new ones
+        previousFiles = previousFiles.concat(newFiles);
+        
+        // Update the input value to include all files
+        updateFileInput();
+        
+        // Render the file previews
+        renderFilePreviews();
+    });
 
-          const fileName = document.createElement('span');
-          fileName.className = 'file-name';
-          fileName.textContent = file.name;
-
-          const removeFile = document.createElement('span');
-          removeFile.className = 'remove-file';
-          removeFile.innerHTML = '&times;';
-
-          removeFile.addEventListener('click', () => {
-            filePreview.remove();
-            // Optional: remove file from the input element as well
-          });
-
-          filePreview.appendChild(fileIcon);
-          filePreview.appendChild(fileName);
-          filePreview.appendChild(removeFile);
-          filePreviewContainer.appendChild(filePreview);
-        });
-        console.log(filePreviewContainer);
-      });
-
-      // Send Button click event
-      // document.querySelector('.btnSend').addEventListener('click', function() {
-      //     const files = document.getElementById('myfile').files;
-      //     if (files.length === 0) {
-      //         alert("No files attached.");
-      //         return;
-      //     }
-
-      //     alert(`${files.length} file(s) attached.`);
-      // });
-
-      function handleFileSelect(event) {
-        const fileInput = event.target;
-        const filePreviewContainer = document.getElementById('filePreviewContainer');
-
-        // Clear previous previews
-        //filePreviewContainer.innerHTML = '';
-
-        const files = fileInput.files;
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const filePreview = document.createElement('div');
-          filePreview.className = 'file-preview';
-          filePreview.innerHTML = `
-              <span>${file.name}</span>
-              <button onclick="removeFile(${i})">Remove</button>
-          `;
-          filePreviewContainer.appendChild(filePreview);
-        }
-      }
-
-      function removeFile(index) {
+    // Function to update the file input with previously selected files
+    function updateFileInput() {
         const fileInput = document.getElementById('myfile');
         const dt = new DataTransfer();
-
-        const files = fileInput.files;
-        for (let i = 0; i < files.length; i++) {
-          if (i !== index) {
-            dt.items.add(files[i]);
-          }
-        }
-
+        
+        previousFiles.forEach(file => {
+            dt.items.add(file);
+        });
+        
         fileInput.files = dt.files;
-        handleFileSelect({ target: fileInput });
-      }
+    }
 
-      function getAllSelectedTags() {
+    // Function to render file previews
+    function renderFilePreviews() {
+        const filePreviewContainer = document.getElementById('filePreviewContainer');
+        
+        // Clear previous file previews
+        filePreviewContainer.innerHTML = '';
+
+        previousFiles.forEach((file, index) => {
+            const filePreview = document.createElement('div');
+            filePreview.className = 'file-preview';
+
+            const fileIcon = document.createElement('i');
+            fileIcon.className = 'fa fa-file file-icon';
+
+            const fileName = document.createElement('span');
+            fileName.className = 'file-name';
+            fileName.textContent = file.name;
+
+            const removeFile = document.createElement('span');
+            removeFile.className = 'remove-file';
+            removeFile.innerHTML = '&times;';
+
+            removeFile.addEventListener('click', () => {
+                removeFileFromList(index);
+            });
+
+            filePreview.appendChild(fileIcon);
+            filePreview.appendChild(fileName);
+            filePreview.appendChild(removeFile);
+            filePreviewContainer.appendChild(filePreview);
+        });
+    }
+
+    // Function to remove a file from the list
+    function removeFileFromList(index) {
+        previousFiles.splice(index, 1);  // Remove file from the array
+        updateFileInput();              // Update the file input element
+        renderFilePreviews();           // Re-render the file previews
+    }
+
+    // Function to clear the array of files and reset the file input
+    function clearFiles() {
+      // Get the file input element
+      const fileInput = document.querySelector('input[name="myfile"]');
+      
+      // Clear the file input element
+      fileInput.value = '';
+
+      // Clear the previously selected files array
+      previousFiles = [];
+
+      // Optionally, clear the file preview container
+      const filePreviewContainer = document.getElementById('filePreviewContainer');
+      if (filePreviewContainer) {
+        filePreviewContainer.innerHTML = '';
+      }
+    }
+   
+    function getAllSelectedTags() {
         const tags = tagContainer.querySelectorAll('.tag span:first-child');
         return Array.from(tags).map(tag => tag.textContent);
       }
@@ -3012,18 +3195,92 @@
       let customSelectedTags = [];
       let customAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
 
+      // For tracking original dropdown options
+      const originalDropdownOptions = [...customAvailableOptions];
+
+      let emailRegex1 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+
       function customToggleDropdown() {
         const dropdown = document.getElementById("customDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       }
 
-      function customSelectOption(option) {
-        if (!customSelectedTags.includes(option)) {
-          customSelectedTags.push(option);
-          customAvailableOptions = customAvailableOptions.filter(item => item !== option);
-          customUpdateDropdown();
-          customUpdateTagContainer();
+      // Handling key press for input
+      function handleCCKeyDown(event) {
+        const input = document.getElementById("ccInput");
+        if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+          event.preventDefault();
+          processCCInput(input.value);
+          input.value = '';  // Clear input
         }
+      }
+
+      // Handling paste event for multiple emails
+      function handleCCPaste(event) {
+        event.preventDefault();
+        const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+        processCCInput(pasteText.trim());
+        document.getElementById('ccInput').value = '';  // Clear input
+      }
+
+      // Process input string (split by space/comma)
+      function processCCInput(input) {
+        const items = input.split(/[\s,]+/);
+        items.forEach(item => {
+          if (emailRegex1.test(item.trim())) {
+            addCCTag(item.trim(), true);
+          } else {
+            addCCTag(item.trim(), false);
+          }
+        });
+      }
+
+      // Function to add tag
+      function addCCTag(tagText, isCorrect) {
+        if (tagText === '' || customSelectedTags.includes(tagText)) return;
+
+        customSelectedTags.push(tagText);
+        if (customAvailableOptions.includes(tagText)) {
+          customAvailableOptions = customAvailableOptions.filter(item => item !== tagText);
+          customUpdateDropdown();
+        }
+
+        const tagContainer = document.getElementById('customTagContainer');
+        const tagElement = document.createElement('div');
+        tagElement.className = 'custom-tag';
+        const span = document.createElement('span');
+        span.textContent = tagText;
+        if (!isCorrect) {
+          tagElement.style.backgroundColor = '#ffbebe';
+          tagElement.style.border = 'red';
+          // span.style.backgroundColor = 'red';
+        }
+
+        const removeButton = document.createElement('span');
+        removeButton.className = 'custom-remove-tag';
+        removeButton.innerHTML = '&times;';
+        removeButton.onclick = () => {
+          removeCCTag(tagText);
+          tagContainer.removeChild(tagElement);
+        };
+
+        tagElement.appendChild(span);
+        tagElement.appendChild(removeButton);
+        tagContainer.appendChild(tagElement);
+      }
+
+      // Remove tag and add it back to dropdown only if it was originally there
+      function removeCCTag(tag) {
+        customSelectedTags = customSelectedTags.filter(item => item !== tag);
+        if (originalDropdownOptions.includes(tag)) {
+          customAvailableOptions.push(tag);
+          customUpdateDropdown();
+        }
+      }
+
+      function customSelectOption(option) {
+        addCCTag(option, true);
+        customToggleDropdown();
       }
 
       function customRemoveTag(index) {
@@ -3056,12 +3313,16 @@
         });
       }
 
-            // Close dropdown when clicking outside of it
-            window.onclick = function (event) {
-        if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
-          document.getElementById("customDropdown").style.display = "none";
-        }
-      };
+      window.onclick = function (event) {
+      // For CC dropdown
+      if (!event.target.matches('.custom-dropdown-input') && !event.target.closest('.custom-dropdown-content')) {
+        document.getElementById("customDropdown").style.display = "none";
+      }
+      // For BCC dropdown
+      if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
+        document.getElementById("altDropdown").style.display = "none";
+      }
+    };
 
       // Function to get selected tags
       function getCustomSelectedTags() {
@@ -3088,32 +3349,101 @@
       }
 
       function customClearAllTags() {
-      // Add all selected tags back to the available options
-      customAvailableOptions = customAvailableOptions.concat(customSelectedTags);
-
-      // Clear the selected tags array
-      customSelectedTags = [];
-
-      // Update both the dropdown and the tag container
-      customUpdateDropdown();
-      customUpdateTagContainer();
+        customAvailableOptions = customAvailableOptions.concat(
+        customSelectedTags.filter(tag => originalDropdownOptions.includes(tag))
+      );
+        customSelectedTags = [];
+        customUpdateDropdown();
+        document.getElementById('customTagContainer').innerHTML = '';
     }
       // For the BCC dropdown
       let altSelectedTags = [];
       let altAvailableOptions = ['All Registered General Members of IEEE NSU SB', 'All Officers of IEEE NSU SB', 'Executive Panel (Branch Only)', 'Branch Ex-Com Members' , 'All Society, Chapters, Affinity Group Executive Body Members',{% for session in recruitment_sessions %}'Recruits of - {{session.session}}',{% endfor %}];
+
+      // For tracking original dropdown options
+      const altOriginalDropdownOptions = [...altAvailableOptions];
 
       function altToggleDropdown() {
         const dropdown = document.getElementById("altDropdown");
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       }
 
-      function altSelectOption(option) {
-        if (!altSelectedTags.includes(option)) {
-          altSelectedTags.push(option);
-          altAvailableOptions = altAvailableOptions.filter(item => item !== option);
-          altUpdateDropdown();
-          altUpdateTagContainer();
+      // Handling key press for BCC input
+      function handleBCCKeyDown(event) {
+        const input = document.getElementById("bccInput");
+        if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
+          event.preventDefault();
+          processBCCInput(input.value);
+          input.value = '';  // Clear input
         }
+      }
+
+      // Handling paste event for multiple emails
+      function handleBCCPaste(event) {
+        event.preventDefault();
+        const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+        processBCCInput(pasteText.trim());
+        document.getElementById('bccInput').value = '';  // Clear input
+      }
+
+      // Process input string for BCC
+      function processBCCInput(input) {
+        const items = input.split(/[\s,]+/);
+        items.forEach(item => {
+          if (emailRegex1.test(item.trim())) {
+            addBCCTag(item.trim(), true);
+          } else {
+            addBCCTag(item.trim(), false);
+          }
+        });
+      }
+
+      // Function to add tag for BCC
+      function addBCCTag(tagText, isCorrect) {
+        if (tagText === '' || altSelectedTags.includes(tagText)) return;
+
+        altSelectedTags.push(tagText);
+        if (altAvailableOptions.includes(tagText)) {
+          altAvailableOptions = altAvailableOptions.filter(item => item !== tagText);
+          altUpdateDropdown();
+        }
+
+        const tagContainer = document.getElementById('altTagContainer');
+        const tagElement = document.createElement('div');
+        tagElement.className = 'alt-tag';
+        const span = document.createElement('span');
+        span.textContent = tagText;
+        if (!isCorrect) {
+          tagElement.style.backgroundColor = '#ffbebe';
+          tagElement.style.border = 'red';
+          // span.style.backgroundColor = 'red';
+        }
+
+        const removeButton = document.createElement('span');
+        removeButton.className = 'alt-remove-tag';
+        removeButton.innerHTML = '&times;';
+        removeButton.onclick = () => {
+          removeBCCTag(tagText);
+          tagContainer.removeChild(tagElement);
+        };
+
+        tagElement.appendChild(span);
+        tagElement.appendChild(removeButton);
+        tagContainer.appendChild(tagElement);
+      }
+
+      // Remove BCC tag and add it back to dropdown only if it was originally there
+      function removeBCCTag(tag) {
+        altSelectedTags = altSelectedTags.filter(item => item !== tag);
+        if (altOriginalDropdownOptions.includes(tag)) {
+          altAvailableOptions.push(tag);
+          altUpdateDropdown();
+        }
+      }
+
+      function altSelectOption(option) {
+        addBCCTag(option, true);
+        altToggleDropdown();
       }
 
       function altRemoveTag(index) {
@@ -3146,12 +3476,6 @@
         });
       }
 
-        // Close dropdown when clicking outside of it
-        window.onclick = function (event) {
-        if (!event.target.matches('.alt-dropdown-input') && !event.target.closest('.alt-dropdown-content')) {
-          document.getElementById("altDropdown").style.display = "none";
-        }
-      };
 
       // Function to get selected tags
       function getAltSelectedTags() {
@@ -3177,15 +3501,12 @@
       }
 
       function altClearAllTags() {
-        // Add all selected tags back to the available options
-        altAvailableOptions = altAvailableOptions.concat(altSelectedTags);
-
-        // Clear the selected tags array
+        altAvailableOptions = altAvailableOptions.concat(
+        altSelectedTags.filter(tag => altOriginalDropdownOptions.includes(tag))
+      );
         altSelectedTags = [];
-
-        // Update both the dropdown and the tag container
         altUpdateDropdown();
-        altUpdateTagContainer();
+        document.getElementById('altTagContainer').innerHTML = '';
       }
 
       // For the Send Email to dropdown
@@ -3286,6 +3607,7 @@
         uniqueClearAllTags();
         customClearAllTags();
         altClearAllTags();
+        clearFiles();
         const uniqueTagContainer = document.getElementById('uniqueTagContainer');
         uniqueTagContainer.innerHTML = '';
         const altTagContainer = document.getElementById('altTagContainer');
@@ -3374,6 +3696,7 @@
       scheduleModal.style.transform = 'translateY(0px)';
       scheduleModal.style.zIndex = '103100';
       scheduleModal.style.opacity = '1';
+      scheduleModal.style.backdropFilter = 'blur(2px)';
     
       // Get the <span> element that closes the modal
       var closeBtn = document.getElementsByClassName("scheduleModalClosebtn")[0];
@@ -3393,6 +3716,7 @@
       confirmModal.style.transform = 'translateY(0px)';
       confirmModal.style.zIndex = '103100';
       confirmModal.style.opacity = '1';
+      confirmModal.style.backdropFilter = 'blur(2px)';
     
       // Get the <span> element that closes the modal
       var closeBtn = document.getElementsByClassName("confirmModalClosebtn")[0];
@@ -3482,6 +3806,58 @@
       scheduleModal.style.transform = 'translateY(-50px)';
       scheduleModal.style.zIndex = '-100';
       scheduleModal.style.opacity = '0';
+      }
+
+      function displayCC(element){
+        let CC = document.querySelectorAll('.displayCC');
+
+        element.style.display = 'none';
+
+        CC.forEach(element => {
+          if(element.classList.contains('custom-tag-container'))
+            element.style.display = 'flex';
+          else
+            element.style.display = 'block';
+        });
+      }
+
+      function displayBCC(element){
+        let bCC = document.querySelectorAll('.displayBCC');
+
+        element.style.display = 'none';
+
+        bCC.forEach(element => {
+          if(element.classList.contains('alt-tag-container'))
+            element.style.display = 'flex';
+          else 
+            element.style.display = 'block';
+        });
+      }
+
+      // Function to toggle the hamburger menu
+      function toggleMenu() {
+        const menu = document.getElementById('menu');
+        const isMenuOpen = menu.style.display === 'flex';
+        menu.style.display = isMenuOpen ? 'none' : 'flex';
+
+        // If menu is opened, listen for clicks outside
+        if (!isMenuOpen) {
+          document.addEventListener('click', closeMenuOnClickOutside);
+        } else {
+          document.removeEventListener('click', closeMenuOnClickOutside);
+        }
+      }
+
+      // Function to close the menu if clicked outside
+      function closeMenuOnClickOutside(event) {
+        const menu = document.getElementById('menu');
+        const hamburger = document.querySelector('.hamburger');
+        
+        // Check if the click is outside the menu and hamburger
+        if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+          menu.style.display = 'none';
+          document.removeEventListener('click', closeMenuOnClickOutside);
+        }
       }
     </script>
     {% block common_js %}

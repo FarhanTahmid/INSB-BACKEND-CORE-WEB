@@ -19,4 +19,4 @@ class MemberNotifications(admin.ModelAdmin):
 
 @admin.register(PushNotification)
 class PushNotification(admin.ModelAdmin):
-    list_display = ['member','fcm_token']
+    list_display = ['member','fcm_token','created_at','updated_at']

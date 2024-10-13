@@ -33,7 +33,7 @@
             flex-direction: column;
             flex-wrap: wrap;
             max-width: 850px;
-            margin: 40px auto;
+            margin: 40px auto 0;
         }
         .flex-wrapper{
             display: flex;
@@ -476,7 +476,7 @@
     .front {
     display: block;
     position: relative;
-    padding: 5px 15px;
+    padding: 0px 16px;
     border-radius: 12px;
     font-size: 1.1rem;
     color: white;
@@ -528,6 +528,7 @@
         justify-content: center;
         flex-direction: row;
         flex-wrap: wrap;
+        gap: .25rem;
     }
     .name_tab li {
         display: flex;
@@ -535,21 +536,26 @@
         align-items: center;
         list-style: none;
         text-align: center;
-        border: 1px solid rgba(0, 0, 0, 0.7);
+        border: 2px solid rgba(0, 0, 0, 0.7);
         font-style: italic;
         transition: all .2s ease-in-out;
         padding: 10px;
         cursor: pointer;
+        border-radius: .25rem;
     }
     .name_tab li:hover{
-        background: #002855ad;
+        background: #1769acb7;
         color: white;
     }
     .active_tab{
-        background: #002855ad;
+        background: #1768ac;
         color: white;
     }
-
+    @media screen and (max-width:500px) {
+        .name_tab li{
+            width: 100%;
+        }
+    }
     /* modal */
     .modal__wrapper{
     position: fixed;
@@ -585,17 +591,17 @@
     max-height: 400px;
 }
 .btn__purple {
-    background: #01a687;
-    color: #fff;
+    background: #99e7d8;
+    color: #00725e;
     border-radius: 0;
-    font-size: 18px;
     cursor: pointer;
-    border: 1px solid black;
+    border: 2px solid #00725e;
     transition: all 0.3s;
+    border-radius: .25rem;
 }
 .btn__purple:hover{
     background: #01a68773;
-    color: #000;
+    color: #004a3d;
 }
 .modal__container button.close-4 {
     position: absolute;
@@ -616,6 +622,37 @@
 }
 .modal__wrapper.active .modal__container{
     transform: translateY(0px);
+}
+.fileUploaded{
+    overflow: hidden;
+}
+.mediaUploaded{
+    display: flex;
+}
+@media screen and (max-width:1440px) {
+    .fileUploaded , .mediaUploaded{
+        max-width: 643px;
+    }
+}
+@media screen and (max-width:1024px) {
+    .fileUploaded , .mediaUploaded{
+        max-width: 598px;
+    }
+}
+@media screen and (max-width:768px) {
+    .fileUploaded , .mediaUploaded{
+        max-width: 367px;
+    }
+}
+@media screen and (max-width:425px) {
+    .fileUploaded , .mediaUploaded{
+        max-width: 321px;
+    }
+}
+@media screen and (max-width:375px) {
+    .fileUploaded , .mediaUploaded{
+        max-width: 272px;
+    }
 }
     </style>
   </head>
@@ -736,8 +773,8 @@
                     {% if members_task_type.has_drive_link %}
                     <!-- Drive link -->
                     <div class="form-group">
-                        <label>Folder Drive Link</label>
-                        <input placeholder="Provide Drive Link" class="form-control" type="url" autocomplete="off"
+                        <label>Link</label>
+                        <input placeholder="Provide Link" class="form-control" type="url" autocomplete="off"
                         value="{{drive_link_loaded.drive_link}}" name="content_drive" 
                         {% if task.is_task_completed %}disabled {% endif %}/>
                     </div>
@@ -746,13 +783,13 @@
 
                     {% if members_task_type.has_permission_paper %}
                     <!-- Paper permission -->
-                    <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                    <label class="description_label" style="margin-right: 20px;">Completed? </label>
                     <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                     
                         <select id="paper_permission_dropdown" name="permission_paper" class="form-control" {% if task.is_task_completed %}disabled {% endif %}>
                             <option value="" disabled selected>Select</option>
-                            <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Completed </option>
-                            <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
+                            <option value="completed"{% if permission_paper_loaded.permission_paper == "completed" %}selected{% endif %}>Yes</option>
+                            <option value="not_completed"{% if permission_paper_loaded.permission_paper == "not_completed" %}selected{% endif %}>No</option>
                         </select>                                  
                     </div>
                     <br>
@@ -799,9 +836,9 @@
                     <!--upload doc-->
                     {% if members_task_type.has_file_upload %}
                     <div class="form-group">
-                            <label for="documents">File Upload</label>
+                            <label for="documents">File / Permission Paper Upload</label>
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept=".doc, .docx, .pdf" multiple {% if task.is_task_completed %}disabled{% endif %}>
+                                <input type="file" class="custom-file-input" id="content-doc-input" name="document" accept="*/*" multiple {% if task.is_task_completed %}disabled{% endif %}>
                                 <label class="custom-file-label bg-light" for="content-doc-input">Choose files</label>
                             </div>
                             
@@ -910,18 +947,21 @@
             {% if create_individual_task_access or create_team_task_access %}
             
             <div class="form-wrapper">
-                <form>
+                <div style="display: flex;
+                justify-content: space-between;
+                align-items: flex-end;">
                     <div class="tooltip-container">
                         {% if app_name == "central_branch" %}
-                            <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
-                        {% else %}
+                        <a href="{% url 'central_branch:task_edit' task.pk %}" class="image-button">
+                            {% else %}
                             <a href="{% url ''|add:app_name|add:':task_edit_team' task.pk team_primary  %}" class="image-button">
-                        {% endif %}
-                        <img src="/static/back-arrow.png" alt="Go back to session">
-                        </a>
-                        <span class="tooltip-text">Go back</span>
+                                {% endif %}
+                                <img src="/static/back-arrow.png" alt="Go back to session">
+                            </a>
+                            <span class="tooltip-text">Go back</span>
+                        </div>
+                        <!-- <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button> -->
                     </div>
-                </form>
                 <!--Messages-->
                 <div id="messageContainer" style="display:none; justify-content:center; text-align:center;">
                     <div id="messageBox" class="alert alert-success" role="alert">
@@ -934,7 +974,7 @@
                 <!--Messages-->
                 
                 <!-- task page heading-->
-                <h4 style="margin-top: 25px;">Click to see their Task Progress</h4>
+                <h4 style="margin-top: 25px;">See Task Progress</h4>
                 
 
             <div class="name_tab">
@@ -966,11 +1006,17 @@
                     flex-wrap: wrap;
                     justify-content: space-between;
                     align-items: center;
-                    margin-bottom: 20px;">
-                    <span style="font-size: 20px; font-weight: 500; font-style: italic;">{{member.name}} - {{member.ieee_id}}</span>
-                        <div style="font-size: 20px;">
-                            Points:
-                            <input type="number" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" {% if task.is_task_completed %} disabled {% endif %} placeholder="Task marks" style="width: 60px;">
+                    margin-bottom: 30px;
+                    gap: 20px;">
+                    <span style="font-size: 18px; font-weight: 600; color: #277da1;">{{member.name}} - {{member.ieee_id}}</span>
+                        <div>
+                            <span style="font-size: larger;">Points:</span>
+                            <input type="number" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" {% if task.is_task_completed %} disabled {% endif %} placeholder="Task marks" style="width: 70px; border-radius: .5rem;
+                            padding: 0 4px;
+                            border: none;
+                            background: #f8f8f8;
+                            font-size: 20px;
+                            margin-right: .75rem;">
                             <input type="hidden" id="member_id" name="member_id" value="{{member}}"></input>
                             <input type="hidden" id="task_id" name="task_id" value="{{task.pk}}"></input>
                             <button type="button" class="task-mark-save" {% if task.is_task_completed %} disabled {% endif %}>
@@ -978,24 +1024,26 @@
                                 <span class="edge"></span>
                                 <span class="front text">Save</span>
                             </button>
-                        </div>
+                        </div>                        
                     </div>
-                    <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
-                    <br>
-                    <br>
+                    <div style="margin-bottom: 2rem;">
+                        <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
+                    </div>
 
                     {% csrf_token %}
     
     
                         <!-- Drive link -->
                         {% if task_type.0.has_drive_link %}
-                        <label>Folder Drive Link</label>
+                        <label>Link</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                             <div>
                                 {% if task_type.2.drive_link %}
                                 <a href="{{task_type.2.drive_link}}" target="_blank">Click to redirect to the link</a>
                                 {% else %}
-                                Didn't upload yet!
+                                <div style="color: #d33838;">
+                                    Didn't upload yet!
+                                </div>
                                 {% endif %}
                             </div>
                             <!-- <input placeholder="Provide Drive Link" class="form-control" type="url" autocomplete="off"
@@ -1008,15 +1056,17 @@
     
                         {% if task_type.0.has_permission_paper %}
                         <!-- Paper permission -->
-                        <label class="description_label" style="margin-right: 20px;">Paper Permission</label>
+                        <label class="description_label" style="margin-right: 20px;">Completed?</label>
                         <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
                             <div>
                                 {% if task_type.1.permission_paper == "completed" %}
-                                Completed
+                                Yes
                                 {% elif task_type.1.permission_paper == "not_completed" %}
-                                Not Completed
+                                No
                                 {% else %}
-                                No response yet!
+                                <div style="color: #d33838;">
+                                    No response yet!
+                                </div>
                                 {% endif %}
                             </div>
                             {% comment %} <select id="paper_permission_dropdown" name="permission_paper" class="form-control" disabled>
@@ -1048,27 +1098,19 @@
                             
                             {% if task_type.0.has_file_upload %}
                             <!--file upload -->
-                            <label for="documents">File Upload</label>
-                            <div class="form-group"  style="background-color: #F8F8F8; padding: 5px; display: flex;">
-                                <input type="file" class="file-input file-input-bordered file-input-info" name = "document" multiple style="flex-grow: 1;" disabled>
-                            </div>
-                            {% if task_type.4|length > 0 %}
                             <p>Uploaded Files</p>
+                            <div class="file-upload-text" style="margin: 1rem 0 2rem; background-color: #f8f9fa; padding: 8px; color: #d33838;">No Files Uploaded Yet!</div>
+                            {% if task_type.4|length > 0 %}
                             {% for file in task_type.4 %}
-                            <div>
-                                <div class="row container-fluid bg-light mt-3" style="margin: auto;
+                                <div style="margin: 1rem auto 0;
                                 display: flex;
                                 justify-content: space-between;
                                 align-items: flex-start;
                                 padding: 8px;
-                                overflow-y: hidden;">
-                                    <ul style="margin: 0%; list-style: none; padding-left: 25px; width: 10px;">
-                                        <li>
-                                            <a href={{media_url}}{{file.document}} target="_blank"><div>{{forloop.counter}}. {{file.filename}}</div></a>
-                                        </li>
-                                    </ul>
+                                /* overflow-y: hidden; */
+                                background-color: #f8f9fa;">
+                                    <a href={{media_url}}{{file.document}} class="fileUploaded" target="_blank">{{forloop.counter}}. {{file.filename}}</a>
                                 </div>
-                            </div>
                             {% endfor %}
                             
                             <br>
@@ -1078,33 +1120,28 @@
                             {% endif %}                                                                
                             {% if task_type.0.has_media %}
                             <!-- Media -->
-                            <label for="images" >Media Upload</label>
-                            <div class="form-group" style="background-color: #F8F8F8; padding: 5px;">                        
-                                <input type="file" id="images" name="images" accept="image/*" style="display: block; width: 100%;" multiple disabled>
-                            </div>
+                             <div class="media-upload-txt-container">
+                                 <p>Media Upload</p>
+                                 <div style="margin: 1rem 0; background-color: #f8f9fa; padding: 8px; color: #d33838;">No Media Uploaded Yet!</div>
+                                </div>
                             {% if task_type.5|length > 0 %}
                             <p>Uploaded Images</p>
                                 {% for media in task_type.5 %}
-                                <div>
-                                    <div class="row container-fluid bg-light mt-3" style="margin: auto;
-                                    display: flex;
-                                    justify-content: space-between;
-                                    align-items: center;
-                                    overflow-y: hidden;">
-                                        <ol style="margin: 0%; list-style: none; padding: 0; width: 10px;">
-                                            <li>
-                                        <a href="#" class="btn btn-link btn-block" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
-                                            </li>
-                                        </ol>
+                                <div style="margin: 1rem auto 0;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                overflow-y: hidden;
+                                background-color: #f8f9fa;">
+                                        <a href="#" class="btn btn-link btn-block mediaUploaded" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
                                     </div>
-                                </div>
                                 {% endfor %}
                             <br>
                             {% endif %}
                             {% endif %}
                         
                         
-                            <label class="description_label" style="color: #d33838;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
+                            <label class="description_label" style="color: #3a86ff;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
                             <div class="ckeditor">
                                 <div>
                                     <input type="hidden" name="comments_member" value="{{member}}"></input>
@@ -1492,6 +1529,28 @@
                     var inputElement = document.getElementById('modal_image');
                     inputElement.src = image_path
                 }
+            </script>
+            <script>
+                const fileUploadTxt = document.querySelector(".file-upload-text");
+                let fileUploaded = document.querySelector(".fileUploaded");
+
+                if(fileUploaded){
+                    fileUploadTxt.style.display = "none";
+                }
+                else{
+                    fileUploadTxt.style.display = "block";
+                }
+
+                let mediaUploaded = document.querySelector(".mediaUploaded");
+                const mediaTxtContainer = document.querySelector(".media-upload-txt-container");
+
+                if(mediaUploaded){
+                    mediaTxtContainer.style.display = "none";
+                }
+                else{
+                    mediaTxtContainer.style.display = "block";
+                }
+
             </script>
   </body>
 </html>

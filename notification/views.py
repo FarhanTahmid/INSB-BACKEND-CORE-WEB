@@ -132,11 +132,11 @@ class ReceiveTokenAjax(View):
                 title = "IEEE NSU SB PORTAL"
                 body = f"You have {str(member_notifications_count)} new notifications!"
                 response = push_notification.send_push_notification(title,body,token)   
-                return JsonResponse('Message sent!',response)  
+                return JsonResponse({'message':'Message sent!','response':response})  
             else:
-                return JsonResponse('No message to send!',safe=False)
+                return JsonResponse({'message':'No message to send!'},safe=False)
         except:
-            return JsonResponse('Something went wrong!',safe=False)
+            return JsonResponse({'message':'Something went wrong!'},safe=False)
 
 @login_required
 @member_login_permission

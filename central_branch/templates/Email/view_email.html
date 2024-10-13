@@ -55,6 +55,7 @@
       justify-content: space-between;
       /* flex-basis: 20%; */
       align-items: flex-start;
+      width: 90%;
     }
 
     .heading_col2 {
@@ -502,7 +503,44 @@
 
     .ccBccFields h6 {
       margin-left: .5rem;
-      color: #888;
+      color: #333;
+    }
+
+    .ccBccFields{
+      position: relative;
+      z-index: 1;
+      height: 0;
+    }
+
+    .ccBccFieldsBox {
+      display: flex;
+      flex-direction: column;
+      transition: all ease-in-out .2s;
+      padding: .75rem;
+      height: auto;       
+      box-shadow: 2px 2px 2px #efefef;
+      background-color: white;
+      border-radius: 4px;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    .ccBccFieldsBox::-webkit-scrollbar{
+        width: 4px;
+        height: 4px;
+    }
+    .ccBccFieldsBox::-webkit-scrollbar-thumb{
+        background-color: #e7eeef;
+        transition: all .4s ease-in-out;
+        border-radius: 4px;
+    }
+    .ccBccFieldsBox::-webkit-scrollbar-thumb:hover{
+        background-color: rgb(169, 170, 170);
+    }
+
+    .ccBccFieldsBoxContent{
+      display: grid;
+      grid-template-columns: 40px auto;
     }
   </style>
   <!--Internal CSS End-->
@@ -582,9 +620,9 @@
       display: none;
     }
 
-    button[title="Insert Image"], [title="Upload Files"] {
+    {% comment %} button[title="Insert Image"], [title="Insert Files"] {
       display: none;
-    }
+    } {% endcomment %}
 
     
     .email_sent_confirm_modal {
@@ -681,9 +719,20 @@
 
                 <!-- CC and BCC Fields (Initially Hidden) -->
                 <div class="ccBccFields" style="opacity: 0;">
-                  <h6>To: {{threads.0.to}}</h6>
-                  <h6>CC: {{threads.0.cc}}</h6>
-                  <h6>BCC: {{threads.0.bcc}}</h6>
+                  <div class="ccBccFieldsBox">
+                    <div class="ccBccFieldsBoxContent">
+                      <h6 style="color: #888;">to:</h6>
+                      <h6 style="width: min-content; line-height: 1.3;">{{threads.0.to}}</h6>
+                    </div>  
+                    <div class="ccBccFieldsBoxContent">
+                      <h6 style="color: #888;">cc:</h6>
+                      <h6 style="width: min-content; line-height: 1.3;">{{threads.0.cc}}</h6>
+                    </div>
+                    <div class="ccBccFieldsBoxContent">
+                      <h6 style="color: #888;">bcc:</h6>
+                      <h6 style="width: min-content; line-height: 1.3;">{{threads.0.bcc}}</h6>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -732,7 +781,7 @@
             </div>
             <hr class="fwd-only1">
             <div class="custom-dropdown-container fwd-only2">
-              <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC" readonly
+              <input type="text" class="custom-dropdown-input" name="cc" placeholder="CC"
                 onclick="customToggleDropdown()">
               <div class="custom-dropdown-content" id="customDropdown">
                 <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -745,7 +794,7 @@
             <div class="custom-tag-container fwd-only3" id="customTagContainer"></div>
             <hr class="fwd-only4">
             <div class="alt-dropdown-container fwd-only5">
-              <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC" readonly
+              <input type="text" class="alt-dropdown-input" name="bcc" placeholder="BCC"
                 onclick="altToggleDropdown()">
               <div class="alt-dropdown-content" id="altDropdown">
                 <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
@@ -766,6 +815,7 @@
                 <label for="myfile"><i class="fa fa-paperclip" style="margin: 6px 9px;"></i></label>
                 <input type="file" id="myfile" name="myfile" hidden multiple>
               </div>
+              <input type="hidden" id="mail_type">
 
               <input type="button" class="send_button" onclick="EmailSent('{{threads.0.thread_id}}','{{threads.0.message_id}}')" value="Send">
             </div>
@@ -788,9 +838,20 @@
 
                 <!-- CC and BCC Fields (Initially Hidden) -->
                 <div class="ccBccFields" style="opacity: 0;">
-                  <h6>To: {{thread.to}}</h6>
-                  <h6>CC: {{thread.cc}}</h6>
-                  <h6>BCC: {{thread.bcc}}</h6>
+                  <div class="ccBccFieldsBox">
+                    <div class="ccBccFieldsBoxContent">
+                      <h6 style="color: #888;">to:</h6>
+                      <h6 style="width: min-content; line-height: 1.3;">{{threads.0.to}}</h6>
+                    </div>  
+                    <div class="ccBccFieldsBoxContent">
+                      <h6 style="color: #888;">cc:</h6>
+                      <h6 style="width: min-content; line-height: 1.3;">{{threads.0.cc}}</h6>
+                    </div>
+                    <div class="ccBccFieldsBoxContent">
+                      <h6 style="color: #888;">bcc:</h6>
+                      <h6 style="width: min-content; line-height: 1.3;">{{threads.0.bcc}}</h6>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -853,6 +914,7 @@
           document.querySelector('.fwd-only4').style.display = 'none';
           document.querySelector('.fwd-only5').style.display = 'none';
           document.querySelector('.fwd-only6').style.display = 'none';
+          document.getElementById('mail_type').value = 'reply';
         }else if (composeType === 'fwd' && (prev === 'none' || prev === 'reply')){
           x.style.display = 'block';
           prev = 'fwd';
@@ -862,6 +924,7 @@
           document.querySelector('.fwd-only4').style.display = 'block';
           document.querySelector('.fwd-only5').style.display = 'block';
           document.querySelector('.fwd-only6').style.display = 'flex';
+          document.getElementById('mail_type').value = 'fwd';
         }else{
           x.style.display = 'none';
           prev = 'none';
@@ -958,15 +1021,38 @@
       const tagContainer = document.getElementById('tagContainer');
       const tagInput = document.getElementById('tagInput');
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
           event.preventDefault(); // Prevent the space/comma from being typed
-          addTag(tagInput.value.trim());
+          processInput(tagInput.value);
+          //addTag(tagInput.value.trim());
           tagInput.value = ''; // Clear the input field
         }
       });
 
-      function addTag(tagText) {
+      // Handle paste event for multiple values
+      tagInput.addEventListener('paste', function (event) {
+          event.preventDefault(); // Stop default paste behavior
+          const pasteText = (event.clipboardData || window.clipboardData).getData('text');
+          processInput(pasteText.trim());
+          tagInput.value = ''; // Clear the input field after paste
+        });
+
+        function processInput(input) {
+        const items = input.split(/[\s,]+/); // Split by space or comma
+        items.forEach(item => {
+          if (emailRegex.test(item.trim())) {
+            addTag(item.trim(), true);
+          }
+          else {
+            addTag(item.trim(), false);
+          }
+        });
+      }
+
+      function addTag(tagText, isCorrect) {
         if (tagText === '') return;
 
         const tag = document.createElement('div');
@@ -974,6 +1060,11 @@
 
         const span = document.createElement('span');
         span.textContent = tagText;
+
+        if(!isCorrect) {
+          tag.style.borderColor = 'red';
+          span.style.color = 'red';
+        }
 
         const removeButton = document.createElement('span');
         removeButton.className = 'remove-tag';
@@ -1028,8 +1119,10 @@
       // Toggle opacity and visibility
       if (ccBccFields.style.opacity === "0") {
         ccBccFields.style.opacity = "1";
+        // ccBccFields.style.height = ccBccFields.scrollHeight + 'px';
       } else {
         ccBccFields.style.opacity = "0";
+        // ccBccFields.style.height = "0px";
       }
     }
 
@@ -1041,7 +1134,6 @@
       shadowRoot.innerHTML = `
       {{threads.0.body|safe}}
       `;
-      console.log("POK");
      
       {% for thread in threads|slice:"1:" %}
       const shadowHost{{forloop.counter}} = document.getElementById('shadow-host-{{forloop.counter}}');
@@ -1057,6 +1149,8 @@
 
         // Get the modal
         var sentModal = document.getElementById("sentModal");
+        const mail_type = document.getElementById('mail_type').value;
+        console.log(mail_type);
         sentModal.style.transform = 'translateY(0px)';
         sentModal.style.zIndex = '103100';
         sentModal.style.opacity = '1';
@@ -1072,7 +1166,6 @@
         formData.append('to[]', getAllSelectedTags());
         formData.append('body', body);
         formData.append('csrfmiddlewaretoken', csrf);
-        formData.append('thread_id', thread_id);
         formData.append('message_id',message_id);
 
         // Append each file from the attachments input
@@ -1081,25 +1174,53 @@
           formData.append('attachments', attachments.files[i]);
         }
 
-        $.ajax({
-          url: "{% url 'central_branch:send_reply_mail_request' %}",
-          type: "POST",
-          data: formData,
-          processData: false,  // Important!
-          contentType: false,  // Importfant!
-          headers: {
-            "X-CSRFToken": csrf
-          },
-          success: function (response) {
-            // Handle the response
-            console.log(response);
-            mssg.innerHTML = response['message'];
-            window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          }
-        });
+        if(mail_type == 'reply') {
+          formData.append('thread_id', thread_id);
+
+          $.ajax({
+            url: "{% url 'central_branch:send_reply_mail_request' %}",
+            type: "POST",
+            data: formData,
+            processData: false,  // Important!
+            contentType: false,  // Importfant!
+            headers: {
+              "X-CSRFToken": csrf
+            },
+            success: function (response) {
+              // Handle the response
+              console.log(response);
+              mssg.innerHTML = response['message'];
+              window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
+            },
+            error: function (error) {
+              console.error("Error:", error);
+            }
+          });
+        }
+        else if (mail_type == 'fwd') {
+          $.ajax({
+            url: "{% url 'central_branch:send_forward_mail_request' %}",
+            type: "POST",
+            data: formData,
+            processData: false,  // Important!
+            contentType: false,  // Importfant!
+            headers: {
+              "X-CSRFToken": csrf
+            },
+            success: function (response) {
+              // Handle the response
+              console.log(response);
+              mssg.innerHTML = response['message'];
+              //window.location.replace("{% url 'central_branch:view_mail' threads.0.thread_id %}");
+            },
+            error: function (error) {
+              console.error("Error:", error);
+            }
+          });
+        }
+        else {
+          mssg.innerHTML = "Wrong email type!";
+        }
 
         // Get the <span> element that closes the modal
         var closeBtn = document.getElementsByClassName("modalClosebtn")[0];

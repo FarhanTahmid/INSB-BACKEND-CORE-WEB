@@ -49,7 +49,19 @@
         top: 88px;
         background: white;
         padding-top: 16px;
-        z-index: 9999;
+        z-index: 1000;
+    }
+    .publish_google_calendar{
+        margin: 0;
+        text-align: center;
+        padding: .25rem;
+        cursor: pointer;
+        width: 320px;
+        color: #f0f0f0;
+        background: #2a9d8f;
+        border-radius: .25rem;
+        border: 1px solid #2a9d8f;
+        transition: all .3s ease-in-out;
     }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -78,27 +90,20 @@
                     <a href="{% url 'chapters_and_affinity_group:event_control_homepage' sc_ag_info.primary %}" class="btn btn-outline b-danger text-danger mb-2">Cancel</a>
                     {% endif %}
                 </div>
-                <div class="publish-switch">
-                    <label class="form-control-label slider-checkbox">Publish Event:</label>
-                    <span>                                            
-                        <label class="ui-switch m-t-xs m-r">
-                            <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin: .75rem 0">
+                    <div class="publish-switch">
+                        <label class="form-control-label slider-checkbox">Publish Event:</label>
+                        <span>                                            
+                            <label class="ui-switch m-t-xs m-r">
+                                <input name="publish_event" type="checkbox" {% if is_event_published %} checked {% endif %}>
                                 <i></i>
-                        </label>                
-                    </span>
-                </div>
-                <div class="publish-switch">
-                    {% if is_branch %}
-                    <a href="{% url 'central_branch:google_calendar' event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 10px; background-color: #007377; border: 1px solid black; margin: 10px 0; color: #ddd;">
-                    {% else %}
-                    <a href="{% url 'chapters_and_affinity_group:google_calendar' primary event_id %}" class="m-t-xs m-r" style="cursor: pointer; font-size: 16px; padding: 10px; background-color: #007377; border: 1px solid black; margin: 10px 0; color: #ddd;">
-                    {% endif %}
-                        Click to publish the event to Google Calendar
-                    </a>
-                </div>
-                <div class="form-group">
-                    <label>Event Name: <span style="color:red">*<span></label> 
-                    <input
+                            </label>                
+                        </span>
+                    </div>
+                    </div>
+                        <div class="form-group">
+                            <label>Event Name: <span style="color:red">*<span></label> 
+                                <input
                         placeholder="Event Name"
                         class="form-control"
                         type="text"
@@ -158,14 +163,15 @@
                 {% endif %}
                 <br>
                 <div class="form-group">
-                    <label for="exampleInputPassword3">Add a (tentative) start date for the Event: </label>
-                    <input type="datetime-local" id="date_time" name="start_date_time" required value = "{{event_details.start_date|date:"Y-m-d\TH:i" }}">
+                    <label for="startDateTime">Add a (tentative) start date for the Event: </label>
+                    <input type="datetime-local" id="startDateTime" name="start_date_time" required value = "{{event_details.start_date|date:"Y-m-d\TH:i" }}">
                 </div>
                 <br>
                 <div class="form-group">
-                    <label for="exampleInputPassword3">Add a end date for the Event (if any): </label>
-                    <input type="datetime-local" id="date_time" name="end_date_time" value = "{{event_details.end_date|date:"Y-m-d\TH:i" }}">
+                    <label for="endDateTime">Add a end date for the Event (if any): </label>
+                    <input type="datetime-local" id="endDateTime" name="end_date_time" value = "{{event_details.end_date|date:"Y-m-d\TH:i" }}">
                 </div>
+                <div id="error-message" style="color: red; display: none;"></div><br>
                 <br>
                 <div class="form-group">
                     <label>Inter Branch Collaboration With: (Press CTRL to select multiple options) </label>
@@ -384,6 +390,28 @@
             checkbox.change();
         });
     </script>
-    
+    <script>
+        const form = document.getElementById('myForm');
+        const startDateTimeInput = document.getElementById('startDateTime');
+        const endDateTimeInput = document.getElementById('endDateTime');
+        const errorMessage = document.getElementById('error-message');
+
+        form.addEventListener('submit', function(event) {
+            const startDateTime = new Date(startDateTimeInput.value);
+            const endDateTime = new Date(endDateTimeInput.value);
+
+            // Reset error message
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+
+            if (startDateTime > endDateTime) {
+                // Prevent form submission
+                event.preventDefault();
+                // Show error message
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Start date/time cannot be after the end date/time.';
+            }
+        });
+    </script>
     
 {% endblock event_details_form %}

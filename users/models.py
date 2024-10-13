@@ -23,6 +23,8 @@ class Members(models.Model):
     email_ieee=models.EmailField(null=True,blank=True)
     email_personal=models.EmailField(null=True,blank=True)
     email_nsu=models.EmailField(null=True,blank=True)
+    school=models.CharField(null=True,blank=True,max_length=50,default="SEPS")
+    department = models.CharField(null=True,blank=True,max_length=50,default="ECE")
     major=models.CharField(null=True,blank=True,max_length=50)
     contact_no=models.CharField(null=True,blank=True,max_length=16)
     home_address=models.CharField(null=True,blank=True,max_length=200)

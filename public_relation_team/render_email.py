@@ -31,7 +31,7 @@ class PRT_Email_System:
         
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
-        substrings = single_emails.split(',')
+        substrings = single_emails[0].split(',')
         
         for email in substrings:
             # Trim leading and trailing whitespaces
@@ -41,6 +41,10 @@ class PRT_Email_System:
         to_email_list = to_email_list[0].split(',')
         cc_email_list = cc_email_list[0].split(',')
         bcc_email_list = bcc_email_list[0].split(',')
+
+        # print(to_email_list)
+        # print(cc_email_list)
+        # print(bcc_email_list)
         
         # Get the emails of to_email_list 
         to_email_final_list=[]
@@ -172,6 +176,9 @@ class PRT_Email_System:
                                 else:
                                     if ex.ex_member.email and ex.ex_member.email != 'None':
                                         cc_email_final_list.append(ex.ex_member.email)
+                else:
+                    if email != 'None':
+                        cc_email_final_list.append(email)
         
         # get all bcc_email_list
         bcc_email_final_list=[]
@@ -233,6 +240,9 @@ class PRT_Email_System:
                                 else:
                                     if ex.ex_member.email and ex.ex_member.email != 'None':
                                         bcc_email_final_list.append(ex.ex_member.email)
+                else:
+                    if email != 'None':
+                        bcc_email_final_list.append(email)
     
         '''Checking if same emails exists in 'to' and 'cc'. If so they will be removed from
            the 'to' and kept in 'cc' '''
@@ -334,8 +344,11 @@ class PRT_Email_System:
 
 
                     message = MIMEText(mail_body, 'html')
+                    # print(to_email_list_final)
+                    # print(cc_email_list_final)
+                    # print(bcc_email_list_final)
 
-                    message["From"] = "ieeensusb.portal@gmail.com"
+                    message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                     message["To"] = ','.join(to_email_list_final)
                     message["Cc"] = ','.join(cc_email_list_final)
                     message["Bcc"] = ','.join(bcc_email_list_final)
@@ -378,7 +391,7 @@ class PRT_Email_System:
             
                             message=MIMEMultipart()
 
-                            message["From"] = "ieeensusb.portal@gmail.com"
+                            message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
                             message["To"] = ','.join(to_email_list_final)
                             message["Cc"] = ','.join(cc_email_list_final)
                             message["Bcc"] = ','.join(bcc_email_list_final)
@@ -486,6 +499,7 @@ class PRT_Email_System:
         uuid = str(uuid)[:6]
         unique_task_name = f"{uuid}_{scheduled_email_date_time.timestamp()}"
         
+        username = json.dumps(request.user.username)
         unique_task_name_json = json.dumps(unique_task_name)
 
         Email_Draft.objects.create(email_unique_id=unique_task_name,subject=subject,drafts=drafts,status='Scheduled')
@@ -496,7 +510,7 @@ class PRT_Email_System:
                             clocked = ClockedSchedule.objects.get_or_create(clocked_time=scheduled_email_date_time)[0],
                             name=unique_task_name ,
                             task = "public_relation_team.tasks.send_scheduled_email",
-                            args =json.dumps([unique_task_name_json]),
+                            args =json.dumps([username, unique_task_name_json]),
                             one_off = True,
                             enabled = True,
                     )
@@ -520,13 +534,13 @@ class PRT_Email_System:
 
             message=MIMEMultipart()
 
-            message["From"] = "ieeensusb.portal@gmail.com"
+            message["From"] = "IEEE NSU SB Portal <ieeensusb.portal@gmail.com>"
             message["To"] = ','.join(to_email_list_final)
             message["Cc"] = ','.join(cc_email_list_final)
             message["Bcc"] = ','.join(bcc_email_list_final)
             message["Subject"] = subject
 
-            print(message['To'])
+            # print(message['To'])
 
             # Attach the main message body
             message.attach(MIMEText(mail_body, 'html'))
@@ -560,7 +574,7 @@ class PRT_Email_System:
                 .execute()
             )
 
-            print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
+            # print(f'Draft id: {draft["id"]}\nDraft message: {draft["message"]}')
             return draft['id']
         # except:
         #     print('Could not do it :)')

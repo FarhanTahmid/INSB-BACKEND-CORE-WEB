@@ -71,4 +71,6 @@ urlpatterns = [
 
     #for countdown
     path('count_down/',views.update_count_down,name="count_down"),
+
+    path('dev/privacy_policy/',views.privacy_policy,name='privacy_policy')
 ]

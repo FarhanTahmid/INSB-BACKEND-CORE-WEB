@@ -27,6 +27,7 @@ from graphics_team.renderData import GraphicsTeam
 from main_website.renderData import HomepageItems
 from media_team.models import Media_Images, Media_Link
 from media_team.renderData import MediaTeam
+from public_relation_team.tasks import send_scheduled_email
 from .models import Email_Draft
 from public_relation_team.renderData import PRT_Data
 from public_relation_team.render_email import PRT_Email_System
@@ -71,7 +72,7 @@ from django.views import View
 from users.renderData import member_login_permission
 from task_assignation.models import *
 import re
-from email.utils import parsedate_to_datetime
+from email.utils import getaddresses, parseaddr, parsedate_to_datetime
 
 # Create your views here.
 logger=logging.getLogger(__name__)
@@ -3810,6 +3811,11 @@ def member_details(request,ieee_id):
         user_data=current_user.getUserData() #getting user data as dictionary file
         # load all skill types
         all_skills=users.renderData.load_all_skill_types(request)
+        # get member skills
+        try:
+            skill_of_member=member_skills.skills.all()
+        except AttributeError:
+            skill_of_member=None
         
         context={
             'is_branch':True,
@@ -3822,7 +3828,8 @@ def member_details(request,ieee_id):
             'media_url':settings.MEDIA_URL,
             'active_status':active_status,
             'user_data':user_data,
-            'all_skills':all_skills
+            'all_skills':all_skills,
+            'skill_of_member':skill_of_member,
         }
         if request.method=="POST":
             if request.POST.get('save_edit'):
@@ -3836,11 +3843,17 @@ def member_details(request,ieee_id):
                 email_nsu=request.POST['email_nsu']
                 facebook_url=request.POST['facebook_url']
                 home_address=request.POST['home_address']
+                school = request.POST['school_label']
+                department= request.POST['department_label']
                 major=request.POST['major_label']
                 recruitment_session_value=request.POST['recruitment']
                 renewal_session_value=request.POST['renewal']
                 profile_picture = request.FILES.get('update_picture')
-                blood_group = request.POST['blood_group']
+                skill_sets=request.POST.getlist('skill_sets')
+                try:
+                    blood_group = request.POST['blood_group']
+                except:
+                    blood_group = "None"
 
                 if date_of_birth == '':
                     date_of_birth = None
@@ -3869,6 +3882,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school = school,
+                                                                department=department,
                                                                 major=major,
                                                                 session=None,
                                                                 last_renewal_session=None,
@@ -3879,6 +3894,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                            
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -3894,6 +3922,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
                                                                 last_renewal_session=None,
@@ -3904,6 +3934,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                        
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -3921,6 +3964,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school = school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=None,
                                                                 last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
@@ -3931,6 +3976,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                        
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                            
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -3946,6 +4004,8 @@ def member_details(request,ieee_id):
                                                                 email_nsu=email_nsu,
                                                                 facebook_url=facebook_url,
                                                                 home_address=home_address,
+                                                                school=school,
+                                                                department = department,
                                                                 major=major,
                                                                 session=recruitment_session.objects.get(id=recruitment_session_value),
                                                                 last_renewal_session=Renewal_Sessions.objects.get(id=renewal_session_value),
@@ -3956,6 +4016,19 @@ def member_details(request,ieee_id):
                             pass
                         else:
                             Branch.update_profile_picture(profile_picture,ieee_id)
+                        
+                        if MemberSkillSets.objects.filter(member=ieee_id).exists():
+                            member_skills = MemberSkillSets.objects.get(member=ieee_id)
+                            member_skills.skills.clear()
+                            if skill_sets[0] != 'null':
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+                        else:
+                            if skill_sets[0] != 'null':
+                                member_skills = MemberSkillSets.objects.create(member=Members.objects.get(ieee_id=ieee_id))
+                                member_skills.skills.add(*skill_sets)
+                                member_skills.save()
+
                         messages.info(request,"Member Info Was Updated. If you want to update the Members IEEE ID please contact the System Administrators")
                         return redirect('central_branch:member_details',ieee_id)
                     except Members.DoesNotExist:
@@ -4564,9 +4637,16 @@ def create_task(request,team_primary = None):
                 team_select = None
                 member_select = None
                 task_types_per_member = {}
+                coordinators_per_team = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
+                    print(team_select)
+                    for team_id in team_select:
+                        coordinators_name = request.POST.getlist(team_id+'_coordinators[]')
+                        coordinators_per_team[team_id] = coordinators_name
+                    print("printing team and coordinators")
+                    print(coordinators_per_team)
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
                     for member_id in member_select:
@@ -4574,7 +4654,7 @@ def create_task(request,team_primary = None):
                         task_types_per_member[member_id] = member_name
             
                 task_of = 1 #Setting task_of as 1 for Branch primary
-                if(Task_Assignation.create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member)):
+                if(Task_Assignation.create_new_task(request, current_user, task_of, team_primary, title, description, task_category, deadline, task_type, team_select, member_select,task_types_per_member,coordinators_per_team)):
                     messages.success(request,"Task Created successfully!")
                 else:
                     messages.warning(request,"Something went wrong while creating the task!")
@@ -4594,6 +4674,20 @@ def create_task(request,team_primary = None):
                 teams = PortData.get_teams_of_sc_ag_with_id(request=request,sc_ag_primary=1) #loading all the teams of Branch
                 all_members = Task_Assignation.load_insb_members_for_task_assignation(request)
 
+                #fetching all team and the coordinators of the team as a dictionary
+                teams_and_coordinators = {}
+                current_panel = Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
+                co_ordinator_position = Roles_and_Position.objects.filter(role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1),is_co_ordinator = True,is_officer=True)
+                for team in teams:
+                    team_coordinator_members = []
+                    for position in co_ordinator_position:
+                        members = Panel_Members.objects.filter(team=team,position=position,tenure=current_panel)
+                        team_coordinator_members+=members
+                    teams_and_coordinators[team] = team_coordinator_members
+                
+                print(teams_and_coordinators)
+    
+
                 context = {
                     'is_new_task':True, #Task is being created. Use it to disable some ui in the template
                     'task_categories':task_categories,
@@ -4603,6 +4697,7 @@ def create_task(request,team_primary = None):
                     'user_data':user_data,
                     'create_individual_task_access':create_individual_task_access,
                     'create_team_task_access':create_team_task_access,
+                    'teams_and_coordinators':teams_and_coordinators,
 
                     'app_name':app_name,
                 }
@@ -5011,7 +5106,7 @@ def upload_task(request, task_id,team_primary = None):
 
 @login_required
 @member_login_permission
-def add_task(request, task_id,team_primary = None):
+def add_task(request, task_id,team_primary = None,by_coordinators = 0):
 
     try:
 
@@ -5046,7 +5141,7 @@ def add_task(request, task_id,team_primary = None):
                     return redirect('central_branch:add_task',task_id)
             print(task_types_per_member)
 
-            if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team_primary)):
+            if(Task_Assignation.forward_task(request,task_id,task_types_per_member,team_primary,by_coordinators)):
 
                 #If it is a team task and no members were selected then show message but save other params
                 if(not member_select):
@@ -5057,14 +5152,14 @@ def add_task(request, task_id,team_primary = None):
                 if team_primary == None or team_primary == "1":
                     return redirect('central_branch:add_task',task_id)
                 else:
-                    return redirect(f'{app_name}:add_task_team',task_id,team_primary)
+                    return redirect(f'{app_name}:add_task_team',task_id,team_primary,by_coordinators)
             else:
                 messages.warning(request,"Error occured while forwarding task")
 
                 if team_primary == None or team_primary == "1":
                     return redirect('central_branch:add_task',task_id)
                 else:
-                    return redirect(f'{app_name}:add_task_team',task_id,team_primary)
+                    return redirect(f'{app_name}:add_task_team',task_id,team_primary,by_coordinators)
 
         
         
@@ -5135,6 +5230,7 @@ def task_edit(request,task_id,team_primary = None):
         is_task_started_by_any_incharge = False
         
         print(is_task_of_teams_individuals)
+        print(is_task_forwarded_to_volunteers)
         print("checking")
         #app name for proper redirecting
         app_name = "central_branch"
@@ -5243,7 +5339,7 @@ def task_edit(request,task_id,team_primary = None):
         task_logs = Task_Log.objects.get(task_number = task)
 
         #checking to see if points to be deducted
-        late = Task_Assignation.deduct_points_for_members(task)
+        late = Task_Assignation.deduct_points_for_members(request,task)
 
         is_member_view = logged_in_user in task.members.all()
         #If it is a task member view or a regular view then override the access
@@ -5257,7 +5353,6 @@ def task_edit(request,task_id,team_primary = None):
         print(create_individual_task_access)
         print(create_team_task_access)
 
-   
             
         if team_primary == None or team_primary == "1":
 
@@ -5266,7 +5361,17 @@ def task_edit(request,task_id,team_primary = None):
             all_members = Task_Assignation.load_insb_members_with_upload_types_for_task_assignation(request, task)
            
             #this is being done to ensure that he can click start button only if it is his task
-       
+
+            #fetching all team and the coordinators of the team as a dictionary
+            teams_and_coordinators = {}
+            current_panel = Panels.objects.get(current=True,panel_of=Chapters_Society_and_Affinity_Groups.objects.get(primary=1))
+            co_ordinator_position = Roles_and_Position.objects.filter(role_of = Chapters_Society_and_Affinity_Groups.objects.get(primary=1),is_co_ordinator = True,is_officer=True)
+            for team in teams:
+                team_coordinator_members = []
+                for position in co_ordinator_position:
+                    members = Panel_Members.objects.filter(team=team,position=position,tenure=current_panel)
+                    team_coordinator_members+=members
+                teams_and_coordinators[team] = team_coordinator_members
 
             context = {
                 'task':task,
@@ -5283,6 +5388,7 @@ def task_edit(request,task_id,team_primary = None):
                 'create_team_task_access':create_team_task_access,
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
+                'teams_and_coordinators': teams_and_coordinators,
 
                 'app_name':app_name,
                 'is_coordinator':is_coordinator,
@@ -6160,7 +6266,6 @@ class DeleteEmailAjax(View):
         try:
             message_ids = request.POST.get('message_id')
             message_ids = message_ids.split(',')
-            print(message_ids)
             
             global service
             if not service:
@@ -6170,12 +6275,21 @@ class DeleteEmailAjax(View):
                     return None
                 
                 service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            
+            # Create a batch request
+            batch = BatchHttpRequest()
 
             for message_id in message_ids: 
-                service.users().threads().trash(
+                batch.add(
+                    service.users().threads().trash(
                     userId='me',
                     id=message_id,
-                ).execute()
+                    )
+                )
+
+            batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
+
+            batch.execute()
 
             return JsonResponse({'message':'Deleted Successfully!'})   
                 
@@ -6216,8 +6330,13 @@ def get_attachment(request, message_id, attachment_id):
     # Decode the attachment data
     attachment_data = base64.urlsafe_b64decode(attachment['data'].encode('utf-8'))
 
+    # Get the MIME type based on the file extension
+    mime_type, _ = mimetypes.guess_type(filename)
+    if not mime_type:
+        mime_type = 'application/octet-stream'  # Fallback for unknown types
+
     # Create the response
-    response = HttpResponse(attachment_data)
+    response = HttpResponse(attachment_data, content_type=mime_type)
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
@@ -6230,7 +6349,6 @@ class UpdateScheduledEmailOptionsAjax(View):
                 unique_id = request.POST.get('id')
                 new_datetime = request.POST.get('new_schedule_datetime')
                 status = request.POST.get('status')
-                print(status)
 
                 task = PeriodicTask.objects.get(name=unique_id)
                 if new_datetime:
@@ -6263,6 +6381,11 @@ class UpdateScheduledEmailOptionsAjax(View):
                         task.save()
                         draft.delete()
                         message = 'Email schedule is cancelled'
+                    elif status == 'send_now':
+                        send_scheduled_email(json.dumps(request.user.username), json.dumps(unique_id))
+                        task.enabled = False
+                        task.save()
+                        message = "Email sent successfully"
 
             return JsonResponse({'message':message})
         except Exception as e:
@@ -6280,7 +6403,7 @@ class SendReplyMailAjax(View):
                 original_message_id = request.POST.get('message_id')
                 thread_id = request.POST.get('thread_id')
                 email_attachment = None
-                if request.POST.get('attachments'):
+                if request.FILES.get('attachments'):
                     email_attachment=request.FILES.getlist('attachments')
                 to_email_additional = ''
                 if request.POST.get('to[]'):
@@ -6309,7 +6432,6 @@ class SendReplyMailAjax(View):
 
                     message["From"] = "ieeensusb.portal@gmail.com"
                     message['To'] = headers.get('From') + ',' + to_email_additional
-                    print(message['To'])
                     message['From'] = headers.get('To')  # Original recipient becomes the sender
                     message['Cc'] = headers.get('Cc')
                     subject = headers.get('Subject', '(No Subject)')
@@ -6356,6 +6478,169 @@ class SendReplyMailAjax(View):
 
                 send_message = service.users().messages().send(userId='me', body=create_message).execute()
                 msg = 'Email sent successfully!'
+
+            return JsonResponse({'message':msg})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
+        
+class SendForwardMailAjax(View):
+    def post(self, request):
+        msg = 'test'
+
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                body = request.POST.get('body')
+                original_message_id = request.POST.get('message_id')
+                email_attachment = None
+                if request.FILES.get('attachments'):
+                    email_attachment=request.FILES.getlist('attachments')
+                to_email_additional = ''
+                if request.POST.get('to[]'):
+                    to_email_additional=request.POST.get('to[]')
+                
+                print(to_email_additional)
+
+                global service
+                if not service:
+                    credentials = GmailHandler.get_credentials(request)
+                    if not credentials:
+                        print("NOT OK")
+                        return None
+                    
+                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+
+                # Get the original email
+                original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
+
+                # Extract original details
+                original_payload = original_message['payload']
+                headers = {h['name']: h['value'] for h in original_payload['headers']}
+
+                message=MIMEMultipart()
+
+                message["From"] = "ieeensusb.portal@gmail.com"
+                message['To'] = to_email_additional
+                # message['Cc'] = headers.get('Cc')
+                subject = headers.get('Subject', '(No Subject)')
+                if subject[:4] == 'Fwd:':
+                    message['Subject'] = subject
+                else:
+                    message['Subject'] = 'Fwd: ' + subject
+
+                original_message_body = ''
+                original_message_body_plain_text = ''
+                files = []
+                # Check if the message has a 'payload' and 'parts'
+                if 'parts' in original_message['payload']:
+                    def extract_parts(part):
+                        """ Recursively extract parts from a message """
+                        parts = []
+                        mime_type = part['mimeType']
+                        print(mime_type)
+                        
+                        if mime_type == 'text/plain' or mime_type == 'text/html':
+                            data = part['body'].get('data')
+                            if data:
+                                decoded_data = base64.urlsafe_b64decode(data).decode('utf-8')
+                                parts.append({'mimeType': mime_type, 'content': decoded_data})
+                        elif mime_type == 'multipart/alternative' or mime_type == 'multipart/related' or mime_type == 'multipart/report' or mime_type == 'multipart/mixed':
+                            for subpart in part.get('parts', []):
+                                parts.extend(extract_parts(subpart))
+                                
+                        # # Check if the part is an attachment
+                        # elif part.get('filename'):
+                        #     attachment_id = part['body'].get('attachmentId')
+                        #     if attachment_id:
+
+                        #         # Add the attachment URL to parts
+                        #         files.append({
+                        #             'msg_id':original_message['id'],
+                        #             'mimeType': mime_type,
+                        #             'filename': part.get('filename'),
+                        #             'attachment_id': attachment_id
+                        #         })
+
+                        return parts
+                    
+                
+                    #Start extraction from the root message part
+                    email_parts = extract_parts(original_message['payload'])
+                    
+                    # Separate HTML and plain text
+                    content_parts = {part['mimeType']: part.get('content') for part in email_parts}
+                    original_message_body = content_parts.get('text/html')
+                    original_message_body_plain_text = content_parts.get('text/plain')
+                    # # Remove previous replies (common patterns to strip off replies)
+                    # body = re.split(r"(On\s.*wrote:)", body)[0]
+
+                    # # You can also strip off quoted text that starts with '>'
+                    # body = re.sub(r'(>.*\n)', '', body)
+
+                    if original_message_body == None:
+                        # # Remove previous replies (common patterns to strip off replies)
+                        # plain_text_body = re.split(r"(On\s.*wrote:)", plain_text_body)[0]
+
+                        # # You can also strip off quoted text that starts with '>'
+                        # plain_text_body = re.sub(r'(>.*\n)', '', plain_text_body)
+                        original_message_body = original_message_body_plain_text
+                    
+                else:
+                    # If there are no 'parts', it means the message is simple and not multipart
+                    if original_message['payload']['mimeType'] == 'text/plain':
+                        original_message_body = base64.urlsafe_b64decode(original_message['payload']['body']['data']).decode('utf-8')
+                    elif original_message['payload']['mimeType'] == 'text/html':
+                        original_message_body = base64.urlsafe_b64decode(original_message['payload']['body']['data']).decode('utf-8')
+                            
+                
+                # Assuming headers is a dictionary that contains email headers
+                to_header = headers.get('To')
+                from_header = headers.get('From')
+                cc_header = headers.get('Cc')
+
+                # Use getaddresses to parse multiple recipients in the 'To' field
+                to_addresses = getaddresses([to_header])
+                from_name, from_email = parseaddr(from_header)
+
+                # Format 'To' field with all recipients
+                to = ', '.join([f'{name} &lt;<a href="mailto:{email}">{email}</a>&gt;' for name, email in to_addresses])
+
+                # Handle the 'Cc' field (if it exists)
+                cc = ''
+                if cc_header:
+                    cc_addresses = getaddresses([cc_header])
+                    cc = ', '.join([f'{name} &lt;<a href="mailto:{email}">{email}</a>&gt;' for name, email in cc_addresses])
+                    cc = f'<br>Cc: <span>{cc}</span>'
+                
+                # Attach the main message body along with the forwarded body
+                message.attach(MIMEText(f'''{body}
+<br>---------- Forwarded message ---------
+<br>From: <span>{from_name} &lt;<a href="mailto:{from_email}">{from_email}</a>&gt;</span>
+<br>To: <span>{to}</span>
+{cc if cc else ''}
+<br><br>
+{original_message_body}''', 'html'))
+
+                if email_attachment:
+                    for attachment in email_attachment:
+                        content_file = ContentFile(attachment.read())
+                        content_file.name = attachment.name
+                        part = MIMEBase('application', 'octet-stream')
+                        part.set_payload(content_file.read())
+                        encoders.encode_base64(part)
+                        part.add_header(
+                            'Content-Disposition',
+                            f'attachment; filename={content_file.name}',
+                        )
+                        message.attach(part)
+
+                # encoded message
+                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+                
+                create_message = {"raw": encoded_message}
+
+                send_message = service.users().messages().send(userId='me', body=create_message).execute()
+                msg = 'Email forwarded successfully!'
 
             return JsonResponse({'message':msg})
         except Exception as e:
