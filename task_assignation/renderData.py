@@ -17,6 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from notification.notifications import NotificationHandler
 from notification.models import *
+from central_branch.view_access import Branch_View_Access
 
 class Task_Assignation:
     
@@ -1494,7 +1495,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            # email.send()
             task_log_message = f'Task Name: {task.title}, task due email sent to designated member {member.name}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1544,7 +1545,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            # email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
@@ -1635,7 +1636,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            email.send()
+            # email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.name}({logged_in_user.ieee_id}) and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1701,7 +1702,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            # email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1916,7 +1917,7 @@ This is an automated message. Do not reply
         site_domain = request.META['HTTP_HOST']
         all_ieed_id = []
         for mem in all_task_members:
-            all_ieed_id.append(mem.ieee_id)
+            all_ieed_id.append(str(mem.ieee_id))
 
         if team_primary == None or team_primary == "1":
             #getting all teams
@@ -1927,19 +1928,34 @@ This is an automated message. Do not reply
 
             if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
                 return (False,"Task already forwarded to Volunteers!")
-
+            
+            #updating incharges if task not forwarded by incharge
             if team_forward.task_forwarded_to_incharge and not team_forward.task_forwarded_to_core_or_team_volunteers:
                 new_member_added = []
                 for people in all_task_members:
 
-                    if people.team == team:
-                        if people.ieee_id not in member_select:
+                    if people.team == team and people.position.is_officer and not people.position.is_co_ordinator:
+                        if str(people.ieee_id) not in member_select:
                             task.members.remove(people)
                             task.save()
                             task_log_message = f'Task Name: {task.title},{people.name}({people.ieee_id}), of {team} removed.'
 
+                            Task_Drive_Link.objects.filter(task=task,uploaded_by=str(people.ieee_id)).delete()
+                            Task_Content.objects.filter(task=task,uploaded_by=str(people.ieee_id)).delete()
+                            Permission_Paper.objects.filter(task=task,uploaded_by=str(people.ieee_id)).delete()
+
+                            files = Task_Document.objects.filter(task=task,uploaded_by=str(people.ieee_id))
+                            for file in files:
+                                Task_Assignation.delete_task_document(file)                
+                            
+                            media_files = Task_Media.objects.filter(task=task,uploaded_by=str(people.ieee_id))
+                            for media_file in media_files:
+                                Task_Assignation.delete_task_media(media_file)
+                            Member_Task_Upload_Types.objects.filter(task=task,task_member=people).delete()
+                            Member_Task_Point.objects.filter(task = task,member=str(people.ieee_id)).delete()
                             # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
                             # upload_types.delete()
+                            
 
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1985,9 +2001,12 @@ This is an automated message. Do not reply
 
                     if people.team == team:
                         if people.position.is_co_ordinator and people.position.is_officer:
-                            task.members.remove(people)
-                            task.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} removed. Marks obtained - 25% of task'
+                            #task.members.remove(people)
+                            #task.save()
+                            task_foward = Member_Task_Upload_Types.objects.get(task=task,task_member=people)
+                            task_foward.is_task_started_by_member = True
+                            task_foward.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} received reduced points. Points received 25% of task'
                             #points deduction
                             points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
                             points.completion_points = task.task_category.points * (25/100)
@@ -2036,19 +2055,33 @@ This is an automated message. Do not reply
             team = Teams.objects.get(primary = int(team_primary))
             #removing current coordinator and add incharges of particular team
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
-
             if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
                 return (False,"Task already forwarded to Volunteers!")
-
+            #updating incharges if task not forwarded by incharge
             if team_forward.task_forwarded_to_incharge and not team_forward.task_forwarded_to_core_or_team_volunteers:
                 new_member_added = []
                 for people in all_task_members:
 
-                    if people.team == team:
-                        if people.ieee_id not in member_select:
+                    if people.team == team and people.position.is_officer and not people.position.is_co_ordinator:
+                        if str(people.ieee_id) not in member_select:
                             task.members.remove(people)
                             task.save()
                             task_log_message = f'Task Name: {task.title},{people.name}({people.ieee_id}), of {team} removed.'
+
+
+                            Task_Drive_Link.objects.filter(task=task,uploaded_by=str(people.ieee_id)).delete()
+                            Task_Content.objects.filter(task=task,uploaded_by=str(people.ieee_id)).delete()
+                            Permission_Paper.objects.filter(task=task,uploaded_by=str(people.ieee_id)).delete()
+
+                            files = Task_Document.objects.filter(task=task,uploaded_by=str(people.ieee_id))
+                            for file in files:
+                                Task_Assignation.delete_task_document(file)                
+                            
+                            media_files = Task_Media.objects.filter(task=task,uploaded_by=str(people.ieee_id))
+                            for media_file in media_files:
+                                Task_Assignation.delete_task_media(media_file)
+                            Member_Task_Upload_Types.objects.filter(task=task,task_member=people).delete()
+                            Member_Task_Point.objects.filter(task = task,member=str(people.ieee_id)).delete()
 
                             # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
                             # upload_types.delete()
@@ -2097,10 +2130,13 @@ This is an automated message. Do not reply
 
                     if people.team == team:
                         if people.position.is_co_ordinator and people.position.is_officer:
-                            task.members.remove(people)
+                            task_foward = Member_Task_Upload_Types.objects.get(task=task,task_member=people)
+                            task_foward.is_task_started_by_member = True
+                            task_foward.save()
+                            #task.members.remove(people)
                             
-                            task.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} removed. Marks obtained - 25% of task'
+                            #task.save()
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Co-ordinator, {people.name}({people.ieee_id}), of {team} received reduced points. Points received - 25% of task'
                             #points deduction
                             points = Member_Task_Point.objects.get(task=task,member = people.ieee_id)
                             points.completion_points = task.task_category.points * (25/100)
@@ -2393,12 +2429,15 @@ This is an automated message. Do not reply
 
                             if member in incharges:
                                 #removing the incharge from the task and reducing their points
-                                task.members.remove(member)
-                                task.save()
+                                #task.members.remove(member)
+                                #task.save()
+                                task_foward = Member_Task_Upload_Types.objects.get(task=task,task_member=member)
+                                task_foward.is_task_started_by_member = True
+                                task_foward.save()
                                 points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                                points_for_incharge.completion_points = task.task_category.points * (40/100)
+                                points_for_incharge.completion_points = task.task_category.points * (25/100)
                                 points_for_incharge.save()
-                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
+                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 15% of task'
                                 #setting message
                                 Task_Assignation.save_task_logs(task,task_log_message)
                 else:
@@ -2416,12 +2455,15 @@ This is an automated message. Do not reply
 
                             if member in coordinators:
                                 #removing the coordinators from the task and reducing their points
-                                task.members.remove(member)
-                                task.save()
+                                #task.members.remove(member)
+                                #task.save()
+                                task_foward = Member_Task_Upload_Types.objects.get(task=task,task_member=member)
+                                task_foward.is_task_started_by_member = True
+                                task_foward.save()
                                 points_for_coordinators = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
                                 points_for_coordinators.completion_points = task.task_category.points * (10/100)
                                 points_for_coordinators.save()
-                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Co-ordinator, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 10% of task'
+                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Co-ordinator, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 10% of task'
                                 #setting message
                                 Task_Assignation.save_task_logs(task,task_log_message)
 
@@ -2544,12 +2586,15 @@ This is an automated message. Do not reply
 
                         if member in incharges:
                             #removing the incharge from the task and reducing their points
-                            task.members.remove(member)
-                            task.save()
+                            #task.members.remove(member)
+                            #task.save()
+                            task_foward = Member_Task_Upload_Types.objects.get(task=task,task_member=member)
+                            task_foward.is_task_started_by_member = True
+                            task_foward.save()
                             points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
-                            points_for_incharge.completion_points = task.task_category.points * (40/100)
+                            points_for_incharge.completion_points = task.task_category.points * (25/100)
                             points_for_incharge.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 15% of task'
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 15% of task'
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
             else:
@@ -2566,12 +2611,15 @@ This is an automated message. Do not reply
 
                         if member in coordinators:
                             #removing the incharge from the task and reducing their points
-                            task.members.remove(member)
-                            task.save()
+                            #task.members.remove(member)
+                            #task.save()
+                            task_foward = Member_Task_Upload_Types.objects.get(task=task,task_member=member)
+                            task_foward.is_task_started_by_member = True
+                            task_foward.save()
                             points_for_coordinator = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
                             points_for_coordinator.completion_points = task.task_category.points * (10/100)
                             points_for_coordinator.save()
-                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Coordinator, {member.name}({member.ieee_id}), of {team} removed from task. Marks obtained - 10% of task'
+                            task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Coordinator, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 10% of task'
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
 
@@ -2694,7 +2742,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            # email.send()
             task_log_message = f'Task Name: {task.title}, task completion email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2743,7 +2791,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            email.send()
+            # email.send()
             task_log_message = f'Task Name: {task.title}, task edit email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2796,6 +2844,32 @@ This is an automated message. Do not reply
             
         
         
+    def check_task_upload_view(request,task):
+
+        user = request.user.username
+        try:
+            member = Members.objects.get(ieee_id = user)
+            member_in_task = False
+            if member in task.members.all():
+                member_in_task = True
+            task_started_by_member = Member_Task_Upload_Types.objects.get(task=task,task_member = member)
+            is_coordinator = member.position.is_co_ordinator
+            is_officer = member.position.is_officer
+            is_team_volunteer = member.position.is_volunteer
+            is_core_volunteer = member.position.is_core_volunteer
+            if task.task_type == "Team":
+                task_forward = Team_Task_Forwarded.objects.get(task=task)
+                if(Branch_View_Access.common_access(username=user)):
+                    return True
+                elif is_officer and is_coordinator and member_in_task:
+                    return True
+                elif is_officer and not is_coordinator and member_in_task:   
+                    return True 
+                elif is_team_volunteer or is_core_volunteer:
+                    return False    
+        except:
+            return True   
+
         
             
                         

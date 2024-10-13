@@ -1112,7 +1112,7 @@
                             <tr>
                                 <td>{{ coordinator.member.name }}</td>
                                 <td class="co_ordinator_checkbox">
-                                    <input type="checkbox" name="coordinator_select" multiple value="{{ coordinator.member.ieee_id }}">
+                                    <input type="checkbox" name="coordinator_select" value="{{ coordinator.member.ieee_id }}">
                                     <input type="hidden" name="{{team.primary}}_coordinators[]" value = {{ coordinator.member.ieee_id}}>
                                 </td>
                             </tr>

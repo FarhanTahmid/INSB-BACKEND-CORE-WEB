@@ -4863,6 +4863,7 @@ def upload_task(request, task_id,team_primary = None):
         this_is_users_task = False
         comments = None
         has_coordinator_access_or_incharge_access_for_team_task = False
+        view_access = Task_Assignation.check_task_upload_view(request,task)
 
         print(create_individual_task_access)
         print(create_team_task_access)
@@ -5058,6 +5059,7 @@ def upload_task(request, task_id,team_primary = None):
                     'create_team_task_access':create_team_task_access,
 
                     'app_name':app_name,
+                    'view_access':view_access,
 
 
                 }
@@ -5091,6 +5093,7 @@ def upload_task(request, task_id,team_primary = None):
                     'graphics_team':nav_bar["graphics_team"],
                     'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
                     'team_primary':team_primary,
+                    'view_access':view_access,
 
 
                 }
@@ -5378,16 +5381,21 @@ def task_edit(request,task_id,team_primary = None):
         except:
             logged_in_user = adminUsers.objects.get(username=user)
 
+        print("before post")
         
         if request.method == 'POST':
+            print("post")
             if 'update_task' in request.POST:
+                print("HERERERERERER")
                 title = request.POST.get('task_title')
                 description = request.POST.get('task_description_details')
                 task_category = request.POST.get('task_category')
                 deadline = request.POST.get('deadline')
                 task_type = request.POST.get('task_type')
                 is_task_completed = request.POST.get('task_completed_toggle_switch')
-
+                print(title)
+                print("printing is task completed")
+                print(is_task_completed)
                 team_select = None
                 member_select = None
                 task_types_per_member = {}
@@ -5460,7 +5468,7 @@ def task_edit(request,task_id,team_primary = None):
         print(create_individual_task_access)
         print(create_team_task_access)
 
-            
+        all_members_in_task = task.members.all()
         if team_primary == None or team_primary == "1":
 
             
@@ -5496,6 +5504,7 @@ def task_edit(request,task_id,team_primary = None):
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
                 'teams_and_coordinators': teams_and_coordinators,
+                'all_members_in_task':all_members_in_task,
 
                 'app_name':app_name,
                 'is_coordinator':is_coordinator,
@@ -5526,6 +5535,7 @@ def task_edit(request,task_id,team_primary = None):
                 'create_team_task_access':create_team_task_access,
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
+                'all_members_in_task':all_members_in_task,
 
                 #loading navbars as per page
                 'web_dev_team':nav_bar["web_dev_team"],
