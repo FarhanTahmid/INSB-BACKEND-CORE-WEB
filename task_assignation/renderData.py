@@ -1916,7 +1916,7 @@ This is an automated message. Do not reply
         site_domain = request.META['HTTP_HOST']
         all_ieed_id = []
         for mem in all_task_members:
-            all_ieed_id.append(mem.ieee_id)
+            all_ieed_id.append(str(mem.ieee_id))
 
         if team_primary == None or team_primary == "1":
             #getting all teams
@@ -1933,7 +1933,7 @@ This is an automated message. Do not reply
                 for people in all_task_members:
 
                     if people.team == team:
-                        if people.ieee_id not in member_select:
+                        if str(people.ieee_id) not in member_select:
                             task.members.remove(people)
                             task.save()
                             task_log_message = f'Task Name: {task.title},{people.name}({people.ieee_id}), of {team} removed.'
@@ -2036,7 +2036,6 @@ This is an automated message. Do not reply
             team = Teams.objects.get(primary = int(team_primary))
             #removing current coordinator and add incharges of particular team
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
-
             if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
                 return (False,"Task already forwarded to Volunteers!")
 
@@ -2045,7 +2044,7 @@ This is an automated message. Do not reply
                 for people in all_task_members:
 
                     if people.team == team:
-                        if people.ieee_id not in member_select:
+                        if str(people.ieee_id) not in member_select:
                             task.members.remove(people)
                             task.save()
                             task_log_message = f'Task Name: {task.title},{people.name}({people.ieee_id}), of {team} removed.'
