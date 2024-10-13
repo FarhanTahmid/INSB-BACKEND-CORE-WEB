@@ -12,7 +12,7 @@ from googleapiclient.http import MediaIoBaseUpload
 from django.core.files.base import ContentFile
 from django.contrib import messages
 
-from system_administration.google_mail_handler import GmailHandler
+from system_administration.google_authorisation_handler import GoogleAuthorisationHandler
 from system_administration.system_error_handling import ErrorHandling
 import time
 
@@ -31,7 +31,7 @@ class CalendarHandler:
         return dt
 
     def authorize(request):
-        credentials = GmailHandler.get_credentials(request)
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             return None
         try:
@@ -225,7 +225,7 @@ class CalendarHandler:
 
     def google_drive_upload_files(request, file_path):
 
-        credentials = GmailHandler.get_credentials(request)
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             return None
         
@@ -281,7 +281,7 @@ class CalendarHandler:
             return None
         
     def google_drive_get_file(request, file_id):
-        credentials = GmailHandler.get_credentials(request)
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             return None
         try:
@@ -300,7 +300,7 @@ class CalendarHandler:
             return None
         
     def google_drive_delete_file(request, file_id):
-        credentials = GmailHandler.get_credentials(request)
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             return None
         try:

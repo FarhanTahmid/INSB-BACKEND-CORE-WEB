@@ -12,7 +12,7 @@ import json,os
 from datetime import datetime
 from insb_port import settings
 from central_branch.models import Email_Draft
-from system_administration.google_mail_handler import GmailHandler
+from system_administration.google_authorisation_handler import GoogleAuthorisationHandler
 from googleapiclient.discovery import build
 from django.template.loader import render_to_string
 import traceback
@@ -334,7 +334,7 @@ class PRT_Email_System:
             # bcc_email_list_final=[]    
             # print(cc_email_list_final)
             if attachment is None:
-                credentials = GmailHandler.get_credentials(request)
+                credentials = GoogleAuthorisationHandler.get_credentials(request)
                 if not credentials:
                     print("NOT OKx")
                     return False
@@ -381,7 +381,7 @@ class PRT_Email_System:
 
                     else:
                         try:
-                            credentials = GmailHandler.get_credentials(request)
+                            credentials = GoogleAuthorisationHandler.get_credentials(request)
                             if not credentials:
                                 print("NOT OKx")
                                 return None
@@ -524,7 +524,7 @@ class PRT_Email_System:
 
     def send_scheduled_email_confirmation(request, to_email_list_final, cc_email_list_final, bcc_email_list_final, subject, mail_body, attachment):
         # try:
-            credentials = GmailHandler.get_credentials(request)
+            credentials = GoogleAuthorisationHandler.get_credentials(request)
             if not credentials:
                 print("NOT OKx")
                 return None

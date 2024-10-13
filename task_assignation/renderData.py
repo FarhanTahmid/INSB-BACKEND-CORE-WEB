@@ -53,8 +53,10 @@ class Task_Assignation:
         #task_created_by is a charfield so if ieee_id is stored we convert it to string
         try:
             task_created_by=str(Members.objects.get(ieee_id=current_user.user.username).ieee_id)
+            username = str(Members.objects.get(ieee_id=current_user.user.username).name)
         except:
             task_created_by=adminUsers.objects.get(username=current_user.user.username).username
+            username = task_created_by
     
         #Create a new task and save it
         new_task = Task(title=title,
@@ -68,7 +70,7 @@ class Task_Assignation:
         
         new_task.save()
         #creating task log
-        task_log = Task_Log.objects.create(task_number = new_task,task_log_details = {str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, created by {task_created_by}'})
+        task_log = Task_Log.objects.create(task_number = new_task,task_log_details = {str(datetime.now().strftime('%I:%M:%S %p')):f'Task Name: {title}, created by {task_created_by}({username})'})
         task_log.update_task_number+=1
         task_log.save()
 
@@ -1905,20 +1907,79 @@ This is an automated message. Do not reply
             else:
                 return False
         
-    def forward_task_to_incharges(request,task,team_clicked,team_primary):
+    def forward_task_to_incharges(request,task,team_primary,member_select):
 
         '''This function will forward the tasks to the team incharges if team_primary exists
             else to the individuals team's incharges by the coordinator'''
         user = request.user.username
         all_task_members = task.members.all()
         site_domain = request.META['HTTP_HOST']
+        all_ieed_id = []
+        for mem in all_task_members:
+            all_ieed_id.append(mem.ieee_id)
 
         if team_primary == None or team_primary == "1":
             #getting all teams
-            team = Teams.objects.get(primary = int(team_clicked))
+            team = Teams.objects.get(primary = int(team_primary))
             #removing current coordinators and assigning to incharges
             
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
+
+            if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
+                return (False,"Task already forwarded to Volunteers!")
+
+            if team_forward.task_forwarded_to_incharge and not team_forward.task_forwarded_to_core_or_team_volunteers:
+                new_member_added = []
+                for people in all_task_members:
+
+                    if people.team == team:
+                        if people.ieee_id not in member_select:
+                            task.members.remove(people)
+                            task.save()
+                            task_log_message = f'Task Name: {task.title},{people.name}({people.ieee_id}), of {team} removed.'
+
+                            # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                            # upload_types.delete()
+
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+                            task.save()
+                            notification_message = f"You were removed from the task, {task.title}!"
+                            NotificationHandler.notification_to_a_member(request,task,f"Task Removed",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,people)
+                for mem in member_select:
+                    if mem not in all_ieed_id:
+                        people = Members.objects.get(ieee_id = mem)
+                        new_member_added.append(people)
+
+                for people in new_member_added:
+                    task.members.add(people)
+                    task.save()
+
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.name}({people.ieee_id}), of {team} added to the task'
+                    #setting message
+                    Task_Assignation.save_task_logs(task,task_log_message)
+                    Task_Assignation.task_creation_email(request,people,task)
+                    notification_message = f"You have been assigned a Task, {task.title}!"
+                    NotificationHandler.notification_to_a_member(request,task,f"Task Created",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_creation_notification_type,people)
+
+                    task.save()
+
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types.has_content=True
+                    upload_types.has_drive_link=True
+                    upload_types.has_file_upload=True
+                    upload_types.has_media=True
+                    upload_types.has_permission_paper=True
+                    upload_types.save()
+
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points.save()
+                    
+
+                team_forward.task_forwarded_to_incharge = True
+                team_forward.forwared_by = user
+                team_forward.save()
+
             if not team_forward.task_forwarded_to_incharge and not Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team):
                 for people in all_task_members:
 
@@ -1939,7 +2000,10 @@ This is an automated message. Do not reply
                             Task_Assignation.save_task_logs(task,task_log_message)
                             task.save()
 
-                team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                #added team incharges as per selected by coordinator
+                team_incharges = []
+                for mem in member_select:
+                    team_incharges.append(Members.objects.get(ieee_id = mem))
                 for people in team_incharges:
                     task.members.add(people)
                     task.save()
@@ -1972,6 +2036,62 @@ This is an automated message. Do not reply
             team = Teams.objects.get(primary = int(team_primary))
             #removing current coordinator and add incharges of particular team
             team_forward = Team_Task_Forwarded.objects.get(task=task,team=team)
+
+            if team_forward.task_forwarded_to_incharge and team_forward.task_forwarded_to_core_or_team_volunteers:
+                return (False,"Task already forwarded to Volunteers!")
+
+            if team_forward.task_forwarded_to_incharge and not team_forward.task_forwarded_to_core_or_team_volunteers:
+                new_member_added = []
+                for people in all_task_members:
+
+                    if people.team == team:
+                        if people.ieee_id not in member_select:
+                            task.members.remove(people)
+                            task.save()
+                            task_log_message = f'Task Name: {task.title},{people.name}({people.ieee_id}), of {team} removed.'
+
+                            # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
+                            # upload_types.delete()
+
+                            #setting message
+                            Task_Assignation.save_task_logs(task,task_log_message)
+                            task.save()
+                            notification_message = f"You were removed from the task, {task.title}!"
+                            NotificationHandler.notification_to_a_member(request,task,f"Task Removed",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,people)
+                for mem in member_select:
+                    if mem not in all_ieed_id:
+                        people = Members.objects.get(ieee_id = mem)
+                        new_member_added.append(people)
+
+                for people in new_member_added:
+                    task.members.add(people)
+                    task.save()
+
+                    task_log_message = f'Task Name: {task.title}, task forwared by {user}, hence Incharge, {people.name}({people.ieee_id}), of {team} added to the task'
+                    #setting message
+                    Task_Assignation.save_task_logs(task,task_log_message)
+                    Task_Assignation.task_creation_email(request,people,task)
+                    notification_message = f"You have been assigned a Task, {task.title}!"
+                    NotificationHandler.notification_to_a_member(request,task,f"Task Created",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_creation_notification_type,people)
+
+                    task.save()
+
+                    upload_types = Member_Task_Upload_Types.objects.create(task_member = people,task = task)
+                    upload_types.has_content=True
+                    upload_types.has_drive_link=True
+                    upload_types.has_file_upload=True
+                    upload_types.has_media=True
+                    upload_types.has_permission_paper=True
+                    upload_types.save()
+
+                    incharge_task_points = Member_Task_Point.objects.create(task = task,member = people.ieee_id,completion_points=task.task_category.points)
+                    incharge_task_points.save()
+                    
+
+                team_forward.task_forwarded_to_incharge = True
+                team_forward.forwared_by = user
+                team_forward.save()
+
             if not team_forward.task_forwarded_to_incharge and not Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team):
                 for people in all_task_members:
 
@@ -1993,7 +2113,9 @@ This is an automated message. Do not reply
                             Task_Assignation.save_task_logs(task,task_log_message)
                             task.save()
 
-                team_incharges = Members.objects.filter(team=team,position__is_co_ordinator = False,position__is_officer = True)
+                team_incharges = []
+                for mem in member_select:
+                    team_incharges.append(Members.objects.get(ieee_id = mem))
                 for people in team_incharges:
                     task.members.add(people)
                     task.save()
@@ -2020,7 +2142,7 @@ This is an automated message. Do not reply
                 team_forward.forwared_by = user
                 team_forward.save()
 
-        return True
+        return (True,"Forwarded Successfully")
     
     def upload_task_page_access_for_team_task(request,task,team_primary):
 
@@ -2052,21 +2174,56 @@ This is an automated message. Do not reply
 
     def load_volunteers_for_task_assignation(task,team_primary = None):
 
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
+        panel = Panels.objects.get(current = True,panel_of = society)
         members = []
         if team_primary!=None and team_primary!="1":
             team_of = Teams.objects.get(primary = int(team_primary))
-            members = Members.objects.filter(position__is_volunteer =True,team = team_of)
+            panel_member = Panel_Members.objects.filter(tenure = panel,team = team_of,position__is_volunteer = True)
+            for mem in panel_member:
+                members.append(mem.member) 
         else:
             all_team = task.team.all()
             for team in all_team:
                 team_forward = Team_Task_Forwarded.objects.get(team = team,task=task)
                 if team_forward.task_forwarded_to_incharge:
                     if Task_Assignation.is_task_started_by_a_incharge_for_a_team(task,team):
-                        print("here")
+                        pass
                     else:
                         print("here222")
-                        member = list(Members.objects.filter(position__is_volunteer =True,team = team))
-                        members += member
+                        panel_member = Panel_Members.objects.filter(tenure = panel,team = team,position__is_volunteer = True)
+                        for mem in panel_member:
+                            members.append(mem.member) 
+        dic = {}
+        for member in members:
+            try:
+                member_task_type = Member_Task_Upload_Types.objects.get(task_member = member, task= task)
+            except:
+                member_task_type = None
+            dic.update({member:member_task_type})
+        return dic
+    
+    def load_incharges_for_task_assignation(task,team_primary = None):
+
+        society = Chapters_Society_and_Affinity_Groups.objects.get(primary = 1)
+        panel = Panels.objects.get(current = True,panel_of = society)
+        members = []
+        if team_primary!=None and team_primary!="1":
+            team_of = Teams.objects.get(primary = int(team_primary))
+            panel_member = Panel_Members.objects.filter(tenure = panel,team = team_of,position__is_officer = True,position__is_co_ordinator=False)
+            for mem in panel_member:
+                members.append(mem.member) 
+        else:
+            all_team = task.team.all()
+            for team in all_team:
+                # team_forward = Team_Task_Forwarded.objects.get(team = team,task=task)
+                if Task_Assignation.is_task_started_by_a_coodinator_for_a_team(task,team):
+                    pass
+                else:
+                    print("here222")
+                    panel_member = Panel_Members.objects.filter(tenure = panel,team = team,position__is_officer = True,position__is_co_ordinator=False)
+                    for mem in panel_member:
+                        members.append(mem.member) 
         dic = {}
         for member in members:
             try:

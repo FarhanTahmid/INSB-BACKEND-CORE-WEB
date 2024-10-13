@@ -1096,7 +1096,8 @@
                                     {% for team,bool in is_task_forwared_to_incharge.0.items %}
                                     {% if bool == False %}
                                         {% comment %} <input type="submit" value="{{team.team_name}}" name="{{team.primary}}"> {% endcomment %}
-                                        <button type="button" id="forward_to_team_incharges_modal_button" class="forward_to_team_incharges_modal_button" name="{{team.primary}}" value="{{team.team_name}}">{{team.team_name}}</button>
+                                        {% comment %} <button type="button" id="forward_to_team_incharges_modal_button" class="forward_to_team_incharges_modal_button" name="{{team.primary}}" value="{{team.team_name}}">{{team.team_name}}</button> {% endcomment %}
+                                        <a href="{% url 'central_branch:forward_to_incharges' task.pk team.primary %}" style="text-align:center;">{{team.team_name}}</a>
                                         {% comment %} <input type="hidden" value="{{team.primary}}" name="teamclicked"> {% endcomment %}
                                     {% endif %}
                                     {% endfor %}
@@ -1141,7 +1142,7 @@
                             {% endif %}
                             {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_forwarded_to_volunteers == False and is_task_started_by_member == False %}
                                 {% if not is_task_started_by_any_coordinator %}
-                                    <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
+                                    <a href="{% url ''|add:app_name|add:':forward_to_incharges' task.pk team_primary %}" class="check-task-button">Forward Task To Team Incharges</a>
                                     <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 1  %}" class="check-task-button">Forward Task to Volunteers</a>
                                 {% endif %}
                             {% endif %}
@@ -1163,18 +1164,21 @@
                             {% if is_task_forwared_to_incharge == True %}
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
                             {% endif %}
+                            {% if is_task_forwarded_to_volunteers == False and is_task_forwared_to_incharge == True %}
+                            <a href="{% url ''|add:app_name|add:':forward_to_incharges' task.pk team_primary %}" class="check-task-button">Change Task Assignation</a>
+                            {% endif %}
                             {% if is_task_forwared_to_incharge == False and is_task_forwarded_to_volunteers == True %}
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
                             {% endif %}
                             {% if is_task_forwarded_to_volunteers == True %}
-                            <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assination</a>
+                            <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assignation</a>
                             {% endif %}
                         {% endif %}
                     {% elif is_officer and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% if team_primary != None and team_primary != "1" %}
                             {% if is_task_forwarded_to_volunteers == True %}
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
-                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assination</a>
+                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assignation</a>
                             {% endif %}
                         {% endif %}
                     {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
