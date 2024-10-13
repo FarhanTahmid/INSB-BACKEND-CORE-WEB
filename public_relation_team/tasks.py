@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 import json
 from googleapiclient.http import BatchHttpRequest
 
-from system_administration.google_mail_handler import GmailHandler
+from system_administration.google_authorisation_handler import GoogleAuthorisationHandler
 from googleapiclient.discovery import build
 
 from system_administration.system_error_handling import ErrorHandling
@@ -24,7 +24,7 @@ def send_scheduled_email(username, unique_task_name_json):
     email_drafts = Email_Draft.objects.get(email_unique_id=email_unique_id)
     drafts = email_drafts.drafts
 
-    credentials = GmailHandler.get_credentials()
+    credentials = GoogleAuthorisationHandler.get_credentials()
     if not credentials:
         print("NOT OKx")
         return None
