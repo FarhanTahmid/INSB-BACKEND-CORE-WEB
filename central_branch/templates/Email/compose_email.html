@@ -2036,6 +2036,16 @@
     <!-- ############ LAYOUT END-->
 
     <script>
+
+        function mapOptions(optionsArray) {
+          return optionsArray.map(option => optionMapping[option] || option);
+        }
+
+        const mappedArray3 = mapOptions(altSelectedTags);
+        console.log(mappedArray3);
+        // return mappedArray;
+      }
+
       // Optionally, you can also run loadContent on initial load as before
       document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2086,11 +2096,9 @@
 
       // Initial call to set counts based on the initially visible container
       {% comment %} updateMailCounts(); {% endcomment %}
-      </script>
-
-
-      <!-- script for compose modal -->
-      <script>
+    </script>
+    <!-- script for compose modal -->
+    <script>
       // showing and hiding compose email button
       const composeBtn = document.querySelector('.child-body');
       const composeBody = document.querySelector('.compose');
@@ -2114,12 +2122,10 @@
         closeCompose();
         clearExistingData();
       })
-      </script>
-
-
-
-      <!-- showing emails according to selected email box -->
-      <script>
+    </script>
+      
+    <!-- showing emails according to selected email box -->
+    <script>
         //getting the selected box and inbox name
       function activeInbox(element, section) {
         //prevent refresh
@@ -2730,6 +2736,9 @@
       }
       checkScreenWidth();
 
+    </script>
+    <script>
+
       function EmailSent() {
         closeCompose();
         // Capture values from input fields
@@ -2836,7 +2845,6 @@
         }
       }
     </script>
-
     <!-- mail soet using label -->
     <script>
       // Select the elements
@@ -2909,7 +2917,6 @@
 
 
     </script>
-
     <!--input tags-->
     <script>
       const tagContainer = document.getElementById('tagContainer');
@@ -3064,7 +3071,6 @@
 
 
     </script>
-
     <script>
       // Function to execute search
       function executeSearch() {
@@ -3094,7 +3100,6 @@
         }
       });
     </script>
-
     <!-- file attachments -->
     <script>
     // Store previously selected files in an array
@@ -3340,12 +3345,12 @@
         };
 
         function mapOptions(optionsArray) {
-          return optionsArray.map(option => optionMapping[option] || null);
+          return optionsArray.map(option => optionMapping[option] || option);
         }
 
-        const mappedArray = mapOptions(customSelectedTags);
-        console.log(mappedArray);
-        return mappedArray;
+        let mappedArray1 = mapOptions(customSelectedTags);
+        console.log(mappedArray1);
+        return mappedArray1;
       }
 
       function customClearAllTags() {
@@ -3492,7 +3497,7 @@
         };
 
         function mapOptions(optionsArray) {
-          return optionsArray.map(option => optionMapping[option] || null);
+          return optionsArray.map(option => optionMapping[option] || option);
         }
 
         const mappedArray = mapOptions(altSelectedTags);
