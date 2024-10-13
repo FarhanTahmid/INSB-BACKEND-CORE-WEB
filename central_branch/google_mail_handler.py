@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 import json
 from insb_port import settings
 from django.http import JsonResponse
+from django.core.files.base import ContentFile
 
 from central_branch.views import mail
 from googleapiclient.discovery import build
