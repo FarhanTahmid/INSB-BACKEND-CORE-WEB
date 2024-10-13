@@ -5174,6 +5174,8 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
 
                 'app_name':app_name,
                 'team_primary':team_primary,
+                'task_type_bool':True,
+
             }
         else:
             context = {
@@ -5195,6 +5197,112 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
                 'graphics_team':nav_bar["graphics_team"],
                 'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
                 'team_primary':team_primary,
+                'task_type_bool':True,
+
+            }
+            
+
+        return render(request,"task_forward_to_members.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+    
+@login_required
+@member_login_permission
+def forward_to_incharges(request,task_id,team_primary = None):
+
+    try:
+
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        task = Task.objects.get(id=task_id)
+
+        #for proper navbar and redirection
+        app_name = "central_branch"
+        if team_primary and team_primary!="1":
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            #getting nav_bar_name
+            nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
+        if request.method == 'POST':
+
+            task_types_per_member = {}
+            member_select = request.POST.getlist('member_select')
+            # for member_id in member_select:
+            #     member_name = request.POST.getlist(member_id + '_task_type[]')
+            #     task_types_per_member[member_id] = member_name
+            
+            #If task is completed then do not update task params
+            if(task.is_task_completed):
+                messages.info(request,'Task is completed already!')
+                if team_primary:
+                    return redirect(f'{app_name}:team_add_task',team_primary,task_id)
+                else:
+                    return redirect('central_branch:add_task',task_id)
+            print(task_types_per_member)
+
+            flag = Task_Assignation.forward_task_to_incharges(request,task,team_primary,member_select)
+
+            if(flag[0]):
+
+                #If it is a team task and no members were selected then show message but save other params
+                if(not member_select):
+                    messages.info(request,'Saved changes. Please select a member to forward tasks!')
+                else:
+                    #Else members were selected
+                    messages.success(request,"Task Forwarded Successfully!")
+                if app_name == "central_branch":
+                    return redirect('central_branch:forward_to_incharges',task_id,team_primary)
+                else:
+                    return redirect(f'{app_name}:forward_to_incharges',task_id,team_primary)
+            else:
+                messages.warning(request,flag[1])
+
+                if app_name == "central_branch":
+                    return redirect('central_branch:forward_to_incharges',task_id,team_primary)
+                else:
+                    return redirect(f'{app_name}:forward_to_incharges',task_id,team_primary)
+
+        
+        
+        members = Task_Assignation.load_incharges_for_task_assignation(task,team_primary)
+                    
+        if team_primary == None or team_primary == "1":
+            context = {
+                'task':task,
+                'volunteer_members':members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+
+                'app_name':app_name,
+                'team_primary':team_primary,
+                'task_type_bool':False,
+            }
+        else:
+            context = {
+                'task':task,
+                'volunteer_members':members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+
+                'app_name':app_name,
+                #loading navbars as per page
+                'web_dev_team':nav_bar["web_dev_team"],
+                'content_and_writing_team':nav_bar["content_and_writing_team"],
+                'event_management_team':nav_bar["event_management_team"],
+                'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                'promotion_team':nav_bar["promotion_team"],
+                'public_relation_team':nav_bar["public_relation_team"],
+                'membership_development_team':nav_bar["membership_development_team"],
+                'media_team':nav_bar["media_team"],
+                'graphics_team':nav_bar["graphics_team"],
+                'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+                'team_primary':team_primary,
+                'task_type_bool':False,
             }
             
 
