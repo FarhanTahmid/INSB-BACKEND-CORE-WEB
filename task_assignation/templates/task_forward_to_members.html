@@ -449,7 +449,9 @@
                         <tr>
                           <th>Select</th>
                           <th>Name</th>
+                          {% if task_type_bool == True %}
                           <th>Task Type</th>
+                          {% endif %}
                           <th>IEEE ID</th>
                           <th>Team</th>
                           <th>Position</th>
@@ -471,6 +473,7 @@
                           <input type="checkbox" name="member_select" value="{{volunteers.ieee_id}}" {% if volunteers in task.members.all %}checked{% endif %}>
                         </td>
                         <td>{{volunteers.name}}</td>
+                        {% if task_type_bool == True %}
                         <td>
                           <select name="{{volunteers.ieee_id}}_task_type[]" multiple multiselect-search="true"> 
                               <option value="permission_paper" {% if types.has_permission_paper %}selected{% endif %}>Yes/No Box </option>
@@ -479,7 +482,8 @@
                               <option value="media" {% if types.has_media %}selected{% endif %}>Media Upload </option>
                               <option value="drive_link" {% if types.has_drive_link %}selected{% endif %}>Link </option>
                           </select>
-                        </td>                  
+                        </td> 
+                        {% endif %}                 
                         <td>{{volunteers.ieee_id}}</td>
                         <td>{{volunteers.team.team_name}}</td>
                         <td>{{volunteers.position}}</td>

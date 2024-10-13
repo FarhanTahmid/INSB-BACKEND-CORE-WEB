@@ -14,7 +14,7 @@ from django.contrib import messages
 from system_administration.models import adminUsers
 from users.models import Members
 
-class GmailHandler:
+class GoogleAuthorisationHandler:
 
     def get_credentials(request=None):
     
@@ -42,7 +42,7 @@ class GmailHandler:
             if creds and creds.expired and creds.refresh_token:
                 try:
                     creds.refresh(Request())
-                    GmailHandler.save_credentials(creds)
+                    GoogleAuthorisationHandler.save_credentials(creds)
                 except:
                     if(type(member) == Members):
                         messages.info(request, "Google Authorization Required! Please contact Web Team")
@@ -64,7 +64,7 @@ class GmailHandler:
             settings.GOOGLE_CLOUD_EXPIRY = credentials.expiry.isoformat()
     
     def test_html_gmail(request):
-        credentials = GmailHandler.get_credentials(request)
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             print("NOT OK")
             return None
@@ -103,7 +103,7 @@ class GmailHandler:
             return None
         
     def test_gmail(request):
-        credentials = GmailHandler.get_credentials(request)
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             print("NOT OK")
             return None

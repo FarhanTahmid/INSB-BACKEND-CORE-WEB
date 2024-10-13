@@ -31,7 +31,7 @@ from public_relation_team.tasks import send_scheduled_email
 from .models import Email_Draft
 from public_relation_team.renderData import PRT_Data
 from public_relation_team.render_email import PRT_Email_System
-from system_administration.google_mail_handler import GmailHandler
+from system_administration.google_authorisation_handler import GoogleAuthorisationHandler
 from system_administration.models import adminUsers, system
 from system_administration.system_error_handling import ErrorHandling
 from task_assignation.models import Task, Task_Category
@@ -76,7 +76,6 @@ from email.utils import getaddresses, parseaddr, parsedate_to_datetime
 
 # Create your views here.
 logger=logging.getLogger(__name__)
-service = None
 
 @login_required
 @member_login_permission
@@ -4864,6 +4863,7 @@ def upload_task(request, task_id,team_primary = None):
         this_is_users_task = False
         comments = None
         has_coordinator_access_or_incharge_access_for_team_task = False
+        view_access = Task_Assignation.check_task_upload_view(request,task)
 
         print(create_individual_task_access)
         print(create_team_task_access)
@@ -5059,6 +5059,7 @@ def upload_task(request, task_id,team_primary = None):
                     'create_team_task_access':create_team_task_access,
 
                     'app_name':app_name,
+                    'view_access':view_access,
 
 
                 }
@@ -5092,6 +5093,7 @@ def upload_task(request, task_id,team_primary = None):
                     'graphics_team':nav_bar["graphics_team"],
                     'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
                     'team_primary':team_primary,
+                    'view_access':view_access,
 
 
                 }
@@ -5174,6 +5176,8 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
 
                 'app_name':app_name,
                 'team_primary':team_primary,
+                'task_type_bool':True,
+
             }
         else:
             context = {
@@ -5195,6 +5199,112 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
                 'graphics_team':nav_bar["graphics_team"],
                 'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
                 'team_primary':team_primary,
+                'task_type_bool':True,
+
+            }
+            
+
+        return render(request,"task_forward_to_members.html",context)
+    except Exception as e:
+        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+        return custom_500(request)
+    
+@login_required
+@member_login_permission
+def forward_to_incharges(request,task_id,team_primary = None):
+
+    try:
+
+        # get all sc ag for sidebar
+        sc_ag=PortData.get_all_sc_ag(request=request)
+        # get user data for side bar
+        current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
+        user_data=current_user.getUserData() #getting user data as dictionary file
+        task = Task.objects.get(id=task_id)
+
+        #for proper navbar and redirection
+        app_name = "central_branch"
+        if team_primary and team_primary!="1":
+            app_name = Task_Assignation.get_team_app_name(team_primary=team_primary)
+            #getting nav_bar_name
+            nav_bar = Task_Assignation.get_nav_bar_name(team_primary=team_primary)
+
+        if request.method == 'POST':
+
+            task_types_per_member = {}
+            member_select = request.POST.getlist('member_select')
+            # for member_id in member_select:
+            #     member_name = request.POST.getlist(member_id + '_task_type[]')
+            #     task_types_per_member[member_id] = member_name
+            
+            #If task is completed then do not update task params
+            if(task.is_task_completed):
+                messages.info(request,'Task is completed already!')
+                if team_primary:
+                    return redirect(f'{app_name}:team_add_task',team_primary,task_id)
+                else:
+                    return redirect('central_branch:add_task',task_id)
+            print(task_types_per_member)
+
+            flag = Task_Assignation.forward_task_to_incharges(request,task,team_primary,member_select)
+
+            if(flag[0]):
+
+                #If it is a team task and no members were selected then show message but save other params
+                if(not member_select):
+                    messages.info(request,'Saved changes. Please select a member to forward tasks!')
+                else:
+                    #Else members were selected
+                    messages.success(request,"Task Forwarded Successfully!")
+                if app_name == "central_branch":
+                    return redirect('central_branch:forward_to_incharges',task_id,team_primary)
+                else:
+                    return redirect(f'{app_name}:forward_to_incharges',task_id,team_primary)
+            else:
+                messages.warning(request,flag[1])
+
+                if app_name == "central_branch":
+                    return redirect('central_branch:forward_to_incharges',task_id,team_primary)
+                else:
+                    return redirect(f'{app_name}:forward_to_incharges',task_id,team_primary)
+
+        
+        
+        members = Task_Assignation.load_incharges_for_task_assignation(task,team_primary)
+                    
+        if team_primary == None or team_primary == "1":
+            context = {
+                'task':task,
+                'volunteer_members':members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+
+                'app_name':app_name,
+                'team_primary':team_primary,
+                'task_type_bool':False,
+            }
+        else:
+            context = {
+                'task':task,
+                'volunteer_members':members,
+                'all_sc_ag':sc_ag,
+                'user_data':user_data,
+
+                'app_name':app_name,
+                #loading navbars as per page
+                'web_dev_team':nav_bar["web_dev_team"],
+                'content_and_writing_team':nav_bar["content_and_writing_team"],
+                'event_management_team':nav_bar["event_management_team"],
+                'logistic_and_operation_team':nav_bar["logistic_and_operation_team"],
+                'promotion_team':nav_bar["promotion_team"],
+                'public_relation_team':nav_bar["public_relation_team"],
+                'membership_development_team':nav_bar["membership_development_team"],
+                'media_team':nav_bar["media_team"],
+                'graphics_team':nav_bar["graphics_team"],
+                'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
+                'team_primary':team_primary,
+                'task_type_bool':False,
             }
             
 
@@ -5271,16 +5381,21 @@ def task_edit(request,task_id,team_primary = None):
         except:
             logged_in_user = adminUsers.objects.get(username=user)
 
+        print("before post")
         
         if request.method == 'POST':
+            print("post")
             if 'update_task' in request.POST:
+                print("HERERERERERER")
                 title = request.POST.get('task_title')
                 description = request.POST.get('task_description_details')
                 task_category = request.POST.get('task_category')
                 deadline = request.POST.get('deadline')
                 task_type = request.POST.get('task_type')
                 is_task_completed = request.POST.get('task_completed_toggle_switch')
-
+                print(title)
+                print("printing is task completed")
+                print(is_task_completed)
                 team_select = None
                 member_select = None
                 task_types_per_member = {}
@@ -5353,7 +5468,7 @@ def task_edit(request,task_id,team_primary = None):
         print(create_individual_task_access)
         print(create_team_task_access)
 
-            
+        all_members_in_task = task.members.all()
         if team_primary == None or team_primary == "1":
 
             
@@ -5389,6 +5504,7 @@ def task_edit(request,task_id,team_primary = None):
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
                 'teams_and_coordinators': teams_and_coordinators,
+                'all_members_in_task':all_members_in_task,
 
                 'app_name':app_name,
                 'is_coordinator':is_coordinator,
@@ -5419,6 +5535,7 @@ def task_edit(request,task_id,team_primary = None):
                 'create_team_task_access':create_team_task_access,
                 'is_member_view':is_member_view,
                 'is_task_started_by_member':is_task_started_by_member,
+                'all_members_in_task':all_members_in_task,
 
                 #loading navbars as per page
                 'web_dev_team':nav_bar["web_dev_team"],
@@ -5579,9 +5696,6 @@ def task_leaderboard(request):
         ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
         return custom_500(request)
     
-
-
-
 @login_required
 @member_login_permission
 def mail(request):
@@ -5607,15 +5721,16 @@ def mail(request):
                 else:
                     pg_token = ''
 
-                global service
-                if not service:
-                    credentials = GmailHandler.get_credentials(request)
+                global gmail_service
+
+                if not gmail_service:
+                    credentials = GoogleAuthorisationHandler.get_credentials(request)
                     if not credentials:
                         error_message = 'Google Authorization Required! Please contact Web Team'
                         print("NOT OK")
                         return None
                     # try:
-                    service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    gmail_service = build(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
                     print(settings.GOOGLE_MAIL_API_NAME, settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                 query = request.GET.get('query')
@@ -5623,32 +5738,32 @@ def mail(request):
 
                 if section == 'inbox':
                     if query:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
                     else:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section == 'sent':
                     if query:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} in:sent -label:dev-mail",pageToken=pg_token).execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q=f"{query} in:sent -label:dev-mail",pageToken=pg_token).execute()
                     else:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='dev_mail':
                     if Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username):
                         if query:
-                            threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} label:dev-mail",pageToken=pg_token).execute()
+                            threads = gmail_service.users().threads().list(userId='me', maxResults=10, q=f"{query} label:dev-mail",pageToken=pg_token).execute()
                         else:
-                            threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
+                            threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken=pg_token).execute()
                     else:
                         if query:
-                            threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
+                            threads = gmail_service.users().threads().list(userId='me', maxResults=10, q=f"{query} -label:dev-mail",pageToken=pg_token).execute()
                         else:
-                            threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
+                            threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 elif section =='starred':
                     if query:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q=f"{query} is:starred",pageToken=pg_token).execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q=f"{query} is:starred",pageToken=pg_token).execute()
                     else:
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken=pg_token).execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="is:starred",pageToken=pg_token).execute()
                 else:
-                    threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
+                    threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken=pg_token).execute()
                 
                 
                 if not request.session.get('pg_token'):
@@ -5704,7 +5819,7 @@ def mail(request):
                         thread_id = thread['id']
 
                         # Fetch the required details for each message
-                        batch.add(service.users().threads().get(
+                        batch.add(gmail_service.users().threads().get(
                             userId='me',
                             id=thread_id,
                             format='metadata',
@@ -5744,7 +5859,7 @@ def mail(request):
                 section = request.GET.get('section')
                 thread_data = []
 
-                credentials = GmailHandler.get_credentials(request)
+                credentials = GoogleAuthorisationHandler.get_credentials(request)
                 if not credentials:
                     print("NOT OK")
                     error_message = 'Google Authorization Required! Please contact Web Team'
@@ -5753,23 +5868,23 @@ def mail(request):
                                                                       'section':section,
                                                                       'error_message':error_message})
                 try:
-                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    gmail_service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
                     print(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
                     if section == 'inbox':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
                     elif section == 'sent':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken='').execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="in:sent -label:dev-mail",pageToken='').execute()
                     elif section == 'dev_mail':
                         if Access_Render.system_administrator_superuser_access(request.user.username) or Access_Render.system_administrator_staffuser_access(request.user.username):
-                            threads = service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
+                            threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="label:dev-mail",pageToken='').execute()
                         else:
-                            threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
+                            threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
                     elif section =='starred':
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="is:starred -label:dev-mail",pageToken='').execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="is:starred -label:dev-mail",pageToken='').execute()
                     else:
                         section = 'inbox'
-                        threads = service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
+                        threads = gmail_service.users().threads().list(userId='me', maxResults=10, q="category:primary -label:dev-mail",pageToken='').execute()
 
 
                     if 'nextPageToken' in threads:
@@ -5824,7 +5939,7 @@ def mail(request):
                             thread_id = thread['id']
 
                             # Fetch the required details for each message
-                            batch.add(service.users().threads().get(
+                            batch.add(gmail_service.users().threads().get(
                                 userId='me',
                                 id=thread_id,
                                 format='metadata',
@@ -5892,11 +6007,13 @@ def view_mail(request, mail_id):
         has_access=Branch_View_Access.get_manage_email_access(request)
 
         if has_access:
-            credentials = GmailHandler.get_credentials(request)
+            global gmail_service
+
+            credentials = GoogleAuthorisationHandler.get_credentials(request)
             if not credentials:
                 print("NOT OK")
                 return None
-            service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            gmail_service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
             print(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, 'service created successfully')
 
             thread_data = []
@@ -5904,7 +6021,7 @@ def view_mail(request, mail_id):
             thread_id = mail_id
 
             # Fetch the required details for each message
-            thread_details = service.users().threads().get(
+            thread_details = gmail_service.users().threads().get(
                 userId='me',
                 id=thread_id,
                 format='full',
@@ -6018,7 +6135,7 @@ def view_mail(request, mail_id):
                     })
 
                 # Fetch the required details for each message
-                thread_details = service.users().threads().modify(
+                thread_details = gmail_service.users().threads().modify(
                     userId='me',
                     id=thread_id,
                     body={
@@ -6045,181 +6162,76 @@ def view_mail(request, mail_id):
     
 class SendMailAjax(View):
     def post(self, request):
-        '''
-        The recruitment sessions "option value" from html comes
-        as "recruits_{session_id}. Applied an algorithm that will retrieve
-        session_id from this.
-        
-        If no option is selected, backend will recieve an empty string as value.
-        
-        Settled value for the options in HTML:
-            All Registered Members - "general_members"
-            ALL officers of IEEE NSU SB - "all_officers",
-            Executive Panel (Branch Only) - "eb_panel",
-            Branch Ex-Com Members - "excom_branch",
-            All, Society, Chapters, Affinity Group Ebs - "scag_eb"
-        
-        '''
-        
-        email_single_email = ''
-        if request.POST.get('to[]'):
-            email_single_email=request.POST.get('to[]')
-        email_to_list = ['']
-        if request.POST.getlist('sendTo[]'):
-            email_to_list=request.POST.getlist('sendTo[]')
-
-        email_cc_list = ['']
-        if request.POST.getlist('cc[]'): 
-            email_cc_list=request.POST.getlist('cc[]')
-        
-        email_bcc_list = ['']
-        if request.POST.getlist('bcc[]'):
-            email_bcc_list=request.POST.getlist('bcc[]')
-        email_subject=request.POST['subject']
-        email_body=request.POST['body']
-        email_schedule_date_time = request.POST['dateTime']
-
-        msg = 'Test'
-        print(request.POST)
-        
-        if email_schedule_date_time != "":
+        try:
+            '''
+            The recruitment sessions "option value" from html comes
+            as "recruits_{session_id}. Applied an algorithm that will retrieve
+            session_id from this.
             
-            if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                msg = 'Select atleast one recipient'
-                # messages.error(request,"Select atleast one recipient")
-            else:
-                try:
-                # If there is a file 
-                    email_attachment=request.FILES.getlist('attachments')                       
-                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                    )
-                    
-                    if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time,email_attachment):
-                        msg = 'Email scheduled successfully!'
-                        # messages.success(request,"Email scheduled successfully!")
-                    else:
-                        msg = 'Email could not be scheduled! Try again Later'
-                        # messages.error(request,"Email could not be scheduled! Try again Later") 
-                except MultiValueDictKeyError:
-                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                    )
-                    if PRT_Email_System.send_scheduled_email(request, to_email_list,cc_email_list,bcc_email_list,email_subject,email_body,email_schedule_date_time):
-                        msg = 'Email scheduled successfully!'
-                        # messages.success(request,"Email scheduled successfully!")
-                    else:
-                        msg = 'Email could not be scheduled! Try again Later'
-                        # messages.error(request,"Email could not be scheduled! Try again Later")
-                                
-        else:   
+            If no option is selected, backend will recieve an empty string as value.
+            
+            Settled value for the options in HTML:
+                All Registered Members - "general_members"
+                ALL officers of IEEE NSU SB - "all_officers",
+                Executive Panel (Branch Only) - "eb_panel",
+                Branch Ex-Com Members - "excom_branch",
+                All, Society, Chapters, Affinity Group Ebs - "scag_eb"
+            
+            '''
+            
+            email_single_email = ''
+            if request.POST.get('to[]'):
+                email_single_email=request.POST.getlist('to[]')
+            email_to_list = ['']
+            if request.POST.getlist('sendTo[]'):
+                email_to_list=request.POST.getlist('sendTo[]')
 
-            if(email_single_email=='' and email_to_list[0]=='' and email_cc_list[0]=='' and email_bcc_list[0]==''):
-                msg = 'Select atleast one recipient'
-                # messages.error(request,"Select atleast one recipient")
-            else:
+            email_cc_list = ['']
+            if request.POST.getlist('cc[]'): 
+                email_cc_list=request.POST.getlist('cc[]')
+            
+            email_bcc_list = ['']
+            if request.POST.getlist('bcc[]'):
+                email_bcc_list=request.POST.getlist('bcc[]')
+            email_subject=request.POST['subject']
+            email_body=request.POST['body']
+            email_attachment=request.FILES.getlist('attachments')                       
+            email_schedule_date_time = request.POST['dateTime']
 
-                email_attachment=request.FILES.getlist('attachments')
-
-                if email_attachment:
-
-                    # If there is a file 
-                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                    )
-                    if PRT_Email_System.send_email(request, to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False,attachment=email_attachment):
-                        msg = 'Email sent successfully!'
-                        # messages.success(request,"Email sent successfully!")
-                    else:
-                        msg = 'Email sending failed! Try again Later'
-                        # messages.error(request,"Email sending failed! Try again Later")
-
-                else:
-                    to_email_list,cc_email_list,bcc_email_list=PRT_Email_System.get_all_selected_emails_from_backend(
-                        email_single_email,email_to_list,email_cc_list,email_bcc_list,request
-                    )
-                    if PRT_Email_System.send_email(request, to_email_list=to_email_list,cc_email_list=cc_email_list,bcc_email_list=bcc_email_list,subject=email_subject,mail_body=email_body,is_scheduled=False):
-                        msg = 'Email sent successfully!'
-                        # messages.success(request,"Email sent successfully!")
-                    else:
-                        msg = 'Email sending failed! Try again Later'
-                        # messages.error(request,"Email sending failed! Try again Later")
-        return JsonResponse({'message':msg})
+            response = GmailHandler.send_mail(request, email_single_email, email_to_list, email_cc_list, email_bcc_list, email_subject, email_body, email_attachment, email_schedule_date_time)
+            
+            return response
+        
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
     
 class PaginationAjax(View):
     def get(self, request):
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            navigate_to = request.GET.get('navigate_to')
-            section = request.GET.get('section')
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                navigate_to = request.GET.get('navigate_to')
+                section = request.GET.get('section')
 
-            if navigate_to and section:
-                pg_token = request.session.get('pg_token')
-                if pg_token and len(pg_token) != 0:                   
-                    if navigate_to == 'next_page':
-                        if pg_token[-1] == None:
-                            return JsonResponse({'message':'That\'s all'})
-                        
-                        response = mail(request)
-                        # Redirect with the URL containing custom params
-                        response = json.loads(response.content)
-                        request.session['pg_token'].append(response['nextPageToken'])
-                        pg_range = request.session['pg_range'].split(' - ')
-                        request.session['pg_range'] = f'{int(pg_range[0])+10} - {int(pg_range[1])+10}'
-                        request.session.modified = True
-                        response['pg_range'] = request.session['pg_range']
-                        return JsonResponse(response)
-                    elif navigate_to == 'prev_page':
-                        if len(pg_token) == 1:
-                            request.session['pg_token'].pop()
-                            pg_range = request.session['pg_range'].split(' - ')
-                            request.session['pg_range'] = f'{int(pg_range[0])-10} - {int(pg_range[1])-10}'
-                        else:
-                            request.session['pg_token'].pop()
-                            request.session['pg_token'].pop()
-                            pg_range = request.session['pg_range'].split(' - ')
-                            request.session['pg_range'] = f'{int(pg_range[0])-10} - {int(pg_range[1])-10}'
+                response = GmailHandler.get_pagination(request, section, navigate_to)
 
-                        request.session.modified = True
-                        response = mail(request)
-                        response['pg_range'] = request.session['pg_range']
-                        return response
-                    else:
-                        return JsonResponse({'message':'error'})
-
-                else:
-                    return JsonResponse({'message':'error'})
-        else:
-            return HttpResponse('Access Denied!')
+                return response
+            else:
+                return HttpResponse('Access Denied!')
+        except Exception as e:
+            print(e)
+            return JsonResponse({'message':'Something went wrong!'})
 
 class ReadUnreadEmailAjax(View):
     def post(self, request):
         try:
             message_id = request.POST.get('message_id')
             action = request.POST.get('action')
-            message_id = message_id.split(',')
+            message_ids = message_id.split(',')
             
-            global service
-            if not service:
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
-                
-                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-
-            if action == 'READ':
-                service.users().messages().batchModify(
-                userId='me',
-                body={'ids':message_id,'removeLabelIds': ['UNREAD']}
-                ).execute()
-                return JsonResponse({'message':'Marked as Read!'})
-
-            elif action == 'UNREAD':
-                service.users().messages().batchModify(
-                userId='me',
-                body={'ids':message_id,'addLabelIds': ['UNREAD']}
-                ).execute()
-                return JsonResponse({'message':'Marked as Unread!'})   
+            response = GmailHandler.perform_read_unread_mail(request, message_ids, action)
+        
+            return response           
                 
         except Exception as e:
             print(e)
@@ -6230,32 +6242,10 @@ class StarUnstarEmailAjax(View):
         try:
             message_id = request.POST.get('message_id')
             action = request.POST.get('action')
-            print(action)
             
-            global service
-            if not service:
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
-                
-                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+            response = GmailHandler.perform_star_unstar_mail(request, message_id, action)
 
-            if action == 'STAR':
-                service.users().threads().modify(
-                userId='me',
-                id=message_id,
-                body={'addLabelIds': ['STARRED']}
-                ).execute()
-                return JsonResponse({'message':'UnStarred Succesfully!'})
-
-            elif action == 'UNSTAR':
-                service.users().threads().modify(
-                userId='me',
-                id=message_id,
-                body={'removeLabelIds': ['STARRED']}
-                ).execute()
-                return JsonResponse({'message':'UnStarred Succesfully!'})
+            return response
                 
         except Exception as e:
             print(e)
@@ -6267,31 +6257,9 @@ class DeleteEmailAjax(View):
             message_ids = request.POST.get('message_id')
             message_ids = message_ids.split(',')
             
-            global service
-            if not service:
-                credentials = GmailHandler.get_credentials(request)
-                if not credentials:
-                    print("NOT OK")
-                    return None
-                
-                service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
-            
-            # Create a batch request
-            batch = BatchHttpRequest()
+            response = GmailHandler.perform_delete_mail(request, message_ids)
 
-            for message_id in message_ids: 
-                batch.add(
-                    service.users().threads().trash(
-                    userId='me',
-                    id=message_id,
-                    )
-                )
-
-            batch._batch_uri = 'https://www.googleapis.com/batch/gmail/v1'
-
-            batch.execute()
-
-            return JsonResponse({'message':'Deleted Successfully!'})   
+            return response   
                 
         except Exception as e:
             print(e)
@@ -6312,16 +6280,17 @@ class GetScheduledEmailInfoAjax(View):
 def get_attachment(request, message_id, attachment_id):
     # Fetch the attachment from Gmail API
     filename = request.GET.get('filename')
-    global service
-    if not service:
-        credentials = GmailHandler.get_credentials(request)
+    global gmail_service
+
+    if not gmail_service:
+        credentials = GoogleAuthorisationHandler.get_credentials(request)
         if not credentials:
             print("NOT OK")
             return None
         
-        service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+        gmail_service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
-    attachment = service.users().messages().attachments().get(
+    attachment = gmail_service.users().messages().attachments().get(
         userId='me',
         messageId=message_id,
         id=attachment_id
@@ -6395,7 +6364,6 @@ class UpdateScheduledEmailOptionsAjax(View):
 
 class SendReplyMailAjax(View):
     def post(self, request):
-        msg = 'test'
 
         try:
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -6411,75 +6379,11 @@ class SendReplyMailAjax(View):
                 
                 print(to_email_additional)
 
-                global service
-                if not service:
-                    credentials = GmailHandler.get_credentials(request)
-                    if not credentials:
-                        print("NOT OK")
-                        return None
-                    
-                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                response = GmailHandler.send_reply_mail(request, thread_id, original_message_id, body, to_email_additional, email_attachment)
 
-                # Get the original email
-                original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
-                
-                # Extract original details
-                original_payload = original_message['payload']
-                headers = {h['name']: h['value'] for h in original_payload['headers']}
-
-                if email_attachment is None:
-                    message = MIMEText(body, 'html')
-
-                    message["From"] = "ieeensusb.portal@gmail.com"
-                    message['To'] = headers.get('From') + ',' + to_email_additional
-                    message['From'] = headers.get('To')  # Original recipient becomes the sender
-                    message['Cc'] = headers.get('Cc')
-                    subject = headers.get('Subject', '(No Subject)')
-                    if subject[:3] == 'Re:':
-                        message['Subject'] = subject
-                    else:
-                        message['Subject'] = 'Re: ' + subject
-                    message['In-Reply-To'] = headers.get('Message-ID')
-                    message['References'] = headers.get('Message-ID')
-                else:
-                    message=MIMEMultipart()
-
-                    message["From"] = "ieeensusb.portal@gmail.com"
-                    message['To'] = headers.get('From')
-                    message['From'] = headers.get('To')  # Original recipient becomes the sender
-                    message['Cc'] = headers.get('Cc')
-                    subject = headers.get('Subject', '(No Subject)')
-                    if subject[:3] == 'Re:':
-                        message['Subject'] = subject
-                    else:
-                        message['Subject'] = 'Re: ' + subject
-                    message['In-Reply-To'] = headers.get('Message-ID')
-                    message['References'] = headers.get('Message-ID')
-
-                    # Attach the main message body
-                    message.attach(MIMEText(body, 'html'))
-        
-                    for attachment in email_attachment:
-                        content_file = ContentFile(attachment.read())
-                        content_file.name = attachment.name
-                        part = MIMEBase('application', 'octet-stream')
-                        part.set_payload(content_file.read())
-                        encoders.encode_base64(part)
-                        part.add_header(
-                            'Content-Disposition',
-                            f'attachment; filename={content_file.name}',
-                        )
-                        message.attach(part)
-
-                # encoded message
-                encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-                
-                create_message = {"raw": encoded_message, "threadId":thread_id}
-
-                send_message = service.users().messages().send(userId='me', body=create_message).execute()
-                msg = 'Email sent successfully!'
-
-            return JsonResponse({'message':msg})
+                return response
+            else:
+                return HttpResponse('Access Denied')
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Something went wrong!'})
@@ -6501,17 +6405,18 @@ class SendForwardMailAjax(View):
                 
                 print(to_email_additional)
 
-                global service
-                if not service:
-                    credentials = GmailHandler.get_credentials(request)
+                global gmail_service
+
+                if not gmail_service:
+                    credentials = GoogleAuthorisationHandler.get_credentials(request)
                     if not credentials:
                         print("NOT OK")
                         return None
                     
-                    service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
+                    gmail_service = build(Settings.GOOGLE_MAIL_API_NAME, Settings.GOOGLE_MAIL_API_VERSION, credentials=credentials)
 
                 # Get the original email
-                original_message = service.users().messages().get(userId='me', id=original_message_id).execute()
+                original_message = gmail_service.users().messages().get(userId='me', id=original_message_id).execute()
 
                 # Extract original details
                 original_payload = original_message['payload']
@@ -6639,10 +6544,13 @@ class SendForwardMailAjax(View):
                 
                 create_message = {"raw": encoded_message}
 
-                send_message = service.users().messages().send(userId='me', body=create_message).execute()
+                send_message = gmail_service.users().messages().send(userId='me', body=create_message).execute()
                 msg = 'Email forwarded successfully!'
 
             return JsonResponse({'message':msg})
         except Exception as e:
             print(e)
             return JsonResponse({'message':'Something went wrong!'})
+        
+# DO NOT MOVE/CHANGE THIS LINE OF CODE!!
+from central_branch.google_mail_handler import GmailHandler, gmail_service

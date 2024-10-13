@@ -1071,12 +1071,12 @@
                
                </div>
            </form> 
-           <form method="post" id="taskForm">
+           <form method="POST" id="taskForm">
             {% csrf_token %}
             <!--Messages-->
             {% if not is_new_task %}
               <!--buttons showed when viewing task-->
-              <div class="task-btn">
+`               <div class="task-btn">
                     {% if create_individual_task_access or create_team_task_access %}
                         {% if team_primary == None or team_primary == "1" %}
                         <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
@@ -1096,14 +1096,14 @@
                                     {% for team,bool in is_task_forwared_to_incharge.0.items %}
                                     {% if bool == False %}
                                         {% comment %} <input type="submit" value="{{team.team_name}}" name="{{team.primary}}"> {% endcomment %}
-                                        <button type="button" id="forward_to_team_incharges_modal_button" class="forward_to_team_incharges_modal_button" name="{{team.primary}}" value="{{team.team_name}}">{{team.team_name}}</button>
+                                        {% comment %} <button type="button" id="forward_to_team_incharges_modal_button" class="forward_to_team_incharges_modal_button" name="{{team.primary}}" value="{{team.team_name}}">{{team.team_name}}</button> {% endcomment %}
+                                        <p>{{forloop.counter}}.<a href="{% url 'central_branch:forward_to_incharges' task.pk team.primary %}" style="text-align:center;">{{team.team_name}}</a></p>
+                                        <br>
                                         {% comment %} <input type="hidden" value="{{team.primary}}" name="teamclicked"> {% endcomment %}
                                     {% endif %}
                                     {% endfor %}
                                 </div>
                             </div>
-
-
 
                             <div id="modal4" class="confirm_forward">
                                 <!-- Modal content -->
@@ -1124,7 +1124,8 @@
                         {% if is_officer == "Admin/EB" and is_task_forwarded_to_volunteers.1 == False and not task.is_task_completed and task.task_type == "Team" %}
                             <a href="{% url 'central_branch:add_task' task.pk %}" class="check-task-button">Forward Task to Volunteers</a>
                         {% endif %}
-                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
+                    {% endif %}
+                    {% if is_member_view and not task.is_task_completed and task.task_type == "Individuals" %}
                         {% if my_task %}
                         <a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                         {% elif team_primary != None and team_primary != "1" %}
@@ -1132,7 +1133,8 @@
                         {% else %}
                         <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">{% if is_task_started_by_member %}View Task Submission{% else %}Start the Task{% endif %}</a>
                         {% endif %}
-                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                    {% endif %}
+                    {% if is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% if team_primary != None and team_primary != "1" %}
                             {% if my_task %}
                             {% if is_task_started_by_member %}<a href="{% url 'users:upload_task_user' task.pk %}" class="check-task-button">View Task Submission</a>{% else %}<button type="button" class="check-task-button" id="start_task">Start the Task</button>{% endif %}
@@ -1141,7 +1143,7 @@
                             {% endif %}
                             {% if is_coordinator == True and  is_task_forwared_to_incharge == False and is_task_forwarded_to_volunteers == False and is_task_started_by_member == False %}
                                 {% if not is_task_started_by_any_coordinator %}
-                                    <input type="submit" class="check-task-button" name="forward_to_team_incharges" value="Forward To Team Incharges">
+                                    <a href="{% url ''|add:app_name|add:':forward_to_incharges' task.pk team_primary %}" class="check-task-button">Forward Task To Team Incharges</a>
                                     <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 1  %}" class="check-task-button">Forward Task to Volunteers</a>
                                 {% endif %}
                             {% endif %}
@@ -1158,52 +1160,58 @@
                             {% endif %}
 
                         {% endif %}
-                    {% elif is_coordinator and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                    {% endif %}
+                    {% if is_coordinator and is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% if team_primary != None and team_primary != "1" %}
                             {% if is_task_forwared_to_incharge == True %}
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
+                            {% endif %}
+                            {% if is_task_forwarded_to_volunteers == False and is_task_forwared_to_incharge == True %}
+                            <a href="{% url ''|add:app_name|add:':forward_to_incharges' task.pk team_primary %}" class="check-task-button">Change Task Assignation</a>
                             {% endif %}
                             {% if is_task_forwared_to_incharge == False and is_task_forwarded_to_volunteers == True %}
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
                             {% endif %}
                             {% if is_task_forwarded_to_volunteers == True %}
-                            <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assination</a>
+                            <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assignation</a>
                             {% endif %}
                         {% endif %}
-                    {% elif is_officer and not is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                    {% endif %}
+                    {% if is_officer and is_member_view and not task.is_task_completed and task.task_type == "Team" %}
                         {% if team_primary != None and team_primary != "1" %}
                             {% if is_task_forwarded_to_volunteers == True %}
                                 <a href="{% url ''|add:app_name|add:':upload_task_team' task.pk team_primary  %}" class="check-task-button">Check task progress</a>
-                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assination</a>
+                                <a href="{% url ''|add:app_name|add:':add_task_team' task.pk team_primary 0 %}" class="check-task-button">Change Task Assignation</a>
                             {% endif %}
                         {% endif %}
-                    {% elif is_member_view and not task.is_task_completed and task.task_type == "Team" %}
+                    {% endif %}
+                    {% if is_member_view and task.is_task_completed and task.task_type == "Team" %}
                         {% comment %} Task link for team {% endcomment %}
-                    {% elif is_coordinator and not is_member_view and task.is_task_completed %}
+                    {% elif is_coordinator and is_member_view and task.is_task_completed %}
                         <p  style="color: #d33838;">Task Completed!</p>
-                    {% elif is_officer and not is_member_view and task.is_task_completed %}
+                    {% elif is_officer and is_member_view and task.is_task_completed %}
                         <p  style="color: #d33838;">Task Completed!</p>
                     {% elif is_member_view and task.is_task_completed %}
                         <p  style="color: #d33838;">Task Completed!</p>
                     {% endif %}
 
-                  {% comment %} {% if task.task_type == "Team" and has_team_task_options_view_access %}
-                        {% if is_branch %}
-                        <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
-                        {% else %}
-                        <a href="{% url ''|add:app_name|add:':upload_task' 8 task.pk  %}" class="check-task-button">Check task progress</a>
-                        {% endif %}
+                    {% comment %} {% if task.task_type == "Team" and has_team_task_options_view_access %}
+                            {% if is_branch %}
+                            <a href="{% url 'central_branch:upload_task' task.pk %}" class="check-task-button">Check task progress</a>
+                            {% else %}
+                            <a href="{% url ''|add:app_name|add:':upload_task' 8 task.pk  %}" class="check-task-button">Check task progress</a>
+                            {% endif %}
 
-                    <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Forward Task to Team Members</a>
+                        <a href="{% url 'central_branch:add_task' task.pk %}" class="add-members-task-btn">Forward Task to Team Members</a>
 
-                  {% endif %} {% endcomment %}
+                    {% endif %} {% endcomment %}  
 
-                  {% if create_individual_task_access or create_team_task_access %}
-                    <button type="button" class="log-task-button" id="trigger">Task Logs</button>
-                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
-                    <button type="submit" id="submitTaskButton" class="create-task-btn" name="update_task">Update Task</button>     
-                    {% endif %}         
-                  {% endif %}                  
+                    {% if create_individual_task_access or create_team_task_access %}
+                        <button type="button" class="log-task-button" id="trigger">Task Logs</button>
+                        {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                        <input type="submit" class="create-task-btn" name="update_task" value="Update Task">     
+                        {% endif %}         
+                    {% endif %}                  
                   
                 </div>
                 {% endif %}     
@@ -1315,81 +1323,6 @@
                     </div>
                     {% endif %}
                 </div>
-
-
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search_task_category');
-            const optionsContainer = document.getElementById('options_task_category');
-            const options = optionsContainer.getElementsByClassName('option');
-            const hiddenSelect = document.getElementById('task_category_select');
-            const taskPointsDisplay = document.getElementById('task_points');
-            const lateTextContainer = document.querySelector('.category.user .late_text'); // Late text container
-
-            // Function to set initial values based on existing task category
-            function setInitialValues() {
-                const selectedOption = hiddenSelect.value; // Get the selected value from hidden select
-                const correspondingOption = Array.from(options).find(option => option.getAttribute('data-value') === selectedOption);
-
-                if (correspondingOption) {
-                    searchInput.value = correspondingOption.textContent.trim(); // Set input value to selected option text
-                    taskPointsDisplay.textContent = correspondingOption.getAttribute('data-points'); // Update task points display
-                }
-            }
-
-            // Initialize initial values
-            setInitialValues();
-
-            searchInput.addEventListener('focus', () => {
-                optionsContainer.style.display = 'block';
-            });
-
-            searchInput.addEventListener('input', function() {
-                const filter = this.value.toLowerCase();
-                for (let i = 0; i < options.length; i++) {
-                    const option = options[i];
-                    const text = option.textContent || option.innerText;
-                    option.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
-                }
-            });
-
-            for (let i = 0; i < options.length; i++) {
-                options[i].addEventListener('click', function() {
-                    searchInput.value = this.textContent;
-                    hiddenSelect.value = this.getAttribute('data-value');
-                    taskPointsDisplay.textContent = this.getAttribute('data-points');
-                    optionsContainer.style.display = 'none';
-                });
-            }
-
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.searchable-select')) {
-                    optionsContainer.style.display = 'none';
-                }
-            });
-
-            // Check if task is late and hide input field accordingly
-            function updateInputFieldVisibility() {
-                const isLate = lateTextContainer && lateTextContainer.querySelector('p') && lateTextContainer.querySelector('p').textContent.trim() === 'Task deadline has exceeded';
-                
-                if (isLate) {
-                    searchInput.style.display = 'none'; // Hide input field if task is late
-                } else {
-                    searchInput.style.display = 'block'; // Show input field otherwise
-                }
-            }
-
-            // Call the function initially and on relevant events
-            updateInputFieldVisibility();
-            hiddenSelect.addEventListener('change', updateInputFieldVisibility); // Update on hidden select change
-            document.addEventListener('DOMNodeInserted', updateInputFieldVisibility); // Update on DOM changes
-        });
-        </script>
-
-
-
-    
-
 
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
@@ -1528,7 +1461,7 @@
                                                 <tr>
                                                     <td>{{ coordinator.member.name }}</td>
                                                     <td>
-                                                        <input type="checkbox" name="coordinator_{{ team.primary }}" value="{{ coordinator.member.ieee_id }}">
+                                                        <input type="checkbox" name="coordinator_{{ team.primary }}" value="{{ coordinator.member.ieee_id }}" {% if coordinator.member in all_members_in_task %}checked{% endif %}>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -1569,6 +1502,74 @@
             background-color: #ffdddd!important; /* Light red background */
         }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search_task_category');
+            const optionsContainer = document.getElementById('options_task_category');
+            const options = optionsContainer.getElementsByClassName('option');
+            const hiddenSelect = document.getElementById('task_category_select');
+            const taskPointsDisplay = document.getElementById('task_points');
+            const lateTextContainer = document.querySelector('.category.user .late_text'); // Late text container
+
+            // Function to set initial values based on existing task category
+            function setInitialValues() {
+                const selectedOption = hiddenSelect.value; // Get the selected value from hidden select
+                const correspondingOption = Array.from(options).find(option => option.getAttribute('data-value') === selectedOption);
+
+                if (correspondingOption) {
+                    searchInput.value = correspondingOption.textContent.trim(); // Set input value to selected option text
+                    taskPointsDisplay.textContent = correspondingOption.getAttribute('data-points'); // Update task points display
+                }
+            }
+
+            // Initialize initial values
+            setInitialValues();
+
+            searchInput.addEventListener('focus', () => {
+                optionsContainer.style.display = 'block';
+            });
+
+            searchInput.addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const text = option.textContent || option.innerText;
+                    option.style.display = text.toLowerCase().includes(filter) ? '' : 'none';
+                }
+            });
+
+            for (let i = 0; i < options.length; i++) {
+                options[i].addEventListener('click', function() {
+                    searchInput.value = this.textContent;
+                    hiddenSelect.value = this.getAttribute('data-value');
+                    taskPointsDisplay.textContent = this.getAttribute('data-points');
+                    optionsContainer.style.display = 'none';
+                });
+            }
+
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.searchable-select')) {
+                    optionsContainer.style.display = 'none';
+                }
+            });
+
+            // Check if task is late and hide input field accordingly
+            function updateInputFieldVisibility() {
+                const isLate = lateTextContainer && lateTextContainer.querySelector('p') && lateTextContainer.querySelector('p').textContent.trim() === 'Task deadline has exceeded';
+                
+                if (isLate) {
+                    searchInput.style.display = 'none'; // Hide input field if task is late
+                } else {
+                    searchInput.style.display = 'block'; // Show input field otherwise
+                }
+            }
+
+            // Call the function initially and on relevant events
+            updateInputFieldVisibility();
+            hiddenSelect.addEventListener('change', updateInputFieldVisibility); // Update on hidden select change
+            document.addEventListener('DOMNodeInserted', updateInputFieldVisibility); // Update on DOM changes
+        });
+    </script>
         
     <script>
     // Function to toggle the display of the coordinator list for the selected team
