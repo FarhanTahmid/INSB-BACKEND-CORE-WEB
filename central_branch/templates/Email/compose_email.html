@@ -2037,15 +2037,6 @@
 
     <script>
 
-        function mapOptions(optionsArray) {
-          return optionsArray.map(option => optionMapping[option] || option);
-        }
-
-        const mappedArray3 = mapOptions(altSelectedTags);
-        console.log(mappedArray3);
-        // return mappedArray;
-      }
-
       // Optionally, you can also run loadContent on initial load as before
       document.addEventListener("DOMContentLoaded", function () {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2112,6 +2103,28 @@
       function closeCompose() {
         const composeBtn = document.querySelector('.child-body');
         const composeBody = document.querySelector('.compose');
+
+        document.getElementById('altTagContainer').innerHTML = '';
+        document.getElementById('customTagContainer').innerHTML = '';
+
+
+        let BCC = document.querySelectorAll('.displayBCC');
+        document.querySelector('.bccBtn').style.display = 'block';
+        BCC.forEach(element => {
+          if(element.classList.contains('custom-tag-container'))
+            element.style.display = 'none';
+          else
+            element.style.display = 'none';
+        });
+
+        let CC = document.querySelectorAll('.displayCC');
+        document.querySelector('.ccBtn').style.display = 'block';
+        CC.forEach(element => {
+          if(element.classList.contains('custom-tag-container'))
+            element.style.display = 'none';
+          else
+            element.style.display = 'none';
+        });
 
         composeBtn.classList.remove('hidden');
         composeBody.classList.add('hidden');
