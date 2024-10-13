@@ -979,7 +979,7 @@
 
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}
-                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
+                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}} ({{member.team.team_name}})</li>
                 {% endfor %}
             </div>
 
@@ -1187,7 +1187,7 @@
             <div class="name_tab">
                 {% for member,task_type  in task_type_per_member.items %}
                 {% if member.ieee_id != user_data.ieee_id %}
-                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
+                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}} ({{member.team.team_name}})</li>
                 {% endif %}
                 {% endfor %}
             </div>

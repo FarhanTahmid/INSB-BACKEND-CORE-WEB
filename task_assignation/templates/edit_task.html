@@ -1097,7 +1097,8 @@
                                     {% if bool == False %}
                                         {% comment %} <input type="submit" value="{{team.team_name}}" name="{{team.primary}}"> {% endcomment %}
                                         {% comment %} <button type="button" id="forward_to_team_incharges_modal_button" class="forward_to_team_incharges_modal_button" name="{{team.primary}}" value="{{team.team_name}}">{{team.team_name}}</button> {% endcomment %}
-                                        <a href="{% url 'central_branch:forward_to_incharges' task.pk team.primary %}" style="text-align:center;">{{team.team_name}}</a>
+                                        <p>{{forloop.counter}}.<a href="{% url 'central_branch:forward_to_incharges' task.pk team.primary %}" style="text-align:center;">{{team.team_name}}</a></p>
+                                        <br>
                                         {% comment %} <input type="hidden" value="{{team.primary}}" name="teamclicked"> {% endcomment %}
                                     {% endif %}
                                     {% endfor %}
