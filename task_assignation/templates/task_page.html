@@ -1161,8 +1161,219 @@
                         {% endif %}
                     </form> 
             </div>
-                {% endfor %}
+            {% endfor %}
+            {% elif view_access %}
+            <div class="form-wrapper">
+                <div style="display: flex;
+                justify-content: space-between;
+                align-items: flex-end;">
+                        <!-- <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button> -->
+                    </div>
+                <!--Messages-->
+                <div id="messageContainer2" style="display:none; justify-content:center; text-align:center;">
+                    <div id="messageBox2" class="alert alert-success" role="alert">
+                        <span id="messageText2"></span>
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <!--Messages-->
+                
+                <!-- task page heading-->
+                <h4 style="margin-top: 25px;">See Task Progress</h4>
+                
+
+            <div class="name_tab">
+                {% for member,task_type  in task_type_per_member.items %}
+                {% if member.ieee_id != user_data.ieee_id %}
+                <li class="tab{% if forloop.counter == 1 %} active_tab{% else %}{% endif %}" id="{{ member.ieee_id }}" onclick="showDetails('{{ member.ieee_id }}')">{{member.name}} - {{member.ieee_id}}</li>
                 {% endif %}
+                {% endfor %}
+            </div>
+
+            
+
+            {% for member,task_type  in task_type_per_member.items %}
+            {% if member.ieee_id != user_data.ieee_id %}
+            <!-- logs modal -->
+            <div class="modal__wrapper" id="modal__wrapper_{{ member.ieee_id }}">
+                <div class="modal__container">
+                    <button class="close-4" id="close-4_{{ member.ieee_id }}">&times;</button>
+                    <h4>Points Logs - {{ member.name }}</h4>
+                    <div class="modal__wrapper__container">
+                        <ul>
+                            {% for date, log in task_type.8.items %}
+                            <li><b>{{date}}:</b><br>{{log}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="details_{{ member.ieee_id }}" class="details" style="display: {% if forloop.counter == 1 %}block{% else %}none{% endif %};">
+                <form method="POST" enctype="multipart/form-data" id="{{member.ieee_id}}">
+                    <div style="    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 30px;
+                    gap: 20px;">
+                    <span style="font-size: 18px; font-weight: 600; color: #277da1;">{{member.name}} - {{member.ieee_id}}</span>
+                        <div>
+                            <span style="font-size: larger;">Points:</span>
+                            <input type="number" id="completed_points" name = "completed_points" value="{{task_type.6.completion_points|floatformat:2}}" {% if task.is_task_completed %} disabled {% endif %} placeholder="Task marks" style="width: 70px; border-radius: .5rem;
+                            padding: 0 4px;
+                            border: none;
+                            background: #f8f8f8;
+                            font-size: 20px;
+                            margin-right: .75rem;">
+                            <input type="hidden" id="member_id" name="member_id" value="{{member}}"></input>
+                            <input type="hidden" id="task_id" name="task_id" value="{{task.pk}}"></input>
+                            {% comment %} <button type="button" class="task-mark-save" disabled>
+                                <span class="shadow"></span>
+                                <span class="edge"></span>
+                                <span class="front text">Save</span>
+                            </button> {% endcomment %}
+                        </div>                        
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <button type="button" class="btn__purple" id="trigger_{{ member.ieee_id }}">Points Logs</button>
+                    </div>
+
+                    {% csrf_token %}
+    
+    
+                        <!-- Drive link -->
+                        {% if task_type.0.has_drive_link %}
+                        <label>Link</label>
+                        <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
+                            <div>
+                                {% if task_type.2.drive_link %}
+                                <a href="{{task_type.2.drive_link}}" target="_blank">Click to redirect to the link</a>
+                                {% else %}
+                                <div style="color: #d33838;">
+                                    Didn't upload yet!
+                                </div>
+                                {% endif %}
+                            </div>
+                            <!-- <input placeholder="Provide Drive Link" class="form-control" type="url" autocomplete="off"
+                            value="{{task_type.2.drive_link}}" name="content_drive" disabled /> -->
+                        </div>
+                        <br>
+                        {% endif %}
+    
+    
+    
+                        {% if task_type.0.has_permission_paper %}
+                        <!-- Paper permission -->
+                        <label class="description_label" style="margin-right: 20px;">Completed?</label>
+                        <div class="form-group"  style="background-color: #F8F8F8; padding: 10px;  align-items: center;">
+                            <div>
+                                {% if task_type.1.permission_paper == "completed" %}
+                                Yes
+                                {% elif task_type.1.permission_paper == "not_completed" %}
+                                No
+                                {% else %}
+                                <div style="color: #d33838;">
+                                    No response yet!
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% comment %} <select id="paper_permission_dropdown" name="permission_paper" class="form-control" disabled>
+                                <option value="completed"{% if task_type.1.permission_paper == "completed" %}selected{% endif %}>Completed </option>
+                                <option value="not_completed"{% if task_type.1.permission_paper == "not_completed" %}selected{% endif %}>Not Completed</option>
+                            </select>                                   {% endcomment %}
+                        </div>
+                        <br>
+                        {% endif %}
+    
+                        
+                        
+                        {% if task_type.0.has_content %}
+                        <!--content-->
+                        <label class="description_label">Content</label>
+                        <div class="ckeditor">
+                            <div>
+                                <textarea class="form-control" type="text" name="content_details_{{member.name}}" disabled >{{task_type.3.content}}</textarea>
+                            </div>
+                                <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
+                        </div>
+                            <br>
+                    
+                            <div id="media-selected-images-container"></div>
+                            <input type="hidden" name="selected_images" id="media-selected-images"> 
+                            <br>
+                        {% endif %}
+                            
+                            
+                            {% if task_type.0.has_file_upload %}
+                            <!--file upload -->
+                            <p>Uploaded Files</p>
+                            <div class="file-upload-text" style="margin: 1rem 0 2rem; background-color: #f8f9fa; padding: 8px; color: #d33838;">No Files Uploaded Yet!</div>
+                            {% if task_type.4|length > 0 %}
+                            {% for file in task_type.4 %}
+                                <div style="margin: 1rem auto 0;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                padding: 8px;
+                                /* overflow-y: hidden; */
+                                background-color: #f8f9fa;">
+                                    <a href={{media_url}}{{file.document}} class="fileUploaded" target="_blank">{{forloop.counter}}. {{file.filename}}</a>
+                                </div>
+                            {% endfor %}
+                            
+                            <br>
+                            <div id="content-selected-docs-container"></div>
+                            <input type="hidden" name="selected_documents" id="content-selected-documents">
+                            {% endif %}
+                            {% endif %}                                                                
+                            {% if task_type.0.has_media %}
+                            <!-- Media -->
+                             <div class="media-upload-txt-container">
+                                 <p>Media Upload</p>
+                                 <div style="margin: 1rem 0; background-color: #f8f9fa; padding: 8px; color: #d33838;">No Media Uploaded Yet!</div>
+                                </div>
+                            {% if task_type.5|length > 0 %}
+                            <p>Uploaded Images</p>
+                                {% for media in task_type.5 %}
+                                <div style="margin: 1rem auto 0;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: flex-start;
+                                overflow-y: hidden;
+                                background-color: #f8f9fa;">
+                                        <a href="#" class="btn btn-link btn-block mediaUploaded" data-toggle="modal" data-target="#showImageModal" onclick="openImageModal('{{media_url}}{{media.media}}')">{{forloop.counter}}. {{media.filename}}</a>
+                                    </div>
+                                {% endfor %}
+                            <br>
+                            {% endif %}
+                            {% endif %}
+                        
+                        
+                            <label class="description_label" style="color: #3a86ff;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
+                            <div class="ckeditor">
+                                <div>
+                                    <input type="hidden" name="comments_member" value="{{member}}"></input>
+                                    <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details" disabled>{{task_type.7|safe}}</textarea>
+                                </div>
+                            
+                            </div> 
+    
+                        
+    
+    
+                        <!--Submit btn-->
+                        {% if not task.is_task_completed %}
+                        <div class="task-btn">
+                            <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer; margin-top: 40px;">
+                        </div>
+                        {% endif %}
+                    </form> 
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
         </div>
 
         <!-- Confirmation modal for delete -->
@@ -1430,6 +1641,8 @@
                     success: function (response) {
                         // Update other form fields based on the received data
                         showMessage(response.message);
+                        showMessage2(response.message);
+                        console.log(response.message);
                         points.val(response.points.toFixed(1))
                         document.body.scrollTop = 0; // For Safari
                         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -1450,11 +1663,24 @@
         function hideMessage() {
             $('#messageContainer').hide();
         }
+        function showMessage2(message) {
+            $('#messageText2').text(message);
+            $('#messageContainer2').show();
+        }
+
+        // Function to hide the message box
+        function hideMessage2() {
+            $('#messageContainer2').hide();
+        }
         // Add event listener to close button
         $('#messageBox .close').click(function() {
         // Hide the message box when the close button is clicked
         hideMessage();
         });
+        $('#messageBox2 .close').click(function() {
+            // Hide the message box when the close button is clicked
+            hideMessage2();
+            });
     </script>
     <script>
         let nameTabs = document.querySelectorAll('.tab');
