@@ -68,7 +68,7 @@ def md_team_homepage(request):
 @member_login_permission
 def insb_members_list(request):
 
-    try:
+    # try:
 
         sc_ag=PortData.get_all_sc_ag(request=request)
         current_user=LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
@@ -95,7 +95,7 @@ def insb_members_list(request):
             
 
             context={
-                'is_branch':False,
+                'is_branch':True,
                 'all_sc_ag':sc_ag,
                 'members':members,
                 'totalNumber':totalNumber,
@@ -108,10 +108,10 @@ def insb_members_list(request):
         else:
             return render(request,'access_denied2.html', {'all_sc_ag':sc_ag,'user_data':user_data,})
         
-    except Exception as e:
-        logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
-        ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
-        return cv.custom_500(request)
+    # except Exception as e:
+    #     logger.error("An error occurred at {datetime}".format(datetime=datetime.now()), exc_info=True)
+    #     ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
+    #     return cv.custom_500(request)
 
 @login_required
 @member_login_permission
@@ -152,7 +152,7 @@ def member_details(request,ieee_id):
             skill_of_member=None
             
         context={
-            'is_branch':False,
+            'is_branch':True,
             'all_sc_ag':sc_ag,
             'member_data':member_data,
             'member_skills':member_skills,
