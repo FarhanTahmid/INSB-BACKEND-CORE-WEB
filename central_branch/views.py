@@ -5421,7 +5421,7 @@ def task_edit(request,task_id,team_primary = None):
                     team = task.team.all()
                     team_select = [team[0].primary]
                     
-                if(Task_Assignation.update_task(request, task_id,task_of, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member)):
+                if(Task_Assignation.update_task(request, task_id,task_of, title, description, task_category, deadline, task_type, team_select, member_select, is_task_completed,task_types_per_member,coordinators_per_team)):
                     messages.success(request,"Task Updated successfully!")
                 else:
                     messages.warning(request,"Something went wrong while updating the task!")
