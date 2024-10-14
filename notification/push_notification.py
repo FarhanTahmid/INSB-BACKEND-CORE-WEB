@@ -5,7 +5,7 @@ from .models import *
 from datetime import datetime
 
 
-def send_push_notification(title,body,token):
+def send_push_notification(title,body,token,link=None):
 
     try:
         message = messaging.Message(
@@ -13,7 +13,8 @@ def send_push_notification(title,body,token):
                 title=title,
                 body=body,
             ),
-            token=token
+            token=token,
+            data={"link": link} if link else None
         )
         response = messaging.send(message)
         return response 

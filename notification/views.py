@@ -131,7 +131,8 @@ class ReceiveTokenAjax(View):
             if member_notifications_count > 0 and (previous_path == '/portal/users/dashboard' or previous_path == '/portal/notifications/'):
                 title = "IEEE NSU SB PORTAL"
                 body = f"You have {str(member_notifications_count)} new notifications!"
-                response = push_notification.send_push_notification(title,body,token)   
+                site_domain = request.META['HTTP_HOST']
+                response = push_notification.send_push_notification(title,body,token,f'{site_domain}/portal/users/dashboard')   
                 return JsonResponse({'message':'Message sent!','response':response})  
             else:
                 return JsonResponse({'message':'No message to send!'},safe=False)
