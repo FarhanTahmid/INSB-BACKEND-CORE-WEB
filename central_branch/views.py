@@ -5399,6 +5399,7 @@ def task_edit(request,task_id,team_primary = None):
                 team_select = None
                 member_select = None
                 task_types_per_member = {}
+                coordinators_per_team = {}
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
