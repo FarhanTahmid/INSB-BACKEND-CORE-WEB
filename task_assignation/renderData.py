@@ -1190,7 +1190,7 @@ class Task_Assignation:
                 #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
                 # elif requesting_member.position.is_eb_member:
                 #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = True, position__is_officer=True)
-            
+            else:
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
         else:
             #Admin user so load all members
@@ -1788,8 +1788,8 @@ This is an automated message. Do not reply
             return 'events_and_management_team'
         elif team_primary == 4:
             return 'logistics_and_operations_team'
-        elif team_primary == 5:
-            return 'promotions_team'
+        # elif team_primary == 5:
+        #     return 'promotions_team'
         elif team_primary == 6:
             return 'public_relation_team'
         elif team_primary == 7:
@@ -1815,7 +1815,7 @@ This is an automated message. Do not reply
             logistic_team = True
         # elif team_primary == 5:
         #     promotion_team = True
-        elif team_primary == 0:
+        elif team_primary == 6:
             public_relation_team = True
         elif team_primary == 7:
             mdt_team = True

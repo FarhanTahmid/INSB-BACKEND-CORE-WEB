@@ -18,7 +18,7 @@ class PRT_Data:
         
         '''Gets the team id from the database only for Public Relation Team. Not the right approach'''
         
-        team=Teams.objects.get(primary=0)
+        team=Teams.objects.get(primary=6)
         return team.id
     
     def getPublicRelationPromotionTeamID():
@@ -32,7 +32,7 @@ class PRT_Data:
         
         '''This function loads all the team members for the public relation team'''
 
-        load_team_members=Branch.load_team_members(team_primary=0)
+        load_team_members=Branch.load_team_members(team_primary=6)
         team_members=[]
         
         for i in range(len(load_team_members)):
@@ -69,7 +69,7 @@ class PRT_Data:
         return recruitment_session.objects.all().order_by('-id')
     
     def add_member_to_team(ieee_id,position):
-        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=0) 
+        Branch.add_member_to_team(ieee_id=ieee_id,position=position,team_primary=6) 
 
     def prt_manage_team_access_modifications(manage_email_access,manage_team_access,ieee_id):
         try:
