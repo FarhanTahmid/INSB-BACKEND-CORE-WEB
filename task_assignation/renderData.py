@@ -1181,52 +1181,23 @@ class Task_Assignation:
 
             #checking whether it is requested from team or from central branch
             if team_primary!=None and team_primary!="1":
-                
-                if team_primary == 5:
-                    members = []
-                    all_member = PromotionTeam.load_all_team_members()
-                    for mem in all_member:
-                        if mem.position.rank>requesting_member.position.rank:
-                            members.append(mem)
-                elif team_primary == 6:
-                    print("HREREER")
-                    members = []
-                    all_member = PRT_Data.load_team_members()
-                    for mem in all_member:
-                        if mem.position.rank>requesting_member.position.rank:
-                            members.append(mem)
-                    print(members)
-                else:
 
-                    team_of = Teams.objects.get(primary = int(team_primary))
-        
-                    # if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)#.exclude(position__is_co_ordinator = False, position__is_officer=True)
-                    # elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                    #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
-                    # elif requesting_member.position.is_eb_member:
-                    #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = True, position__is_officer=True)
-            else:
+                team_of = Teams.objects.get(primary = int(team_primary))
+    
+                # if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)#.exclude(position__is_co_ordinator = False, position__is_officer=True)
+                # elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of)
+                # elif requesting_member.position.is_eb_member:
+                #     members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team_of).exclude(position__is_co_ordinator = True, position__is_officer=True)
+            
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank)
         else:
             #Admin user so load all members
             members = Members.objects.all()
             if team_primary and team_primary != "1":
-                if team_primary == 5:
-                    members = []
-                    all_member = PromotionTeam.load_all_team_members()
-                    for mem in all_member:
-                        members.append(mem)
-                elif team_primary == 6:
-                    members = []
-                    all_member = PRT_Data.load_team_members()
-                    print(all_member)
-                    for mem in all_member:
-                        members.append(mem)
-                    print(members)
-                else:
-                    team_of = Teams.objects.get(primary = int(team_primary))
-                    members = Members.objects.filter(team = team_of)#.exclude(position__is_officer=True)
+                team_of = Teams.objects.get(primary = int(team_primary))
+                members = Members.objects.filter(team = team_of)#.exclude(position__is_officer=True)
         
         dic = {}
         for member in members:
@@ -1261,52 +1232,28 @@ class Task_Assignation:
             if team_primary==None or team_primary == "1":
                 members = Members.objects.filter(position__rank__gt=requesting_member.position.rank).exclude(ieee_id__in=task.members.all())
             else:
-                if team_primary == 5:
-                    members = []
-                    all_member = PromotionTeam.load_all_team_members()
-                    for mem in all_member:
-                        if mem.position.rank>requesting_member.position.rank and mem not in task.members.all():
-                            members.append(mem)
-                elif team_primary == 6:
-                    members = []
-                    all_member = PRT_Data.load_team_members()
-                    for mem in all_member:
-                        if mem.position.rank>requesting_member.position.rank and mem not in task.members.all():
-                            members.append(mem)
-                else:
-                    team = Teams.objects.get(primary = int(team_primary))
-                    members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
+                team = Teams.objects.get(primary = int(team_primary))
+                members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team=team).exclude(ieee_id__in=task.members.all())
 
-                    # if task.task_type == "Individuals" and len(task.team.all()) == 1:
+                # if task.task_type == "Individuals" and len(task.team.all()) == 1:
 
-                    #     if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                    #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = False, position__is_officer=True)
-                    #     elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
-                    #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team)
-                    #     elif requesting_member.position.is_eb_member:
-                    #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = True, position__is_officer=True)
+                #     if requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = False, position__is_officer=True)
+                #     elif not requesting_member.position.is_co_ordinator and requesting_member.position.is_officer:
+                #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team)
+                #     elif requesting_member.position.is_eb_member:
+                #         members = Members.objects.filter(position__rank__gt=requesting_member.position.rank,team = team).exclude(position__is_co_ordinator = True, position__is_officer=True)
 
         else:
             #Admin user so load all members
             if team_primary==None or team_primary == "1":
                 members = Members.objects.filter().exclude(ieee_id__in=task.members.all())
             else:
-                if team_primary == 5:
-                    members = []
-                    all_member = PromotionTeam.load_all_team_members()
-                    for mem in all_member:
-                        members.append(mem)
-                elif team_primary == 6:
-                    members = []
-                    all_member = PRT_Data.load_team_members()
-                    for mem in all_member:
-                        members.append(mem)
-                else:
-                    team = Teams.objects.get(primary = int(team_primary))
-                    members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
+                team = Teams.objects.get(primary = int(team_primary))
+                members = Members.objects.filter(team=team).exclude(ieee_id__in=task.members.all())
 
-                    # if task.task_type == "Individuals" and len(task.team.all()) == 1:
-                    #     members = Members.objects.filter(team = team).exclude(position__is_officer=True)
+                # if task.task_type == "Individuals" and len(task.team.all()) == 1:
+                #     members = Members.objects.filter(team = team).exclude(position__is_officer=True)
 
         
         for member in members:
