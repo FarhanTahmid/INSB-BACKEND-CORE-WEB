@@ -3204,9 +3204,9 @@
     }
    
     function getAllSelectedTags() {
-        const tags = tagContainer.querySelectorAll('.tag span:first-child');
-        return Array.from(tags).map(tag => tag.textContent);
-      }
+      const tags = tagContainer.querySelectorAll('.tag span:first-child');
+      return Array.from(tags).map(tag => tag.textContent);
+    }
     </script>
     <script>
       // For the CC dropdown
@@ -3361,9 +3361,9 @@
           return optionsArray.map(option => optionMapping[option] || option);
         }
 
-        let mappedArray1 = mapOptions(customSelectedTags);
-        console.log(mappedArray1);
-        return mappedArray1;
+        let mappedArray = mapOptions(customSelectedTags);
+        console.log(mappedArray);
+        return mappedArray;
       }
 
       function customClearAllTags() {
