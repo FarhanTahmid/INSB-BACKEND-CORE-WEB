@@ -1161,8 +1161,23 @@
             if (teamCheckbox && coordinatorRow) {
                 coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
             }
-        }
 
+            deselectCoordinators(teamRowId);
+        }
+        function deselectCoordinators(teamPrimary) {
+            // Get the coordinator list row by team primary ID
+            const coordinatorRow = document.getElementById(`coordinator-list-${teamPrimary}`);
+            
+            if (coordinatorRow) {
+                // Select all checkboxes inside this coordinator row
+                const checkboxes = coordinatorRow.querySelectorAll('input[type="checkbox"]');
+                
+                // Uncheck all the checkboxes
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            }
+        }
 
         {% if create_team_task_access %}
         function filter_team_search_table() {
