@@ -4642,7 +4642,7 @@ def create_task(request,team_primary = None):
                     team_select = request.POST.getlist('team_select')
                     print(team_select)
                     for team_id in team_select:
-                        coordinators_name = request.POST.getlist(team_id+'_coordinators[]')
+                        coordinators_name = request.POST.getlist(team_id+'_coordinator_select[]')
                         coordinators_per_team[team_id] = coordinators_name
                     print("printing team and coordinators")
                     print(coordinators_per_team)
