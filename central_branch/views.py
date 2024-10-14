@@ -5402,6 +5402,12 @@ def task_edit(request,task_id,team_primary = None):
                 #Checking task types and get list accordingly
                 if task_type == "Team":
                     team_select = request.POST.getlist('team_select')
+                    print(team_select)
+                    for team_id in team_select:
+                        coordinators_name = request.POST.getlist(team_id+'_coordinator_select[]')
+                        coordinators_per_team[team_id] = coordinators_name
+                    print("printing team and coordinators")
+                    print(coordinators_per_team)
                 elif task_type == "Individuals":
                     member_select = request.POST.getlist('member_select')
                     for member_id in member_select:
