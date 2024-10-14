@@ -1461,7 +1461,7 @@
                                                 <tr>
                                                     <td>{{ coordinator.member.name }}</td>
                                                     <td>
-                                                        <input type="checkbox" name="coordinator_{{ team.primary }}" value="{{ coordinator.member.ieee_id }}" {% if coordinator.member in all_members_in_task %}checked{% endif %}>
+                                                        <input type="checkbox" name="="{{team.primary}}_coordinator_select[]" value="{{ coordinator.member.ieee_id }}" {% if coordinator.member in all_members_in_task %}checked{% endif %}>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
