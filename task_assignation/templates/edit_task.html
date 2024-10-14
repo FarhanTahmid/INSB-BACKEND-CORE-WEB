@@ -1587,16 +1587,76 @@
 
     // Optional: Function to filter the team table based on search input
     function filter_team_table() {
-        let input = document.getElementById("search_input_team").value.toLowerCase();
-        let rows = document.querySelectorAll("#team-table tbody tr");
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("search_input_team");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("team-table");
+            tr = table.getElementsByTagName("tr");
 
-        rows.forEach((row) => {
-            // Display only rows that match the search criteria (either team or coordinator)
-            let isMatch = row.innerText.toLowerCase().includes(input);
-            row.style.display = isMatch ? "" : "none";
-        });
+            // Loop through all table rows, including coordinator rows
+            for (i = 0; i < tr.length; i++) {
+                // Skip coordinator rows and header row
+                if (tr[i].classList.contains("coordinator-row") || i === 0) continue;
+                const coordinatorTable = document.querySelectorAll('.coordinator-row');
+                coordinatorTable.forEach(table => table.style.display = "none");
+
+                // Loop through cells in the current team row to search for the filter term
+                td = tr[i].getElementsByTagName("td")[1]; // Assuming the team name is in the second cell
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        // Show matching team rows
+                        tr[i].style.display = "";
+
+                        // Show the coordinator row if the team is selected
+                        let teamCheckbox = tr[i].querySelector('input[name="team_select"]');
+                        let coordinatorRow = tr[i].nextElementSibling; // Get the corresponding coordinator row
+                        console.log("txtValue");
+                        console.log(txtValue);
+                        console.log("txtValue");
+                        console.log(txtValue);
+                        if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                            coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
+                        }
+                    } else {
+                        // Hide non-matching team rows
+                        tr[i].style.display = "none";
+
+                        // Ensure the corresponding coordinator row is hidden as well
+                        let coordinatorRow = tr[i].nextElementSibling;
+                        if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                            coordinatorRow.style.display = "none";
+                        }
+                    }
+                }
+            }
+            showCoordinatorsForSelectedTeams();
     }
+    function showCoordinatorsForSelectedTeams() {
+            var input = document.getElementById("search_input_team");
+            var filter = input.value.toUpperCase();
 
+            // If the search input is empty, proceed to show coordinators for selected teams
+            if (filter === "") {
+                var table = document.getElementById("team-table");
+                var tr = table.getElementsByTagName("tr");
+
+                for (let i = 1; i < tr.length; i++) {
+                    // Skip coordinator rows
+                    if (tr[i].classList.contains("coordinator-row")) continue;
+
+                    // Get team checkbox and corresponding coordinator row
+                    let teamCheckbox = tr[i].querySelector('input[name="team_select"]');
+                    let coordinatorRow = tr[i].nextElementSibling;
+
+                    // Show coordinator row if the team checkbox is checked
+                    if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                        coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
+                    }
+                }
+            }
+        }
     function handleSelection() {
         const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
         const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
@@ -1679,103 +1739,90 @@
         highlightErrorRow(taskType, false);
     }
 
-    // Function to validate form before submission
-    function validateForm(event) {
-        const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
-        const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
-        const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
+// Function to validate form before submission
+function validateForm(event) {
+    const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
+    const individualCheckboxes = document.querySelectorAll('input[name="member_select"]');
+    const taskTypeSelects = document.querySelectorAll('select[name$="_task_type[]"]');
 
-        // Remove any existing error highlights
-        individualCheckboxes.forEach(individual => removeErrorHighlight(individual));
+    // Remove any existing error highlights
+    individualCheckboxes.forEach(individual => removeErrorHighlight(individual));
+    teamCheckboxes.forEach(team => highlightErrorRow(team, false)); // Remove team error highlights
 
-        // Check if any team or individual is selected
-        const isTeamSelected = Array.from(teamCheckboxes).some(checkbox => checkbox.checked);
-        const isIndividualSelected = Array.from(individualCheckboxes).some(checkbox => checkbox.checked);
+    // Check if any team or individual is selected
+    const isTeamSelected = Array.from(teamCheckboxes).some(checkbox => checkbox.checked);
+    const isIndividualSelected = Array.from(individualCheckboxes).some(checkbox => checkbox.checked);
 
-        if (!isTeamSelected && !isIndividualSelected) {
-            alert("Please select either a team or an individual before submitting.");
+    if (!isTeamSelected && !isIndividualSelected) {
+        alert("Please select either a team or an individual before submitting.");
+        event.preventDefault();
+        return false;
+    }
+
+    // Check if task types are selected for selected individuals
+    if (isIndividualSelected) {
+        let allTaskTypesSelected = true;
+        individualCheckboxes.forEach(individual => {
+            if (individual.checked) {
+                const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
+                if (!taskType || taskType.selectedOptions.length === 0) {
+                    // Highlight the row in red if no task type is selected
+                    highlightErrorRow(individual);
+                    highlightErrorRow(taskType);
+                    allTaskTypesSelected = false;
+                } else {
+                    // Remove any previous error highlight if task type is selected
+                    highlightErrorRow(individual, false);
+                }
+            }
+        });
+
+        if (!allTaskTypesSelected) {
+            alert("Please select a task type for each selected individual.");
             event.preventDefault();
             return false;
         }
-
-        // Check if task types are selected for selected individuals
-        if (isIndividualSelected) {
-            let allTaskTypesSelected = true;
-            individualCheckboxes.forEach(individual => {
-                if (individual.checked) {
-                    const taskType = document.querySelector(`select[name="${individual.value}_task_type[]"]`);
-                    if (!taskType || taskType.selectedOptions.length === 0) {
-                        // Highlight the row in red if no task type is selected
-                        highlightErrorRow(individual);
-                        highlightErrorRow(taskType);
-                        allTaskTypesSelected = false;
-                    }
-                }
-            });
-
-            if (!allTaskTypesSelected) {
-                alert("Please select a task type for each selected individual.");
-                event.preventDefault();
-                return false;
-            }
-        }
-
-        // Check if a coordinator is selected for each selected team
-        if (isTeamSelected) {
-            let allCoordinatorsSelected = true;
-            teamCheckboxes.forEach(team => {
-                if (team.checked) {
-                    const teamId = team.value;
-                    const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
-                    
-                    // Get the team name from the corresponding row
-                    const teamRow = team.closest('tr');
-                    const teamName = teamRow.querySelector('td:nth-child(2)').innerText; // Assuming team name is in the second column
-
-                    if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
-                        alert(`Please select at least one coordinator for the team "${teamName}".`);
-                        allCoordinatorsSelected = false;
-                        event.preventDefault();
-                        return false;
-                    }
-                }
-            });
-            
-            if (!allCoordinatorsSelected) {
-                return false;
-            }
-        }
-
-        return true;
     }
-            
-    // Attach event listeners
-    document.addEventListener("DOMContentLoaded", () => {
-        handleSelection();
-        const submitButton = document.getElementById("submitTaskButton"); // Replace with your button's specific ID
-        if (submitButton) {
-            submitButton.addEventListener("click", (event) => {
-                const form = document.getElementById("taskForm"); // Ensure you're referencing the form
-                if (form) {
-                    // Prevent default form submission to perform validation
+
+    // Check if a coordinator is selected for each selected team
+    if (isTeamSelected) {
+        let allCoordinatorsSelected = true;
+        teamCheckboxes.forEach(team => {
+            if (team.checked) {
+                const teamId = team.value;
+                const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
+                
+                // Get the team name from the corresponding row
+                const teamRow = team.closest('tr');
+                const teamName = teamRow.querySelector('td:nth-child(2)').innerText; // Assuming team name is in the second column
+
+                if (!Array.from(coordinatorCheckboxes).some(c => c.checked)) {
+                    alert(`Please select at least one coordinator for the team "${teamName}".`);
+                    highlightErrorRow(team);
+                    allCoordinatorsSelected = false;
                     event.preventDefault();
-                    if (validateForm(event)) {
-                        // If validation is successful, submit the form
-                        form.submit();
-                    }
+                } else {
+                    // Remove any previous error highlight if a coordinator is selected
+                    highlightErrorRow(team, false);
                 }
-            });
-        }
-        // Show coordinator lists for pre-selected teams on page load
-        const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
-        teamCheckboxes.forEach((teamCheckbox) => {
-            if (teamCheckbox.checked) {
-                // Get the unique team row ID from the checkbox value
-                const teamRowId = teamCheckbox.closest('tr').querySelector('td').innerText.replace('.', '');
-                toggleCoordinators(teamRowId);
             }
         });
-    });
+
+        if (!allCoordinatorsSelected) {
+            return false;
+        }
+    }
+
+    return true;
+}
+     
+        // Attach event listeners
+        document.addEventListener("DOMContentLoaded", () => {
+            handleSelection();
+            showCoordinatorsForSelectedTeams();
+            const form = document.getElementById("taskForm");
+            form.addEventListener("submit", validateForm);
+        });
     </script>
         
 
@@ -1965,36 +2012,73 @@
         {% if create_team_task_access %}
         //filtering for team table
         function filter_team_table() {
-            // Declare variables
+// Declare variables
             var input, filter, table, tr, td, i, txtValue;
             input = document.getElementById("search_input_team");
             filter = input.value.toUpperCase();
             table = document.getElementById("team-table");
             tr = table.getElementsByTagName("tr");
-            
-            // Loop through all table rows and hide those that don't match the search query
+
+            // Loop through all table rows, including coordinator rows
             for (i = 0; i < tr.length; i++) {
-                // Skip the header row
-                if (i === 0) continue;
-                
-                // Loop through all table cells in the current row
-                var rowContainsSearchTerm = false;
-                for (var j = 0; j < tr[i].cells.length; j++) {
-                    td = tr[i].cells[j];
-                    if (td) {
-                        txtValue = td.textContent || td.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            rowContainsSearchTerm = true;
-                            break;
+                // Skip coordinator rows and header row
+                if (tr[i].classList.contains("coordinator-row") || i === 0) continue;
+                const coordinatorTable = document.querySelectorAll('.coordinator-row');
+                coordinatorTable.forEach(table => table.style.display = "none");
+
+                // Loop through cells in the current team row to search for the filter term
+                td = tr[i].getElementsByTagName("td")[1]; // Assuming the team name is in the second cell
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        // Show matching team rows
+                        tr[i].style.display = "";
+
+                        // Show the coordinator row if the team is selected
+                        let teamCheckbox = tr[i].querySelector('input[name="team_select"]');
+                        let coordinatorRow = tr[i].nextElementSibling; // Get the corresponding coordinator row
+                        console.log("txtValue");
+                        console.log(txtValue);
+                        console.log("txtValue");
+                        console.log(txtValue);
+                        if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                            coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
+                        }
+                    } else {
+                        // Hide non-matching team rows
+                        tr[i].style.display = "none";
+
+                        // Ensure the corresponding coordinator row is hidden as well
+                        let coordinatorRow = tr[i].nextElementSibling;
+                        if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                            coordinatorRow.style.display = "none";
                         }
                     }
                 }
-            
-                // Toggle the visibility of the row based on whether it contains the search term
-                if (rowContainsSearchTerm) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
+            }
+            showCoordinatorsForSelectedTeams();
+    }
+    function showCoordinatorsForSelectedTeams() {
+            var input = document.getElementById("search_input_team");
+            var filter = input.value.toUpperCase();
+
+            // If the search input is empty, proceed to show coordinators for selected teams
+            if (filter === "") {
+                var table = document.getElementById("team-table");
+                var tr = table.getElementsByTagName("tr");
+
+                for (let i = 1; i < tr.length; i++) {
+                    // Skip coordinator rows
+                    if (tr[i].classList.contains("coordinator-row")) continue;
+
+                    // Get team checkbox and corresponding coordinator row
+                    let teamCheckbox = tr[i].querySelector('input[name="team_select"]');
+                    let coordinatorRow = tr[i].nextElementSibling;
+
+                    // Show coordinator row if the team checkbox is checked
+                    if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                        coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
+                    }
                 }
             }
         }

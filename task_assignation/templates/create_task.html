@@ -1211,8 +1211,33 @@
                     }
                 }
             }
+            showCoordinatorsForSelectedTeams();
         }
         {% endif %}
+        function showCoordinatorsForSelectedTeams() {
+            var input = document.getElementById("search_input_team");
+            var filter = input.value.toUpperCase();
+
+            // If the search input is empty, proceed to show coordinators for selected teams
+            if (filter === "") {
+                var table = document.getElementById("team-table");
+                var tr = table.getElementsByTagName("tr");
+
+                for (let i = 1; i < tr.length; i++) {
+                    // Skip coordinator rows
+                    if (tr[i].classList.contains("coordinator-row")) continue;
+
+                    // Get team checkbox and corresponding coordinator row
+                    let teamCheckbox = tr[i].querySelector('input[name="team_select"]');
+                    let coordinatorRow = tr[i].nextElementSibling;
+
+                    // Show coordinator row if the team checkbox is checked
+                    if (coordinatorRow && coordinatorRow.classList.contains("coordinator-row")) {
+                        coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
+                    }
+                }
+            }
+        }
 // Function to handle checkbox selection logic
 function handleSelection() {
     const teamCheckboxes = document.querySelectorAll('input[name="team_select"]');
@@ -1367,14 +1392,32 @@ function validateForm(event) {
                 // Check if any option in the select is selected
                 const selectedOptions = [...selectElement.options].filter(option => option.selected);
                 if (selectedOptions.length === 0) {
+                    highlightRowIfNoSelection(checkbox, true);
                     alert(`No options selected for ${checkbox.closest('tr').querySelector('td:nth-child(2)').innerText}`);
                     event.preventDefault();
+                }
+                else
+                {
+                    // Remove any previous error highlight if options are selected
+                    highlightRowIfNoSelection(checkbox, false);
                 }
             }
         });
     }
     return true;
 }
+        // Function to highlight rows with no selections (turns the row red)
+        function highlightRowIfNoSelection(checkbox, addHighlight = true) {
+            const row = checkbox.closest('tr');
+            if (row) {
+                if (addHighlight) {
+                    row.classList.add('error-row'); // Add red highlighting class
+                } else {
+                    row.classList.remove('error-row'); // Remove red highlighting class
+                }
+            }
+        }
+
         // Attach event listeners
         document.addEventListener("DOMContentLoaded", () => {
             handleSelection();
@@ -1524,9 +1567,46 @@ function validateForm(event) {
                         tr[i].style.display = "none";
                     }
                     }
+                    bringSelectedIndividualsOnTop();
             }
         {% endif %}
+        function bringSelectedIndividualsOnTop() {
+            var table = document.getElementById("individuals-table");
+            var tr = table.getElementsByTagName("tr");
 
+            // Arrays to hold selected and unselected rows
+            let selectedRows = [];
+            let unselectedRows = [];
+
+            // Loop through all table rows, skip the header
+            for (let i = 1; i < tr.length; i++) {
+                var teamCheckbox = tr[i].querySelector('input[name="member_select"]');
+                
+                if (teamCheckbox && teamCheckbox.checked) {
+                    // Add the row to selectedRows if the checkbox is checked
+                    selectedRows.push(tr[i]);
+                } else {
+                    // Otherwise, add it to unselectedRows
+                    unselectedRows.push(tr[i]);
+                }
+                console.log(selectedRows)
+                console.log(unselectedRows)
+
+            }
+
+            // Clear the table body
+            let tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            // Append selected rows first, then unselected rows
+            selectedRows.forEach(row => {
+                if (row) tbody.appendChild(row);
+            });
+
+            unselectedRows.forEach(row => {
+                if (row) tbody.appendChild(row);
+            });
+        }
     
         {% if create_team_task_access %}
         //filtering for team table
