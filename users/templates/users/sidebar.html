@@ -350,6 +350,7 @@
                       <i class="fa-fa-user">
                       </i>
                   </span>
+                  {% comment %}
                     <span class="nav-text">Promotions</span>
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
@@ -381,7 +382,7 @@
                       <img src={% static 'images/pr.png' %} width="20px" height="20px">
                       <i class="fa-fa-user">
                       </i>
-                  </span>
+                  </span>{% endcomment %}
                     <span class="nav-text">Public Relations</span>
                   </a>
                   <ul class="nav-sub nav-mega nav-mega-3">
@@ -391,7 +392,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="{% url 'public_relation_team:task_home_team' 6 %}">
+                      <a href="{% url 'public_relation_team:task_home_team' 0 %}">
                         <span class="nav-text">Tasks</span>
                       </a>
                     </li>

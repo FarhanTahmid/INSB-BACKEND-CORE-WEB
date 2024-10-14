@@ -1866,9 +1866,9 @@ This is an automated message. Do not reply
             event_team = True
         elif team_primary == 4:
             logistic_team = True
-        elif team_primary == 5:
-            promotion_team = True
-        elif team_primary == 6:
+        # elif team_primary == 5:
+        #     promotion_team = True
+        elif team_primary == 0:
             public_relation_team = True
         elif team_primary == 7:
             mdt_team = True
