@@ -419,6 +419,9 @@ class Task_Assignation:
                 for team in team_check:
                     if team not in current_teams:
                         is_team_changed = True
+                        if is_team_changed and Team_Task_Forwarded.objects.get(task=task,team=team).task_forwarded_to_incharge:
+                            message.error(request,"Task Forwarded to Incharge, Cannot change now")
+                            return False
 
             #Checking to see if the list is empty depending on which task_type is selected
             #If empty then stop the creation
@@ -552,68 +555,87 @@ class Task_Assignation:
 
                                 member.delete()
                     task.team.clear()
-                
+                #Here it is for updating task team abd member by EB
                 all_task_members = task.members.all()
                 all_task_member_ieee_id = []
                 for mem in all_task_members:
                     all_task_member_ieee_id.append(str(mem.ieee_id))
+                new_members_list = []
+                mem_removed = []
+                selected_members = []
                 for team,team_members in coordinators_per_team.items():
-                    for task_member in team_members:
-                        if str(task_member) in all_task_member_ieee_id:
+                    for i in team_members:
+                        if i in all_task_member_ieee_id:
                             pass
-                        elif str(task_member) not in all_task_member_ieee_id:
-                            member = Members.objects.get(ieee_id = task_member)
-                            member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
-                            member_task_points.save()
-
-                            task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = task)
-                            task_type_member.has_content = True
-                            task_type_member.has_drive_link = True
-                            task_type_member.has_file_upload = True
-                            task_type_member.has_media = True
-                            task_type_member.has_permission_paper = True
-                            task_type_member.save()
-                            #sending the email to the coordinator and saving to task logs
-                            message = f'Task Name: {title}, task assiged to {member.name}({member.ieee_id}) when updating by {notification_created_by_name}'
-                            Task_Assignation.save_task_logs(task,message)
-                            Task_Assignation.task_creation_email(request,member,task)
-                            #notification receipient list
-                            receiver_list.append(member.ieee_id)
-                            #sending notifications
-                            NotificationHandler.create_notifications(
-                                notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
-                                general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
-                                inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
-                            )
-                            task.members.add(member)
-                            task.save()
-                            
                         else:
-                            notification_message = f"You were removed from the task, {task.title}"
-                            member = Members.objects.get(ieee_id = task_member)
-                            NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
+                            new_members_list.append(i)
+                    selected_members += team_members
+                for mem in all_task_member_ieee_id:
+                    if mem not in selected_members:
+                        mem_removed.append(mem)
+                print(selected_members)
+                print("new member added list")
+                print(all_task_member_ieee_id)
+                print(new_members_list)
+                print(mem_removed)
+                for mem in new_members_list:
+                    member = Members.objects.get(ieee_id = mem)
+                    member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
+                    member_task_points.save()
 
-                            member_points = Member_Task_Point.objects.get(task=task,member = str(task_member))
-                            member_points.delete()
+                    task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = task)
+                    task_type_member.has_content = True
+                    task_type_member.has_drive_link = True
+                    task_type_member.has_file_upload = True
+                    task_type_member.has_media = True
+                    task_type_member.has_permission_paper = True
+                    task_type_member.save()
+                    #sending the email to the coordinator and saving to task logs
+                    message = f'Task Name: {title}, task assiged to {member.name}({member.ieee_id}) when updating by {notification_created_by_name}'
+                    Task_Assignation.save_task_logs(task,message)
+                    Task_Assignation.task_creation_email(request,member,task)
+                    #notification receipient list
+                    receiver_list = []
+                    receiver_list.append(member.ieee_id)
+                    #sending notifications
+                    NotificationHandler.create_notifications(
+                        notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
+                        general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
+                        inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
+                    )
+                    task.members.add(member)
+                    task.save()
+                for mem in mem_removed:
+                    member = Members.objects.get(ieee_id = mem)
+                    notification_message = f"You were removed from the task, {task.title}"
+                    NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
 
-                            member_task_upload_type = Member_Task_Upload_Types.objects.get(task_member=member,task=task)
-                            if member_task_upload_type.has_content:
-                                Task_Content.objects.filter(task=task, uploaded_by=task_member).delete()
-                            if member_task_upload_type.has_drive_link:
-                                    Task_Drive_Link.objects.filter(task=task, uploaded_by=task_member).delete()
-                            if member_task_upload_type.has_permission_paper:
-                                    Permission_Paper.objects.filter(task=task, uploaded_by=task_member).delete()
-                            if member_task_upload_type.has_file_upload:
-                                files = Task_Document.objects.filter(task=task, uploaded_by=task_member)
-                                for file in files:
-                                    Task_Assignation.delete_task_document(file)
-                            if member_task_upload_type.has_media:
-                                media_files = Task_Media.objects.filter(task=task, uploaded_by=task_member)
-                                for media_file in media_files:
-                                    Task_Assignation.delete_task_media(media_file)
-                            member_task_upload_type.delete()
-                            task.members.remove(member)
-                            task.save()
+                    message = f'Task Name: {title}, task assiged to {member.name}({member.ieee_id}) when updating by {notification_created_by_name}'
+                    Task_Assignation.save_task_logs(task,message)
+                    Task_Assignation.task_creation_email(request,member,task)
+
+                    member_points = Member_Task_Point.objects.get(task=task,member = str(mem))
+                    member_points.delete()
+
+                    member_task_upload_type = Member_Task_Upload_Types.objects.get(task_member=member,task=task)
+                    if member_task_upload_type.has_content:
+                        Task_Content.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
+                    if member_task_upload_type.has_drive_link:
+                            Task_Drive_Link.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
+                    if member_task_upload_type.has_permission_paper:
+                            Permission_Paper.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
+                    if member_task_upload_type.has_file_upload:
+                        files = Task_Document.objects.filter(task=task, uploaded_by=member.ieee_id)
+                        for file in files:
+                            Task_Assignation.delete_task_document(file)
+                    if member_task_upload_type.has_media:
+                        media_files = Task_Media.objects.filter(task=task, uploaded_by=member.ieee_id)
+                        for media_file in media_files:
+                            Task_Assignation.delete_task_media(media_file)
+                    member_task_upload_type.delete()
+                    task.members.remove(member)
+                    task.save()
+                            
 
             elif task.task_type == "Individuals":
                 task.members.clear()
@@ -813,59 +835,59 @@ class Task_Assignation:
                         task_log_message = f'Task Name: {title}, changed Task Type from {prev_task_type} to {task_type} and assignation to: {team_names}'
                         Task_Assignation.save_task_logs(task,task_log_message)
 
-                    get_current_panel_members = None
+                    #get_current_panel_members = None
                     #If task_of is 1 then we are creating task for branch. Hence load current panel of branch
-                    if task_of == 1:
-                        get_current_panel=Branch.load_current_panel()
-                        #Get current panel members of branch
-                        get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
-                    else:
-                        #Else we are creating task for sc_ag. Hence load current panel of sc_ag
-                        get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task_of).first()
-                        #Get current panel_members for sc_ag
-                        get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
+                    # if task_of == 1:
+                    #     get_current_panel=Branch.load_current_panel()
+                    #     #Get current panel members of branch
+                    #     get_current_panel_members=Branch.load_panel_members_by_panel_id(panel_id=get_current_panel.pk)
+                    # else:
+                    #     #Else we are creating task for sc_ag. Hence load current panel of sc_ag
+                    #     get_current_panel=SC_AG_Info.get_current_panel_of_sc_ag(request=request,sc_ag_primary=task_of).first()
+                    #     #Get current panel_members for sc_ag
+                    #     get_current_panel_members=Panel_Members.objects.filter(tenure=Panels.objects.get(id=get_current_panel.pk))
                 
-                    coordinators = []
-                    #As it is a team task then notify the current coordinators of those teams
-                    #For each member in current panel members
-                    for member in get_current_panel_members:
-                        #If the member's team primary exist in team_select list i.e. is a member of the team
-                        if str(member.team.primary) in team_select:
-                            #And if the member is a coordinator
-                            if member.position.is_co_ordinator and member.position.is_officer:
-                                #Add to coordinators array and send confirmation
-                                coordinators.append(member.member)
-                                ##
-                                ## Send email/notification here
-                                ##
-                    #appending the task to team cooridnator
-                    task.members.add(*coordinators)
-                    #creating those members points in Member Task Points and updating notifications
-                    receiver_list = []
-                    for member in coordinators:
-                        #making all task type true for those coordinators and creating their task points and task upload type
-                        member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
-                        member_task_points.save()
+                    # coordinators = []
+                    # #As it is a team task then notify the current coordinators of those teams
+                    # #For each member in current panel members
+                    # for member in get_current_panel_members:
+                    #     #If the member's team primary exist in team_select list i.e. is a member of the team
+                    #     if str(member.team.primary) in team_select:
+                    #         #And if the member is a coordinator
+                    #         if member.position.is_co_ordinator and member.position.is_officer:
+                    #             #Add to coordinators array and send confirmation
+                    #             coordinators.append(member.member)
+                    #             ##
+                    #             ## Send email/notification here
+                    #             ##
+                    # #appending the task to team cooridnator
+                    # task.members.add(*coordinators)
+                    # #creating those members points in Member Task Points and updating notifications
+                    # receiver_list = []
+                    # for member in coordinators:
+                    #     #making all task type true for those coordinators and creating their task points and task upload type
+                    #     member_task_points = Member_Task_Point.objects.create(task=task,member=member.ieee_id,completion_points=task.task_category.points)
+                    #     member_task_points.save()
 
-                        task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = task)
-                        task_type_member.has_content = True
-                        task_type_member.has_drive_link = True
-                        task_type_member.has_file_upload = True
-                        task_type_member.has_media = True
-                        task_type_member.has_permission_paper = True
-                        task_type_member.save()
-                        #sending the email to the coordinator and saving to task logs
-                        message = f'Task Name: {title}, task assiged to {member.name}({member.ieee_id}) when updating by {notification_created_by_name}'
-                        Task_Assignation.save_task_logs(task,message)
-                        Task_Assignation.task_creation_email(request,member,task)
-                        #notification receipient list
-                        receiver_list.append(member.ieee_id)
-                    #sending notifications
-                    NotificationHandler.create_notifications(
-                        notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
-                        general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
-                        inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
-                    )
+                    #     task_type_member = Member_Task_Upload_Types.objects.create(task_member = member,task = task)
+                    #     task_type_member.has_content = True
+                    #     task_type_member.has_drive_link = True
+                    #     task_type_member.has_file_upload = True
+                    #     task_type_member.has_media = True
+                    #     task_type_member.has_permission_paper = True
+                    #     task_type_member.save()
+                    #     #sending the email to the coordinator and saving to task logs
+                    #     message = f'Task Name: {title}, task assiged to {member.name}({member.ieee_id}) when updating by {notification_created_by_name}'
+                    #     Task_Assignation.save_task_logs(task,message)
+                    #     Task_Assignation.task_creation_email(request,member,task)
+                    #     #notification receipient list
+                    #     receiver_list.append(member.ieee_id)
+                    # #sending notifications
+                    # NotificationHandler.create_notifications(
+                    #     notification_type=Task_Assignation.task_creation_notification_type.pk,title = "Task Created",
+                    #     general_message=f"{notification_created_by_name} has just assigned you a new Team task titled -'{task.title}'. Click to see the details.",
+                    #     inside_link=inside_link,created_by=notification_created_by,reciever_list = receiver_list,notification_of=task
+                    # )
             
             #Else if task_type is Individuals
             elif task_type == "Individuals":
