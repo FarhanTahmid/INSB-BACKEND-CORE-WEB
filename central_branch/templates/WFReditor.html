@@ -90,7 +90,9 @@
         padding-right: 5px;
     }
 
-    .toolbar button.active {
+
+
+    .tool-sec button.active {
         background-color: #ffadad;
         /* border: 1px solid #bbb; */
         border-radius: 5px;
@@ -611,18 +613,18 @@
     }
 
     function updateActiveButtons() {
-        const boldButton = document.querySelector('button[title="Bold"]');
-        const italicButton = document.querySelector('button[title="Italic"]');
-        const underlineButton = document.querySelector('button[title="Underline"]');
+        const boldButton = document.querySelector('button[onclick="formatText(\'bold\')"]');
+        const italicButton = document.querySelector('button[onclick="formatText(\'italic\')"]');
+        const underlineButton = document.querySelector('button[onclick="formatText(\'underline\')"]');
 
-        // Toggle active class based on command state
+        // Check if buttons exist before toggling class
         boldButton.classList.toggle('active', document.queryCommandState('bold'));
         italicButton.classList.toggle('active', document.queryCommandState('italic'));
         underlineButton.classList.toggle('active', document.queryCommandState('underline'));
 
         document.querySelector('.editor').focus();
     }
-    document.querySelector('.editor').addEventListener('mouseup', updateActiveButtons);
+    document.querySelector('.editor').addEventListener('mouseup', updateActiveButtons());
 
     // To set id for multiple editor
     window.onload = function() {
