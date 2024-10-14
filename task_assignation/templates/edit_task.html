@@ -1461,7 +1461,7 @@
                                                 <tr>
                                                     <td>{{ coordinator.member.name }}</td>
                                                     <td>
-                                                        <input type="checkbox" name="="{{team.primary}}_coordinator_select[]" value="{{ coordinator.member.ieee_id }}" {% if coordinator.member in all_members_in_task %}checked{% endif %}>
+                                                        <input type="checkbox" name="{{team.primary}}_coordinator_select[]" value="{{ coordinator.member.ieee_id }}" {% if coordinator.member in all_members_in_task %}checked{% endif %}>
                                                     </td>
                                                 </tr>
                                                 {% endfor %}
@@ -1790,7 +1790,8 @@ function validateForm(event) {
         teamCheckboxes.forEach(team => {
             if (team.checked) {
                 const teamId = team.value;
-                const coordinatorCheckboxes = document.querySelectorAll(`input[name="coordinator_${teamId}"]`);
+                // Match the correct name format for the coordinator checkboxes
+                const coordinatorCheckboxes = document.querySelectorAll(`input[name="${teamId}_coordinator_select[]"]`);
                 
                 // Get the team name from the corresponding row
                 const teamRow = team.closest('tr');

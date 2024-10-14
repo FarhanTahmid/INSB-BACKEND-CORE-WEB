@@ -1366,17 +1366,19 @@ function validateForm(event) {
             const coordinatorRow = document.querySelector(`#coordinator-list-${checkbox.value}`);
 
             // Check if any coordinator is selected in that row
-            const coordinatorCheckboxes = coordinatorRow.querySelectorAll('input[name="coordinator_select"]');
+            const coordinatorCheckboxes = coordinatorRow.querySelectorAll(`input[name="${checkbox.value}_coordinator_select[]"]`);
             const isAnyCoordinatorChecked = [...coordinatorCheckboxes].some(coordinator => coordinator.checked);
 
             if (!isAnyCoordinatorChecked) {
                 highlightErrorRow(checkbox);
-                alert(`Please select at least one coordinator for the selected team "${checkbox.closest('tr').querySelector('td:nth-child(2)').innerText}".`);
+                const teamName = checkbox.closest('tr').querySelector('td:nth-child(2)').innerText;
+                alert(`Please select at least one coordinator for the selected team "${teamName}".`);
                 event.preventDefault();
             }
         }
     });
-    }
+}
+
 
     function checkSelections() {
         let isAnyChecked = false; // To track if any checkbox is checked
