@@ -321,14 +321,14 @@
 <div class="editor-container">
     <div class="toolbar">
         <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
-            <button onclick="formatText('undo')" title="Undo"><i class="fa fa-rotate-left"></i></button>
-            <button onclick="formatText('redo')" title="Redo"><i class="fa fa-rotate-right"></i></button>
+            <button type="button" onclick="formatText('undo')" title="Undo"><i class="fa fa-rotate-left"></i></button>
+            <button type="button" onclick="formatText('redo')" title="Redo"><i class="fa fa-rotate-right"></i></button>
         </div>
         <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
-            <button onclick="formatText('bold')" title="Bold"><b style="font-size: 13px;">B</b></button>
-            <button onclick="formatText('italic')" title="Italic"><i style="font-family: auto; font-size: 14px;">I</i></button>
-            <button onclick="formatText('underline')" title="Underline"><u>U</u></button>
-            <button onclick="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
+            <button type="button" onclick="formatText('bold')" title="Bold"><b style="font-size: 13px;">B</b></button>
+            <button type="button" onclick="formatText('italic')" title="Italic"><i style="font-family: auto; font-size: 14px;">I</i></button>
+            <button type="button" onclick="formatText('underline')" title="Underline"><u>U</u></button>
+            <button type="button" onclick="formatText('strikeThrough')" title="Strikethrough"><s>S</s></button>
             <select onchange="formatText('fontSize', this.value)" title="Font Size">
                 <option value="1">Small</option>
                 <option value="3" selected>Normal</option>
@@ -337,24 +337,24 @@
             </select>
         </div>
         <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
-            <button onclick="formatText('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
-            <button onclick="formatText('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
-            <button onclick="formatText('justifyRight')" title="Align Right"><i class="fa fa-align-right"></i></button>
-            <button onclick="formatText('justifyFull')" title="Justify"><i class="fa fa-align-justify"></i></button>
+            <button type="button" onclick="formatText('justifyLeft')" title="Align Left"><i class="fa fa-align-left"></i></button>
+            <button type="button" onclick="formatText('justifyCenter')" title="Align Center"><i class="fa fa-align-center"></i></button>
+            <button type="button" onclick="formatText('justifyRight')" title="Align Right"><i class="fa fa-align-right"></i></button>
+            <button type="button" onclick="formatText('justifyFull')" title="Justify"><i class="fa fa-align-justify"></i></button>
         </div>
         <div class="tool-sec" style="border-right: 1.5px solid #a2a2a2;">
-            <button onclick="formatText('insertUnorderedList')" title="Bulleted List"><i class="fa fa-list-ul"></i></button>
-            <button onclick="formatText('insertOrderedList')" title="Numbered List"><i class="fa fa-list-ol"></i></button>
-            <button onclick="formatText('indent')" title="Increase Indent"><i class="fa fa-indent"></i></button>
-            <button onclick="formatText('outdent')" title="Decrease Indent"><i class="fa fa-outdent"></i></button>
+            <button type="button" onclick="formatText('insertUnorderedList')" title="Bulleted List"><i class="fa fa-list-ul"></i></button>
+            <button type="button" onclick="formatText('insertOrderedList')" title="Numbered List"><i class="fa fa-list-ol"></i></button>
+            <button type="button" onclick="formatText('indent')" title="Increase Indent"><i class="fa fa-indent"></i></button>
+            <button type="button" onclick="formatText('outdent')" title="Decrease Indent"><i class="fa fa-outdent"></i></button>
         </div>
         <div class="tool-sec">
-            <button onclick="openImageModal()" title="Insert Image"><i class="fa fa-image"></i></button>
-            <button onclick="openLinkModal()" title="Insert Link"><i class="fa fa-link"></i></button>
-            <button onclick="openTableModal()" title="Insert Table"><i class="fa fa-table"></i></button>
-            <button onclick="document.getElementById('fileInput').click();" title="Upload Files"><i class="fa fa-upload"></i></button>
-            <button class="expand-editor" onclick="toggleExpand()" title="Expand Editor"><i class="fa fa-expand"></i></button>
-            <button onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%; font-size: 9.5px;"></i></button>
+            <button type="button" onclick="openImageModal()" title="Insert Image"><i class="fa fa-image"></i></button>
+            <button type="button" onclick="openLinkModal()" title="Insert Link"><i class="fa fa-link"></i></button>
+            <button type="button" onclick="openTableModal()" title="Insert Table"><i class="fa fa-table"></i></button>
+            <button type="button" onclick="document.getElementById('fileInput').click();" title="Upload Files"><i class="fa fa-upload"></i></button>
+            <button type="button" class="expand-editor" onclick="toggleExpand()" title="Expand Editor"><i class="fa fa-expand"></i></button>
+            <button type="button" onclick="openHelpModal()" title="Help"><i class="fa fa-question" style="height: 12px; width: 12px; border: 1.5px solid #333; border-radius: 50%; font-size: 9.5px;"></i></button>
 
             <!-- Hidden file input -->
             <input type="file" id="fileInput" style="display: none;" />
@@ -433,7 +433,6 @@
     </div>
 </div>
 
-
 <!-- Insert Image Modal -->
 <div id="imageModal" class="modal-bg" style="display:none;" onclick="closeImageModal()">
     <div class="modal-img">
@@ -504,16 +503,24 @@
 </div>
 
 <!-- getEditorContent() function to get the content of this editor -->
+<!-- getEditorContentByChild(editor[index number]) function to get the content of multiple editor but curently not in use -->
 <!-- getEditorAttachments() function to get the attachments of this editor -->
 <script>
     // Function to return all editor content
     function getEditorContent() {
         const editor = document.querySelector('.editor');
-        return editor.innerHTML;
+        return editor ? editor.innerHTML : '';
     }
+    // For multiple editor format
+    // Call editor by editor1, editor2, ...
+    function getEditorContentByChild(editorNumber) {
+        const editor = document.getElementById('editor'+editorNumber);
+        return editor ? editor.innerHTML : '';
+    } // also comment out the part in common which gives the id of these editors
+
     // Function to return all attached files
     function getEditorAttachments() {
-    return attachedFiles;
+        return attachedFiles;
     }
 </script>
 
@@ -616,6 +623,15 @@
         document.querySelector('.editor').focus();
     }
     document.querySelector('.editor').addEventListener('mouseup', updateActiveButtons);
+
+    // To set id for multiple editor
+    window.onload = function() {
+    // function multyEditorMode() {
+        const editors = document.querySelectorAll('.editor');
+        editors.forEach((editor, index) => {
+            editor.id = 'editor' + (index); // Assign unique ID (editor1, editor2, etc.)
+        });
+    };
 </script>
 
 <!-- help modal -->
