@@ -13,8 +13,11 @@
      {% include "common_css.html" %}
     {% endblock common_css %}
 
+    <!--summernote-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+
     <!-- CKEditor CDN -->
-    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script> -->
 
     <style>
         body{
@@ -1326,7 +1329,7 @@
 
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
-                <div class="ckeditor">
+                <!-- <div class="ckeditor">
                     <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" 
                     {% if create_individual_task_access or create_team_task_access%}    
                         {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
@@ -1336,8 +1339,17 @@
                     {% else %}
                     disabled
                     {% endif %}>{{task.description}}</textarea>
-                    <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
-                </div>
+                    <p id="task_descriptionCharacterCount" style="color: red;"></p>
+                </div> -->
+                <textarea id="summernote" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}    
+                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                {% else %}
+                disabled
+                {% endif %}
+            {% else %}
+            disabled
+            {% endif %}>{{task.description}}</textarea>
+
                 
                 
 
@@ -1937,7 +1949,7 @@ function validateForm(event) {
         });
     </script>
     
-    <script>
+    <!-- <script>
         // character count function
         document.addEventListener("DOMContentLoaded", function () {
           // Replace the textareas with CKEditor instances
@@ -1983,7 +1995,7 @@ function validateForm(event) {
               "Character Count: " + characterCount;
           }
         }
-    </script>
+    </script> -->
     <script>
             
         {% if create_individual_task_access %}
@@ -2555,5 +2567,24 @@ window.addEventListener('load',()=>{
         }
         }
     </script>
+    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Describe the task...',
+            tabsize: 2,
+            height: 250,
+            toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+        </script>
   </body>
 </html>
