@@ -78,7 +78,7 @@ class NotificationHandler:
                 tokens = PushNotification.objects.filter(member=reciever)
                 #sending to all the tokens
                 for token in tokens:
-                    push_notification.send_push_notification(title,general_message,token.fcm_token)
+                    push_notification.send_push_notification(title,general_message,token.fcm_token,inside_link)
             return True
         
         except Exception as e:
@@ -247,7 +247,7 @@ class NotificationHandler:
             member_notification.save()
             tokens = PushNotification.objects.filter(member=member)
             for token in tokens:
-                push_notification.send_push_notification(member_notification.notification.title,member_notification.notification.general_message,token.fcm_token)
+                push_notification.send_push_notification(member_notification.notification.title,member_notification.notification.general_message,token.fcm_token,notification_link)
 
         return True
         
