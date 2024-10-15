@@ -275,7 +275,74 @@
               width: 32px;
             }
         }
-
+        .confirm_start_task_btn{
+            padding: 2px 26px;
+            color: #fff;
+            background: #d33838;
+            border-radius: 4px;
+            border: 1px solid #d33838;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_start_task_btn{
+            padding: 2px 26px;
+            color: #0000008f;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #0000004f;
+            transition: all ease-in-out .3s;
+        }
+        .cancel_start_task_btn:hover{
+            color: white;
+            background: #0000004f;
+            border-color: transparent;
+        }
+        .start_task_modal{
+        opacity: 0;
+        position: fixed;
+        z-index: -1;
+        padding-top: 50px; 
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 150%;
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.5);
+        transition: all .3s ease-in-out;
+        transform: translateY(-50px);
+        overflow: auto;
+        }
+        .start-task-modal-content {
+            background-color: #fefefe;
+            margin: auto 44%;
+            padding: 0px 12px 28px;
+            border: 1px solid rgb(136, 136, 136);
+            width: 25%;
+            border-radius: .25rem;
+        }
+        @media screen and (max-width: 1024px) {
+            .start-task-modal-content{
+                width: 50%;
+                margin: auto;
+            }
+        }
+        @media screen and (max-width: 750px){
+            .start-task-modal-content{
+                width: 90%;
+            }
+        }
+        .closeStartModal{
+            color: #000;
+            font-size: 28px;
+            /* font-weight: bold; */
+            display: flex;
+            justify-content: flex-end;
+            cursor: pointer;
+        }
+        .closeStartModal:focus{
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
   </head>
   {% block preloader %}
@@ -408,7 +475,23 @@
               <!--forward task btn-->
               {% if volunteer_members|length > 0%}
               <div style="text-align: center;">
-                <button type="submit" class="forward-task-btn" style="cursor: pointer;">Forward Task</button>
+                <!-- <button type="submit" class="forward-task-btn" style="cursor: pointer;">Forward Task</button> -->
+                <input type="button" id="start_task" class="forward-task-btn" style="cursor: pointer;" value="Forward Task">
+              </div>
+                <!-- Start Task Modal -->
+                <div id="startTask" class="start_task_modal">
+                  <!-- Modal content -->
+                  <div class="start-task-modal-content">
+                      <div style="display: flex; justify-content: flex-end; ">
+                          <span class="closeStartModal">&times;</span>
+                      </div>
+                      <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Are you sure?</h5>
+                      <h6 style="text-align: center;">Do you want to forward the task?</h6>
+                      <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
+                          <a href="#" class="cancel_start_task_btn">No</a>
+                          <button type="submit"class="confirm_start_task_btn" style="cursor: pointer;">Forward Task</button>
+                  </div>
+                  </div>
               </div>
               {% endif %}
               {% csrf_token %}
@@ -866,7 +949,7 @@
       </script>
       <script>
 
-        var forwardBtn = document.querySelectorAll('.forward-task-btn');
+        var forwardBtn = document.querySelectorAll('.confirm_start_task_btn');
         // forwardBtn.forEach(input => {
         //   input.addEventListener('change', function() {
         //     checkSelections();
@@ -1196,6 +1279,52 @@
           }
         }
         </script>
+            <script>
+              // popup modal when start task button is clicked
+              // Get the modal
+              const startTaskModal = document.getElementById("startTask");
+              
+              // Get the button that opens the modal
+              const btnClick = document.querySelector("#start_task");
+              
+              // Get the <span> element that closes the modal
+              const closeStartTask = document.getElementsByClassName("closeStartModal")[0];
+      
+              const cancelStartTaskBtn = document.getElementsByClassName('cancel_start_task_btn')[0];
+              
+              // When the user clicks the button, open the modal 
+              btnClick.onclick = function() {
+              //   modal.style.display = "block";
+              startTaskModal.style.transform = 'translateY(0px)';
+              startTaskModal.style.zIndex = '103100';
+              startTaskModal.style.opacity = '1';
+              }
+              
+              // When the user clicks on <span> (x), close the modal
+              closeStartTask.onclick = function() {
+              //   modal.style.display = "none";
+              startTaskModal.style.transform = 'translateY(-50px)';
+              startTaskModal.style.zIndex = '-100';
+              startTaskModal.style.opacity = '0';
+              }
+              
+              // When the user clicks on cancel btn, close the modal
+              cancelStartTaskBtn.onclick = function() {
+              //   modal.style.display = "none";
+              startTaskModal.style.transform = 'translateY(-50px)';
+              startTaskModal.style.zIndex = '-100';
+              startTaskModal.style.opacity = '0';
+              }
+      
+              // When the user clicks anywhere outside of the modal, close it
+              window.onclick = function(event) {
+              if (event.target == startTaskModal) {
+                  startTaskModal.style.transform = 'translateY(-50px)';
+                  startTaskModal.style.zIndex = '-100';
+                  startTaskModal.style.opacity = '0';
+              }
+              }
+          </script>
     <!-- endbuild -->
   </body>
 </html>
