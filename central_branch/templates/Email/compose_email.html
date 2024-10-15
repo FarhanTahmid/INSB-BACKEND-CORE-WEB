@@ -1853,7 +1853,7 @@
           <hr class="displayCC">
           <div class="custom-dropdown-container displayCC">
             <input type="text" class="custom-dropdown-input" id="ccInput" name="cc" placeholder="Cc"
-              onclick="customToggleDropdown()" onkeydown="handleCCKeyDown(event)" onpaste="handleCCPaste(event)">
+              onclick="customToggleDropdown()" onkeydown="handleCCKeyDown(event)" onpaste="handleCCPaste(event)" oninput="hideDropdown()">
             <div class="custom-dropdown-content" id="customDropdown">
               <div onclick="customSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="customSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
@@ -1869,7 +1869,7 @@
           <hr class="displayBCC">
           <div class="alt-dropdown-container displayBCC">
             <input type="text" class="alt-dropdown-input" id="bccInput" name="bcc" placeholder="Bcc"
-              onclick="altToggleDropdown()" onkeydown="handleBCCKeyDown(event)" onpaste="handleBCCPaste(event)">
+              onclick="altToggleDropdown()" onkeydown="handleBCCKeyDown(event)" onpaste="handleBCCPaste(event)" oninput="hideAltDropdown()">
             <div class="alt-dropdown-content" id="altDropdown">
               <div onclick="altSelectOption('All Registered General Members of IEEE NSU SB')">All Registered General Members of IEEE NSU SB</div>
               <div onclick="altSelectOption('All Officers of IEEE NSU SB')">All Officers of IEEE NSU SB</div>
@@ -3223,6 +3223,12 @@
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       }
 
+      function hideDropdown() {
+        const dropdown = document.getElementById("customDropdown");
+        // Hide dropdown when typing (input event)
+        dropdown.style.display = "none";
+      }
+      
       // Handling key press for input
       function handleCCKeyDown(event) {
         const input = document.getElementById("ccInput");
@@ -3239,6 +3245,7 @@
         const pasteText = (event.clipboardData || window.clipboardData).getData('text');
         processCCInput(pasteText.trim());
         document.getElementById('ccInput').value = '';  // Clear input
+        hideDropdown();
       }
 
       // Process input string (split by space/comma)
@@ -3386,6 +3393,11 @@
         dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
       }
 
+      function hideAltDropdown() {
+        const dropdown = document.getElementById("altDropdown");
+        // Hide dropdown when typing (input event)
+        dropdown.style.display = "none";
+      }
       // Handling key press for BCC input
       function handleBCCKeyDown(event) {
         const input = document.getElementById("bccInput");
@@ -3402,6 +3414,7 @@
         const pasteText = (event.clipboardData || window.clipboardData).getData('text');
         processBCCInput(pasteText.trim());
         document.getElementById('bccInput').value = '';  // Clear input
+        hideAltDropdown();
       }
 
       // Process input string for BCC
