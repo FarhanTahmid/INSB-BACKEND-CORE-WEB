@@ -49,23 +49,55 @@
 			background-color: #07608A;
 			color: white;
 			padding: 10px;
-			border-radius: 10px;
-			align-items: flex-start;
+			border-radius: 0px;
+			align-items: center;
+			position: sticky;
+			top: 0;
+		}
+
+		.body_top_per::-webkit-scrollbar,
+		#team-table::-webkit-scrollbar,
+		.modal-1-content::-webkit-scrollbar,
+		.modal-2-content::-webkit-scrollbar,
+		.modal-3-content::-webkit-scrollbar {
+			width: 6px;
+			height: 6px;
+		}
+
+		.body_top_per::-webkit-scrollbar-thumb,
+		#team-table::-webkit-scrollbar-thumb,
+		.modal-1-content::-webkit-scrollbar-thumb,
+		.modal-2-content::-webkit-scrollbar-thumb,
+		.modal-3-content::-webkit-scrollbar-thumb {
+			background-color: #e7eeef;
+			transition: all .4s ease-in-out;
+			border-radius: 4px;
+		}
+
+		.body_top_per::-webkit-scrollbar-thumb:hover,
+		#team-table::-webkit-scrollbar-thumb:hover,
+		.modal-1-content::-webkit-scrollbar-thumb:hover,
+		.modal-2-content::-webkit-scrollbar-thumb:hover,
+		.modal-3-content::-webkit-scrollbar-thumb:hover {
+			background-color: rgb(169, 170, 170);
 		}
 
 		.body_top_per {
 			margin-top: 20px;
-			border: 2px solid #0091C5;
-			border-radius: 10px;
+			/* border: 2px solid #0091C5; */
+			border-radius: 4px;
 			overflow-y: scroll;
 			height: 430px;
 			width: 100%;
+			box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 90px 0px;
 		}
 
 		.headline_top_performers h1 {
+			font-weight: bold;
 			font-size: 1.5rem;
 			margin-top: 15px;
 			margin-left: 20px;
+
 		}
 
 
@@ -76,7 +108,7 @@
 			/* border: 1px solid #fff; */
 			border-radius: 10px;
 			margin: 0px 5px;
-			align-items: center;
+			/* align-items: center; */
 
 		}
 
@@ -86,7 +118,8 @@
 			/* border: 1px solid #fff; */
 			border-radius: 5px;
 			margin: 5px 5px;
-			align-items: center;
+			/* align-items: center; */
+
 
 		}
 
@@ -94,7 +127,7 @@
 			display: flex;
 		}
 
-		button {
+		/* button {
 			background-color: #fff;
 			margin-top: 10px;
 			border: none;
@@ -106,6 +139,38 @@
 			font-size: 14px;
 			border-radius: 30px;
 
+		} */
+
+
+		/* CSS */
+		.button-43 {
+			/* background-image: linear-gradient(-180deg, #37AEE2 0%, #1E96C8 100%);
+			 */
+			background-color: #FFD924;
+			border-radius: 50px;
+			box-sizing: border-box;
+			color: #000;
+			display: flex;
+			font-size: 16px;
+			justify-content: center;
+			padding: 0.5rem 1rem !important;
+			text-decoration: none;
+			width: 100%;
+			border: 0;
+			cursor: pointer;
+			user-select: none;
+			-webkit-user-select: none;
+			touch-action: manipulation;
+		}
+
+		.button-43:hover {
+			background-image: linear-gradient(-180deg, #1D95C9 0%, #17759C 100%);
+		}
+
+		@media (min-width: 768px) {
+			.button-43 {
+				padding: 1rem 2rem;
+			}
 		}
 
 		.text_top_performers {
@@ -114,12 +179,22 @@
 
 		.text_top_performers h1 {
 			margin-top: 10px;
-			font-size: 1.75rem;
+			font-size: 1.30rem;
+			font-weight: bold;
+
+		}
+
+		.text_top_performers:nth-child(2) {
+			margin-top: 10px;
+			font-size: 0.75rem;
 
 		}
 
 		.text_top_performers p {
-			font-size: 0.85rem;
+
+			font-size: 0.95rem;
+			margin-bottom: 0px !important;
+			margin-top: 10px;
 
 		}
 
@@ -127,17 +202,19 @@
 			border-radius: 10px;
 			/* margin-right: 30px; */
 			padding-top: 20px;
+			/* box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 10px; */
 		}
 
 		.img_top_per img {
-			border-radius: 50%;
+			border-radius: 3px;
 		}
 
 		.points_top {
-			font-size: 2rem;
+			font-size: 1.30rem;
 			text-align: center;
 			margin-top: 10px;
 			margin-right: 20px;
+			font-weight: bold;
 		}
 
 		.mt-4.pt-2.mb-2 .btn {
@@ -962,7 +1039,7 @@
 								<div class="body_top_per">
 									<div class="headline_top_performers">
 										<h1>Top Performers of all time!</h1>
-										<span><button>Task Leaderboards</button></span>
+										<span><button class="button-43">Task Leaderboards</button></span>
 									</div>
 									<div class="card_top_performers_1_0">
 										<div class="card_top_performers_2">
@@ -973,7 +1050,7 @@
 											<div class="text_top_performers">
 												<h1>Farhana Rahman</h1>
 												<p>Website Development Team</p\>
-												<p>Core Volunteer</p>
+												<p style="opacity: 0.8;">Core Volunteer</p>
 											</div>
 										</div>
 										<div class="points_top_performers">
