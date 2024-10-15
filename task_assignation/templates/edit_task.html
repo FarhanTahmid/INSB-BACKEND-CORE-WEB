@@ -1344,14 +1344,7 @@
                     {% endif %}>{{task.description}}</textarea>
                     <p id="task_descriptionCharacterCount" style="color: red;"></p>
                 </div> -->
-                <textarea id="summernote" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}    
-                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
-                {% else %}
-                disabled
-                {% endif %}
-            {% else %}
-            disabled
-            {% endif %}>{{task.description}}</textarea>
+                <textarea id="summernote" name="task_description_details">{{task.description}}</textarea>
 
                 
                 
@@ -2588,6 +2581,16 @@ window.addEventListener('load',()=>{
             ['view', ['fullscreen', 'codeview', 'help']]
             ]
         });
+        </script>
+        <script>
+            {% if create_individual_task_access or create_team_task_access%}    
+                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                {% else %}
+                $('#summernote').summernote('disable');
+                {% endif %}
+            {% else %}
+            $('#summernote').summernote('disable');
+            {% endif %}
         </script>
   </body>
 </html>
