@@ -15,8 +15,10 @@
      {% include "common_css.html" %}
     {% endblock common_css %}
 
+    <!--summernote-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <!-- CKEditor CDN -->
-    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <!-- <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script> -->
 
     <style>
         body{
@@ -799,11 +801,13 @@
                     {% if members_task_type.has_content %}
                     <!--content-->
                     <label class="description_label">Content</label>
-                    <div class="ckeditor">
+                    <!-- <div class="ckeditor">
                         <div>
                             <textarea class="form-control" type="text" name="content_details" {% if task.is_task_completed %}disabled {% endif %}>{{content_loaded.content}}</textarea>
                         </div>
-                    </div>
+                    </div> -->
+                    <textarea id="members_task_type_content" name="content_details">{{content_loaded.content}}</textarea>
+
                     <br>
                     {% endif %}
                     
@@ -930,12 +934,13 @@
                     </div>  -->
 
                     <label class="description_label" style="color: #d33838;">Comment for you regarding the task</label>
-                        <div class="ckeditor">
+                        <!-- <div class="ckeditor">
                             <div>
                                 <textarea class="form-control" type="text" id="comments" name="comments_details" disabled>{{comments|safe}}</textarea>
                             </div>
 
-                        </div>
+                        </div> -->
+                        <textarea id="comments" name="comments_details" class="disable">{{comments|safe}}</textarea>
                     
                     <br><br>
                     
@@ -1092,12 +1097,13 @@
                         {% if task_type.0.has_content %}
                         <!--content-->
                         <label class="description_label">Content</label>
-                        <div class="ckeditor">
+                        <!-- <div class="ckeditor">
                             <div>
                                 <textarea class="form-control" type="text" name="content_details_{{member.name}}" disabled >{{task_type.3.content}}</textarea>
                             </div>
-                                <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
-                        </div>
+                                <p id="contentCharacterCount" style="color: red;"></p>
+                        </div> -->
+                        <textarea name="content_details_{{member.name}}" class="disable2">{{task_type.3.content}}</textarea>
                             <br>
                     
                             <div id="media-selected-images-container"></div>
@@ -1152,13 +1158,14 @@
                         
                         
                             <label class="description_label" style="color: #3a86ff;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
-                            <div class="ckeditor">
+                            <!-- <div class="ckeditor">
                                 <div>
-                                    <input type="hidden" name="comments_member" value="{{member}}"></input>
                                     <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details" {% if task.is_task_completed %}disabled{% endif %}>{{task_type.7|safe}}</textarea>
                                 </div>
-                            
-                            </div> 
+                                
+                            </div>  -->
+                            <input type="hidden" name="comments_member" value="{{member}}"></input>
+                            <textarea id="comments_{{forloop.counter}}" name="comments_details" class="disable3">{{task_type.7|safe}}</textarea>
     
                         
     
@@ -1311,12 +1318,13 @@
                         {% if task_type.0.has_content %}
                         <!--content-->
                         <label class="description_label">Content</label>
-                        <div class="ckeditor">
+                        <!-- <div class="ckeditor">
                             <div>
                                 <textarea class="form-control" type="text" name="content_details_{{member.name}}" disabled >{{task_type.3.content}}</textarea>
                             </div>
-                                <!-- <p id="contentCharacterCount" style="color: red;"></p> -->
-                        </div>
+                                <p id="contentCharacterCount" style="color: red;"></p>
+                        </div> -->
+                        <textarea name="content_details_{{member.name}}" class="disable4">{{task_type.3.content}}</textarea>
                             <br>
                     
                             <div id="media-selected-images-container"></div>
@@ -1371,13 +1379,14 @@
                         
                         
                             <label class="description_label" style="color: #3a86ff;">Comments for {{member.name}}  (if any){% if task.is_task_completed %}. Task Marked Completed. Cannot add comment now!{% endif %}</label>
-                            <div class="ckeditor">
+                            <!-- <div class="ckeditor">
                                 <div>
-                                    <input type="hidden" name="comments_member" value="{{member}}"></input>
                                     <textarea class="form-control" type="text" id="comments_{{forloop.counter}}" name="comments_details" disabled>{{task_type.7|safe}}</textarea>
                                 </div>
-                            
-                            </div> 
+                                
+                            </div>  -->
+                            <input type="hidden" name="comments_member" value="{{member}}"></input>
+                            <textarea name="comments_details" id="comments_{{forloop.counter}}" class="disable5">{{task_type.7|safe}}</textarea>
     
                         
     
@@ -1542,19 +1551,19 @@
 
     <script>
         // character count function
-        document.addEventListener("DOMContentLoaded", function () {
-          // Replace the textareas with CKEditor instances
-          CKEDITOR.replace("content_details");
-          CKEDITOR.replace("comments")
-          {% for member,task_type  in task_type_per_member.items %}
-          CKEDITOR.replace("comments_{{forloop.counter}}");
-          {% if task_type.0.has_content %}
-          CKEDITOR.replace("content_details_{{member.name}}");
+        // document.addEventListener("DOMContentLoaded", function () {
+        //   // Replace the textareas with CKEditor instances
+        //   CKEDITOR.replace("content_details");
+        //   CKEDITOR.replace("comments")
+        //   {% for member,task_type  in task_type_per_member.items %}
+        //   CKEDITOR.replace("comments_{{forloop.counter}}");
+        //   {% if task_type.0.has_content %}
+        //   CKEDITOR.replace("content_details_{{member.name}}");
 
-          {% endif %}
-          {% endfor %}
+        //   {% endif %}
+        //   {% endfor %}
           
-        });
+        // });
     </script>
 
     <script>
@@ -1797,5 +1806,98 @@
                 }
 
             </script>
+            <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+            <script>
+                $('#members_task_type_content').summernote({
+                    placeholder: 'Describe the task...',
+                    tabsize: 2,
+                    height: 250,
+                    toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                $('.disable').summernote({
+                    tabsize: 2,
+                    height: 250,
+                    toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                $('.disable2').summernote({
+                    tabsize: 2,
+                    height: 250,
+                    toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                $('.disable3').summernote({
+                    tabsize: 2,
+                    height: 250,
+                    toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                $('.disable4').summernote({
+                    tabsize: 2,
+                    height: 250,
+                    toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                $('.disable5').summernote({
+                    tabsize: 2,
+                    height: 250,
+                    toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                </script>
+                <script>
+                    {% if task.is_task_completed %}
+                        $('#members_task_type_content').summernote('disable');
+                        $('.disable3').summernote('disable');
+                        {% endif %}
+                        $('.disable').summernote('disable');
+                        $('.disable2').summernote('disable');
+                        $('.disable4').summernote('disable');
+                        $('.disable5').summernote('disable');
+                </script>
   </body>
 </html>
