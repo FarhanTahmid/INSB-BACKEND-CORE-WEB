@@ -385,7 +385,7 @@
               {% endif %}
             </div>
             <div style="display: flex; justify-content: center;">
-              <button type="button" class="finish_task_modal_btn">How to forward a task</button>
+              <button type="button" class="finish_task_modal_btn">How To Forward A Task</button>
             </div>
 
             <div id="modal1" class="create_modal">
@@ -398,8 +398,35 @@
                   </div>
                       <ol style="font-size: 16px; margin: 15px">
                           <li>Select the individuals you want to forward the task</li>
-                          <li>After selecting the individuals by select checkbox, you have to assign them what type of fields you want them to fill to complete the task from <span style="font-weight: 600;">Select task type</span></li>
+                          <li>After selecting the individuals by selecting checkbox, you have to assign them what type of fields you want them to fill to complete the task from <span style="font-weight: 600;">Select task type</span> (only if you want to forward to volunteers)</li>
                           <li>Must press <span style="font-weight: 600;">Forward Task</span> button to forward the task to the assigned individuals and then it will send a mail to that assigned individuals</li>
+                          <li>As an Executive Body, if you forward the task to
+                            <ul>
+                              <li>the Team's Incharges, they will get <span style="color:red;font-weight: 600;">25%</span> points of the Task points</li>
+                              <li>the Team's Volunteers, they will get <span style="color:red;font-weight: 600;">10%</span> points of the Task points</li>
+                              <li>Co-ordinator of a particular Team are assigned to this task as a group. So if you forwards it, every Co-ordinators of the Team receives 25% or 10% of the Task points</li>
+                              <li>Once forwarded Co-ordinators can still upload Task materials if necessary, and you can adjust the points later on their upload basis</li>
+                              <li>Same for Incharges</li>
+                            </ul>
+                          </li>
+                          <li>As a Co-ordinator if you forward your task to
+                            <ul>
+                              <li>your Incharges, you will get <span style="color:red;font-weight: 600;">25%</span> points of the Task points</li>
+                              <li>your Volunteers, you will get <span style="color:red;font-weight: 600;">10%</span> points of the Task points</li>
+                              <li>Co-ordinator of a particular Team are assigned to this task as a group. So if any Co-ordinator forwards it, every Co-ordinators receives 25% or 10% of the Task points. They would be notified by an email and notification</li>
+                              <li>Once forwarded you can still upload Task materials if necessary, and EB's can adjust your points later on your upload basis</li>
+                              <li>You can change the assignees of the Task forwarded to your Incharges, if and only if any Incharge <span style="color:red;font-weight: 600;">did not</span> forward it to their Volunteers</li>
+                              <li>If Incharge forwarded it to the Volunteers, then you can change the Volunteers if you want</li>
+                            </ul>
+                          </li>
+                          <li>As an Incharge, if you forward your task to
+                            <ul>
+                              <li>your Volunteers, you will get <span style="color:red;font-weight: 600;">25%</span> points of the Task points</li>
+                              <li>Incharges of a particular Team are assigned to this task as a group. So if any Incharge forwards it, every Incharges receives 25% of the Task points. They would be notified by an email and notification</li>
+                              <li>Once forwarded you can still upload Task materials if necessary, and EB's can adjust your points later on your upload basis</li>
+                              <li>You can change the assignees of the Task forwarded to your Volunteers</li>
+                            </ul>
+                          </li>
                       </ol>
               </div>
           </div>

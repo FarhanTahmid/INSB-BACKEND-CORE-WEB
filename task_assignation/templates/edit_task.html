@@ -994,7 +994,7 @@
                                     <ol style="font-size: 16px; margin: 15px;">
                                         <li>To start the task, click <span style="font-weight: 600;">Start the task</span> button</li>
                                         <li>Assigned tasks must be completed within the deadline</li>
-                                        <li>Not completing a task within deadline will deduct your Task Point</li>
+                                        <li>Not completing a task within deadline will deduct your Task Point (<span style="color:red;">5%</span> everyday)</li>
                                         <li>Task works can be saved by clicking the <span style="font-weight: 600;">Save for later</span> button and can be finished later</li>
                                         <li>To submit a task click the <span style="font-weight: 600;">Task Completed</span> button and then an email will be sent to the person who created the task</li>
                                     </ol>
@@ -1033,9 +1033,9 @@
                     </div>
                     <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Start Task?</h5>
                     {% if task.task_type == "Team" and is_coordinator and not is_task_forwared_to_incharge.1 %}
-                    <h6  style="text-align: center; margin: 0 22px 5px;">If you forward the task(to incharges), you will get <span style="color:red;">25%</span> or, (to volunteers) <span style="color:red;">10%</span> of the task <b>points</b></h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">forward</span> it to your <b>Incharges</b> or <b>Volunteers</b>, but you can still upload</h6>
                     {% elif task.task_type == "Team" and is_officer and not is_task_forwarded_to_volunteers.1 %}
-                    <h6  style="text-align: center; margin: 0 22px 5px;">If you forward the task , you will get <span style="color:red;">25%</span> of the task <b>points</b></h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">forward</span> it to your <b>Volunteers</b>, but you can still upload</h6>
                     {% else %}
                     {% endif %}
                     <h6 style="text-align: center;">Do you want to start the task?</h6>
