@@ -46,40 +46,31 @@
 
 			display: flex;
 			justify-content: space-between;
-			background-color: #07608A;
+			/* background-color: #6092cf; */
 			color: white;
 			padding: 10px;
 			border-radius: 0px;
 			align-items: center;
 			position: sticky;
 			top: 0;
+			z-index: 1;
+			background-color: white;
+			color: #000;
 		}
 
-		.body_top_per::-webkit-scrollbar,
-		#team-table::-webkit-scrollbar,
-		.modal-1-content::-webkit-scrollbar,
-		.modal-2-content::-webkit-scrollbar,
-		.modal-3-content::-webkit-scrollbar {
+		.body_top_per::-webkit-scrollbar{
 			width: 6px;
 			height: 6px;
 		}
 
-		.body_top_per::-webkit-scrollbar-thumb,
-		#team-table::-webkit-scrollbar-thumb,
-		.modal-1-content::-webkit-scrollbar-thumb,
-		.modal-2-content::-webkit-scrollbar-thumb,
-		.modal-3-content::-webkit-scrollbar-thumb {
-			background-color: #e7eeef;
+		.body_top_per::-webkit-scrollbar-thumb{
+			background-color: rgb(147, 164, 195);
 			transition: all .4s ease-in-out;
 			border-radius: 4px;
 		}
 
-		.body_top_per::-webkit-scrollbar-thumb:hover,
-		#team-table::-webkit-scrollbar-thumb:hover,
-		.modal-1-content::-webkit-scrollbar-thumb:hover,
-		.modal-2-content::-webkit-scrollbar-thumb:hover,
-		.modal-3-content::-webkit-scrollbar-thumb:hover {
-			background-color: rgb(169, 170, 170);
+		.body_top_per::-webkit-scrollbar-thumb:hover{
+			background-color: rgb(169, 169, 170);
 		}
 
 		.body_top_per {
@@ -89,14 +80,15 @@
 			overflow-y: scroll;
 			height: 430px;
 			width: 100%;
-			box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 90px 0px;
+			box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+			background-color: white;
 		}
 
 		.headline_top_performers h1 {
-			font-weight: bold;
+			/* font-weight: bold;	 */
 			font-size: 1.5rem;
-			margin-top: 15px;
-			margin-left: 20px;
+			margin-top: 10px;
+			margin-left: 8px;
 
 		}
 
@@ -106,10 +98,13 @@
 			display: flex;
 			justify-content: space-between;
 			/* border: 1px solid #fff; */
-			border-radius: 10px;
+			border-radius: 4px;
 			margin: 0px 5px;
 			/* align-items: center; */
-
+			box-shadow: 0px 0px 3px 1px #80808040;
+			margin: 7px;
+			padding: 4px;
+			background-color: white;
 		}
 
 		.card_top_performers_1 {
@@ -146,25 +141,26 @@
 		.button-43 {
 			/* background-image: linear-gradient(-180deg, #37AEE2 0%, #1E96C8 100%);
 			 */
-			background-color: #FFD924;
-			border-radius: 50px;
+			background-color: #f3d95b;
+			border-radius: 5px;
 			box-sizing: border-box;
-			color: #000;
+			color: #ca910c;
+			border: 2px solid #ca910c;
 			display: flex;
 			font-size: 16px;
 			justify-content: center;
-			padding: 0.5rem 1rem !important;
+			padding: 0.25rem 1.25rem !important;
 			text-decoration: none;
 			width: 100%;
-			border: 0;
 			cursor: pointer;
 			user-select: none;
 			-webkit-user-select: none;
 			touch-action: manipulation;
+			transition: all .3s ease-in-out;
 		}
 
 		.button-43:hover {
-			background-image: linear-gradient(-180deg, #1D95C9 0%, #17759C 100%);
+			background-color: #000;
 		}
 
 		@media (min-width: 768px) {
@@ -175,44 +171,49 @@
 
 		.text_top_performers {
 			margin-left: 10px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
 		}
 
+		.text_top_performers a:hover{
+			transition: all .3s ease-in-out;
+			color: #00b5e2;
+		}
 		.text_top_performers h1 {
-			margin-top: 10px;
+			/* margin-top: 10px; */
 			font-size: 1.30rem;
 			font-weight: bold;
 
 		}
 
 		.text_top_performers:nth-child(2) {
-			margin-top: 10px;
+			margin-top: 2px;
 			font-size: 0.75rem;
 
 		}
 
 		.text_top_performers p {
-
 			font-size: 0.95rem;
 			margin-bottom: 0px !important;
-			margin-top: 10px;
+			/* margin-top: 10px; */
 
 		}
 
 		.img_top_per {
 			border-radius: 10px;
-			/* margin-right: 30px; */
-			padding-top: 20px;
-			/* box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 10px; */
 		}
 
 		.img_top_per img {
-			border-radius: 3px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 1px solid #ddd;
 		}
 
 		.points_top {
 			font-size: 1.30rem;
 			text-align: center;
-			margin-top: 10px;
+			/* margin-top: 10px; */
 			margin-right: 20px;
 			font-weight: bold;
 		}
@@ -385,6 +386,17 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+		}
+		.numbering{
+			font-weight: bold;
+			padding: 4px; 
+			border-radius: 50%; 
+			margin-right: 8px;
+		}
+		@media screen and (max-width:500px){
+			.text_top_performers h1 , .points_top{
+				font-size: 1rem;
+			}
 		}
 	</style>
 </head>
@@ -1039,7 +1051,7 @@
 								<div class="body_top_per">
 									<div class="headline_top_performers">
 										<h1>Top Performers of all time!</h1>
-										<span><button class="button-43">Task Leaderboards</button></span>
+										<!-- <span><button class="button-43">Task Leaderboards</button></span> -->
 									</div>
 									<div class="card_top_performers_1_0">
 										<div class="card_top_performers_2">
@@ -1048,82 +1060,104 @@
 													width="80px">
 											</div>
 											<div class="text_top_performers">
-												<h1>Farhana Rahman</h1>
-												<p>Website Development Team</p\>
-												<p style="opacity: 0.8;">Core Volunteer</p>
+												<div style="display: flex; align-items: center;">
+													<h6 class="numbering" style="color: #ca910c; background-color: #FFD100;">#1</h6>
+													<a href="#"><h1>Md. Shakib Shahariar Junayed</h1></a>
+												</div>
+												<div>
+													<p>Website Development Team</p\>
+													<p style="opacity: 0.8;">Core Volunteer</p>
+												</div>
 											</div>
 										</div>
 										<div class="points_top_performers">
 											<p class="points_top">100 points</p>
 										</div>
 									</div>
-									<div class="card_top_performers_1">
+									<div class="card_top_performers_1_0">
 										<div class="card_top_performers_2">
 											<div class="img_top_per">
 												<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
 													width="80px">
 											</div>
 											<div class="text_top_performers">
-												<h1>Farhana Rahman</h1>
-												<p>Website Development Team</p>
-												<p>Core Volunteer</p>
+												<div style="display: flex; align-items: center;">
+													<h6 class="numbering" style="color: #969798; background-color: #cfcfcf;">#2</h6>
+													<a href="#"><h1>Farhana Rahman</h1></a>
+												</div>
+												<div>
+													<p>Website Development Team</p\>
+													<p style="opacity: 0.8;">Core Volunteer</p>
+												</div>
 											</div>
 										</div>
 										<div class="points_top_performers">
 											<p class="points_top">100 points</p>
 										</div>
 									</div>
-									<div class="card_top_performers_1">
+									<div class="card_top_performers_1_0">
 										<div class="card_top_performers_2">
 											<div class="img_top_per">
 												<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
 													width="80px">
 											</div>
 											<div class="text_top_performers">
-												<h1>Farhana Rahman</h1>
-												<p>Website Development Team</p>
-												<p>Core Volunteer</p>
+												<div style="display: flex; align-items: center;">
+													<h6 class="numbering" style="color: #da9e30; background-color: #a25511;">#3</h6>
+													<a href="#"><h1>Farhana Rahman</h1></a>
+												</div>
+												<div>
+													<p>Website Development Team</p\>
+													<p style="opacity: 0.8;">Core Volunteer</p>
+												</div>
 											</div>
 										</div>
 										<div class="points_top_performers">
 											<p class="points_top">100 points</p>
 										</div>
 									</div>
-									<div class="card_top_performers_1">
+									<div class="card_top_performers_1_0">
 										<div class="card_top_performers_2">
 											<div class="img_top_per">
 												<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
 													width="80px">
 											</div>
 											<div class="text_top_performers">
-												<h1>Farhana Rahman</h1>
-												<p>Website Development Team</p>
-												<p>Core Volunteer</p>
+												<div style="display: flex; align-items: center;">
+													<h6 class="numbering">#4</h6>
+													<a href="#"><h1>Farhana Rahman</h1></a>
+												</div>
+												<div>
+													<p>Website Development Team</p\>
+													<p style="opacity: 0.8;">Core Volunteer</p>
+												</div>
 											</div>
 										</div>
 										<div class="points_top_performers">
 											<p class="points_top">100 points</p>
 										</div>
 									</div>
-									<div class="card_top_performers_1">
+									<div class="card_top_performers_1_0">
 										<div class="card_top_performers_2">
 											<div class="img_top_per">
 												<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
 													width="80px">
 											</div>
 											<div class="text_top_performers">
-												<h1>Farhana Rahman</h1>
-												<p>Website Development Team</p>
-												<p>Core Volunteer</p>
+												<div style="display: flex; align-items: center;">
+													<h6 class="numbering">#5</h6>
+													<a href="#"><h1>Farhana Rahman</h1></a>
+												</div>
+												<div>
+													<p>Website Development Team</p\>
+													<p style="opacity: 0.8;">Core Volunteer</p>
+												</div>
 											</div>
 										</div>
 										<div class="points_top_performers">
 											<p class="points_top">100 points</p>
 										</div>
 									</div>
-
-
-
 								</div>
 							</div>
 
