@@ -1688,7 +1688,7 @@
                     <input type="hidden" class="msg_id" value="{{thread.message_id}}">
                     <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
-                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" onclick="markRead(this)">
                   <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
@@ -1716,7 +1716,7 @@
                     <input type="hidden" class="msg_id" value="{{thread.message_id}}">
                     <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
-                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" onclick="markRead(this)">
                   <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
@@ -1743,7 +1743,7 @@
                     <input type="hidden" class="msg_id" value="{{thread.message_id}}">
                     <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
-                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" onclick="markRead(this)">
                   <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
@@ -1775,7 +1775,7 @@
                     <input type="hidden" class="msg_id" value="{{thread.message_id}}">
                     <i class="fa {% if 'STARRED' in thread.labels %}fa-star{% else %}fa-star-o{% endif %}" aria-hidden="true" onclick="starEmail(this)"></i>
                   </div>
-                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" target="_blank" onclick="markRead(this)">
+                  <a href="{% url 'central_branch:view_mail' thread.message_id %}" onclick="markRead(this)">
                   <div class="email_row" style="{% if 'UNREAD' in thread.labels %}background-color: aliceblue;{% else %}background-color: white{% endif %}" >
                     <div class="email_row_left">
                       <p class="sender">{{thread.sender}}</p>
