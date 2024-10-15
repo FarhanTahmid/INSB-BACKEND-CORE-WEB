@@ -2935,7 +2935,7 @@
       const tagContainer = document.getElementById('tagContainer');
       const tagInput = document.getElementById('tagInput');
 
-      let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+      let emailRegex = /^[^\s@]+@[^\s@]+\.(edu|com|org)$/; // Regex to match 'something@something.something'
 
       tagInput.addEventListener('keydown', function (event) {
         if (event.key === ' ' || event.key === ',' || event.key === 'Enter') {
@@ -3216,7 +3216,7 @@
       // For tracking original dropdown options
       const originalDropdownOptions = [...customAvailableOptions];
 
-      let emailRegex1 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex to match 'something@something.something'
+      let emailRegex1 = /^[^\s@]+@[^\s@]+\.(edu|com|org)$/; // Regex to match 'something@something.something'
 
       function customToggleDropdown() {
         const dropdown = document.getElementById("customDropdown");
