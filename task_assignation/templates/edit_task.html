@@ -1032,7 +1032,12 @@
                         <span class="closeStartModal">&times;</span>
                     </div>
                     <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Start Task?</h5>
-                    <h6  style="text-align: center; margin: 0 22px 5px;">If it is a <b>team task</b>, you <b>cannot</b> forward the task to someone if you start now.</h6>
+                    {% if task.task_type == "Team" and is_coordinator and not is_task_forwared_to_incharge.1 %}
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If you forward the task(to incharges), you will get <span style="color:red;">25%</span> or, (to volunteers) <span style="color:red;">10%</span> of the task <b>points</b></h6>
+                    {% elif task.task_type == "Team" and is_officer and not is_task_forwarded_to_volunteers.1 %}
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If you forward the task , you will get <span style="color:red;">25%</span> of the task <b>points</b></h6>
+                    {% else %}
+                    {% endif %}
                     <h6 style="text-align: center;">Do you want to start the task?</h6>
                     <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
                         <a href="#" class="cancel_start_task_btn">No</a>
@@ -1344,14 +1349,15 @@
                     {% endif %}>{{task.description}}</textarea>
                     <p id="task_descriptionCharacterCount" style="color: red;"></p>
                 </div> -->
-                <textarea id="summernote" name="task_description_details" {% if create_individual_task_access or create_team_task_access%}    
-                {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                <textarea id="summernote" name="task_description_details" 
+                {% if create_individual_task_access or create_team_task_access%}    
+                    {% if team_primary == None or team_primary == "1" or is_task_of_teams_individuals %}
+                    {% else %}
+                    disabled
+                    {% endif %}
                 {% else %}
                 disabled
-                {% endif %}
-            {% else %}
-            disabled
-            {% endif %}>{{task.description}}</textarea>
+                {% endif %}>{{task.description}}</textarea>
 
                 
                 

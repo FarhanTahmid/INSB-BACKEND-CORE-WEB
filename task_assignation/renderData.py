@@ -2132,7 +2132,16 @@ This is an automated message. Do not reply
 
                             # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
                             # upload_types.delete()
-
+                            try:
+                                task_forwarded_by = Members.objects.get(ieee_id = request.user.username)
+                                task_forwarded_to = Members.objects.get(ieee_id = people.ieee_id)
+                                if task_forwarded_by.position.is_co_ordinator and task_forwarded_by.position.is_officer and str(people.ieee_id) != str(request.user.username):
+                                    site_domain = request.META['HTTP_HOST']
+                                    Task_Assignation.task_forward_email(request,task_forwarded_by,task_forwarded_to,task,False)
+                                    notification_message = f"Your Task, {task.title} has been forwarded by {task_forwarded_by.name}({task_forwarded_by.ieee_id}) to the incharges"
+                                    NotificationHandler.notification_to_a_member(request,task,f"Task Forwarded",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type,task_forwarded_to)
+                            except:
+                                pass
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
                             task.save()
@@ -2262,6 +2271,18 @@ This is an automated message. Do not reply
 
                             # upload_types = Member_Task_Upload_Types.objects.get(task_member = people,task = task)
                             # upload_types.delete()
+
+                            #logic for sending awarness email is onyl for when coordinator forwards it
+                            try:
+                                task_forwarded_by = Members.objects.get(ieee_id = request.user.username)
+                                task_forwarded_to = Members.objects.get(ieee_id = people.ieee_id)
+                                if task_forwarded_by.position.is_co_ordinator and task_forwarded_by.position.is_officer and str(people.ieee_id) != str(request.user.username):
+                                    site_domain = request.META['HTTP_HOST']
+                                    Task_Assignation.task_forward_email(request,task_forwarded_by,task_forwarded_to,task,False)
+                                    notification_message = f"Your Task, {task.title}, has been forwarded by {task_forwarded_by.name}({task_forwarded_by.ieee_id}) to the incharges"
+                                    NotificationHandler.notification_to_a_member(request,task,f"Task Forwarded",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type,task_forwarded_to)
+                            except:
+                                pass
 
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2555,9 +2576,19 @@ This is an automated message. Do not reply
                                 points_for_incharge = Member_Task_Point.objects.get(task=task,member = member.ieee_id)
                                 points_for_incharge.completion_points = task.task_category.points * (25/100)
                                 points_for_incharge.save()
-                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 15% of task'
+                                task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 25% of task'
                                 #setting message
                                 Task_Assignation.save_task_logs(task,task_log_message)
+                                try:
+                                    task_forwarded_by = Members.objects.get(ieee_id = request.user.username)
+                                    task_forwarded_to = Members.objects.get(ieee_id = member.ieee_id)
+                                    if task_forwarded_by.position.is_co_ordinator and not task_forwarded_by.position.is_officer and str(member.ieee_id) != str(request.user.username):
+                                        site_domain = request.META['HTTP_HOST']
+                                        Task_Assignation.task_forward_email(request,task_forwarded_by,task_forwarded_to,task,False)
+                                        notification_message = f"Your Task,{task.title} has been forwarded by {task_forwarded_by.name}({task_forwarded_by.ieee_id}) to the volunteers"
+                                        NotificationHandler.notification_to_a_member(request,task,f"Task Forwarded",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type,task_forwarded_to)
+                                except:
+                                    pass
                 else:
                     if team_forward.task_forwarded_to_core_or_team_volunteers == False and team_forward.task_forwarded_to_incharge == False:
 
@@ -2584,6 +2615,16 @@ This is an automated message. Do not reply
                                 task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Co-ordinator, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 10% of task'
                                 #setting message
                                 Task_Assignation.save_task_logs(task,task_log_message)
+                                try:
+                                    task_forwarded_by = Members.objects.get(ieee_id = request.user.username)
+                                    task_forwarded_to = Members.objects.get(ieee_id = member.ieee_id)
+                                    if task_forwarded_by.position.is_co_ordinator and task_forwarded_by.position.is_officer and str(member.ieee_id) != str(request.user.username):
+                                        site_domain = request.META['HTTP_HOST']
+                                        Task_Assignation.task_forward_email(request,task_forwarded_by,task_forwarded_to,task,True)
+                                        notification_message = f"Your Task,{task.title} has been forwarded by {task_forwarded_by.name}({task_forwarded_by.ieee_id}) to the volunteers"
+                                        NotificationHandler.notification_to_a_member(request,task,f"Task Forwarded",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type,task_forwarded_to)
+                                except:
+                                    pass
 
 
         else:
@@ -2715,6 +2756,16 @@ This is an automated message. Do not reply
                             task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Incharge, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 15% of task'
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
+                            try:
+                                task_forwarded_by = Members.objects.get(ieee_id = request.user.username)
+                                task_forwarded_to = Members.objects.get(ieee_id = member.ieee_id)
+                                if task_forwarded_by.position.is_co_ordinator and not task_forwarded_by.position.is_officer and str(member.ieee_id) != str(request.user.username):
+                                    site_domain = request.META['HTTP_HOST']
+                                    Task_Assignation.task_forward_email(request,task_forwarded_by,task_forwarded_to,task,False)
+                                    notification_message = f"Your Task,{task.title} has been forwarded by {task_forwarded_by.name}({task_forwarded_by.ieee_id}) to the volunteers"
+                                    NotificationHandler.notification_to_a_member(request,task,f"Task Forwarded",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type,task_forwarded_to)
+                            except:
+                                pass
             else:
                 if team_forward.task_forwarded_to_core_or_team_volunteers == False and team_forward.task_forwarded_to_incharge==False:
 
@@ -2740,6 +2791,16 @@ This is an automated message. Do not reply
                             task_log_message = f'Task Name: {task.title}, task forwared by {user_name}, hence Coordinator, {member.name}({member.ieee_id}), of {team} received reduced points. Points obtained - 10% of task'
                             #setting message
                             Task_Assignation.save_task_logs(task,task_log_message)
+                            try:
+                                task_forwarded_by = Members.objects.get(ieee_id = request.user.username)
+                                task_forwarded_to = Members.objects.get(ieee_id = member.ieee_id)
+                                if task_forwarded_by.position.is_co_ordinator and task_forwarded_by.position.is_officer and str(member.ieee_id) != str(request.user.username):
+                                    site_domain = request.META['HTTP_HOST']
+                                    Task_Assignation.task_forward_email(request,task_forwarded_by,task_forwarded_to,task,True)
+                                    notification_message = f"Your Task,{task.title} has been forwarded by {task_forwarded_by.name}({task_forwarded_by.ieee_id}) to the volunteers"
+                                    NotificationHandler.notification_to_a_member(request,task,f"Task Forwarded",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_update_notification_type,task_forwarded_to)
+                            except:
+                                pass
 
 
         return True
@@ -2917,6 +2978,55 @@ This is an automated message. Do not reply
         except:
             return False
 
+    def task_forward_email(request,forwarded_by,to_members,task,direct):
+
+        '''This function will send an email to the members in a team task that their task has been forwarded'''
+
+        try:
+            email_from = settings.EMAIL_HOST_USER
+            email_to = []
+            try:
+                task_created_by = Members.objects.get(ieee_id = task.task_created_by)
+                task_created_by = task_created_by.position.role
+            except:
+                task_created_by = "Admin"
+            email_to.append(to_members.email_ieee)
+            email_to.append(to_members.email_personal)
+            email_to.append(to_members.email_nsu)
+            subject = f"{forwarded_by.position.role}, {forwarded_by.name}, has forwarded the task, {task.title} !"
+            site_domain = request.META['HTTP_HOST']
+            if direct:
+                points = "10%"
+            else:
+                points = "25%"         
+            message = f'''
+Hello {to_members.name},
+                
+Your assigend task's - {task.title}, was forwarded by {forwarded_by.name}. You received {points} of the task points.
+
+You can still upload to the task if necessary.
+
+Please follow this link to view the task:{site_domain}/portal/central_branch/task/{task.pk}.
+
+Deadline: {task.deadline}
+Task Assigned by: {task.task_created_by}, {task_created_by}
+
+Best Regards
+IEEE NSU SB Portal
+
+This is an automated message. Do not reply
+            '''
+            email=EmailMultiAlternatives(subject,message,
+                                    email_from,
+                                    email_to
+                                    )
+            # email.send()
+            task_log_message = f'Task Name: {task.title}, task forwarded awarness email sent to {to_members.name}({to_members.ieee_id})'
+            #setting message
+            Task_Assignation.save_task_logs(task,task_log_message)
+            return True
+        except:
+            return False
     
     def get_user(request):
         
