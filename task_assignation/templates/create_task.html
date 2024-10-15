@@ -13,8 +13,10 @@
      {% include "common_css.html" %}
     {% endblock common_css %}
 
+    <!--summernote-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <!-- CKEditor CDN -->
-    <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/4.17.0/standard-all/ckeditor.js"></script> -->
 
     <style>
         body{
@@ -187,7 +189,7 @@
         }
         .individuals-table{
             border-radius: 4px;
-            min-height: 400px;
+            /* min-height: 400px; */
             max-height: 500px;
             margin-bottom: 15px;
         }
@@ -782,6 +784,9 @@
     margin: 0;
 
 }
+.note-editing-area{
+    background-color: #fff;
+}
     </style>
   </head>
 
@@ -994,11 +999,11 @@
 
                 <!--task description-->
                 <label class="description_label">Describe the task:</label>
-                <div class="ckeditor">
-                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" required></textarea>
+                <!-- <div class="ckeditor">
+                    <textarea placeholder="Describe the task..." class="form-control" type="text" name="task_description_details" required></textarea> -->
                     <!-- <p id="task_descriptionCharacterCount" style="color: red;"></p> -->
-                </div>
-                                
+                <!-- </div> -->
+                <textarea id="summernote" name="task_description_details"></textarea>
                 <!--task type-->
                 <div class="task_type ">
                     <label class="task_type_label">Select Task Type and Individuals:</label>
@@ -1161,8 +1166,23 @@
             if (teamCheckbox && coordinatorRow) {
                 coordinatorRow.style.display = teamCheckbox.checked ? "table-row" : "none";
             }
-        }
 
+            deselectCoordinators(teamRowId);
+        }
+        function deselectCoordinators(teamPrimary) {
+            // Get the coordinator list row by team primary ID
+            const coordinatorRow = document.getElementById(`coordinator-list-${teamPrimary}`);
+            
+            if (coordinatorRow) {
+                // Select all checkboxes inside this coordinator row
+                const checkboxes = coordinatorRow.querySelectorAll('input[type="checkbox"]');
+                
+                // Uncheck all the checkboxes
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            }
+        }
 
         {% if create_team_task_access %}
         function filter_team_search_table() {
@@ -1483,7 +1503,7 @@ function validateForm(event) {
             });
         });
     </script>
-    
+<!--     
     <script>
         // character count function
         document.addEventListener("DOMContentLoaded", function () {
@@ -1530,7 +1550,7 @@ function validateForm(event) {
               "Character Count: " + characterCount;
           }
         }
-    </script>
+    </script> -->
     <script>
             
         {% if create_individual_task_access %}
@@ -2143,5 +2163,23 @@ window.addEventListener('load',()=>{
   MultiselectDropdown(window.MultiselectDropdownOptions);
 });
     </script>
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+        <script>
+            $('#summernote').summernote({
+              placeholder: 'Describe the task...',
+              tabsize: 2,
+              height: 250,
+              toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+              ]
+            });
+          </script>
   </body>
 </html>
