@@ -807,6 +807,9 @@
                         </div>
                     </div> -->
                     <textarea id="members_task_type_content" class="members_task_type_content" name="content_details">{{content_loaded.content}}</textarea>
+
+                    <br>
+                    {% endif %}
                     <script>
                         $(document).ready(function() {
                             {% if task.is_task_completed %}
@@ -814,9 +817,6 @@
                             {% endif %}
                         });
                     </script>
-
-                    <br>
-                    {% endif %}
                     
                     <!--                         
                         {% if members_task_type.has_file_upload %}
