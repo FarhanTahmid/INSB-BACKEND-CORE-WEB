@@ -5169,7 +5169,12 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
         is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
         is_officer = Task_Assignation.is_officer(request,team_primary)
         is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
-                    
+
+        print("printing details")
+        print(is_coordinator)
+        print(is_task_forwared_to_incharge)
+        print(is_officer)
+        print(is_task_forwarded_to_volunteers)       
         if team_primary == None or team_primary == "1":
             context = {
                 'task':task,
@@ -5287,7 +5292,11 @@ def forward_to_incharges(request,task_id,team_primary = None):
         is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
         is_officer = Task_Assignation.is_officer(request,team_primary)
         is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
-                    
+        print("printing details")
+        print(is_coordinator)
+        print(is_task_forwared_to_incharge)
+        print(is_officer)
+        print(is_task_forwarded_to_volunteers)  
         if team_primary == None or team_primary == "1":
             context = {
                 'task':task,

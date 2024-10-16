@@ -513,14 +513,19 @@
                           <span class="closeStartModal">&times;</span>
                       </div>
                       <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Are you sure?</h5>
-                      {% if is_coordinator and not is_task_forwared_to_incharge.1 %}
+                      {% if is_coordinator and not is_task_forwared_to_incharge %}
                       <h6  style="text-align: center; margin: 0 22px 5px;">If you <span style="color:red;">forward</span>, all of the Co-ordinators (including you) will get <span style="color:red;">25%</span>(if forwarded to Incharges) or <span style="color:red;">10%</span>(if forwarded to Volunteers) points of the Task points</h6>
                       <h6 style="text-align: center;">Do you want to forward the task?</h6>
-                      {% elif is_coordinator and is_task_forwared_to_incharge.1 and not is_task_forwarded_to_volunteers.1 %}
-                      {% elif is_officer and is_task_forwared_to_incharge.1 and not is_task_forwarded_to_volunteers.1 %}
+                      {% endif %}
+                      {% if is_coordinator and is_task_forwared_to_incharge and not is_task_forwarded_to_volunteers %}
+                      {% endif %}
+                      {% if is_coordinator and is_task_forwared_to_incharge and is_task_forwarded_to_volunteers %}
+                      {% endif %}
+                      {% if is_officer and is_task_forwared_to_incharge and not is_task_forwarded_to_volunteers %}
                       <h6  style="text-align: center; margin: 0 22px 5px;">If you <span style="color:red;">forward</span>, all of the Incharges (including you) will get <span style="color:red;">25%</span> points of the Task points</h6>
                       <h6 style="text-align: center;">Do you want to forward the task?</h6>
-                      {% elif is_officer and is_task_forwared_to_incharge.1 and is_task_forwarded_to_volunteers.1 %}
+                      {% endif %}
+                      {% if is_officer and is_task_forwared_to_incharge and is_task_forwarded_to_volunteers %}
                       {% else %}
                       {% endif %}
                       <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
