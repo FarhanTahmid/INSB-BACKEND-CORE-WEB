@@ -171,6 +171,8 @@
         <div class="filter">
             <select id="filter-dropdown" style="width: 200px; height: 40px; border-radius: 5px; padding: 5px;">
                 <option value="" selected disabled>Select Award</option>
+                <option value="members">Top Five Performers</option>
+                <option value="teams">Top Three Teams</option>
                 {% for i in awards %}
                     <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
                 {% endfor %}
@@ -321,66 +323,178 @@
             var selectedAwardID = $(this).val();
             // Display loading indicator while fetching data
             awardWinnersContainer.innerHTML = '<div class="loading">Loading...</div>';
-
-            // Make an AJAX request to retrieve data for the selected role
             
-            $.ajax({
-                url: "{% url 'main_website:load_awards' %}",
-                type: "GET",
-                data: {'award_pk': selectedAwardID},
-                success: function (data) {
-                    // Update other form fields based on the received data
-                    // $("#award_name").val(data.volunteer_award_name);
-                    const award_name=data.award_name
-                    awardNameContainer.innerHTML=award_name;
-
-                    if (Array.isArray(data.winners)) {
-                        // Dynamically create individual award winner elements
-                        const awardWinnerElements = data.winners.map(awardWinner => {
-                            
-                            const award_name=awardWinner.award_name;
-                            const imgSrc=awardWinner.picture;
-                            const name=awardWinner.name;
-                            const team=awardWinner.team;
-                            const position = awardWinner.position;
-                            const contributions = awardWinner.contributions;
-
-                            return `
-                            <div class="content">
-                                <div class="con">
-                                    <div class="circle">
-                                        <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
-                                    </div>
-                                    <div class="details">
-                                        <div class="list-with-icon-caption">
-                                            <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
-                                            <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
-                                            <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
+            if(selectedAwardID == 'members') {
+                // Make an AJAX request to retrieve data for the selected performer          
+                $.ajax({
+                    url: "{% url 'main_website:load_top_performers' %}",
+                    type: "GET",
+                    data: {'performer_type': selectedAwardID},
+                    success: function (data) {
+                        const name=data.name
+                        awardNameContainer.innerHTML=name;
+    
+                        if (Array.isArray(data.topFivePerformers)) {
+                            // Dynamically create individual award winner elements
+                            const TopPerformerElements = data.topFivePerformers.map(performer => {
+                                
+                                const imgSrc=performer.picture;
+                                const name=performer.name;
+                                const team=performer.team;
+                                const position = performer.position;
+                                const points = performer.points;
+    
+                                return `
+                                <div class="content">
+                                    <div class="con">
+                                        <div class="circle">
+                                            <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_top_performer">
                                         </div>
-                                        <div class="list-with-icon-content">
-                                            <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
-                                                Contributions
-                                            </div>
+                                        <div class="details">
                                             <div class="list-with-icon-caption">
-                                                <p style="text-align: justify;">${contributions}</p>
+                                                <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                                <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
+                                                <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
+                                            </div>
+                                            <div class="list-with-icon-content">
+                                                {% comment %} <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                    Points
+                                                </div> {% endcomment %}
+                                                <div class="list-with-icon-caption">
+                                                    <p style="text-align: left;">Points: <span style="color: #002855;">${points}</span></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            `;
-                        });
-                        
-                        // Update the award winner container content
-                        awardWinnersContainer.innerHTML = awardWinnerElements.join('');
-                        totalSlides = awardWinnerElements.length;
-                        showSlide(currentIndex, awardWinnersContainer);
-                        }
-                },
-                error: function (error) {
-                    console.log("Error:", error);
-                }
-            });
+                                `;
+                            });
+                            
+                            // Update the award winner container content
+                            awardWinnersContainer.innerHTML = TopPerformerElements.join('');
+                            totalSlides = TopPerformerElements.length;
+                            showSlide(currentIndex, awardWinnersContainer);
+                            }
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            }
+            else if(selectedAwardID == 'teams') {
+                // Make an AJAX request to retrieve data for the selected performer          
+                $.ajax({
+                    url: "{% url 'main_website:load_top_performers' %}",
+                    type: "GET",
+                    data: {'performer_type': selectedAwardID},
+                    success: function (data) {
+                        const name=data.name
+                        awardNameContainer.innerHTML=name;
+    
+                        if (Array.isArray(data.topThreeTeams)) {
+                            // Dynamically create individual award winner elements
+                            const TopTeamElements = data.topThreeTeams.map(team => {
+                                
+                                const imgSrc=team.picture;
+                                const name=team.name;
+                                const points = team.points;
+    
+                                return `
+                                <div class="content">
+                                    <div class="con">
+                                        <div class="circle">
+                                            <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                        </div>
+                                        <div class="details">
+                                            <div class="list-with-icon-caption">
+                                                <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                            </div>
+                                            <div class="list-with-icon-content">
+                                                {% comment %} <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                    Points
+                                                </div> {% endcomment %}
+                                                <div class="list-with-icon-caption">
+                                                    <p style="text-align: left;">Points: <span style="color: #002855;">${points}</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            });
+                            
+                            // Update the award winner container content
+                            awardWinnersContainer.innerHTML = TopTeamElements.join('');
+                            totalSlides = TopTeamElements.length;
+                            showSlide(currentIndex, awardWinnersContainer);
+                            }
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            }
+            else {
+
+                // Make an AJAX request to retrieve data for the selected role          
+                $.ajax({
+                    url: "{% url 'main_website:load_awards' %}",
+                    type: "GET",
+                    data: {'award_pk': selectedAwardID},
+                    success: function (data) {
+                        // Update other form fields based on the received data
+                        // $("#award_name").val(data.volunteer_award_name);
+                        const award_name=data.award_name
+                        awardNameContainer.innerHTML=award_name;
+    
+                        if (Array.isArray(data.winners)) {
+                            // Dynamically create individual award winner elements
+                            const awardWinnerElements = data.winners.map(awardWinner => {
+                                
+                                const award_name=awardWinner.award_name;
+                                const imgSrc=awardWinner.picture;
+                                const name=awardWinner.name;
+                                const team=awardWinner.team;
+                                const position = awardWinner.position;
+                                const contributions = awardWinner.contributions;
+    
+                                return `
+                                <div class="content">
+                                    <div class="con">
+                                        <div class="circle">
+                                            <img src="/media_files/${imgSrc}" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';" alt="picture_of_volunteer_of_the_month">
+                                        </div>
+                                        <div class="details">
+                                            <div class="list-with-icon-caption">
+                                                <p style="text-align: left;">Name: <span style="color: #002855;">${name}</span></p>
+                                                <p style="text-align: left;">Team: <span style="color: #002855;">${team}</span></p>
+                                                <p style="text-align: left;">Position: <span style="color: #002855;">${position}</span></p>
+                                            </div>
+                                            <div class="list-with-icon-content">
+                                                <div class="list-with-icon-title gdlr-skin-title" style="font-weight: 500;">
+                                                    Contributions
+                                                </div>
+                                                <div class="list-with-icon-caption">
+                                                    <p style="text-align: justify;">${contributions}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                `;
+                            });
+                            
+                            // Update the award winner container content
+                            awardWinnersContainer.innerHTML = awardWinnerElements.join('');
+                            totalSlides = awardWinnerElements.length;
+                            showSlide(currentIndex, awardWinnersContainer);
+                            }
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            }
         });
 
             // Function to show previous slide
