@@ -536,7 +536,12 @@ def load_all_skill_types(request):
         messages.error(request,"Something went wrong while loading all skill type")
         return False
 
-    
+
+def get_top_5_performers(request):
+
+    '''This function will return top 5 performers of all time'''
+
+    performers = Members.objects.filter()    
 
 class PanelMembersData:
     logger=logging.getLogger(__name__)
