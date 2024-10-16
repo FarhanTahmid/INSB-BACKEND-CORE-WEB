@@ -810,9 +810,7 @@
                     <script>
                         $(document).ready(function() {
                             {% if task.is_task_completed %}
-                            $('.members_task_type_content').each(function() {
-                                $(this).summernote('disable');
-                            });
+                            $('#members_task_type_content').summernote('disable');
                             {% endif %}
                         });
                     </script>
