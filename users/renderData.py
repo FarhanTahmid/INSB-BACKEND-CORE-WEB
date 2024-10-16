@@ -536,8 +536,21 @@ def load_all_skill_types(request):
         messages.error(request,"Something went wrong while loading all skill type")
         return False
 
-    
 
+def get_top_5_performers(request):
+
+    '''This function will return top 5 performers of all time'''
+
+    performers = Members.objects.all().order_by('-completed_task_points')[:5]
+    print(performers)
+    return performers
+
+def get_top_3_teams(request):
+
+    '''This function will return the top 3 teams'''
+    
+    teams = Teams.objects.all().order_by('-completed_task_points')[:3]
+    return teams
 class PanelMembersData:
     logger=logging.getLogger(__name__)
 
