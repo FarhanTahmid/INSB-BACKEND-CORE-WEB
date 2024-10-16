@@ -984,7 +984,7 @@
 									</div>
 								</div>
 								<div class="points_top_performers">
-									<p class="points_top">{{performer.completed_task_points}}</p>
+									<p class="points_top">{{performer.completed_task_points|floatformat:2}}</p>
 								</div>
 							</div>
 							{% endfor %}
@@ -1004,7 +1004,7 @@
 									</div>
 								</div>
 								<div class="points_top_performers">
-									<p class="points_top">{{team.completed_task_points}}</p>
+									<p class="points_top">{{team.completed_task_points|floatformat:2}}</p>
 								</div>
 							</div>
 							{% endfor %}
