@@ -1121,13 +1121,6 @@
                                 <p id="contentCharacterCount" style="color: red;"></p>
                         </div> -->
                         <textarea name="content_details_{{member.name}}" class="disable2">{{task_type.3.content}}</textarea>
-                        <script>
-                            $(document).ready(function() {
-                                $('.disable2').each(function() {
-                                    $(this).summernote('disable');
-                                });
-                            });
-                        </script>
                             <br>
                     
                             <div id="media-selected-images-container"></div>
@@ -1190,15 +1183,6 @@
                             </div>  -->
                             <input type="hidden" name="comments_member" value="{{member}}"></input>
                             <textarea id="comments_{{forloop.counter}}" name="comments_details" class="disable3">{{task_type.7|safe}}</textarea>
-                            <script>
-                                {% if task.is_task_completed %}
-                                $(document).ready(function() {
-                                    $('.disable3').each(function() {
-                                        $(this).summernote('disable');
-                                    });
-                                });
-                                {% endif %}
-                            </script>
                         
     
     
@@ -1211,6 +1195,20 @@
                     </form> 
             </div>
             {% endfor %}
+            <script>
+                {% if task.is_task_completed %}
+                $(document).ready(function() {
+                    $('.disable3').each(function() {
+                        $(this).summernote('disable');
+                    });
+                });
+                {% endif %}
+                $(document).ready(function() {
+                    $('.disable2').each(function() {
+                        $(this).summernote('disable');
+                    });
+                });
+            </script>
             {% elif view_access %}
             <div class="form-wrapper">
                 <div style="display: flex;
