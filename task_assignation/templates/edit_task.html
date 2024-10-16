@@ -1033,9 +1033,11 @@
                     </div>
                     <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Start Task?</h5>
                     {% if task.task_type == "Team" and is_coordinator and not is_task_forwared_to_incharge.1 %}
-                    <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">forward</span> it to your <b>Incharges</b> or <b>Volunteers</b>, but you can still upload</h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">Forward</span> it to your <b>Incharges</b> or <b>Volunteers</b>, but you can still upload</h6>
+                    <h6 style="text-align: center; margin: 0 22px 5px;"><span style="color:red;">To Forward, go to this Task through your respective Team</span></h6>
                     {% elif task.task_type == "Team" and is_officer and not is_task_forwarded_to_volunteers.1 %}
-                    <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">forward</span> it to your <b>Volunteers</b>, but you can still upload</h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">Forward</span> it to your <b>Volunteers</b>, but you can still upload</h6>
+                    <h6 style="text-align: center; margin: 0 22px 5px;"><span style="color:red;">To Forward, go to this Task through your respective Team</span></h6>
                     {% else %}
                     {% endif %}
                     <h6 style="text-align: center;">Do you want to start the task?</h6>

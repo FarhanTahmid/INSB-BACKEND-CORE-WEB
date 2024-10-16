@@ -513,6 +513,12 @@
                           <span class="closeStartModal">&times;</span>
                       </div>
                       <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Are you sure?</h5>
+                      {% if is_coordinator and not is_task_forwared_to_incharge.1 %}
+                      <h6  style="text-align: center; margin: 0 22px 5px;">If you <span style="color:red;">forward</span>, all of the Co-ordinators (including you) will get <span style="color:red;">25%</span>(if forwarded to Incharges) or <span style="color:red;">10%</span>(if forwarded to Volunteers) of the Task points</h6>
+                      {% elif is_officer and not is_task_forwarded_to_volunteers.1 %}
+                      <h6  style="text-align: center; margin: 0 22px 5px;">If you <span style="color:red;">forward</span>, all of the Incharges (including you) will get <span style="color:red;">25%</span> of the Task points</h6>
+                      {% else %}
+                      {% endif %}
                       <h6 style="text-align: center;">Do you want to forward the task?</h6>
                       <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
                           <a href="#" class="cancel_start_task_btn">No</a>

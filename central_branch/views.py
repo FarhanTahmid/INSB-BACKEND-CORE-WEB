@@ -5095,7 +5095,6 @@ def upload_task(request, task_id,team_primary = None):
                     'team_primary':team_primary,
                     'view_access':view_access,
 
-
                 }
 
             return render(request,"task_page.html",context)
@@ -5166,6 +5165,10 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
         
         
         members = Task_Assignation.load_volunteers_for_task_assignation(task,team_primary)
+        is_coordinator = Task_Assignation.is_coordinator(request,team_primary)
+        is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
+        is_officer = Task_Assignation.is_officer(request,team_primary)
+        is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
                     
         if team_primary == None or team_primary == "1":
             context = {
@@ -5177,6 +5180,10 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
                 'app_name':app_name,
                 'team_primary':team_primary,
                 'task_type_bool':True,
+                'is_coordinator':is_coordinator,
+                'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
+                'is_officer':is_officer,
+                'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
 
             }
         else:
@@ -5200,6 +5207,10 @@ def add_task(request, task_id,team_primary = None,by_coordinators = 0):
                 'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
                 'team_primary':team_primary,
                 'task_type_bool':True,
+                'is_coordinator':is_coordinator,
+                'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
+                'is_officer':is_officer,
+                'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
 
             }
             
@@ -5272,6 +5283,10 @@ def forward_to_incharges(request,task_id,team_primary = None):
         
         
         members = Task_Assignation.load_incharges_for_task_assignation(task,team_primary)
+        is_coordinator = Task_Assignation.is_coordinator(request,team_primary)
+        is_task_forwared_to_incharge = Task_Assignation.is_task_forwarded_to_incharge(task,team_primary)
+        is_officer = Task_Assignation.is_officer(request,team_primary)
+        is_task_forwarded_to_volunteers=Task_Assignation.is_task_forwarded_to_core_or_team_volunteer(task,team_primary)
                     
         if team_primary == None or team_primary == "1":
             context = {
@@ -5283,6 +5298,10 @@ def forward_to_incharges(request,task_id,team_primary = None):
                 'app_name':app_name,
                 'team_primary':team_primary,
                 'task_type_bool':False,
+                'is_coordinator':is_coordinator,
+                'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
+                'is_officer':is_officer,
+                'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
             }
         else:
             context = {
@@ -5305,6 +5324,10 @@ def forward_to_incharges(request,task_id,team_primary = None):
                 'finance_and_corporate_team':nav_bar["finance_and_corporate_team"],
                 'team_primary':team_primary,
                 'task_type_bool':False,
+                'is_coordinator':is_coordinator,
+                'is_task_forwared_to_incharge':is_task_forwared_to_incharge,
+                'is_officer':is_officer,
+                'is_task_forwarded_to_volunteers':is_task_forwarded_to_volunteers,
             }
             
 

@@ -1198,7 +1198,7 @@
                 <!--Messages-->
                 
                 <!-- task page heading-->
-                <h4 style="margin-top: 25px;">See Task Progress</h4>
+                <h4 style="margin-top: 25px;">See Other's Task Progress</h4>
                 
 
             <!-- <div class="name_tab">
@@ -1211,9 +1211,11 @@
             <div class="name_tab">
                 <select id="memberSelect" onchange="showDetails(this.value)">
                   {% for member, task_type in task_type_per_member.items %}
+                  {% if member.ieee_id != user_data.ieee_id %}
                     <option value="{{ member.ieee_id }}" {% if forloop.counter == 1 %} selected {% endif %}>
                       {{ member.name }} - {{ member.ieee_id }} ({{ member.team.team_name }})
                     </option>
+                    {% endif %}
                   {% endfor %}
                 </select>
               </div>
