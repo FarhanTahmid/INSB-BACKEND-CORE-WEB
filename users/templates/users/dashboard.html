@@ -977,7 +977,7 @@
 									<div class="text_top_performers">
 										<div style="display: flex; align-items: center;">
 											<h6 class="numbering">#1</h6>
-											<a href="#"><h1>{{performer.name}}</h1></a>
+											<a href="{% url 'main_website:member_profile' performer.ieee_id %}"><h1>{{performer.name}}</h1></a>
 										</div>
 										<div>
 											<p>{{performer.team.team_name}}</p\>
@@ -991,70 +991,25 @@
 							</div>
 							{% endfor %}
 							
-							
+							{% for team in top_teams %}
 							<div class="card_top_performers_1_0 teamPerformers" style="display:none;">
 								<div class="card_top_performers_2">
 									<div class="img_top_per">
-										<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
+										<img src="{{media_url}}{{team.team_picture}}"
 											width="80px">
 									</div>
 									<div class="text_top_performers">
 										<div style="display: flex; align-items: center;">
 											<h6 class="numbering"></h6>
-											<a href="#"><h1>Md. Shakib Shahariar Junayed</h1></a>
-										</div>
-										<div>
-											<p>Website Development Team</p\>
-											<p style="opacity: 0.8;">Core Volunteer</p>
+											<a href="#"><h1>{{team.team_name}}</h1></a>
 										</div>
 									</div>
 								</div>
 								<div class="points_top_performers">
-									<p class="points_top">100 points</p>
+									<p class="points_top">{{team.completed_task_points}}</p>
 								</div>
 							</div>
-							<div class="card_top_performers_1_0 teamPerformers" style="display:none;">
-								<div class="card_top_performers_2">
-									<div class="img_top_per">
-										<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
-											width="80px">
-									</div>
-									<div class="text_top_performers">
-										<div style="display: flex; align-items: center;">
-											<h6 class="numbering"></h6>
-											<a href="#"><h1>Farhana Rahman</h1></a>
-										</div>
-										<div>
-											<p>Website Development Team</p\>
-											<p style="opacity: 0.8;">Core Volunteer</p>
-										</div>
-									</div>
-								</div>
-								<div class="points_top_performers">
-									<p class="points_top">100 points</p>
-								</div>
-							</div>
-							<div class="card_top_performers_1_0 teamPerformers" style="display:none;">
-								<div class="card_top_performers_2">
-									<div class="img_top_per">
-										<img src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg"
-											width="80px">
-									</div>
-									<div class="text_top_performers">
-										<div style="display: flex; align-items: center;">
-											<h6 class="numbering"></h6>
-											<a href="#"><h1>Farhana Rahman</h1></a>
-										</div>
-										<div>
-											<p>Website Development Team</p\>
-											<p style="opacity: 0.8;">Core Volunteer</p>
-										</div>
-									</div>
-								</div>
-								<div class="points_top_performers">
-									<p class="points_top">100 points</p>
-								</div>
-							</div>
+							{% endfor %}
 						</div>
 					</div>
 				</div>
