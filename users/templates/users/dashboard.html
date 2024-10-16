@@ -78,7 +78,7 @@
 			/* border: 2px solid #0091C5; */
 			border-radius: 4px;
 			overflow-y: scroll;
-			height: 430px;
+			height: 674px;
 			width: 100%;
 			box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 			background-color: white;
@@ -2018,269 +2018,265 @@
 
 	<!-- ############ LAYOUT END-->
 
-	</div>
-	<!-- build:js scripts/app.html.js -->
-	<!-- jQuery -->
-	<script src="{% static '/libs/jquery/jquery/dist/jquery.js'%}"></script>
-	<script src="{% static '/libs/jquery/screenfull/dist/screenfull.min.js'%}"></script>
+</div>
+<!-- build:js scripts/app.html.js -->
+<!-- jQuery -->
+  <script src="{% static '/libs/jquery/jquery/dist/jquery.js'%}"></script>
+  <script src="{% static '/libs/jquery/screenfull/dist/screenfull.min.js'%}"></script>
 
 
-	<!-- Bootstrap -->
-	<script src="{% static '/libs/jquery/tether/dist/js/tether.min.js'%}"></script>
-	<script src="{% static '/libs/jquery/bootstrap/dist/js/bootstrap.js'%}"></script>
-	<!-- core -->
-	<script src="{% static '/libs/jquery/underscore/underscore-min.js'%}"></script>
-	<script src="{% static '/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js'%}"></script>
-	<script src="{% static '/libs/jquery/PACE/pace.min.js'%}"></script>
+<!-- Bootstrap -->
+  <script src="{% static '/libs/jquery/tether/dist/js/tether.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/bootstrap/dist/js/bootstrap.js'%}"></script>
+<!-- core -->
+  <script src="{% static '/libs/jquery/underscore/underscore-min.js'%}"></script>
+  <script src="{% static '/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js'%}"></script>
+  <script src="{% static '/libs/jquery/PACE/pace.min.js'%}"></script>
 
-	{% comment %}
-	<script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
+  {% comment %} <script src="{% static 'script/config.lazyload.js'%}"></script> {% endcomment %}
 
-	<script src="{% static 'script/palette.js'%}"></script>
-	<script src="{% static 'script/ui-load.js'%}"></script>
-	<script src="{% static 'script/ui-jp.js' %}"></script>
-	<script src="{% static 'script/ui-include.js'%}"></script>
-	<script src="{% static 'script/ui-device.js'%}"></script>
-	<script src="{% static 'script/ui-form.js'%}"></script>
-	<script src="{% static 'script/ui-nav.js'%}"></script>
-	<script src="{% static 'script/ui-screenfull.js'%}"></script>
-	<script src="{% static 'script/ui-scroll-to.js'%}"></script>
-	<script src="{% static 'script/ui-toggle-class.js'%}"></script>
-	{% comment %}
-	<script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
-	<script src="{% static 'script/app.js'%}"></script>
-	<!-- apexcharts -->
-	<script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
-	<!-- Chart JS -->
-	<script src="{% static 'scripts/chartjs.js' %}"></script>
-	<script src="{% static 'scripts/dashboard.js' %}"></script>
-	<!-- ajax -->
-	{% comment %}
-	<script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
-	<script src="{% static 'script/ajax.js'%}"></script>
-	<!-- endbuild -->
-	<script>
+  <script src="{% static 'script/palette.js'%}"></script>
+  <script src="{% static 'script/ui-load.js'%}"></script>
+  <script src="{% static 'script/ui-jp.js' %}"></script>
+  <script src="{% static 'script/ui-include.js'%}"></script>
+  <script src="{% static 'script/ui-device.js'%}"></script>
+  <script src="{% static 'script/ui-form.js'%}"></script>
+  <script src="{% static 'script/ui-nav.js'%}"></script>
+  <script src="{% static 'script/ui-screenfull.js'%}"></script>
+  <script src="{% static 'script/ui-scroll-to.js'%}"></script>
+  <script src="{% static 'script/ui-toggle-class.js'%}"></script>
+  {% comment %} <script src="{% static 'script/screenfull.min.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/app.js'%}"></script>
+  <!-- apexcharts -->
+  <script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+  <!-- Chart JS -->
+  <script src="{% static 'scripts/chartjs.js' %}"></script>
+  <script src="{% static 'scripts/dashboard.js' %}"></script>
+  <!-- ajax -->
+  {% comment %} <script src="{% static 'script/jquery.pjax.js'%}"></script> {% endcomment %}
+  <script src="{% static 'script/ajax.js'%}"></script>
+<!-- endbuild -->
+<script>
 
-		function getChartColorsArray(chartId) {
-			if (document.getElementById(chartId) !== null) {
-				var colors = document.getElementById(chartId).getAttribute("data-colors");
-				colors = JSON.parse(colors);
-				return colors.map(function (value) {
-					var newValue = value.replace(" ", "");
-					if (newValue.indexOf("--") != -1) {
-						var color = getComputedStyle(document.documentElement).getPropertyValue(
-							newValue
-						);
-						if (color) return color;
-					} else {
-						return newValue;
-					}
-				});
-			}
+	function getChartColorsArray(chartId) {
+		if (document.getElementById(chartId) !== null) {
+			var colors = document.getElementById(chartId).getAttribute("data-colors");
+			colors = JSON.parse(colors);
+			return colors.map(function (value) {
+				var newValue = value.replace(" ", "");
+				if (newValue.indexOf("--") != -1) {
+					var color = getComputedStyle(document.documentElement).getPropertyValue(
+						newValue
+					);
+					if (color) return color;
+				} else {
+					return newValue;
+				}
+			});
 		}
-		async function initializeMiniChart1() {
-			try {
-				var barchartColors = getChartColorsArray("mini-1");
-				var options = {
-					series: [{
-						data: {{ event_number_over_5_years }}
-			}],
-			chart: {
-				type: 'line',
-					height: 61,
-						sparkline: {
+	}
+	async function initializeMiniChart1() {
+		try {
+			var barchartColors = getChartColorsArray("mini-1");
+			var options = {
+				series: [{
+				  data: {{event_number_over_5_years}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
 					enabled: true
-				}
-			},
-			colors: barchartColors,
+				  }  
+				},
+				colors: barchartColors,
 				stroke: {
-				curve: 'smooth',
-					width: 2.5,
+				  curve: 'smooth',
+				  width: 2.5,
 				},
-			tooltip: {
-				fixed: {
+				tooltip: {
+				  fixed: {
 					enabled: false
-				},
-				x: {
+				  },
+				  x: {
 					show: false
-				},
-				y: {
+				  },
+				  y: {
 					title: {
-						formatter: function (seriesName) {
-							return ''
-						}
-					}
-				},
-				marker: {
-					show: false
-				}
-			}
-		};
-
-		var chart = new ApexCharts(document.querySelector("#mini-1"), options);
-		chart.render();
-	  } catch (error) {
-
-		}
-	  }
-		initializeMiniChart1();
-
-		async function initializeMiniChart3() {
-			try {
-				var barchartColors = getChartColorsArray("mini-3");
-				var options = {
-					series: [{
-						data: {{ hit_count_monthly_data }}
-			}],
-			chart: {
-				type: 'line',
-					height: 61,
-						sparkline: {
-					enabled: true
-				}
-			},
-			colors: barchartColors,
-				stroke: {
-				curve: 'smooth',
-					width: 2.5,
-				},
-			tooltip: {
-				fixed: {
-					enabled: false
-				},
-				x: {
-					show: false
-				},
-				y: {
-					title: {
-						formatter: function (seriesName) {
-							return ''
-						}
-					}
-				},
-				marker: {
-					show: false
-				}
-			}
-		};
-
-		var chart = new ApexCharts(document.querySelector("#mini-3"), options);
-		chart.render();
-	  } catch (error) {
-
-		}
-	  }
-		initializeMiniChart3();
-
-		async function initializeMiniChart4() {
-			try {
-				var barchartColors = getChartColorsArray("mini-4");
-				var options = {
-					series: [{
-						data: {{ hit_count_over_5_years }}
-			}],
-			chart: {
-				type: 'line',
-					height: 61,
-						sparkline: {
-					enabled: true
-				}
-			},
-			colors: barchartColors,
-				stroke: {
-				curve: 'smooth',
-					width: 2.5,
-				},
-			tooltip: {
-				fixed: {
-					enabled: false
-				},
-				x: {
-					show: false
-				},
-				y: {
-					title: {
-						formatter: function (seriesName) {
-							return ''
-						}
-					}
-				},
-				marker: {
-					show: false
-				}
-			}
-		};
-
-		var chart = new ApexCharts(document.querySelector("#mini-4"), options);
-		chart.render();
-	  } catch (error) {
-
-		}
-	  }
-		initializeMiniChart4();
-
-		async function initializeMiniChart2() {
-			try {
-				var barchartColors = getChartColorsArray("mini-2");
-				var options = {
-					series: [{
-						data: {{ hit_count_monthly | safe}}
-			}]
-    	},
-		chart: {
-			type: 'line',
-				height: 61,
-					sparkline: {
-				enabled: true
-			}
-		},
-		colors: barchartColors,
-			stroke: {
-			curve: 'smooth',
-				width: 2.5,
-    },
-		tooltip: {
-			fixed: {
-				enabled: false
-			},
-			x: {
-				show: false
-			},
-			y: {
-				title: {
-					formatter: function (seriesName) {
+					  formatter: function (seriesName) {
 						return ''
+					  }
 					}
+				  },
+				  marker: {
+					show: false
+				  }
 				}
-			},
-			marker: {
-				show: false
-			}
-		}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-1"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart1();
+
+	  async function initializeMiniChart3() {
+		try {
+			var barchartColors = getChartColorsArray("mini-3");
+			var options = {
+				series: [{
+				  data: {{hit_count_monthly_data}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-3"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart3();
+
+	  async function initializeMiniChart4() {
+		try {
+			var barchartColors = getChartColorsArray("mini-4");
+			var options = {
+				series: [{
+				  data: {{hit_count_over_5_years}}
+				}],
+				chart: {
+				  type: 'line',
+				  height: 61,
+				  sparkline: {
+					enabled: true
+				  }  
+				},
+				colors: barchartColors,
+				stroke: {
+				  curve: 'smooth',
+				  width: 2.5,
+				},
+				tooltip: {
+				  fixed: {
+					enabled: false
+				  },
+				  x: {
+					show: false
+				  },
+				  y: {
+					title: {
+					  formatter: function (seriesName) {
+						return ''
+					  }
+					}
+				  },
+				  marker: {
+					show: false
+				  }
+				}
+			  };
+			
+			  var chart = new ApexCharts(document.querySelector("#mini-4"), options);
+			chart.render();
+	  } catch (error) {
+		
+	  }
+	  }
+	  initializeMiniChart4();
+
+	async function initializeMiniChart2() {
+		try {
+			var barchartColors = getChartColorsArray("mini-2");
+var options = {
+    series: [{
+      data: {{hit_count_monthly | safe}}
+    }],
+    chart: {
+      type: 'line',
+      height: 61,
+      sparkline: {
+        enabled: true
+      }  
+    },
+    colors: barchartColors,
+    stroke: {
+      curve: 'smooth',
+      width: 2.5,
+    },
+    tooltip: {
+      fixed: {
+        enabled: false
+      },
+      x: {
+        show: false
+      },
+      y: {
+        title: {
+          formatter: function (seriesName) {
+            return ''
+          }
+        }
+      },
+      marker: {
+        show: false
+      }
+    }
   };
 
-		var chart = new ApexCharts(document.querySelector("#mini-2"), options);
-		chart.render();
+  var chart = new ApexCharts(document.querySelector("#mini-2"), options);
+chart.render();
 } catch (error) {
-
-		}
+		
 }
-		initializeMiniChart2();
+}
+initializeMiniChart2();
 
-		async function initializeChart() {
-			try {
-				var barchartColors = getChartColorsArray("recruitment-statistics");
-				var options = {
-					series: [{
-						data: {{ recruitment_stat_values }}
+async function initializeChart() {
+	try {
+		var barchartColors = getChartColorsArray("recruitment-statistics");
+		var options = {
+			series: [{
+				data: {{recruitment_stat_values}}
 			}],
 			chart: {
 				toolbar: {
 					show: false,
 				},
 				height: 350,
-					type: 'bar',
-						events: {
+				type: 'bar',
+				events: {
 					click: function (chart, w, e) {
 						// Handle click event if needed
 					}
@@ -2289,7 +2285,7 @@
 			plotOptions: {
 				bar: {
 					columnWidth: '70%',
-						distributed: true,
+					distributed: true,
 				}
 			},
 			dataLabels: {
@@ -2299,12 +2295,12 @@
 				show: false
 			},
 			colors: barchartColors,
-				xaxis: {
-				categories: { { recruitment_stat_key | safe } }, // Categories will be populated dynamically
+			xaxis: {
+				categories:{{recruitment_stat_key | safe}}, // Categories will be populated dynamically
 				labels: {
 					style: {
 						colors: barchartColors,
-							fontSize: '12px'
+						fontSize: '12px'
 					}
 				}
 			}
@@ -2312,203 +2308,201 @@
 		var chart = new ApexCharts(document.querySelector("#recruitment-statistics"), options);
 		chart.render();
 	} catch (error) {
-			console.error('Error initializing chart:', error);
-		}
+		console.error('Error initializing chart:', error);
+	}
   }
-		initializeChart();
+  initializeChart();
 
-		async function initializeCircleChart() {
-			try {
+ async function initializeCircleChart(){
+	try {
 
-				Chart.pluginService.register({
-					afterUpdate: function (chart) {
-						for (var i = 1; i < chart.config.data.labels.length; i++) {
-							var arc = chart.getDatasetMeta(0).data[i];
-							arc.round = {
-								x: (chart.chartArea.left + chart.chartArea.right) / 2,
-								y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
-								radius: (chart.outerRadius + chart.innerRadius) / 2,
-								thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
-								backgroundColor: arc._model.backgroundColor
-							}
-						}
-						// Draw rounded corners for first item
-						var arc = chart.getDatasetMeta(0).data[0];
-						arc.round = {
-							x: (chart.chartArea.left + chart.chartArea.right) / 2,
-							y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
-							radius: (chart.outerRadius + chart.innerRadius) / 2,
-							thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
-							backgroundColor: arc._model.backgroundColor
-						}
-					},
-
-					afterDraw: function (chart) {
-						for (var i = 1; i < chart.config.data.labels.length; i++) {
-							var ctx = chart.chart.ctx;
-							arc = chart.getDatasetMeta(0).data[i];
-							var startAngle = Math.PI / 2 - arc._view.startAngle;
-							var endAngle = Math.PI / 2 - arc._view.endAngle;
-							ctx.save();
-							ctx.translate(arc.round.x, arc.round.y);
-							ctx.fillStyle = arc.round.backgroundColor;
-							ctx.beginPath();
-							ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
-							ctx.closePath();
-							ctx.fill();
-							ctx.restore();
-						}
-						// Draw rounded corners for first item
-						var ctx = chart.chart.ctx;
-						arc = chart.getDatasetMeta(0).data[0];
-						var startAngle = Math.PI / 2 - arc._view.startAngle;
-						var endAngle = Math.PI / 2 - arc._view.endAngle;
-						ctx.save();
-						ctx.translate(arc.round.x, arc.round.y);
-						ctx.fillStyle = arc.round.backgroundColor;
-						ctx.beginPath();
-						// ctx.arc(arc.round.radius * Math.sin(startAngle), arc.round.radius * Math.cos(startAngle), arc.round.thickness, 0, 2 * Math.PI);
-						ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
-						ctx.closePath();
-						ctx.fill();
-						ctx.restore();
-					},
-				});
-				// round corners
-				var salescategorycolors = getChartColorsArray('sales-category');
-
-				var config = {
-					type: 'doughnut',
-					data: {
-						labels: {{ type_of_event_stats_keys | safe
-			}},
-		datasets: [{
-			data: {{ type_of_event_stats_values }},
-			backgroundColor: salescategorycolors,
-			hoverBackgroundColor: salescategorycolors,
-			borderWidth: 0,
-			borderColor: salescategorycolors,
-			hoverBorderWidth: 0,
+ Chart.pluginService.register({
+    afterUpdate: function (chart) {
+      for (var i = 1; i < chart.config.data.labels.length; i++) {
+        var arc = chart.getDatasetMeta(0).data[i];
+        arc.round = {
+          x: (chart.chartArea.left + chart.chartArea.right) / 2,
+          y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+          radius: (chart.outerRadius + chart.innerRadius) / 2,
+          thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+          backgroundColor: arc._model.backgroundColor
+        }
+      }
+      // Draw rounded corners for first item
+      var arc = chart.getDatasetMeta(0).data[0];
+      arc.round = {
+        x: (chart.chartArea.left + chart.chartArea.right) / 2,
+        y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+        radius: (chart.outerRadius + chart.innerRadius) / 2,
+        thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+        backgroundColor: arc._model.backgroundColor
+      }
+    },
+  
+    afterDraw: function (chart) {
+      for (var i = 1; i < chart.config.data.labels.length; i++) {
+        var ctx = chart.chart.ctx;
+        arc = chart.getDatasetMeta(0).data[i];
+        var startAngle = Math.PI / 2 - arc._view.startAngle;
+        var endAngle = Math.PI / 2 - arc._view.endAngle;
+        ctx.save();
+        ctx.translate(arc.round.x, arc.round.y);
+        ctx.fillStyle = arc.round.backgroundColor;
+        ctx.beginPath();
+        ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      // Draw rounded corners for first item
+      var ctx = chart.chart.ctx;
+      arc = chart.getDatasetMeta(0).data[0];
+      var startAngle = Math.PI / 2 - arc._view.startAngle;
+      var endAngle = Math.PI / 2 - arc._view.endAngle;
+      ctx.save();
+      ctx.translate(arc.round.x, arc.round.y);
+      ctx.fillStyle = arc.round.backgroundColor;
+      ctx.beginPath();
+      // ctx.arc(arc.round.radius * Math.sin(startAngle), arc.round.radius * Math.cos(startAngle), arc.round.thickness, 0, 2 * Math.PI);
+      ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    },
+  });
+  // round corners
+  var salescategorycolors = getChartColorsArray('sales-category');
+  
+  var config = {
+    type: 'doughnut',
+    data: {
+      labels:{{type_of_event_stats_keys | safe}},
+      datasets: [{
+        data: {{type_of_event_stats_values}},
+        backgroundColor: salescategorycolors,
+        hoverBackgroundColor: salescategorycolors,
+        borderWidth: 0,
+        borderColor: salescategorycolors,
+        hoverBorderWidth: 0,
       }]
     },
-		options: {
-			responsive: false,
-				legend: {
-				display: false //This will do the task
-			},
-			tooltips: {
-				enabled: true,
+    options: {
+      responsive: false,
+      legend: {
+        display: false //This will do the task
       },
-			cutoutPercentage: 75,
-				rotation: -0.5 * Math.PI,
-					circumference: 2 * Math.PI,
-						title: {
-				display: false
-			},
-		}
+      tooltips: {
+        enabled: true,
+      },
+      cutoutPercentage: 75,
+      rotation: -0.5 * Math.PI,
+      circumference: 2 * Math.PI,
+      title: {
+        display: false
+      },
+    }
   };
-		var ctx = document.getElementById('sales-category');
-
-		window.myDoughnut = new Chart(ctx, config);
+  var ctx = document.getElementById('sales-category');
+  
+  window.myDoughnut = new Chart(ctx, config);
   // window.myDoughnut.generateLegend();
 } catch (error) {
-			console.error('Error initializing chart:', error);
-		}
+	console.error('Error initializing chart:', error);
 }
-		initializeCircleChart();
+}
+initializeCircleChart();
 
-		async function initializeCircleChart2() {
-			try {
-				Chart.pluginService.register({
-					afterUpdate: function (chart) {
-						for (var i = 1; i < chart.config.data.labels.length; i++) {
-							var arc = chart.getDatasetMeta(0).data[i];
-							arc.round = {
-								x: (chart.chartArea.left + chart.chartArea.right) / 2,
-								y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
-								radius: (chart.outerRadius + chart.innerRadius) / 2,
-								thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
-								backgroundColor: arc._model.backgroundColor
-							}
-						}
-						// Draw rounded corners for first item
-						var arc = chart.getDatasetMeta(0).data[0];
-						arc.round = {
-							x: (chart.chartArea.left + chart.chartArea.right) / 2,
-							y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
-							radius: (chart.outerRadius + chart.innerRadius) / 2,
-							thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
-							backgroundColor: arc._model.backgroundColor
-						}
-					},
-
-					afterDraw: function (chart) {
-						for (var i = 1; i < chart.config.data.labels.length; i++) {
-							var ctx = chart.chart.ctx;
-							arc = chart.getDatasetMeta(0).data[i];
-							var startAngle = Math.PI / 2 - arc._view.startAngle;
-							var endAngle = Math.PI / 2 - arc._view.endAngle;
-							ctx.save();
-							ctx.translate(arc.round.x, arc.round.y);
-							ctx.fillStyle = arc.round.backgroundColor;
-							ctx.beginPath();
-							ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
-							ctx.closePath();
-							ctx.fill();
-							ctx.restore();
-						}
-						// Draw rounded corners for first item
-						var ctx = chart.chart.ctx;
-						arc = chart.getDatasetMeta(0).data[0];
-						var startAngle = Math.PI / 2 - arc._view.startAngle;
-						var endAngle = Math.PI / 2 - arc._view.endAngle;
-						ctx.save();
-						ctx.translate(arc.round.x, arc.round.y);
-						ctx.fillStyle = arc.round.backgroundColor;
-						ctx.beginPath();
-						// ctx.arc(arc.round.radius * Math.sin(startAngle), arc.round.radius * Math.cos(startAngle), arc.round.thickness, 0, 2 * Math.PI);
-						ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
-						ctx.closePath();
-						ctx.fill();
-						ctx.restore();
-					},
-				});
-				// round corners
-				var salescategorycolors = getChartColorsArray('Category2');
-
-				var config = {
-					type: 'doughnut',
-					data: {
-						labels: {{ gender_active_inactive_users_labels | safe
-			}},
-		datasets: [{
-			data: {{ gender_active_inactive_users_data }},
-			backgroundColor: salescategorycolors,
-			hoverBackgroundColor: salescategorycolors,
-			borderWidth: 0,
-			borderColor: salescategorycolors,
-			hoverBorderWidth: 0,
+async function initializeCircleChart2(){
+	try {
+		Chart.pluginService.register({
+			afterUpdate: function (chart) {
+			  for (var i = 1; i < chart.config.data.labels.length; i++) {
+				var arc = chart.getDatasetMeta(0).data[i];
+				arc.round = {
+				  x: (chart.chartArea.left + chart.chartArea.right) / 2,
+				  y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+				  radius: (chart.outerRadius + chart.innerRadius) / 2,
+				  thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+				  backgroundColor: arc._model.backgroundColor
+				}
+			  }
+			  // Draw rounded corners for first item
+			  var arc = chart.getDatasetMeta(0).data[0];
+			  arc.round = {
+				x: (chart.chartArea.left + chart.chartArea.right) / 2,
+				y: (chart.chartArea.top + chart.chartArea.bottom) / 2,
+				radius: (chart.outerRadius + chart.innerRadius) / 2,
+				thickness: (chart.outerRadius - chart.innerRadius) / 2 - 1,
+				backgroundColor: arc._model.backgroundColor
+			  }
+			},
+		  
+			afterDraw: function (chart) {
+			  for (var i = 1; i < chart.config.data.labels.length; i++) {
+				var ctx = chart.chart.ctx;
+				arc = chart.getDatasetMeta(0).data[i];
+				var startAngle = Math.PI / 2 - arc._view.startAngle;
+				var endAngle = Math.PI / 2 - arc._view.endAngle;
+				ctx.save();
+				ctx.translate(arc.round.x, arc.round.y);
+				ctx.fillStyle = arc.round.backgroundColor;
+				ctx.beginPath();
+				ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+				ctx.closePath();
+				ctx.fill();
+				ctx.restore();
+			  }
+			  // Draw rounded corners for first item
+			  var ctx = chart.chart.ctx;
+			  arc = chart.getDatasetMeta(0).data[0];
+			  var startAngle = Math.PI / 2 - arc._view.startAngle;
+			  var endAngle = Math.PI / 2 - arc._view.endAngle;
+			  ctx.save();
+			  ctx.translate(arc.round.x, arc.round.y);
+			  ctx.fillStyle = arc.round.backgroundColor;
+			  ctx.beginPath();
+			  // ctx.arc(arc.round.radius * Math.sin(startAngle), arc.round.radius * Math.cos(startAngle), arc.round.thickness, 0, 2 * Math.PI);
+			  ctx.arc(arc.round.radius * Math.sin(endAngle), arc.round.radius * Math.cos(endAngle), arc.round.thickness, 0, 2 * Math.PI);
+			  ctx.closePath();
+			  ctx.fill();
+			  ctx.restore();
+			},
+		  });
+		  // round corners
+		  var salescategorycolors = getChartColorsArray('Category2');
+		  
+		  var config = {
+			type: 'doughnut',
+			data: {
+			  labels:{{gender_active_inactive_users_labels | safe}},
+			  datasets: [{
+				data: {{gender_active_inactive_users_data}},
+				backgroundColor: salescategorycolors,
+				hoverBackgroundColor: salescategorycolors,
+				borderWidth: 0,
+				borderColor: salescategorycolors,
+				hoverBorderWidth: 0,
 			  }]
 			},
-		options: {
-			responsive: false,
-				legend: {
+			options: {
+			  responsive: false,
+			  legend: {
 				display: false //This will do the task
-			},
-			tooltips: {
+			  },
+			  tooltips: {
 				enabled: true,
 			  },
-			cutoutPercentage: 75,
-				rotation: -0.5 * Math.PI,
-					circumference: 2 * Math.PI,
-						title: {
+			  cutoutPercentage: 75,
+			  rotation: -0.5 * Math.PI,
+			  circumference: 2 * Math.PI,
+			  title: {
 				display: false
-			},
-		}
+			  },
+			}
 		  };
-		var ctx = document.getElementById('Category2');
-
-		window.myDoughnut = new Chart(ctx, config);
+		  var ctx = document.getElementById('Category2');
+		  
+		  window.myDoughnut = new Chart(ctx, config);
 		  // window.myDoughnut.generateLegend();
 		} catch (error) {
 			console.error('Error initializing chart:', error);
@@ -2517,7 +2511,6 @@
 		initializeCircleChart2();
 
 
-	</script>
+</script>
 </body>
-
 </html>
