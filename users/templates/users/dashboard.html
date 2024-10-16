@@ -242,13 +242,15 @@
 		display: flex;
 	}
 	.img_top_per {
-		border-radius: 10px;
+		height: 80px;
+		width: 80px;
+		overflow: hidden;
+		border-radius: 50%;
 	}
 
 	.img_top_per img {
-		border-radius: 50%;
 		object-fit: cover;
-		border: 1px solid #ddd;
+		width: 100%;
 	}
 	.text_top_performers {
 		margin-left: 10px;
@@ -969,8 +971,7 @@
 							<div class="card_top_performers_1_0 individualPerformers">
 								<div class="card_top_performers_2">
 									<div class="img_top_per">
-										<img src="{{media_url}}{{performer.user_profile_picture}}"
-											width="80px" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+										<img src="{{media_url}}{{performer.user_profile_picture}}">
 									</div>
 									<div class="text_top_performers">
 										<div style="display: flex; align-items: center;">
@@ -993,8 +994,7 @@
 							<div class="card_top_performers_1_0 teamPerformers" style="display:none;">
 								<div class="card_top_performers_2">
 									<div class="img_top_per">
-										<img src="{{media_url}}{{team.team_picture}}"
-											width="80px" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+										<img src="{{media_url}}{{team.team_picture}}">
 									</div>
 									<div class="text_top_performers">
 										<div style="display: flex; align-items: center;">
