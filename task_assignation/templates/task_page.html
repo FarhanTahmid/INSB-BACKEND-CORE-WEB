@@ -806,7 +806,16 @@
                             <textarea class="form-control" type="text" name="content_details" {% if task.is_task_completed %}disabled {% endif %}>{{content_loaded.content}}</textarea>
                         </div>
                     </div> -->
-                    <textarea id="members_task_type_content" name="content_details">{{content_loaded.content}}</textarea>
+                    <textarea id="members_task_type_content" class="members_task_type_content" name="content_details">{{content_loaded.content}}</textarea>
+                    <script>
+                        $(document).ready(function() {
+                            {% if task.is_task_completed %}
+                            $('.members_task_type_content').each(function() {
+                                $(this).summernote('disable');
+                            });
+                            {% endif %}
+                        });
+                    </script>
 
                     <br>
                     {% endif %}
@@ -940,8 +949,14 @@
                             </div>
 
                         </div> -->
-                        <textarea id="comments" name="comments_details" class="disable">{{comments|safe}}</textarea>
-                    
+                        <textarea id="comments" name="comments_details" class="disabled">{{comments|safe}}</textarea>
+                        <script>
+                            $(document).ready(function() {
+                                $('.disabled').each(function() {
+                                    $(this).summernote('disable');
+                                });
+                            });
+                                </script>
                     <br><br>
                     
 
@@ -1104,6 +1119,13 @@
                                 <p id="contentCharacterCount" style="color: red;"></p>
                         </div> -->
                         <textarea name="content_details_{{member.name}}" class="disable2">{{task_type.3.content}}</textarea>
+                        <script>
+                            $(document).ready(function() {
+                                $('.disable2').each(function() {
+                                    $(this).summernote('disable');
+                                });
+                            });
+                        </script>
                             <br>
                     
                             <div id="media-selected-images-container"></div>
@@ -1166,7 +1188,13 @@
                             </div>  -->
                             <input type="hidden" name="comments_member" value="{{member}}"></input>
                             <textarea id="comments_{{forloop.counter}}" name="comments_details" class="disable3">{{task_type.7|safe}}</textarea>
-    
+                            <script>
+                                $(document).ready(function() {
+                                    $('.disable3').each(function() {
+                                        $(this).summernote('disable');
+                                    });
+                                });
+                            </script>
                         
     
     
@@ -1327,6 +1355,13 @@
                                 <p id="contentCharacterCount" style="color: red;"></p>
                         </div> -->
                         <textarea name="content_details_{{member.name}}" class="disable4">{{task_type.3.content}}</textarea>
+                        <script>
+                            $(document).ready(function() {
+                                $('.disable4').each(function() {
+                                    $(this).summernote('disable');
+                                });
+                            });
+                        </script>
                             <br>
                     
                             <div id="media-selected-images-container"></div>
@@ -1389,7 +1424,15 @@
                             </div>  -->
                             <input type="hidden" name="comments_member" value="{{member}}"></input>
                             <textarea name="comments_details" id="comments_{{forloop.counter}}" class="disable5">{{task_type.7|safe}}</textarea>
-    
+                            <script>
+                                $(document).ready(function() {
+                                    {% if task.is_task_completed %}
+                                    $('.disable5').each(function() {
+                                        $(this).summernote('disable');
+                                    });
+                                    {% endif %}
+                                });
+                            </script>
                         
     
     
@@ -1811,7 +1854,7 @@
             <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
             <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
             <script>
-                $('#members_task_type_content').summernote({
+                $('.members_task_type_content').summernote({
                     placeholder: 'Describe the task...',
                     tabsize: 2,
                     height: 250,
@@ -1825,7 +1868,7 @@
                     ['view', ['fullscreen', 'codeview', 'help']]
                     ]
                 });
-                $('.disable').summernote({
+                $('.disabled').summernote({
                     tabsize: 2,
                     height: 250,
                     toolbar: [
@@ -1890,16 +1933,6 @@
                     ['view', ['fullscreen', 'codeview', 'help']]
                     ]
                 });
-                </script>
-                <script>
-                    {% if task.is_task_completed %}
-                        $('#members_task_type_content').summernote('disable');
-                        $('.disable3').summernote('disable');
-                        {% endif %}
-                        $('.disable').summernote('disable');
-                        $('.disable2').summernote('disable');
-                        $('.disable4').summernote('disable');
-                        $('.disable5').summernote('disable');
                 </script>
   </body>
 </html>
