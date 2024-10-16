@@ -1034,12 +1034,17 @@
                     <h5 style="text-align: center; font-weight: bold;margin-bottom: 12px;">Start Task?</h5>
                     {% if task.task_type == "Team" and is_coordinator and not is_task_forwared_to_incharge.1 %}
                     <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">Forward</span> it to your <b>Incharges</b> or <b>Volunteers</b>, but you can still upload</h6>
-                    <h6 style="text-align: center; margin: 0 22px 5px;"><span style="color:red;">To Forward, go to this Task through your respective Team</span></h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">Task is assigned as a <b>group to your Team's Co-ordinator</b>. Forwarding it, will cause it to be forwarded for <b>each</b> Co-ordinator in your Team and will receive (25% or 10%) points of the Task points <b>(including you)</b></h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">and if you start the Task, then it would be <b>mandatory</b> for every Co-ordinators to complete it (including you)</h6>
+                    <h6 style="text-align: center; margin: 0 22px 5px;"><span style="color:red;">To Forward, go to this Task through your respective Team, from side-bar</span></h6>
                     {% elif task.task_type == "Team" and is_officer and not is_task_forwarded_to_volunteers.1 %}
                     <h6  style="text-align: center; margin: 0 22px 5px;">If you start the task, you won't be able to <span style="color:red;">Forward</span> it to your <b>Volunteers</b>, but you can still upload</h6>
-                    <h6 style="text-align: center; margin: 0 22px 5px;"><span style="color:red;">To Forward, go to this Task through your respective Team</span></h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">Task is assigned as a <b>group to your Team's Incharges</b>. Forwarding it, will cause it to be forwarded for <b>each</b> Incharge in your Team and will receive 25% points of the Task points <b>(including you)</b></h6>
+                    <h6  style="text-align: center; margin: 0 22px 5px;">and if you start the Task, then it would be <b>mandatory</b> for every Incharges to complete it (including you)</h6>
+                    <h6 style="text-align: center; margin: 0 22px 5px;"><span style="color:red;">To Forward, go to this Task through your respective Team, from side-bar</span></h6>
                     {% else %}
                     {% endif %}
+                    <br>
                     <h6 style="text-align: center;">Do you want to start the task?</h6>
                     <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 20px;">
                         <a href="#" class="cancel_start_task_btn">No</a>
@@ -2571,7 +2576,6 @@ window.addEventListener('load',()=>{
         }
     </script>
     </script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     <script>
         $('#summernote').summernote({
