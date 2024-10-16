@@ -541,7 +541,9 @@ def get_top_5_performers(request):
 
     '''This function will return top 5 performers of all time'''
 
-    performers = Members.objects.filter()    
+    performers = Members.objects.all().order_by('-completed_task_points')[:5]
+    print(performers)
+    return performers
 
 class PanelMembersData:
     logger=logging.getLogger(__name__)
