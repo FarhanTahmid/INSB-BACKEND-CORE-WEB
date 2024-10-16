@@ -970,7 +970,7 @@
 								<div class="card_top_performers_2">
 									<div class="img_top_per">
 										<img src="{{media_url}}{{performer.user_profile_picture}}"
-											width="80px">
+											width="80px" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
 									</div>
 									<div class="text_top_performers">
 										<div style="display: flex; align-items: center;">
@@ -994,7 +994,7 @@
 								<div class="card_top_performers_2">
 									<div class="img_top_per">
 										<img src="{{media_url}}{{team.team_picture}}"
-											width="80px">
+											width="80px" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
 									</div>
 									<div class="text_top_performers">
 										<div style="display: flex; align-items: center;">
