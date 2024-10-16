@@ -555,7 +555,7 @@
         color: white;
     }
     @media screen and (max-width:500px) {
-        .name_tab li{
+        .name_tab select{
             width: 100%;
         }
     }
@@ -1005,6 +1005,9 @@
             </div> -->
             <div class="name_tab">
                 <select id="memberSelect" onchange="showDetails(this.value)">
+                    <option value="click">
+                      Click to select
+                    </option>
                   {% for member, task_type in task_type_per_member.items %}
                     <option value="{{ member.ieee_id }}" {% if forloop.counter == 1 %} selected {% endif %}>
                       {{ member.name }} - {{ member.ieee_id }} ({{ member.team.team_name }})
@@ -1015,6 +1018,7 @@
 
             
 
+            <div id="details_click"></div>
             {% for member,task_type  in task_type_per_member.items %}
             <!-- logs modal -->
             <div class="modal__wrapper" id="modal__wrapper_{{ member.ieee_id }}">
@@ -1238,6 +1242,9 @@
             </div> -->
             <div class="name_tab">
                 <select id="memberSelect" onchange="showDetails(this.value)">
+                    <option value="click">
+                        Click to select
+                    </option>
                   {% for member, task_type in task_type_per_member.items %}
                   {% if member.ieee_id != user_data.ieee_id %}
                     <option value="{{ member.ieee_id }}" {% if forloop.counter == 1 %} selected {% endif %}>
@@ -1249,7 +1256,7 @@
               </div>
 
             
-
+            <div id="details_click"></div>
             {% for member,task_type  in task_type_per_member.items %}
             {% if member.ieee_id != user_data.ieee_id %}
             <!-- logs modal -->
