@@ -1189,11 +1189,13 @@
                             <input type="hidden" name="comments_member" value="{{member}}"></input>
                             <textarea id="comments_{{forloop.counter}}" name="comments_details" class="disable3">{{task_type.7|safe}}</textarea>
                             <script>
+                                {% if task.is_task_completed %}
                                 $(document).ready(function() {
                                     $('.disable3').each(function() {
                                         $(this).summernote('disable');
                                     });
                                 });
+                                {% endif %}
                             </script>
                         
     
@@ -1426,22 +1428,22 @@
                             <textarea name="comments_details" id="comments_{{forloop.counter}}" class="disable5">{{task_type.7|safe}}</textarea>
                             <script>
                                 $(document).ready(function() {
-                                    {% if task.is_task_completed %}
+                                    
                                     $('.disable5').each(function() {
                                         $(this).summernote('disable');
                                     });
-                                    {% endif %}
+                                    
                                 });
                             </script>
                         
     
     
                         <!--Submit btn-->
-                        {% if not task.is_task_completed %}
+                        {% comment %} {% if not task.is_task_completed %}
                         <div class="task-btn">
                             <input type="submit" class="finish-task-btn" name="add_comment" value = "Save Comment" style="cursor: pointer; margin-top: 40px;">
                         </div>
-                        {% endif %}
+                        {% endif %} {% endcomment %}
                     </form> 
             </div>
             {% endif %}
@@ -1693,6 +1695,7 @@
         
     </script>
     <!--Ajax Function to override Form data with select option change-->
+    
     <script>
         $(document).ready(function () {
             $(".task-mark-save").click(function () {
@@ -1851,7 +1854,6 @@
                 }
 
             </script>
-            <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
             <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
             <script>
                 $('.members_task_type_content').summernote({
