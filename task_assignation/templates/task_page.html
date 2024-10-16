@@ -1203,13 +1203,11 @@
                     });
                 });
                 {% endif %}
-                <script>
-                    $(document).ready(function() {
-                        $('.disable2').each(function() {
-                            $(this).summernote('disable');
-                        });
+                $(document).ready(function() {
+                    $('.disable2').each(function() {
+                        $(this).summernote('disable');
                     });
-                </script>
+                });
             </script>
             {% elif view_access %}
             <div class="form-wrapper">
