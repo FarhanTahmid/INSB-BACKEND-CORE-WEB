@@ -833,16 +833,24 @@
 </div>
 
 <script>
-  //function to display the notification box
   function show_ntfn() {
     var icon = document.querySelector(".bell-icon");
     const ntfn_content = document.getElementById("notification");
+
     if (ntfn_content.style.display === "block") {
-      // icon.classList.remove("wobble-hor-top");
       ntfn_content.style.display = "none";
+      document.removeEventListener("click", handleClickOutside);
     } else {
-      // icon.classList.add("wobble-hor-top");
       ntfn_content.style.display = "block";
+      document.addEventListener("click", handleClickOutside);
+    }
+  }
+
+  function handleClickOutside(event) {
+    const ntfn_content = document.getElementById("notification");
+    if (!ntfn_content.contains(event.target) && !event.target.closest(".bell-icon")) {
+      ntfn_content.style.display = "none";
+      document.removeEventListener("click", handleClickOutside);
     }
   }
 
