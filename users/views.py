@@ -27,7 +27,7 @@ from system_administration.system_error_handling import ErrorHandling
 from datetime import datetime
 import traceback
 from central_branch import views as cv
-from .renderData import member_login_permission,get_top_5_performers,get_top_3_teams
+from .renderData import member_login_permission,get_top_5_performers,get_top_5_teams
 from task_assignation.renderData import Task_Assignation
 from django.utils import timezone
 
@@ -216,7 +216,7 @@ def dashboard(request):
         current_user=renderData.LoggedinUser(request.user) #Creating an Object of logged in user with current users credentials
         user_data=current_user.getUserData() #getting user data as dictionary file
         performers = get_top_5_performers(request)
-        top_teams = get_top_3_teams(request)
+        top_teams = get_top_5_teams(request)
         if(user_data==False):
 
             if request.method == "POST":

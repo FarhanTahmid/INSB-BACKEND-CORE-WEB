@@ -195,7 +195,7 @@ class LoadTopPerformers(View):
                 safe=False
             )
         elif performer_type == 'teams':
-            topThreeTeams = HomepageItems.get_top_3_teams()
+            topThreeTeams = HomepageItems.get_top_5_teams()
 
             data = []
             for team in topThreeTeams:
