@@ -71,6 +71,25 @@
         font-size: 17px;
     }
 
+    #scrollToBottomBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #00629B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#scrollToBottomBtn:hover {
+    background-color: white;
+    color: #00629B;
+}
+
+
 
 
     @media(max-width:600px){
@@ -102,6 +121,15 @@
         
         
     </style>
+
+<script>function scrollToBottom() {
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+    });
+}</script>
+
+
 </head>
 <body>
     <!-- ############ LAYOUT START-->
@@ -173,6 +201,9 @@
             </div>
             <!-- Grid row -->
 
+        <!-- scroll button -->
+        <button id="scrollToBottomBtn" onclick="scrollToBottom()">Scroll to Bottom</button>
+
         </div>
         <!--PAGE END-->
 
@@ -190,6 +221,8 @@
     {% block common_js %}
         {% include "common_js.html" %}
     {% endblock common_js %}
+
+    
 
 </body>
 </html>
