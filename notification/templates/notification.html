@@ -421,6 +421,12 @@
             object-fit: cover;
             scale: .7;
         }
+        .notification_link{
+            display: none;
+            color: #6b6b6b;
+            font-weight: 600;
+            margin-top: 4px;
+        }
     </style>
 </head>
 {% block preloader %}
@@ -480,9 +486,8 @@
                                     onmouseout="hoverOutRow(this)" style="background-color: {% if notification.is_read %}white{% endif %}">
                                     <td style="color: #00629b">
                                         <!--link here-->
-                                        <a href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" target="_blank" onclick="removeUnread(this)">
-                                            <div class="sender_content_row">
-                                                <div class="sender_inner_div">
+                                        <div class="sender_content_row">
+                                            <div class="sender_inner_div" onclick="seeMore(this)">
                                                     <div class="sender_frame"><img src="{{media_url}}{% if notification.notification.created_by != None %}{{notification.notification.created_by.user_profile_picture}}{% elif notification.notification.event %}{{notification.notification.event.event_organiser.logo}}{% else %}{{admin.profile_picture}}{% endif %}" alt="profile_picture" onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';"></div>
                                                     <div class="friend_svg" >
                                                         <img src="{{media_url}}{{notification.notification.type.type_icon}}" alt="">
@@ -491,9 +496,10 @@
                                                                 <svg style="background-image: linear-gradient(45deg, #002855, #7bd5fe);
                                                                 border-radius: 50%;" width="24px" height="24px" viewBox="-15 0 87 70" xmlns="http://www.w3.org/2000/svg" stroke-width="3"  fill="white"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><circle cx="29.22" cy="16.28" r="11.14"></circle><path d="M 52.32 53.69 h 0 A 22.55 22.55 0 0 0 6.67 55 h 45.9"></path></g></svg>
                                                             </div> -->
-                                                    <div class="notification_content_row">
-                                                        <h6 class='sender_title_row'>{{notification.notification.title|safe}}</h6>
-                                                        <h6 class='notification_msg_row ellipsis'>{{notification.notification.general_message|safe}}</h6>
+                                                            <div class="notification_content_row">
+                                                                <h6 class='sender_title_row'>{{notification.notification.title|safe}}</h6>
+                                                                <h6 class='notification_msg_row ellipsis'>{{notification.notification.general_message|safe}}</h6>
+                                                                <a class="notification_link" href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" target="_blank" onclick="removeUnread(this)">View More</a>
                                                     </div>
                                                 </div>
                                                 <h6 class='time_notification'>{{notification.notification.timestamp}}</h6>
@@ -507,13 +513,12 @@
                                             <div class="dropdown-content-row" id="dropdownContent">
                                                 <a id="notify_action" name="notify_action" href="#"
                                                     onclick="markAsRead_markAsUnread_table(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
-                                                <a href="#" onclick="seeMore(this)">See More</a>
+                                                <!-- <a href="#">See More</a> -->
                                                     <a href="#" onclick="deleteNotification(this); return false;">Delete</a>
                                                 <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
                                             </div>
                                         </div>
                                     </td>
-                                    </a>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -815,15 +820,18 @@
 
         
         function seeMore(element){
-            var showMore = element.parentElement.parentElement.parentElement.parentElement.querySelector('.notification_msg_row');
+            var showMore = element.querySelector('.notification_msg_row');
+            var link = showMore.parentElement.querySelector('.notification_link');
             
             if (showMore.classList.contains('ellipsis')){
             showMore.classList.remove('ellipsis');
-            element.innerHTML = 'See Less'
-            }
-            else{
+            link.style.display = "block";
+            // element.innerHTML = 'See Less'
+        }
+        else{
             showMore.classList.add('ellipsis');
-            element.innerHTML = 'See More'
+            link.style.display = "none";
+            // element.innerHTML = 'See More'
             }
         }
     </script>

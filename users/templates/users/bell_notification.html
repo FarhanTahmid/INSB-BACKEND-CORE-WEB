@@ -822,7 +822,7 @@
           <div class="dropdown-content" id="dropdownContent">
             <a href="#" id="notify_action" name="notify_action" onclick="markAsRead_markAsUnread(this); return false;">{% if notification.is_read %}Mark as unread{% else %}Mark as read{% endif %}</a>
             <input type="hidden" id="member_notification_id" name="member_notification_id" value="{{notification.pk}}"/>
-            <a href="#" onclick="seeMore(this)">See More</a>
+            <a href="#" onclick="seeMore1(this)">See More</a>
           </div>
         </div>
       </div>
@@ -1315,7 +1315,7 @@
       icon.classList.add("wobble-hor-top");
     }
 
-  function seeMore(element){
+  function seeMore1(element){
     var showMore = element.parentElement.parentElement.parentElement.querySelector('.notification_msg');
     var showMore2 = element.parentElement.parentElement.parentElement.querySelector('.sender_title');
     
