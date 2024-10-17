@@ -6236,7 +6236,7 @@ class SendMailAjax(View):
             email_body=request.POST['body']
             email_attachment=request.FILES.getlist('attachments')                       
             email_schedule_date_time = request.POST['dateTime']
-
+            print("HERE COMING")
             response = GmailHandler.send_mail(request, email_single_email, email_to_list, email_cc_list, email_bcc_list, email_subject, email_body, email_attachment, email_schedule_date_time)
             
             return response

@@ -286,7 +286,7 @@
                           <td>{{task.deadline}}</td>
                           <td>{{task.task_category.points}}</td>
                           {% if not user.position.is_eb_member %}
-                          <td>{{earned_points.completion_points}}</td>
+                          <td>{{earned_points.completion_points|floatformat:2}}</td>
                           {% endif %}
                           {% if task.is_task_completed %}
                           <td>

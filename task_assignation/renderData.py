@@ -633,34 +633,36 @@ class Task_Assignation:
                         return False
                 for mem in mem_removed:
                     member = Members.objects.get(ieee_id = mem)
-                    print("remove2")
-                    notification_message = f"You were removed from the task, {task.title}"
-                    NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
+                    team_task_forward_of_member = Team_Task_Forwarded.objects.get(task=task,team=member.team)
+                    if (not team_task_forward_of_member.task_forwarded_to_incharge and not team_task_forward_of_member.task_forwarded_to_core_or_team_volunteers):
+                        print("remove2")
+                        notification_message = f"You were removed from the task, {task.title}"
+                        NotificationHandler.notification_to_a_member(request,task,"Removed From Task",notification_message,f"{site_domain}/portal/central_branch/task/{task.pk}",Task_Assignation.task_member_remove,member)
 
-                    message = f'{member.name}({member.ieee_id}) was removed from the task, {task.title} by {notification_created_by_name}'
-                    Task_Assignation.save_task_logs(task,message)
+                        message = f'{member.name}({member.ieee_id}) was removed from the task, {task.title} by {notification_created_by_name}'
+                        Task_Assignation.save_task_logs(task,message)
 
-                    member_points = Member_Task_Point.objects.get(task=task,member = str(mem))
-                    member_points.delete()
+                        member_points = Member_Task_Point.objects.get(task=task,member = str(mem))
+                        member_points.delete()
 
-                    member_task_upload_type = Member_Task_Upload_Types.objects.get(task_member=member,task=task)
-                    if member_task_upload_type.has_content:
-                        Task_Content.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
-                    if member_task_upload_type.has_drive_link:
-                            Task_Drive_Link.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
-                    if member_task_upload_type.has_permission_paper:
-                            Permission_Paper.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
-                    if member_task_upload_type.has_file_upload:
-                        files = Task_Document.objects.filter(task=task, uploaded_by=member.ieee_id)
-                        for file in files:
-                            Task_Assignation.delete_task_document(file)
-                    if member_task_upload_type.has_media:
-                        media_files = Task_Media.objects.filter(task=task, uploaded_by=member.ieee_id)
-                        for media_file in media_files:
-                            Task_Assignation.delete_task_media(media_file)
-                    member_task_upload_type.delete()
-                    task.members.remove(member)
-                    task.save()
+                        member_task_upload_type = Member_Task_Upload_Types.objects.get(task_member=member,task=task)
+                        if member_task_upload_type.has_content:
+                            Task_Content.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
+                        if member_task_upload_type.has_drive_link:
+                                Task_Drive_Link.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
+                        if member_task_upload_type.has_permission_paper:
+                                Permission_Paper.objects.filter(task=task, uploaded_by=member.ieee_id).delete()
+                        if member_task_upload_type.has_file_upload:
+                            files = Task_Document.objects.filter(task=task, uploaded_by=member.ieee_id)
+                            for file in files:
+                                Task_Assignation.delete_task_document(file)
+                        if member_task_upload_type.has_media:
+                            media_files = Task_Media.objects.filter(task=task, uploaded_by=member.ieee_id)
+                            for media_file in media_files:
+                                Task_Assignation.delete_task_media(media_file)
+                        member_task_upload_type.delete()
+                        task.members.remove(member)
+                        task.save()
                             
 
             elif task.task_type == "Individuals":
@@ -1613,7 +1615,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task due email sent to designated member {member.name}'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1663,7 +1665,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
 
             task_log_message = f'Task Name: {task.title}, {task.task_created_by} just added a comment on member, {member.name}({member_id}), work'
             #saving logs
@@ -1754,7 +1756,7 @@ This is an automated message. Do not reply
                                 email_from,
                                 email_to
                                 )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task checked completed by {logged_in_user.name}({logged_in_user.ieee_id}) and notified to task assignee'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -1820,7 +1822,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task creation email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2921,7 +2923,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task completion email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -2970,7 +2972,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task edit email sent to {member.name}({member.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
@@ -3020,7 +3022,7 @@ This is an automated message. Do not reply
                                     email_from,
                                     email_to
                                     )
-            # email.send()
+            email.send()
             task_log_message = f'Task Name: {task.title}, task forwarded awarness email sent to {to_members.name}({to_members.ieee_id})'
             #setting message
             Task_Assignation.save_task_logs(task,task_log_message)
