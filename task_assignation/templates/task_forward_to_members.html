@@ -469,8 +469,8 @@
                           <li>Must press <span style="font-weight: 600;">Forward Task</span> button to forward the task to the assigned individuals and then it will send a mail to that assigned individuals</li>
                           <li>As an Executive Body, if you forward the task to
                             <ul>
-                              <li>the Team's Incharges, they will get <span style="color:red;font-weight: 600;">25%</span> points of the Task points</li>
-                              <li>the Team's Volunteers, they will get <span style="color:red;font-weight: 600;">10%</span> points of the Task points</li>
+                              <li>the Team's Incharges, Co-ordinators will get <span style="color:red;font-weight: 600;">25%</span> points of the Task points</li>
+                              <li>the Team's Volunteers, both Co-ordinators and Incharges will get <span style="color:red;font-weight: 600;">10%</span> points of the Task points</li>
                               <li>Co-ordinator of a particular Team are assigned to this task as a group. So if you forwards it, every Co-ordinators of the Team receives 25% or 10% of the Task points</li>
                               <li>Once forwarded Co-ordinators can still upload Task materials if necessary, and you can adjust the points later on their upload basis</li>
                               <li>Same for Incharges</li>
@@ -497,6 +497,7 @@
                       </ol>
               </div>
           </div>
+          {% if not task.is_task_completed %}
             <form method="post" id="taskForm">
 
               <!--forward task btn-->
@@ -613,15 +614,18 @@
                         <td>{{volunteers.position}}</td>
                         <td>{{volunteers.contact_no}}</td>
                       </tr>
-                      {% endfor %} 
+                      {% endfor %}
+                      {% else %}
+                      <h1 style="color:red;text-align:center;">Task Already Completed</h1>
                     </tbody>
-                </table>
-                </div>
+                  </table>
                 </div>
               </div>
-      
-
-            </form>
+            </div>
+            
+            
+          </form>
+          {% endif %} 
       
           </div>
         </div>
