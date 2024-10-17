@@ -8,7 +8,8 @@
     <link rel="icon" href="{% static 'logos/logo.gif' %}" />
 
     <link rel="stylesheet" href="{% static 'newTable.css' %}" type="text/css" />
-
+    <!--summernote-->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
 
     <!--common CSS-->
     {% block common_css %}
@@ -486,8 +487,8 @@
                         <!--notification url-->
                         <input type="url" class="box" name="notification_link" placeholder="Link">
                         <!--notification description-->
-                        <textarea class="box" name="notification_description" placeholder="Description"
-                        style="min-height: 100px; max-height: 180px;" maxlength="500" required></textarea>
+                        <textarea class="box" id="summernote" name="notification_description" placeholder="Description"
+                         required></textarea>
                         
                         <!--selecting individuals to send notification-->
                         <div class="custom_select">
@@ -556,7 +557,7 @@
                         <!--notification url-->
                         <p class="history_box">Link:{{notification.inside_link}}</p>
                         <!--notification description-->
-                        <p class="history_box">General Message:{{notification.general_message}}</p>
+                        <p class="history_box">General Message:{{notification.general_message | safe}}</p>
                         <div class="sent_to_whom_and_date">
                             <h5><span style="margin-bottom: 5px;">Sent to-</span> <br> {% for mem in member %}
                             {{mem.name}}({{mem.ieee_id}}){% if forloop.last%}{% else %},{% endif %}
@@ -575,6 +576,23 @@
         {% endblock common_js %}
 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+<script>
+    $('#summernote').summernote({
+        placeholder: 'Describe the task...',
+        tabsize: 2,
+        height: 250,
+        toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video']],
+        ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const customSelects = document.querySelectorAll('.custom_select');
