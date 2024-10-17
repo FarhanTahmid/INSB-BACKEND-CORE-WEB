@@ -31,7 +31,10 @@ class PRT_Email_System:
         
         # At first seperate the emails of single emails seperated by commas
         single_emails_final_list=[]
-        substrings = single_emails[0].split(',')
+        try:
+            substrings = single_emails[0].split(',')
+        except:
+            substrings=[]
         
         for email in substrings:
             # Trim leading and trailing whitespaces
