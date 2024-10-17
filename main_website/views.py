@@ -167,6 +167,55 @@ class LoadAwards(View):
                     safe=False
                 )
             
+class LoadTopPerformers(View):
+    def get(self, request):
+        performer_type = request.GET.get('performer_type')
+
+        if performer_type == 'members':
+            topFivePerformers = HomepageItems.get_top_5_performers()
+
+            data = []
+            for performer in topFivePerformers:
+                data.append({
+                    "picture":str(performer.user_profile_picture),
+                    "name":performer.name,
+                    "team":str(performer.team),
+                    "position":str(performer.position),
+                    "points":str(performer.completed_task_points)
+                })
+
+            json_data = {
+                'name':'Top Five Performers',
+                'topFivePerformers':data
+            }
+
+            return JsonResponse(
+                data=json_data,
+                status=200,
+                safe=False
+            )
+        elif performer_type == 'teams':
+            topThreeTeams = HomepageItems.get_top_3_teams()
+
+            data = []
+            for team in topThreeTeams:
+                data.append({
+                    "picture":str(team.team_picture),
+                    "name":team.team_name,
+                    "points":str(team.completed_task_points)
+                })
+
+            json_data = {
+                'name':'Top Three Teams',
+                'topThreeTeams':data
+            }
+
+            return JsonResponse(
+                data=json_data,
+                status=200,
+                safe=False
+            )
+            
 
 ##################### EVENT WORKS ####################
 

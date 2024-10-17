@@ -3,7 +3,7 @@ from django.http import HttpResponseServerError
 from users.models import Members,User_IP_Address,Panel_Members
 from membership_development_team.renderData import MDT_DATA
 from central_events.models import Events,InterBranchCollaborations,SuperEvents
-from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels
+from port.models import Chapters_Society_and_Affinity_Groups,Roles_and_Position,Panels, Teams
 from graphics_team.models import Graphics_Banner_Image
 from media_team.models import Media_Images
 from datetime import datetime
@@ -476,4 +476,18 @@ class HomepageItems:
             ErrorHandling.saveSystemErrors(error_name=e,error_traceback=traceback.format_exc())
             return False
 
+    def get_top_5_performers():
+
+        '''This function will return top 5 performers of all time'''
+
+        performers = Members.objects.all().order_by('-completed_task_points')[:5]
+        print(performers)
+        return performers
+
+    def get_top_3_teams():
+
+        '''This function will return the top 3 teams'''
+        
+        teams = Teams.objects.all().order_by('-completed_task_points')[:3]
+        return teams
                 
