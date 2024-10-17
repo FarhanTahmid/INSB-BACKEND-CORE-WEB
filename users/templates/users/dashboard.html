@@ -243,7 +243,7 @@
 	}
 	.card_top_performers_2 {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 	}
 	.img_top_per {
 		height: 60px;
@@ -989,7 +989,7 @@
 											<a href="{% url 'main_website:member_profile' performer.ieee_id %}"><h1>{{performer.name}}</h1></a>
 										</div>
 										<div>
-											<p>{{performer.team.team_name}}</p\>
+											<p>{{performer.team.team_name}}</p>
 											<p style="opacity: 0.8;">{{performer.postion.role}}</p>
 										</div>
 									</div>
