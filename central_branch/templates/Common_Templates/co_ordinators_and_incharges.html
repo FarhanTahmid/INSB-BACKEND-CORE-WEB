@@ -42,6 +42,33 @@
         font-size: 20px;
     }
 
+    .name_box{
+        height: 50px;
+
+    }
+
+    .text-muted{
+        font-size: 17px;
+    }
+
+    /**#scrollToBottomBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #00629B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    }
+
+#scrollToBottomBtn:hover {
+    background-color: white;
+    color: #00629B;
+    }**/
+
 
     @media(max-width:600px){
         .avatar_box{
@@ -72,7 +99,12 @@
 </style>
 
 
-
+    <!-- <script>function scrollToBottom() {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth"
+        });
+    }</script> -->
 
 
 <br>
@@ -89,7 +121,7 @@
             <div class="individual_box">
             <div style="display: flex;justify-content: center;">
             <div class="avatar_box">
-                <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+                <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: cover; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
             </div>
             </div>
   
@@ -97,14 +129,14 @@
               <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
           </div>-->
 
-          <h6 class="font-weight-bold">{{i.name}}</h6>
+          <div class="name_box"><h6 class="font-weight-bold">{{i.name}}</h6></div>
           <small class="text-muted">{{i.team}} Team<br></small>
           <small class="text-muted">{{i.contact_no}}</small>
 
           <ul class="list-unstyled d-flex justify-content-center m-2">
-              <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-1"></i></a></li>
-              <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-1 icon-gray"></i></a></li>
-              <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-1"></i></a></li>
+              <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-2"></i></a></li>
+              <li style="border-right: 2px solid #ddd; border-left: 2px solid #ddd;"><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+              <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
           </ul>
           </div>
         
@@ -129,7 +161,7 @@
     <div class="individual_box">
     <div style="display: flex;justify-content: center;">
     <div class="avatar_box">
-        <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+        <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: cover; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
     </div>
     </div>
 
@@ -137,14 +169,14 @@
       <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
   </div>-->
 
-  <h6 class="font-weight-bold">{{i.name}}</h6>
+  <div class="name_box"><h6 class="font-weight-bold">{{i.name}}</h6></div>
   <small class="text-muted">{{i.team}} Team<br></small>
   <small class="text-muted">{{i.contact_no}}</small>
 
   <ul class="list-unstyled d-flex justify-content-center m-2">
-      <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-1"></i></a></li>
-      <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-1 icon-gray"></i></a></li>
-      <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-1"></i></a></li>
+      <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-2"></i></a></li>
+      <li style="border-right: 2px solid #ddd; border-left: 2px solid #ddd;"><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+      <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
   </ul>
   </div>
 
@@ -168,7 +200,7 @@
     <div class="individual_box">
     <div style="display: flex;justify-content: center;">
     <div class="avatar_box">
-        <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+        <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: cover; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
     </div>
     </div>
 
@@ -176,14 +208,14 @@
       <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
   </div>-->
 
-  <h6 class="font-weight-bold">{{i.name}}</h6>
+  <div class="name_box"><h6 class="font-weight-bold">{{i.name}}</h6></div>
   <small class="text-muted">{{i.team}} Team<br></small>
   <small class="text-muted">{{i.contact_no}}</small>
 
   <ul class="list-unstyled d-flex justify-content-center m-2">
-      <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-1"></i></a></li>
-      <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-1 icon-gray"></i></a></li>
-      <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-1"></i></a></li>
+      <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-2"></i></a></li>
+      <li style="border-right: 2px solid #ddd; border-left: 2px solid #ddd;"><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+      <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
   </ul>
   </div>
 
@@ -207,7 +239,7 @@
     <div class="individual_box">
     <div class="content" style="display: flex;justify-content: center;">
     <div class="avatar_box">
-        <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+        <img src="/media_files/{{i.user_profile_picture}}"  class="rounded shadow" style="object-fit: cover; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
     </div>
     </div>
 
@@ -215,14 +247,14 @@
       <img src="/media_files/{{i.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
   </div>-->
 
-  <h6 class="font-weight-bold">{{i.name}}</h6>
+  <div class="name_box"><h6 class="font-weight-bold">{{i.name}}</h6></div>
   <small class="text-muted">{{i.team}} Team<br></small>
   <small class="text-muted">{{i.contact_no}}</small>
 
   <ul class="list-unstyled d-flex justify-content-center m-2">
-      <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-1"></i></a></li>
-      <li><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-1 icon-gray"></i></a></li>
-      <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-1"></i></a></li>
+      <li><a href="{{i.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-2"></i></a></li>
+      <li style="border-right: 2px solid #ddd; border-left: 2px solid #ddd;"><a href="{{i.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+      <li><a href="mailto:{{i.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
   </ul>
   </div>
 
@@ -234,3 +266,7 @@
 </div>
 <!-- Grid row -->
 {% endblock co_ordinators_and_incharges %}
+
+
+<!-- scroll button -->
+<!-- <button id="scrollToBottomBtn" onclick="scrollToBottom()">Scroll to Bottom</button> -->
