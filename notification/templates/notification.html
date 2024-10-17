@@ -309,7 +309,7 @@
             display: flex;
             flex-direction: row;
             gap: 10px;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
         }
 
@@ -499,7 +499,10 @@
                                                             <div class="notification_content_row">
                                                                 <h6 class='sender_title_row'>{{notification.notification.title|safe}}</h6>
                                                                 <h6 class='notification_msg_row ellipsis'>{{notification.notification.general_message|safe}}</h6>
-                                                                <a class="notification_link" href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" target="_blank" onclick="removeUnread(this)">View More</a>
+                                                                
+                                                                {% if notification.notification.inside_link %}
+                                                                <a class="notification_link" href="{% if notification.notification.inside_link %}{% if notification.notification.type.type == "Custom Notification" %}{% else %}//{% endif %}{{notification.notification.inside_link}}{% else %}{% url 'notification:all_notifications' %}{% endif %}" onclick="removeUnread(this)">View More</a>
+                                                                {% endif %}
                                                     </div>
                                                 </div>
                                                 <h6 class='time_notification'>{{notification.notification.timestamp}}</h6>
