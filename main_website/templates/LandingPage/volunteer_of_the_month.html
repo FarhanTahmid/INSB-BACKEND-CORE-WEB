@@ -172,7 +172,7 @@
             <select id="filter-dropdown" style="width: 200px; height: 40px; border-radius: 5px; padding: 5px;">
                 <option value="" selected disabled>Select Award</option>
                 <option value="members">Top Five Performers</option>
-                <option value="teams">Top Five Teams</option>
+                <option value="teams">Top Three Teams</option>
                 {% for i in awards %}
                     <option value="{{i.pk}}">{{i.volunteer_award_name}}</option>
                 {% endfor %}
