@@ -48,9 +48,13 @@
       align-items: center;
       height: 100%;
     }
-  .app-header{
-      left: 2px;
+    .app-header{
+      position: sticky;
+      margin: 0 0 0 2px;
   }
+  .app-header ~ .app-body {
+    padding-top: 0rem;
+}
   </style>
 </head>
 <body>

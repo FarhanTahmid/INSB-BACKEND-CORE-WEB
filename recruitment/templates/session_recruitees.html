@@ -66,9 +66,13 @@
         width: 100%; /* Make the button full width on smaller screens */
       }
     }
-  .app-header{
-      left: 2px;
+    .app-header{
+      position: sticky;
+      margin: 0 0 0 2px;
   }
+  .app-header ~ .app-body {
+    padding-top: 0rem;
+}
   </style>
 </head>
 <body>

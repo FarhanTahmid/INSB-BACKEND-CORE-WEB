@@ -31,6 +31,15 @@
   <link rel="stylesheet" href="{% static '/assets/styles/font.css'%}" type="text/css" />
 </head>
 <body>
+  <style>
+    .app-header{
+    position: sticky;
+    margin: 0 0 0 2px;
+}
+.app-header ~ .app-body {
+  padding-top: 0rem;
+}
+</style>
   <div class="app" id="app">
 
 <!-- ############ LAYOUT START-->
