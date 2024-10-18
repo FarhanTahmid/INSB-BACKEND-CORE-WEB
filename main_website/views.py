@@ -206,7 +206,7 @@ class LoadTopPerformers(View):
                 })
 
             json_data = {
-                'name':'Top Three Teams',
+                'name':'Top Five Teams',
                 'topThreeTeams':data
             }
 
