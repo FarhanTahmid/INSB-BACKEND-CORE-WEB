@@ -1,45 +1,140 @@
 {% load static %}
 {% block co_ordinator_card %}
 
-<!--Co Ordinators-->
-<h3 style="justify-content:center;text-align:center;margin-top:25px;margin-bottom:15px;"> Meet our <span><b>Officers</b></span> </h3>
 
-<div class="row d-flex justify-content-center">
+<style>
+  h3{
+      justify-content:center;
+      text-align:center;
+      margin-bottom:15px;
+      margin-top: 30px;
+  }
+
+  .row{
+      display: flex;
+      justify-content: center;
+      width: 100%;
+  }
+
+  .individual_box{
+      background-color: white;
+      margin:0px 20px 20px 20px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      height: 90%;
+      width: 90%;
+      
+  }
+
+  .avatar_box{
+      height: 200px;
+      width:200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #00629B;
+      border-radius: 50%;
+      margin-bottom: 15px;
+  }
+
+  .font-weight-bold{
+      font-size: 20px;
+  }
+
+  .name_box{
+      height: 50px;
+
+  }
+
+  .details{
+      font-size: 17px;
+      color: #636c72;
+      opacity: .6;
+  }
+
+
+
+  @media(max-width:600px){
+      .avatar_box{
+          height: 100px;
+          width: 100px;
+      }
+
+      .individual_box{
+          padding: 10px;
+      }
+
+  }
+
+  @media(max-width:768px){
+      .avatar_box{
+          height: 150px;
+          width: 150px;
+      }
+  }
+
+  @media(max-width:1024px){
+      .avatar_box{
+          height: 150px;
+          width: 150px;
+      }
+  }
+
+</style>
+
+
+<!--Co Ordinators-->
+<h3> Meet our <span><b>Officers</b></span> </h3>
+
+<div class="row">
                             
   <!-- Grid column -->
   {% for i in sc_ag_officers %}
     {% if i.member %}
-    <div class="col-md-3 mb-4 text-center">
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-10"  style="margin: 0; padding: 0; text-align: center;">
   
-      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-          <img src="/media_files/{{i.member.user_profile_picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
-      </div>
-      <h5 class="font-weight-bold">{{i.member.name}}</h5>
-      <p class="font-weight-bold">{{i.position}}, {{i.team}}</p>
-      <small class="text-muted">{{i.member.contact_no}}</small>
+      <div class="individual_box">
+        <div style="display: flex;justify-content: center;">
+        <div class="avatar_box">
+          <img src="/media_files/{{i.member.user_profile_picture}}" class="rounded shadow" style="object-fit: cover; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+        </div>
+        </div>
 
-      <ul class="list-unstyled d-flex justify-content-center m-2">
-          <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-          <li><a href="{{i.member.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
-          <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
-      </ul>
+      <div class="name_box"><h6 class="font-weight-bold">{{i.member.name}}</h6></div>
+          <small class="details">{{i.position}}, {{i.team}}<br></small>
+          <small class="details">{{i.member.contact_no}}</small>
+
+
+          <ul class="list-unstyled d-flex justify-content-center m-2">
+            <li><a href="{{i.member.linkedin_url}}" target="_blank"><i class="fa fa-linkedin mx-2"></i></a></li>
+            <li style="border-right: 2px solid #ddd; border-left: 2px solid #ddd;"><a href="{{i.member.facebook_url}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+            <li><a href="mailto:{{i.member.email_ieee}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+        </ul>
+        </div>
 
     </div>
     {% else %}
-    <div class="col-md-3 mb-4 text-center">
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-10"  style="margin: 0; padding: 0; text-align: center;">
   
-      <div class="avatar mx-auto white" style="height: 250px; width:200px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-          <img src="/media_files/{{i.ex_member.picture}}" class="rounded shadow" style="object-fit: fill; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
-      </div>
-      <h5 class="font-weight-bold">{{i.ex_member.name}}</h5>
-      <p class="font-weight-bold">{{i.position}}</p>
-      <small class="text-muted">{{i.ex_member.contact_no}}</small>
 
-      <ul class="list-unstyled d-flex justify-content-center m-2">
-          <li><a href="{{i.ex_member.linkedin_link}}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-          <li><a href="{{i.ex_member.facebook_link}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
-          <li><a href="mailto:{{i.ex_member.email}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
-      </ul>
+      <div class="individual_box">
+        <div style="display: flex;justify-content: center;">
+        <div class="avatar_box">
+          <img src="/media_files/{{i.ex_member.picture}}" class="rounded shadow" style="object-fit: cover; width: 100%; height: 100%;"onerror="this.onerror=null;this.src='{% static '/images/default_profile_picture.png'%}';">
+        </div>
+        </div>
+
+        <div class="name_box"><h6 class="font-weight-bold">{{i.ex_member.name}}</h6></div>
+            <small class="details">{{i.position}}<br></small>
+            <small class="details">{{i.ex_member.contact_no}}</small>
+
+          <ul class="list-unstyled d-flex justify-content-center m-2">
+            <li><a href="{{i.ex_member.linkedin_link}}" target="_blank"><i class="fa fa-linkedin mx-2"></i></a></li>
+            <li style="border-right: 2px solid #ddd; border-left: 2px solid #ddd;"><a href="{{i.ex_member.facebook_link}}" target="_blank"><i class="fa fa-facebook mx-2 icon-gray"></i></a></li>
+            <li><a href="mailto:{{i.ex_member.email}}" target="_blank"><i class="fa fa-envelope mx-2"></i></a></li>
+          </ul>
+        </div>
 
     </div>
     {% endif %}
